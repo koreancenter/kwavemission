@@ -1,0 +1,13 @@
+[프로젝트 구조]
+/
+/project-root
+├── index.html          # Main Entry & Home
+├── news.html           # News Listing Page
+├── assets/
+│   ├── css/            # Custom styles if needed
+│   └── js/
+│       ├── main.js     # UI interactions & Global components
+│       └── news-loader.js  # Markdown Fetch & Render logic
+├── posts/
+│   ├── 2024-10-27.md   # Example MD files
+│   └── posts.json      # Metadata for the feed (title, date, path)
