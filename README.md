@@ -34,7 +34,7 @@
 ## 📐 2. 사이트 맵 (Site Structure)
 
 전체 사이트는 단일 페이지 접근성(Single Page Experience)과 세부 마이크로 페이지를 조합한 **최적의 Minimal UX**를 제공합니다.
-
+```yaml
 /
 ├── [01. Home] ------------- (/index.html)
 │    ├── Hero Section (비전 선언문 & K-Wave 로고 브랜드)
@@ -60,7 +60,7 @@
 ├── 국내 협력교회 & 기관 (전국대학교수선교연합회 등)
 ├── 동역/후원 안내 (기도, 장학금, 오지교회, 재정후원)
 └── Direct Connect Button (카카오톡: kwavemission / 이메일: admin@kwavemission.org)
-
+```
 
 ---
 
@@ -81,7 +81,7 @@
 ---
 
 ## ⚡ 4. Technical Architecture (Zero-DB Static Stack)
-
+```yuaml
 [Markdown Posts (/posts/*.md)]
 │
 ▼
@@ -89,7 +89,7 @@
 │
 ▼
 [GitHub Pages / Vercel Host] ◄────────────────────────── [Direct Kakao/Email Action]
-
+```
 
 ### 4.1 데이터베이스 없는 주간 선교 게시판 구현 기법
 1. `/posts/2026-08-01-mission-news.md` 형태로 마크다운 파일 저장.
