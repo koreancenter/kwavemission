@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>K-Wave Mission | Full-Stack Missionary Platform</title>
+    <meta
+      name="description"
+      content="K-Wave Mission equips higher-education mission fields and connects campuses with local churches through a full-stack missionary platform."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              mission: {
+                50: "#eff6ff",
+                100: "#dbeafe",
+                600: "#2563eb",
+                700: "#1d4ed8",
+                900: "#1e3a8a"
+              }
+            }
+          }
+        }
+      };
+    </script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const menuButton = document.getElementById("menuButton");
+        const mobileMenu = document.getElementById("mobileMenu");
+        const year = document.getElementById("year");
+
+        if (menuButton && mobileMenu) {
+          menuButton.addEventListener("click", () => {
+            mobileMenu.classList.toggle("hidden");
+          });
+        }
+
+        if (year) {
+          year.textContent = String(new Date().getFullYear());
+        }
+      });
+    </script>
+  </head>
+  <body class="bg-slate-50 text-slate-800 antialiased">
+    <header class="sticky top-0 z-10 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <a href="#" class="text-lg font-semibold text-mission-900">K-Wave Mission</a>
+        <button id="menuButton" class="rounded-md p-2 text-slate-700 hover:bg-slate-100 md:hidden" aria-label="Toggle menu">
+          ☰
+        </button>
+        <nav class="hidden gap-8 text-sm font-medium text-slate-600 md:flex">
+          <a href="#platform" class="hover:text-mission-700">Platform</a>
+          <a href="#impact" class="hover:text-mission-700">Impact</a>
+          <a href="#connect" class="hover:text-mission-700">Connect</a>
+        </nav>
+      </div>
+      <nav id="mobileMenu" class="hidden border-t border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 md:hidden">
+        <div class="flex flex-col gap-3">
+          <a href="#platform">Platform</a>
+          <a href="#impact">Impact</a>
+          <a href="#connect">Connect</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <section class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:items-center lg:py-24 lg:px-8">
+        <div>
+          <p class="mb-3 inline-flex rounded-full bg-mission-100 px-3 py-1 text-xs font-semibold uppercase tracking-widest text-mission-700">
+            Higher Education Mission Experts
+          </p>
+          <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+            A Full-Stack Missionary Platform for Campus and Church Collaboration
+          </h1>
+          <p class="mt-6 max-w-xl text-base leading-7 text-slate-600 sm:text-lg">
+            K-Wave Mission activates local campus mission fields, equips leaders, and builds durable pathways connecting students, missionaries, and churches for long-term gospel impact.
+          </p>
+          <div class="mt-8 flex flex-wrap gap-4">
+            <a href="#connect" class="rounded-lg bg-mission-700 px-5 py-3 text-sm font-semibold text-white hover:bg-mission-600">Partner with Us</a>
+            <a href="#platform" class="rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-100">Explore Platform</a>
+          </div>
+        </div>
+        <div class="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
+          <h2 class="text-xl font-semibold text-slate-900">What “Full-Stack Missionary” Means</h2>
+          <ul class="mt-6 space-y-4 text-sm leading-6 text-slate-600">
+            <li><span class="font-semibold text-slate-800">Campus Field Intelligence:</span> local insight, student mapping, and ministry context planning.</li>
+            <li><span class="font-semibold text-slate-800">Leadership Development:</span> mentoring tracks for student leaders and mission teams.</li>
+            <li><span class="font-semibold text-slate-800">Church Integration:</span> practical pipelines from campus discipleship to church mission engagement.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="platform" class="border-y border-slate-200 bg-white">
+        <div class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+          <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Platform Capabilities</h2>
+          <div class="mt-10 grid gap-6 md:grid-cols-3">
+            <article class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+              <h3 class="text-base font-semibold text-slate-900">Field Activation</h3>
+              <p class="mt-3 text-sm leading-6 text-slate-600">Launch and sustain mission initiatives in local universities with proven frameworks and on-site coaching.</p>
+            </article>
+            <article class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+              <h3 class="text-base font-semibold text-slate-900">Mission Stack Design</h3>
+              <p class="mt-3 text-sm leading-6 text-slate-600">Integrate evangelism, discipleship, leadership training, and sending pathways into one unified mission stack.</p>
+            </article>
+            <article class="rounded-xl border border-slate-200 bg-slate-50 p-6">
+              <h3 class="text-base font-semibold text-slate-900">Church Partnership</h3>
+              <p class="mt-3 text-sm leading-6 text-slate-600">Bridge campus ministry momentum with local church strategy through aligned communication and shared mission outcomes.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="impact" class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Why K-Wave Mission</h2>
+        <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-xl bg-mission-900 p-6 text-white">
+            <p class="text-xs uppercase tracking-wide text-mission-100">Specialization</p>
+            <p class="mt-2 text-lg font-semibold">Higher-Education Focus</p>
+          </div>
+          <div class="rounded-xl bg-white p-6 ring-1 ring-slate-200">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Approach</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">End-to-End Mission Architecture</p>
+          </div>
+          <div class="rounded-xl bg-white p-6 ring-1 ring-slate-200">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Connection</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">Campus-to-Church Pipeline</p>
+          </div>
+          <div class="rounded-xl bg-white p-6 ring-1 ring-slate-200">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Outcome</p>
+            <p class="mt-2 text-lg font-semibold text-slate-900">Sustainable Mission Multiplication</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="connect" class="bg-mission-50">
+        <div class="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 lg:px-8">
+          <h2 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">Connect Your Campus Field with Local Churches</h2>
+          <p class="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
+            Partner with K-Wave Mission to design and scale a contextualized missionary platform for your university and church network.
+          </p>
+          <a href="mailto:contact@kwavemission.org" class="mt-8 inline-flex rounded-lg bg-mission-700 px-6 py-3 text-sm font-semibold text-white hover:bg-mission-600">
+            Start a Conversation
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-white">
+      <div class="mx-auto flex max-w-6xl flex-col gap-2 px-4 py-6 text-sm text-slate-500 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <p>© <span id="year"></span> K-Wave Mission. All rights reserved.</p>
+        <p>Jamstack • Tailwind CSS • Vanilla JS • Zero Database</p>
+      </div>
+    </footer>
+  </body>
+</html>
