@@ -41,6 +41,76 @@
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
         }
+        .hero-section {
+            background:
+                /* 1. 은은한 전통 격자선 */
+                repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px),
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px),
+                /* 2. 한국의 단청/오로라 느낌을 주는 은은한 빛 방사 */
+                radial-gradient(circle at 50% 30%, rgba(225, 29, 72, 0.15), transparent 60%),
+                /* 3. 베이스 딥 네이비 */
+                #0b0f19;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #f1f5f9;
+        }
+
+        .btn-share-footer {
+            padding: 10px 18px;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: #334155;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-share-footer:hover {
+            background-color: #e2e8f0;
+        }
+
+        .btn-close-footer {
+            padding: 10px 20px;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            color: #475569;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-close-footer:hover {
+            background-color: #f1f5f9;
+        }
+
+        @media (max-width: 640px) {
+            .modal-footer {
+                gap: 8px;
+                margin-top: 24px;
+                padding-top: 16px;
+            }
+
+            .btn-share-footer,
+            .btn-close-footer {
+                min-height: 44px;
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased selection:bg-rose-500 selection:text-white">
@@ -49,9 +119,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-slate-200/60 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-full bg-rose-600 flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:scale-105 transition-transform">
-                    K
-                </div>
+                <img src="./assests/images/logo.png" alt="K-WAVE MISSION 로고" class="w-10 h-10 rounded-full object-cover shadow-md group-hover:scale-105 transition-transform" />
                 <div>
                     <span class="text-xl font-bold tracking-tight text-slate-900 block leading-none">K-WAVE MISSION</span>
                     <span class="text-xs text-rose-600 font-medium tracking-wider uppercase">하나님 나라를 위한 한류</span>
@@ -96,8 +164,7 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="pt-36 pb-20 md:pt-48 md:pb-32 bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#e11d48_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    <section class="hero-section pt-36 pb-20 md:pt-48 md:pb-32 text-white relative overflow-hidden">
         
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-rose-500/10 border border-rose-500/30 text-rose-300 text-xs sm:text-sm font-medium mb-8 backdrop-blur-md">
@@ -114,7 +181,7 @@
             
             <p class="text-lg sm:text-xl text-slate-300 font-light max-w-3xl mx-auto mb-10 leading-relaxed">
                 "케이웨이브 미션은 대한민국의 교수선교사들과 함께<br class="hidden sm:inline" />
-                현지 고등교육선교의 새로운 패러다임을 만들어가는 선교 전문기관입니다."
+                현지 고등교육선교의 새로운 패러다임을 개척하고 있습니다."
             </p>
 
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -360,7 +427,7 @@
                 <!-- Col 1 -->
                 <div>
                     <div class="flex items-center gap-2 text-white font-bold text-lg mb-4">
-                        <div class="w-8 h-8 rounded-full bg-rose-600 flex items-center justify-center text-white text-sm">K</div>
+                        <img src="./assests/images/logo.png" alt="K-WAVE MISSION 로고" class="w-8 h-8 rounded-full object-cover" />
                         <span>K-WAVE MISSION</span>
                     </div>
                     <p class="text-xs text-slate-400 leading-relaxed mb-4">
@@ -443,7 +510,7 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <h3 id="contact-modal-title" class="text-xl font-bold text-slate-900 mb-2">선교 동역 문의</h3>
-            <p class="text-xs text-slate-500 mb-6">순수 정보 제공 사이트로, 카카오톡 또는 이메일로 메세지를 남겨주시면 대표 선교사가 직접 소통합니다.</p>
+            <p class="text-xs text-slate-500 mb-6">문의 주셔서 감사합니다. 카카오톡 또는 이메일로 메세지를 남겨주시면 대표 선교사가 직접 연락드리겠습니다.</p>
             
             <div class="space-y-3">
                 <a href="https://pf.kakao.com" target="_blank" class="w-full flex items-center justify-center gap-2 bg-[#FEE500] text-[#191919] py-3 rounded-xl font-semibold text-sm hover:bg-[#fada0a] transition-colors">
@@ -536,25 +603,109 @@
             if (!item) return;
             const modalContent = document.getElementById('modal-content');
             modalContent.innerHTML = `
-                <div class="flex items-center gap-2 text-xs text-rose-600 font-bold mb-2">
-                    <span>${item.tag}</span> • <span>${item.date}</span>
+                <div class="flex items-start justify-between gap-4 mb-2">
+                    <div class="flex items-center gap-2 text-xs text-rose-600 font-bold">
+                        <span>${item.tag}</span> • <span>${item.date}</span>
+                    </div>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-900 mb-6">${item.title}</h2>
                 <div class="text-sm text-slate-700 leading-relaxed mb-8">
                     ${item.content}
                 </div>
-                <div class="pt-4 border-t border-slate-100 flex justify-end">
-                    <button onclick="closeNewsModal()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold">닫기</button>
+                <div class="modal-footer">
+                    <button onclick="shareNewsPost(${item.id})" class="btn-share-footer">
+                        <i data-lucide="link-2" class="w-4 h-4"></i>
+                        링크 공유
+                    </button>
+                    <button onclick="closeNewsModal()" class="btn-close-footer">닫기</button>
                 </div>
             `;
             document.getElementById('news-modal').classList.remove('hidden');
             document.getElementById('news-modal').classList.add('flex');
+            history.replaceState(null, '', `?id=${encodeURIComponent(item.id)}`);
             lucide.createIcons();
         }
 
         function closeNewsModal() {
             document.getElementById('news-modal').classList.add('hidden');
             document.getElementById('news-modal').classList.remove('flex');
+            history.replaceState(null, '', window.location.pathname);
+        }
+
+        function getPostShareUrl(postId) {
+            return `${window.location.origin}${window.location.pathname}?id=${encodeURIComponent(postId)}`;
+        }
+
+        function isMobileDevice() {
+            return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        }
+
+        function showShareToast(message) {
+            let toast = document.getElementById('share-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'share-toast';
+                toast.className = 'fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] bg-slate-900 text-white text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-200';
+                document.body.appendChild(toast);
+            }
+
+            toast.textContent = message;
+            toast.classList.remove('opacity-0');
+            toast.classList.add('opacity-100');
+
+            clearTimeout(showShareToast._timer);
+            showShareToast._timer = setTimeout(() => {
+                toast.classList.remove('opacity-100');
+                toast.classList.add('opacity-0');
+            }, 1800);
+        }
+
+        async function shareNewsPost(postId) {
+            const post = weeklyNewsList.find(n => n.id === postId);
+            if (!post) return;
+
+            const shareUrl = getPostShareUrl(postId);
+            const isMobile = isMobileDevice();
+
+            if (isMobile && typeof navigator.share === 'function') {
+                try {
+                    await navigator.share({
+                        title: post.title,
+                        text: post.summary,
+                        url: shareUrl
+                    });
+                    return;
+                } catch (error) {
+                    // If share was canceled or failed, silently fall back to clipboard.
+                }
+            }
+
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                showShareToast('링크가 클립보드에 복사되었습니다.');
+            } catch (error) {
+                const textArea = document.createElement('textarea');
+                textArea.value = shareUrl;
+                textArea.setAttribute('readonly', '');
+                textArea.style.position = 'absolute';
+                textArea.style.left = '-9999px';
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showShareToast('링크가 복사되었습니다.');
+            }
+        }
+
+        function openNewsModalFromQuery() {
+            const params = new URLSearchParams(window.location.search);
+            const idParam = params.get('id');
+            if (!idParam) return;
+
+            const numericId = Number(idParam);
+            if (!Number.isNaN(numericId)) {
+                openNewsModal(numericId);
+            }
         }
 
         function openContactModal(title = "선교 동역 문의") {
@@ -568,6 +719,8 @@
             document.getElementById('contact-modal').classList.add('hidden');
             document.getElementById('contact-modal').classList.remove('flex');
         }
+
+        openNewsModalFromQuery();
     </script>
 </body>
 </html>

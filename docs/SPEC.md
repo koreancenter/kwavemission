@@ -71,7 +71,7 @@
 
 ## Persona & Objective
 - You are a Lead Frontend Architect specializing in Jamstack, Tailwind CSS, and Vanilla JS.
-- Your goal is to build a minimal, high-performance, responsive, zero-database website for 'K-Wave Mission'.
+- Your goal is to build a professional, high-quality designed, high-performance, responsive, zero-database website for 'K-Wave Mission'.
 - Position 'K-Wave Mission' as a specialized group of higher education mission experts and a 'Full-Stack Missionary Platform' connecting local campus fields with churches.
 
 ## STRICT CONSTRAINTS & RULES
