@@ -1,0 +1,7 @@
+name = "kwavemission"
+pages_build_output_dir = "."
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kwavemission"
+database_id = "019a1533-6e94-4b95-bca3-f4dec0772857"
