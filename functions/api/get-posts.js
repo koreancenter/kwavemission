@@ -9,7 +9,7 @@ export async function onRequestGet(context) {
     // 특정 글 1개만 가져오기 (상세보기)
     if (id) {
       const post = await env.DB.prepare(
-        "SELECT * FROM newsletter_posts WHERE id = ? AND type = ?"
+       "SELECT * FROM posts WHERE id = ? AND type = ?"
       ).bind(id, type).first();
 
       return new Response(JSON.stringify(post || {}), {
@@ -19,7 +19,7 @@ export async function onRequestGet(context) {
 
     // 전체 목록 가져오기
     const { results } = await env.DB.prepare(
-      "SELECT id, type, title, thumbnail_url, created_at FROM newsletter_posts WHERE type = ? ORDER BY created_at DESC"
+    "SELECT id, type, title, thumbnail_url, created_at FROM posts WHERE type = ? ORDER BY created_at DESC"
     ).bind(type).all();
 
     return new Response(JSON.stringify(results), {

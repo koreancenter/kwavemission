@@ -1,28 +1,57 @@
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
-    const body = await request.json();
-    const { password, type, title, content, thumbnail_url } = body;
 
-    // 대시보드 Environment Variables에 설정할 ADMIN_PASSWORD와 비교
-    if (password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }), { status: 401 });
+    // 1. 이미지 파일 첨부를 위해 request.formData()로 수신
+    const formData = await request.formData();
+    const password = formData.get("password");
+    const type = formData.get("type") || "news";
+    const title = formData.get("title");
+    const content = formData.get("content");
+    const imageFile = formData.get("image");
+
+    // 2. 관리자 비밀번호 검증 (환경 변수에 ADMIN_PASSWORD가 설정된 경우)
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
     }
 
+    // 3. 필수 입력값 검증
     if (!title || !content) {
-      return new Response(JSON.stringify({ error: "제목과 본문을 입력해 주세요." }), { status: 400 });
+      return new Response(JSON.stringify({ error: "제목과 본문은 필수 입력 항목입니다." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
     }
 
-    // D1 데이터베이스에 저장
-    const info = await env.DB.prepare(
-      "INSERT INTO newsletter_posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
-    ).bind(type || 'news', title, content, thumbnail_url || null).run();
+    // 4. R2 이미지 업로드 처리
+    let imageUrl = null;
+    if (imageFile && imageFile.name) {
+      const fileExtension = imageFile.name.split('.').pop();
+      const fileName = `images/${Date.now()}.${fileExtension}`;
+      
+      await env.BUCKET.put(fileName, imageFile.stream(), {
+        httpMetadata: { contentType: imageFile.type }
+      });
 
-    return new Response(JSON.stringify({ success: true, info }), {
+      imageUrl = `/api/image/${fileName}`;
+    }
+
+    // 5. D1 데이터베이스 저장 (posts 테이블 기준)
+    const info = await env.DB.prepare(
+      "INSERT INTO posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
+    ).bind(type, title, content, imageUrl).run();
+
+    return new Response(JSON.stringify({ success: true, url: imageUrl, info }), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
 
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), { 
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
   }
 }
