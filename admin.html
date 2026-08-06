@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>K-Wave Mission - 글 작성</title>
+  <title>K-Wave Mission - 글 관리자</title>
   <style>
     body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
     .form-group { margin-bottom: 20px; }
@@ -14,24 +14,35 @@
     button { background: #0056b3; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; }
     button:hover { background: #003d82; }
     #status { margin-top: 20px; font-weight: bold; text-align: center; }
+    .mode-box { background: #f4f4f9; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
 
-  <h2>새 글 작성</h2>
+  <h2>글 관리자 (새 글 쓰기 / 글 수정)</h2>
+
+  <!-- 기존 글 선택 섹션 -->
+  <div class="mode-box">
+    <label for="postSelector">기존 글 불러오기 (수정용)</label>
+    <select id="postSelector">
+      <option value="">-- 새 글 작성하기 --</option>
+    </select>
+  </div>
 
   <form id="postForm">
+    <input type="hidden" id="postId" value="">
+
     <!-- 관리자 비밀번호 -->
     <div class="form-group">
       <label for="password">관리자 비밀번호</label>
       <input type="password" id="password" required placeholder="비밀번호 입력">
     </div>
 
-    <!-- 1. 게시글 유형 선택 (news / notice) -->
+    <!-- 1. 게시글 유형 -->
     <div class="form-group">
       <label for="type">게시글 유형</label>
       <select id="type">
-        <option value="news" selected>뉴스 (news)</option>
+        <option value="news">뉴스 (news)</option>
         <option value="notice">공지사항 (notice)</option>
       </select>
     </div>
@@ -44,9 +55,9 @@
 
     <!-- 3. 대표 사진 첨부 -->
     <div class="form-group">
-      <label for="image">대표 사진 첨부 (선택)</label>
+      <label for="image">대표 사진 (수정 시 미선택 시 기존 이미지 유지)</label>
       <input type="file" id="image" accept="image/*">
-      <img id="preview" alt="선택한 이미지 미리보기">
+      <img id="preview" alt="이미지 미리보기">
     </div>
 
     <!-- 4. 본문 내용 -->
@@ -55,16 +66,82 @@
       <textarea id="content" required placeholder="본문 내용을 입력하세요..."></textarea>
     </div>
 
-    <button type="submit">글 등록하기</button>
+    <button type="submit" id="submitBtn">글 등록하기</button>
   </form>
 
   <div id="status"></div>
 
   <script>
+    const postSelector = document.getElementById('postSelector');
+    const postIdInput = document.getElementById('postId');
     const imageInput = document.getElementById('image');
     const preview = document.getElementById('preview');
+    const submitBtn = document.getElementById('submitBtn');
 
-    // 이미지 파일 선택 시 미리보기
+    // 1. 등록된 글 목록 불러오기 (뉴스 + 공지사항)
+    async function loadPostList() {
+      try {
+        const [newsRes, noticeRes] = await Promise.all([
+          fetch('/api/get-posts?type=news'),
+          fetch('/api/get-posts?type=notice')
+        ]);
+        const newsList = await newsRes.json();
+        const noticeList = await noticeRes.json();
+
+        const allPosts = [
+          ...(Array.isArray(newsList) ? newsList : []),
+          ...(Array.isArray(noticeList) ? noticeList : [])
+        ];
+
+        postSelector.innerHTML = '<option value="">-- 새 글 작성하기 --</option>';
+        allPosts.forEach(post => {
+          const opt = document.createElement('option');
+          opt.value = post.id;
+          opt.textContent = `[${post.type}] ${post.title}`;
+          postSelector.appendChild(opt);
+        });
+      } catch (e) {
+        console.error('목록 불러오기 실패', e);
+      }
+    }
+
+    loadPostList();
+
+    // 2. 글 선택 변경 시 데이터 폼에 채우기
+    postSelector.addEventListener('change', async (e) => {
+      const selectedId = e.target.value;
+      if (!selectedId) {
+        // 새 글 모드
+        postIdInput.value = '';
+        document.getElementById('title').value = '';
+        document.getElementById('content').value = '';
+        preview.style.display = 'none';
+        submitBtn.textContent = '글 등록하기';
+        return;
+      }
+
+      // 선택한 글 상세 데이터 가져오기
+      const res = await fetch(`/api/get-posts?id=${selectedId}`);
+      const post = await res.json();
+
+      if (post && post.id) {
+        postIdInput.value = post.id;
+        document.getElementById('type').value = post.type || 'news';
+        document.getElementById('title').value = post.title;
+        document.getElementById('content').value = post.content;
+        
+        if (post.thumbnail_url) {
+          preview.src = post.thumbnail_url;
+          preview.style.display = 'block';
+        } else {
+          preview.style.display = 'none';
+        }
+
+        submitBtn.textContent = '글 수정 저장하기';
+      }
+    });
+
+    // 이미지 프리뷰
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
@@ -74,32 +151,32 @@
           preview.style.display = 'block';
         };
         reader.readAsDataURL(file);
-      } else {
-        preview.style.display = 'none';
       }
     });
 
-    // 폼 제출 처리
+    // 3. 폼 제출 (등록 또는 수정)
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const statusDiv = document.getElementById('status');
-      statusDiv.textContent = '업로드 중...';
+      const isEdit = Boolean(postIdInput.value);
+      const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
+
+      statusDiv.textContent = isEdit ? '수정 사항 저장 중...' : '업로드 중...';
       statusDiv.style.color = 'black';
 
       const formData = new FormData();
+      if (isEdit) formData.append('id', postIdInput.value);
       formData.append('password', document.getElementById('password').value);
-      formData.append('type', document.getElementById('type').value); // 유형 전송 (news 또는 notice)
+      formData.append('type', document.getElementById('type').value);
       formData.append('title', document.getElementById('title').value);
       formData.append('content', document.getElementById('content').value);
 
       const imageFile = imageInput.files[0];
-      if (imageFile) {
-        formData.append('image', imageFile);
-      }
+      if (imageFile) formData.append('image', imageFile);
 
       try {
-        const response = await fetch('/api/write-post', {
+        const response = await fetch(endpoint, {
           method: 'POST',
           body: formData
         });
@@ -107,12 +184,17 @@
         const result = await response.json();
 
         if (response.ok && result.success) {
-          statusDiv.textContent = '성공적으로 등록되었습니다!';
+          statusDiv.textContent = isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!';
           statusDiv.style.color = 'green';
+          
+          // 초기화 및 목록 갱신
           document.getElementById('postForm').reset();
+          postIdInput.value = '';
           preview.style.display = 'none';
+          submitBtn.textContent = '글 등록하기';
+          loadPostList();
         } else {
-          statusDiv.textContent = '등록 실패: ' + (result.error || '오류 발생');
+          statusDiv.textContent = '처리 실패: ' + (result.error || '오류 발생');
           statusDiv.style.color = 'red';
         }
       } catch (err) {

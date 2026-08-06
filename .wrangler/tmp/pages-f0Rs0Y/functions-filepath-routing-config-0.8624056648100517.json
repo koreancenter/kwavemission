@@ -1,0 +1,37 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/image/:path*",
+      "mountPath": "/api/image",
+      "method": "GET",
+      "module": [
+        "api/image/[[path]].js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/get-posts",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/get-posts.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/update-post",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/update-post.js:onRequestPost"
+      ]
+    },
+    {
+      "routePath": "/api/write-post",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/write-post.js:onRequestPost"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
