@@ -1,0 +1,21 @@
+{
+  "routes": [
+    {
+      "routePath": "/api/get-posts",
+      "mountPath": "/api",
+      "method": "GET",
+      "module": [
+        "api/get-posts.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/write-post",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/write-post.js:onRequestPost"
+      ]
+    }
+  ],
+  "baseURL": "/"
+}
