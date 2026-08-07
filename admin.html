@@ -248,10 +248,12 @@
           document.getElementById('content').value = post.content;
 
           if (post.thumbnail_url) {
-            previewImg.src = post.thumbnail_url;
-            previewImg.style.display = 'block';
+          // R2 이미지 경로가 상대 경로나 /api/image로 시작하는 경우 모두 처리
+          previewImg.src = post.thumbnail_url.startsWith('/') ? post.thumbnail_url : '/' + post.thumbnail_url;
+          previewImg.style.display = 'block';
           } else {
-            previewImg.style.display = 'none';
+          previewImg.src = '';
+          previewImg.style.display = 'none';
           }
 
           // UI 수정 모드로 전환
@@ -340,22 +342,24 @@
 
     // 모달 띄우기 함수
     function showModal(type, title, date, imgSrc, content) {
-      const isNews = type === 'news';
-      modalTypeChip.textContent = isNews ? '뉴스' : '공지사항';
-      modalTypeChip.className = `type-chip ${isNews ? 'type-news' : 'type-notice'}`;
-      modalTitle.textContent = title;
-      modalDate.textContent = date ? date.substring(0, 10) : '';
+    const isNews = type === 'news';
+    modalTypeChip.textContent = isNews ? '뉴스' : '공지사항';
+    modalTypeChip.className = `type-chip ${isNews ? 'type-news' : 'type-notice'}`;
+    modalTitle.textContent = title;
+    modalDate.textContent = date ? date.substring(0, 10) : '';
 
-      if (imgSrc) {
-        modalImg.src = imgSrc;
-        modalImg.style.display = 'block';
-      } else {
-        modalImg.style.display = 'none';
-      }
-
-      modalContent.textContent = content; // 본문 렌더링
-      previewModal.style.display = 'flex';
+    if (imgSrc && imgSrc !== 'null' && imgSrc !== 'undefined') {
+    // 상대 경로 처리 보완
+    modalImg.src = imgSrc.startsWith('data:') || imgSrc.startsWith('/') ? imgSrc : '/' + imgSrc;
+    modalImg.style.display = 'block';
+    } else {
+    modalImg.src = '';
+    modalImg.style.display = 'none';
     }
+
+    modalContent.textContent = content;
+    previewModal.style.display = 'flex';
+  }
 
     // 모달 닫기
     modalCloseBtn.addEventListener('click', () => previewModal.style.display = 'none');
