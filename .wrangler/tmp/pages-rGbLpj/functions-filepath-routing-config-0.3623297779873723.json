@@ -9,11 +9,27 @@
       ]
     },
     {
+      "routePath": "/api/delete-post",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/delete-post.js:onRequestPost"
+      ]
+    },
+    {
       "routePath": "/api/get-posts",
       "mountPath": "/api",
       "method": "GET",
       "module": [
         "api/get-posts.js:onRequestGet"
+      ]
+    },
+    {
+      "routePath": "/api/update-post",
+      "mountPath": "/api",
+      "method": "POST",
+      "module": [
+        "api/update-post.js:onRequestPost"
       ]
     },
     {

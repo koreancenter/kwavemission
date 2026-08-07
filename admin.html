@@ -3,167 +3,373 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>K-Wave Mission - 글 관리자</title>
+  <title>K-Wave Mission - 통합 글 관리자</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; line-height: 1.6; }
-    .form-group { margin-bottom: 20px; }
-    label { display: block; font-weight: bold; margin-bottom: 8px; }
-    input[type="text"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-    textarea { height: 200px; resize: vertical; }
-    #preview { max-width: 100%; margin-top: 10px; display: none; border-radius: 6px; }
-    button { background: #0056b3; color: white; border: none; padding: 12px 24px; font-size: 16px; border-radius: 4px; cursor: pointer; width: 100%; }
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 900px; margin: 30px auto; padding: 0 20px; line-height: 1.6; color: #333; }
+    h1, h2 { border-bottom: 2px solid #0056b3; padding-bottom: 8px; color: #111; }
+    
+    .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .form-group { margin-bottom: 18px; }
+    label { display: block; font-weight: bold; margin-bottom: 6px; }
+    input[type="text"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; }
+    textarea { height: 220px; resize: vertical; }
+    
+    .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+    button { background: #0056b3; color: white; border: none; padding: 12px 20px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; }
     button:hover { background: #003d82; }
-    #status { margin-top: 20px; font-weight: bold; text-align: center; }
-    .mode-box { background: #f4f4f9; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+    button.secondary { background: #6c757d; }
+    button.secondary:hover { background: #5a6268; }
+    button.outline { background: transparent; color: #0056b3; border: 1px solid #0056b3; }
+    button.outline:hover { background: #eef5ff; }
+    button.danger { background: #dc3545; }
+    button.danger:hover { background: #bd2130; }
+    button.sm { padding: 5px 10px; font-size: 13px; font-weight: normal; }
+
+    #preview-img { max-width: 200px; margin-top: 10px; display: none; border-radius: 6px; border: 1px solid #ddd; }
+    #status { margin-top: 15px; font-weight: bold; text-align: center; }
+
+    /* 모드 표시 상태바 */
+    .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-left: 10px; }
+    .mode-create { background: #e3f2fd; color: #0d47a1; }
+    .mode-edit { background: #fff3cd; color: #856404; }
+
+    /* 게시글 목록 테이블 */
+    .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
+    .filter-btn { background: #f8f9fa; color: #495057; border: 1px solid #ced4da; padding: 6px 14px; border-radius: 20px; font-size: 14px; cursor: pointer; }
+    .filter-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border-bottom: 1px solid #eee; padding: 12px 8px; text-align: left; font-size: 14px; }
+    th { background: #f8f9fa; font-weight: bold; }
+    .type-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+    .type-news { background: #e8f5e9; color: #2e7d32; }
+    .type-notice { background: #ffebee; color: #c62828; }
+    .list-thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; }
+
+    /* 미리보기 모달 */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
+    .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 650px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; border: none; background: none; }
+    .preview-body { white-space: pre-wrap; margin-top: 15px; line-height: 1.7; word-break: break-all; }
   </style>
 </head>
 <body>
 
-  <h2>글 관리자 (새 글 쓰기 / 글 수정)</h2>
+  <h1>K-Wave Mission 관리자 페이지</h1>
 
-  <!-- 기존 글 선택 섹션 -->
-  <div class="mode-box">
-    <label for="postSelector">기존 글 불러오기 (수정용)</label>
-    <select id="postSelector">
-      <option value="">-- 새 글 작성하기 --</option>
-    </select>
+  <!-- 1. 글 작성 / 수정 폼 카드 -->
+  <div class="card">
+    <h2>
+      <span id="formTitle">새 글 작성</span>
+      <span id="modeBadge" class="mode-badge mode-create">작성 모드</span>
+    </h2>
+
+    <form id="postForm">
+      <input type="hidden" id="postId" value="">
+
+      <div class="form-group">
+        <label for="password">관리자 비밀번호 <span style="color:red">*</span></label>
+        <input type="password" id="password" required placeholder="비밀번호를 입력하세요">
+      </div>
+
+      <div class="form-group">
+        <label for="type">게시글 분류</label>
+        <select id="type">
+          <option value="news">뉴스 (news)</option>
+          <option value="notice">공지사항 (notice)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="title">제목 <span style="color:red">*</span></label>
+        <input type="text" id="title" required placeholder="제목을 입력하세요">
+      </div>
+
+      <div class="form-group">
+        <label for="image">대표 썸네일 이미지</label>
+        <input type="file" id="image" accept="image/*">
+        <img id="preview-img" alt="대표 이미지 미리보기">
+      </div>
+
+      <div class="form-group">
+        <label for="content">본문 내용 <span style="color:red">*</span></label>
+        <textarea id="content" required placeholder="본문 내용을 입력하세요..."></textarea>
+      </div>
+
+      <div class="btn-group">
+        <button type="submit" id="submitBtn">글 등록하기</button>
+        <button type="button" class="outline" id="formPreviewBtn">작성중 내용 미리보기</button>
+        <button type="button" class="secondary" id="resetBtn" style="display:none;">작성 취소 (새 글 모드)</button>
+      </div>
+    </form>
+
+    <div id="status"></div>
   </div>
 
-  <form id="postForm">
-    <input type="hidden" id="postId" value="">
+  <!-- 2. 게시글 목록 및 관리 카드 -->
+  <div class="card">
+    <h2>게시글 목록 및 관리</h2>
 
-    <!-- 관리자 비밀번호 -->
-    <div class="form-group">
-      <label for="password">관리자 비밀번호</label>
-      <input type="password" id="password" required placeholder="비밀번호 입력">
+    <div class="filter-tabs">
+      <button class="filter-btn active" data-type="all">전체보기</button>
+      <button class="filter-btn" data-type="news">뉴스만</button>
+      <button class="filter-btn" data-type="notice">공지사항만</button>
     </div>
 
-    <!-- 1. 게시글 유형 -->
-    <div class="form-group">
-      <label for="type">게시글 유형</label>
-      <select id="type">
-        <option value="news">뉴스 (news)</option>
-        <option value="notice">공지사항 (notice)</option>
-      </select>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50px;">ID</th>
+          <th style="width: 60px;">사진</th>
+          <th style="width: 80px;">분류</th>
+          <th>제목</th>
+          <th style="width: 100px;">작성일</th>
+          <th style="width: 170px;">관리</th>
+        </tr>
+      </thead>
+      <tbody id="postTableBody">
+        <tr><td colspan="6" style="text-align:center;">등록된 글을 불러오는 중...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 3. 미리보기 모달 -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" id="modalCloseBtn">&times;</button>
+      <div>
+        <span id="modalTypeChip" class="type-chip">뉴스</span>
+        <span id="modalDate" style="color: #777; font-size: 13px; margin-left: 10px;"></span>
+      </div>
+      <h2 id="modalTitle" style="margin-top: 10px; border:none;"></h2>
+      <img id="modalImg" style="max-width:100%; border-radius: 6px; display:none; margin-top: 10px;">
+      <div id="modalContent" class="preview-body"></div>
     </div>
-
-    <!-- 2. 제목 -->
-    <div class="form-group">
-      <label for="title">제목</label>
-      <input type="text" id="title" required placeholder="제목을 입력하세요">
-    </div>
-
-    <!-- 3. 대표 사진 첨부 -->
-    <div class="form-group">
-      <label for="image">대표 사진 (수정 시 미선택 시 기존 이미지 유지)</label>
-      <input type="file" id="image" accept="image/*">
-      <img id="preview" alt="이미지 미리보기">
-    </div>
-
-    <!-- 4. 본문 내용 -->
-    <div class="form-group">
-      <label for="content">본문 내용</label>
-      <textarea id="content" required placeholder="본문 내용을 입력하세요..."></textarea>
-    </div>
-
-    <button type="submit" id="submitBtn">글 등록하기</button>
-  </form>
-
-  <div id="status"></div>
+  </div>
 
   <script>
-    const postSelector = document.getElementById('postSelector');
+    // DOM 요소
+    const postForm = document.getElementById('postForm');
     const postIdInput = document.getElementById('postId');
-    const imageInput = document.getElementById('image');
-    const preview = document.getElementById('preview');
+    const formTitle = document.getElementById('formTitle');
+    const modeBadge = document.getElementById('modeBadge');
     const submitBtn = document.getElementById('submitBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const imageInput = document.getElementById('image');
+    const previewImg = document.getElementById('preview-img');
+    const statusDiv = document.getElementById('status');
+    const postTableBody = document.getElementById('postTableBody');
 
-    // 1. 등록된 글 목록 불러오기 (뉴스 + 공지사항)
+    // 모달 요소
+    const previewModal = document.getElementById('previewModal');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalTypeChip = document.getElementById('modalTypeChip');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalImg = document.getElementById('modalImg');
+    const modalContent = document.getElementById('modalContent');
+
+    let currentFilter = 'all';
+
+    // 1. 목록 불러오기
     async function loadPostList() {
       try {
-        const [newsRes, noticeRes] = await Promise.all([
-          fetch('/api/get-posts?type=news'),
-          fetch('/api/get-posts?type=notice')
-        ]);
-        const newsList = await newsRes.json();
-        const noticeList = await noticeRes.json();
+        const res = await fetch(`/api/get-posts?type=${currentFilter}`);
+        const posts = await res.json();
 
-        const allPosts = [
-          ...(Array.isArray(newsList) ? newsList : []),
-          ...(Array.isArray(noticeList) ? noticeList : [])
-        ];
+        if (!Array.isArray(posts) || posts.length === 0) {
+          postTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#777;">등록된 게시글이 없습니다.</td></tr>';
+          return;
+        }
 
-        postSelector.innerHTML = '<option value="">-- 새 글 작성하기 --</option>';
-        allPosts.forEach(post => {
-          const opt = document.createElement('option');
-          opt.value = post.id;
-          opt.textContent = `[${post.type}] ${post.title}`;
-          postSelector.appendChild(opt);
-        });
-      } catch (e) {
-        console.error('목록 불러오기 실패', e);
+        postTableBody.innerHTML = posts.map(post => {
+          const isNews = post.type === 'news';
+          const typeLabel = isNews ? '뉴스' : '공지사항';
+          const typeClass = isNews ? 'type-news' : 'type-notice';
+          const createdDate = post.created_at ? post.created_at.substring(0, 10) : '-';
+          const thumbHtml = post.thumbnail_url 
+            ? `<img src="${post.thumbnail_url}" class="list-thumb">`
+            : `<span style="color:#ccc; font-size:12px;">없음</span>`;
+
+          return `
+            <tr>
+              <td>${post.id}</td>
+              <td>${thumbHtml}</td>
+              <td><span class="type-chip ${typeClass}">${typeLabel}</span></td>
+              <td><strong>${escapeHtml(post.title)}</strong></td>
+              <td>${createdDate}</td>
+              <td>
+                <button class="sm outline" onclick="openPostPreview(${post.id})">보기</button>
+                <button class="sm secondary" onclick="editPost(${post.id})">수정</button>
+                <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        postTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">목록을 불러오는 중 오류 발생</td></tr>';
       }
     }
 
-    loadPostList();
-
-    // 2. 글 선택 변경 시 데이터 폼에 채우기
-    postSelector.addEventListener('change', async (e) => {
-      const selectedId = e.target.value;
-      if (!selectedId) {
-        // 새 글 모드
-        postIdInput.value = '';
-        document.getElementById('title').value = '';
-        document.getElementById('content').value = '';
-        preview.style.display = 'none';
-        submitBtn.textContent = '글 등록하기';
-        return;
-      }
-
-      // 선택한 글 상세 데이터 가져오기
-      const res = await fetch(`/api/get-posts?id=${selectedId}`);
-      const post = await res.json();
-
-      if (post && post.id) {
-        postIdInput.value = post.id;
-        document.getElementById('type').value = post.type || 'news';
-        document.getElementById('title').value = post.title;
-        document.getElementById('content').value = post.content;
-        
-        if (post.thumbnail_url) {
-          preview.src = post.thumbnail_url;
-          preview.style.display = 'block';
-        } else {
-          preview.style.display = 'none';
-        }
-
-        submitBtn.textContent = '글 수정 저장하기';
-      }
+    // 2. 필터 탭 클릭
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.type;
+        loadPostList();
+      });
     });
 
-    // 이미지 프리뷰
+    // 3. 이미지 미리보기
     imageInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
-          preview.src = event.target.result;
-          preview.style.display = 'block';
+          previewImg.src = event.target.result;
+          previewImg.style.display = 'block';
         };
         reader.readAsDataURL(file);
       }
     });
 
-    // 3. 폼 제출 (등록 또는 수정)
-    document.getElementById('postForm').addEventListener('submit', async (e) => {
+    // 4. 글 수정 데이터 채우기
+    async function editPost(id) {
+      try {
+        const res = await fetch(`/api/get-posts?id=${id}`);
+        const post = await res.json();
+
+        if (post && post.id) {
+          postIdInput.value = post.id;
+          document.getElementById('type').value = post.type || 'news';
+          document.getElementById('title').value = post.title;
+          document.getElementById('content').value = post.content;
+
+          if (post.thumbnail_url) {
+            previewImg.src = post.thumbnail_url;
+            previewImg.style.display = 'block';
+          } else {
+            previewImg.style.display = 'none';
+          }
+
+          // UI 수정 모드로 전환
+          formTitle.textContent = `글 수정 (ID: #${post.id})`;
+          modeBadge.textContent = '수정 모드';
+          modeBadge.className = 'mode-badge mode-edit';
+          submitBtn.textContent = '수정사항 저장하기';
+          resetBtn.style.display = 'inline-block';
+
+          // 상단으로 부드럽게 스크롤
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } catch (err) {
+        alert('글 정보를 가져오지 못했습니다.');
+      }
+    }
+
+    // 5. 모드 리셋 (새 글 모드로 복귀)
+    resetBtn.addEventListener('click', () => {
+      postForm.reset();
+      postIdInput.value = '';
+      previewImg.style.display = 'none';
+      formTitle.textContent = '새 글 작성';
+      modeBadge.textContent = '작성 모드';
+      modeBadge.className = 'mode-badge mode-create';
+      submitBtn.textContent = '글 등록하기';
+      resetBtn.style.display = 'none';
+      statusDiv.textContent = '';
+    });
+
+    // 6. 글 삭제 처리
+    async function deletePost(id) {
+      const pwdInput = document.getElementById('password').value;
+      let password = pwdInput;
+
+      if (!password) {
+        password = prompt('글을 삭제하려면 관리자 비밀번호를 입력해 주세요:');
+        if (!password) return;
+      }
+
+      if (!confirm(`정말 #${id}번 글을 삭제하시겠습니까?`)) return;
+
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('password', password);
+
+      try {
+        const res = await fetch('/api/delete-post', { method: 'POST', body: formData });
+        const result = await res.json();
+
+        if (res.ok && result.success) {
+          alert('성공적으로 삭제되었습니다.');
+          loadPostList();
+          if (postIdInput.value == id) resetBtn.click(); // 수정 중인 글 삭제 시 폼 초기화
+        } else {
+          alert('삭제 실패: ' + (result.error || '오류 발생'));
+        }
+      } catch (err) {
+        alert('통신 에러가 발생했습니다.');
+      }
+    }
+
+    // 7. 특정 등록글 미리보기 팝업
+    async function openPostPreview(id) {
+      try {
+        const res = await fetch(`/api/get-posts?id=${id}`);
+        const post = await res.json();
+
+        if (post && post.id) {
+          showModal(post.type, post.title, post.created_at, post.thumbnail_url, post.content);
+        }
+      } catch (e) {
+        alert('미리보기를 불러올 수 없습니다.');
+      }
+    }
+
+    // 8. 작성 중인 내용 실시간 미리보기
+    document.getElementById('formPreviewBtn').addEventListener('click', () => {
+      const type = document.getElementById('type').value;
+      const title = document.getElementById('title').value || '(제목 없음)';
+      const content = document.getElementById('content').value || '(본문 없음)';
+      const imgSrc = previewImg.style.display !== 'none' ? previewImg.src : null;
+
+      showModal(type, title, '방금 전 (작성 중 미리보기)', imgSrc, content);
+    });
+
+    // 모달 띄우기 함수
+    function showModal(type, title, date, imgSrc, content) {
+      const isNews = type === 'news';
+      modalTypeChip.textContent = isNews ? '뉴스' : '공지사항';
+      modalTypeChip.className = `type-chip ${isNews ? 'type-news' : 'type-notice'}`;
+      modalTitle.textContent = title;
+      modalDate.textContent = date ? date.substring(0, 10) : '';
+
+      if (imgSrc) {
+        modalImg.src = imgSrc;
+        modalImg.style.display = 'block';
+      } else {
+        modalImg.style.display = 'none';
+      }
+
+      modalContent.textContent = content; // 본문 렌더링
+      previewModal.style.display = 'flex';
+    }
+
+    // 모달 닫기
+    modalCloseBtn.addEventListener('click', () => previewModal.style.display = 'none');
+    window.addEventListener('click', (e) => { if (e.target === previewModal) previewModal.style.display = 'none'; });
+
+    // 9. 폼 제출 (글 등록 또는 수정)
+    postForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const statusDiv = document.getElementById('status');
+
       const isEdit = Boolean(postIdInput.value);
       const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
 
-      statusDiv.textContent = isEdit ? '수정 사항 저장 중...' : '업로드 중...';
-      statusDiv.style.color = 'black';
+      statusDiv.textContent = isEdit ? '수정사항 저장 중...' : '등록 중...';
+      statusDiv.style.color = '#333';
 
       const formData = new FormData();
       if (isEdit) formData.append('id', postIdInput.value);
@@ -176,23 +382,15 @@
       if (imageFile) formData.append('image', imageFile);
 
       try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          body: formData
-        });
-
+        const response = await fetch(endpoint, { method: 'POST', body: formData });
         const result = await response.json();
 
         if (response.ok && result.success) {
           statusDiv.textContent = isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!';
           statusDiv.style.color = 'green';
-          
-          // 초기화 및 목록 갱신
-          document.getElementById('postForm').reset();
-          postIdInput.value = '';
-          preview.style.display = 'none';
-          submitBtn.textContent = '글 등록하기';
-          loadPostList();
+
+          resetBtn.click(); // 폼 초기화 및 작성 모드 복귀
+          loadPostList(); // 목록 갱신
         } else {
           statusDiv.textContent = '처리 실패: ' + (result.error || '오류 발생');
           statusDiv.style.color = 'red';
@@ -202,7 +400,14 @@
         statusDiv.style.color = 'red';
       }
     });
-  </script>
 
+    // 문자열 이스케이프
+    function escapeHtml(str) {
+      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // 최초 로드 시 목록 불러오기
+    loadPostList();
+  </script>
 </body>
 </html>

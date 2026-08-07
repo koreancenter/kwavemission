@@ -1,72 +1,223 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// api/get-posts.js
+// api/image/[[path]].js
 async function onRequestGet(context) {
-  try {
-    const { env, request } = context;
-    const url = new URL(request.url);
-    const type = url.searchParams.get("type") || "news";
-    const id = url.searchParams.get("id");
-    if (id) {
-      const post = await env.DB.prepare(
-        "SELECT * FROM newsletter_posts WHERE id = ? AND type = ?"
-      ).bind(id, type).first();
-      return new Response(JSON.stringify(post || {}), {
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
-    }
-    const { results } = await env.DB.prepare(
-      "SELECT id, type, title, thumbnail_url, created_at FROM newsletter_posts WHERE type = ? ORDER BY created_at DESC"
-    ).bind(type).all();
-    return new Response(JSON.stringify(results), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  const key = context.params.path.join("/");
+  const object = await context.env.BUCKET.get(key);
+  if (!object) {
+    return new Response("Image Not Found", { status: 404 });
   }
+  const headers = new Headers();
+  object.writeHttpMetadata(headers);
+  headers.set("etag", object.httpEtag);
+  headers.set("Cache-Control", "public, max-age=31536000");
+  return new Response(object.body, { headers });
 }
 __name(onRequestGet, "onRequestGet");
 
-// api/write-post.js
+// api/delete-post.js
 async function onRequestPost(context) {
   try {
     const { env, request } = context;
-    const body = await request.json();
-    const { password, type, title, content, thumbnail_url } = body;
-    if (password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), { status: 401 });
+    const formData = await request.formData();
+    const id = formData.get("id");
+    const password = formData.get("password");
+    if (!id) {
+      return new Response(JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uAE00 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
     }
-    if (!title || !content) {
-      return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC744 \uC785\uB825\uD574 \uC8FC\uC138\uC694." }), { status: 400 });
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
     }
-    const info = await env.DB.prepare(
-      "INSERT INTO newsletter_posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
-    ).bind(type || "news", title, content, thumbnail_url || null).run();
-    return new Response(JSON.stringify({ success: true, info }), {
+    await env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run();
+    return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
   }
 }
 __name(onRequestPost, "onRequestPost");
 
-// ../.wrangler/tmp/pages-79C45g/functionsRoutes-0.3681459581278228.mjs
+// api/get-posts.js
+async function onRequestGet2(context) {
+  try {
+    const { env, request } = context;
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+    const type = url.searchParams.get("type");
+    if (id) {
+      const post = await env.DB.prepare(
+        "SELECT * FROM posts WHERE id = ?"
+      ).bind(id).first();
+      return new Response(JSON.stringify(post || {}), {
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    let stmt;
+    if (type && type !== "all") {
+      stmt = env.DB.prepare(
+        "SELECT id, type, title, thumbnail_url, created_at FROM posts WHERE type = ? ORDER BY created_at DESC"
+      ).bind(type);
+    } else {
+      stmt = env.DB.prepare(
+        "SELECT id, type, title, thumbnail_url, created_at FROM posts ORDER BY created_at DESC"
+      );
+    }
+    const { results } = await stmt.all();
+    return new Response(JSON.stringify(results || []), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestGet2, "onRequestGet");
+
+// api/update-post.js
+async function onRequestPost2(context) {
+  try {
+    const { env, request } = context;
+    const formData = await request.formData();
+    const id = formData.get("id");
+    const password = formData.get("password");
+    const type = formData.get("type") || "news";
+    const title = formData.get("title");
+    const content = formData.get("content");
+    const imageFile = formData.get("image");
+    if (!id) {
+      return new Response(JSON.stringify({ error: "\uC218\uC815\uD560 \uAE00 ID\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." }), { status: 400 });
+    }
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), { status: 401 });
+    }
+    if (!title || !content) {
+      return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC740 \uD544\uC218 \uC785\uB825 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), { status: 400 });
+    }
+    let imageUrl = null;
+    if (imageFile && imageFile.name) {
+      const fileExtension = imageFile.name.split(".").pop();
+      const fileName = `images/${Date.now()}.${fileExtension}`;
+      await env.BUCKET.put(fileName, imageFile.stream(), {
+        httpMetadata: { contentType: imageFile.type }
+      });
+      imageUrl = `/api/image/${fileName}`;
+    }
+    if (imageUrl) {
+      await env.DB.prepare(
+        "UPDATE posts SET type = ?, title = ?, content = ?, thumbnail_url = ? WHERE id = ?"
+      ).bind(type, title, content, imageUrl, id).run();
+    } else {
+      await env.DB.prepare(
+        "UPDATE posts SET type = ?, title = ?, content = ? WHERE id = ?"
+      ).bind(type, title, content, id).run();
+    }
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestPost2, "onRequestPost");
+
+// api/write-post.js
+async function onRequestPost3(context) {
+  try {
+    const { env, request } = context;
+    const formData = await request.formData();
+    const password = formData.get("password");
+    const type = formData.get("type") || "news";
+    const title = formData.get("title");
+    const content = formData.get("content");
+    const imageFile = formData.get("image");
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    if (!title || !content) {
+      return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC740 \uD544\uC218 \uC785\uB825 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    let imageUrl = null;
+    if (imageFile && imageFile.name) {
+      const fileExtension = imageFile.name.split(".").pop();
+      const fileName = `images/${Date.now()}.${fileExtension}`;
+      await env.BUCKET.put(fileName, imageFile.stream(), {
+        httpMetadata: { contentType: imageFile.type }
+      });
+      imageUrl = `/api/image/${fileName}`;
+    }
+    const info = await env.DB.prepare(
+      "INSERT INTO posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
+    ).bind(type, title, content, imageUrl).run();
+    return new Response(JSON.stringify({ success: true, url: imageUrl, info }), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestPost3, "onRequestPost");
+
+// ../.wrangler/tmp/pages-rGbLpj/functionsRoutes-0.748656897682448.mjs
 var routes = [
+  {
+    routePath: "/api/image/:path*",
+    mountPath: "/api/image",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet]
+  },
+  {
+    routePath: "/api/delete-post",
+    mountPath: "/api",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost]
+  },
   {
     routePath: "/api/get-posts",
     mountPath: "/api",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet]
+    modules: [onRequestGet2]
+  },
+  {
+    routePath: "/api/update-post",
+    mountPath: "/api",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost2]
   },
   {
     routePath: "/api/write-post",
     mountPath: "/api",
     method: "POST",
     middlewares: [],
-    modules: [onRequestPost]
+    modules: [onRequestPost3]
   }
 ];
 

@@ -1,5 +1,7 @@
 import { onRequestGet as __api_image___path___js_onRequestGet } from "/home/mrpark/Developer/dev/kwavemission/functions/api/image/[[path]].js"
+import { onRequestPost as __api_delete_post_js_onRequestPost } from "/home/mrpark/Developer/dev/kwavemission/functions/api/delete-post.js"
 import { onRequestGet as __api_get_posts_js_onRequestGet } from "/home/mrpark/Developer/dev/kwavemission/functions/api/get-posts.js"
+import { onRequestPost as __api_update_post_js_onRequestPost } from "/home/mrpark/Developer/dev/kwavemission/functions/api/update-post.js"
 import { onRequestPost as __api_write_post_js_onRequestPost } from "/home/mrpark/Developer/dev/kwavemission/functions/api/write-post.js"
 
 export const routes = [
@@ -11,11 +13,25 @@ export const routes = [
       modules: [__api_image___path___js_onRequestGet],
     },
   {
+      routePath: "/api/delete-post",
+      mountPath: "/api",
+      method: "POST",
+      middlewares: [],
+      modules: [__api_delete_post_js_onRequestPost],
+    },
+  {
       routePath: "/api/get-posts",
       mountPath: "/api",
       method: "GET",
       middlewares: [],
       modules: [__api_get_posts_js_onRequestGet],
+    },
+  {
+      routePath: "/api/update-post",
+      mountPath: "/api",
+      method: "POST",
+      middlewares: [],
+      modules: [__api_update_post_js_onRequestPost],
     },
   {
       routePath: "/api/write-post",
