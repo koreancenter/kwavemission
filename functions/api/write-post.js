@@ -28,12 +28,30 @@ export async function onRequestPost(context) {
 
     // 4. R2 이미지 업로드 처리
     let imageUrl = null;
-    if (imageFile && imageFile.name) {
-      const fileExtension = imageFile.name.split('.').pop();
-      const fileName = `images/${Date.now()}.${fileExtension}`;
-      
-      await env.BUCKET.put(fileName, imageFile.stream(), {
-        httpMetadata: { contentType: imageFile.type }
+    const hasUpload = imageFile
+      && typeof imageFile.arrayBuffer === "function"
+      && Number(imageFile.size || 0) > 0;
+
+    if (hasUpload) {
+      const mimeToExt = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/gif": "gif",
+        "image/webp": "webp",
+        "image/svg+xml": "svg",
+        "image/avif": "avif"
+      };
+
+      const fallbackExt = mimeToExt[imageFile.type] || "bin";
+      const nameExt = typeof imageFile.name === "string" && imageFile.name.includes(".")
+        ? imageFile.name.split('.').pop().toLowerCase()
+        : "";
+      const fileExtension = nameExt || fallbackExt;
+      const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+      const fileBody = await imageFile.arrayBuffer();
+
+      await env.BUCKET.put(fileName, fileBody, {
+        httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
 
       imageUrl = `/api/image/${fileName}`;
