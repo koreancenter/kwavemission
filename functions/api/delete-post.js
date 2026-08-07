@@ -1,6 +1,7 @@
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
+
     const formData = await request.formData();
     const id = formData.get("id");
     const password = formData.get("password");

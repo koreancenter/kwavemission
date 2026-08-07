@@ -171,6 +171,14 @@
     const modalContent = document.getElementById('modalContent');
 
     let currentFilter = 'all';
+    const fallbackApiBase = 'http://localhost:8788';
+    const apiBase = (window.location.protocol === 'file:' || window.location.origin === 'null')
+      ? fallbackApiBase
+      : '';
+
+    function apiUrl(path) {
+      return apiBase + path;
+    }
 
     // 썸네일 URL을 안전하게 표시 가능한 경로로 정규화
     function normalizeImageUrl(rawUrl) {
@@ -197,10 +205,27 @@
       return '/' + value.replace(/^\.?\//, '');
     }
 
+    function getPreviewImageUrl() {
+      return previewImg.dataset.imageUrl || '';
+    }
+
+    function setPreviewImageUrl(rawUrl) {
+      const normalizedUrl = normalizeImageUrl(rawUrl);
+      previewImg.dataset.imageUrl = normalizedUrl;
+      if (normalizedUrl) {
+        previewImg.src = normalizedUrl;
+        previewImg.style.display = 'block';
+      } else {
+        previewImg.removeAttribute('src');
+        previewImg.style.display = 'none';
+      }
+      return normalizedUrl;
+    }
+
     // 1. 목록 불러오기
     async function loadPostList() {
       try {
-        const res = await fetch(`/api/get-posts?type=${currentFilter}`);
+        const res = await fetch(apiUrl(`/api/get-posts?type=${currentFilter}`));
         const posts = await res.json();
 
         if (!Array.isArray(posts) || posts.length === 0) {
@@ -254,6 +279,7 @@
       if (file) {
         const reader = new FileReader();
         reader.onload = (event) => {
+          previewImg.dataset.imageUrl = '';
           previewImg.src = event.target.result;
           previewImg.style.display = 'block';
         };
@@ -264,7 +290,7 @@
     // 4. 글 수정 데이터 채우기
     async function editPost(id) {
       try {
-        const res = await fetch(`/api/get-posts?id=${id}`);
+        const res = await fetch(apiUrl(`/api/get-posts?id=${id}`));
         const post = await res.json();
 
         if (post && post.id) {
@@ -274,13 +300,7 @@
           document.getElementById('content').value = post.content;
 
           const thumbnailUrl = normalizeImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
-          if (thumbnailUrl) {
-          previewImg.src = thumbnailUrl;
-          previewImg.style.display = 'block';
-          } else {
-          previewImg.src = '';
-          previewImg.style.display = 'none';
-          }
+          setPreviewImageUrl(thumbnailUrl);
 
           // UI 수정 모드로 전환
           formTitle.textContent = `글 수정 (ID: #${post.id})`;
@@ -301,6 +321,8 @@
     resetBtn.addEventListener('click', () => {
       postForm.reset();
       postIdInput.value = '';
+      previewImg.dataset.imageUrl = '';
+      previewImg.removeAttribute('src');
       previewImg.style.display = 'none';
       formTitle.textContent = '새 글 작성';
       modeBadge.textContent = '작성 모드';
@@ -327,7 +349,7 @@
       formData.append('password', password);
 
       try {
-        const res = await fetch('/api/delete-post', { method: 'POST', body: formData });
+        const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
         const result = await res.json();
 
         if (res.ok && result.success) {
@@ -345,7 +367,7 @@
     // 7. 특정 등록글 미리보기 팝업
     async function openPostPreview(id) {
       try {
-        const res = await fetch(`/api/get-posts?id=${id}`);
+        const res = await fetch(apiUrl(`/api/get-posts?id=${id}`));
         const post = await res.json();
 
         if (post && post.id) {
@@ -362,7 +384,7 @@
       const type = document.getElementById('type').value;
       const title = document.getElementById('title').value || '(제목 없음)';
       const content = document.getElementById('content').value || '(본문 없음)';
-      const imgSrc = previewImg.style.display !== 'none' ? previewImg.src : null;
+      const imgSrc = getPreviewImageUrl() || (previewImg.style.display !== 'none' ? previewImg.src : null);
 
       showModal(type, title, '방금 전 (작성 중 미리보기)', imgSrc, content);
     });
@@ -411,9 +433,10 @@
 
       const imageFile = imageInput.files[0];
       if (imageFile) formData.append('image', imageFile);
+      else if (isEdit && getPreviewImageUrl()) formData.append('thumbnail_url', getPreviewImageUrl());
 
       try {
-        const response = await fetch(endpoint, { method: 'POST', body: formData });
+        const response = await fetch(apiUrl(endpoint), { method: 'POST', body: formData });
         const result = await response.json();
 
         if (response.ok && result.success) {

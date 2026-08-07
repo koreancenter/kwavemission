@@ -2,7 +2,7 @@ export async function onRequestGet(context) {
   try {
     const { env, request } = context;
     const url = new URL(request.url);
-    
+
     const id = url.searchParams.get('id');
     const type = url.searchParams.get('type');
 

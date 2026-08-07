@@ -9,6 +9,7 @@ export async function onRequestPost(context) {
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
+    const thumbnailUrl = formData.get("thumbnail_url");
 
     // 2. 관리자 비밀번호 검증 (환경 변수에 ADMIN_PASSWORD가 설정된 경우)
     if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
@@ -55,6 +56,8 @@ export async function onRequestPost(context) {
       });
 
       imageUrl = `/api/image/${fileName}`;
+    } else if (typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
+      imageUrl = thumbnailUrl.trim();
     }
 
     // 5. D1 데이터베이스 저장 (posts 테이블 기준)

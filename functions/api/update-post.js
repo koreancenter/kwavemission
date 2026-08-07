@@ -9,6 +9,7 @@ export async function onRequestPost(context) {
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
+    const thumbnailUrl = formData.get("thumbnail_url");
 
     if (!id) {
       return new Response(JSON.stringify({ error: "수정할 글 ID가 없습니다." }), { status: 400 });
@@ -52,6 +53,8 @@ export async function onRequestPost(context) {
       });
 
       imageUrl = `/api/image/${fileName}`;
+    } else if (typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
+      imageUrl = thumbnailUrl.trim();
     }
 
     // 새 이미지가 올려진 경우 thumbnail_url 변경, 없으면 기존 이미지 유지
