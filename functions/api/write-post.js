@@ -1,4 +1,4 @@
-export async function onRequestPost(request, env) {
+export async function onRequestPost(context) {
   try {
     const { env, request } = context;
 
@@ -51,7 +51,7 @@ export async function onRequestPost(request, env) {
       const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
       const fileBody = await imageFile.arrayBuffer();
 
-      await env.BUCKET.put(fileName, fileBody, {
+      await context.env.BUCKET.put(fileName, fileBody, {
         httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
 
@@ -61,7 +61,7 @@ export async function onRequestPost(request, env) {
     }
 
     // 5. D1 데이터베이스 저장 (posts 테이블 기준)
-    const info = await env.DB.prepare(
+    const info = await context.env.DB.prepare(
       "INSERT INTO posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
     ).bind(type, title, content, imageUrl).run();
 
