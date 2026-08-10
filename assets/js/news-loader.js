@@ -87,6 +87,9 @@
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
+        // Notify page-level animation controller to bind staggered reveals on injected cards.
+        window.dispatchEvent(new Event('news:rendered'));
+
         // 쿼리 URL 매칭 시 모달 오픈은 전체 posts 배열 대상 적용
         _openModalFromQuery(posts);
     }
@@ -111,8 +114,12 @@
             '</div>';
 
         var modal = document.getElementById('news-modal');
-        modal.classList.remove('hidden');
-        modal.classList.add('flex');
+        if (typeof window.activateModal === 'function') {
+            window.activateModal(modal);
+        } else {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
         if (postId) history.replaceState(null, '', '?id=' + encodeURIComponent(postId));
         if (typeof lucide !== 'undefined') lucide.createIcons();
 

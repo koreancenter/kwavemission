@@ -80,6 +80,11 @@
             --brand-border: rgba(255, 255, 255, 0.08);
             --consult-accent: #eab85a;
             --consult-soft: rgba(234, 184, 90, 0.16);
+            --motion-hover-scale: 1.02;
+            --motion-icon-shift: 4px;
+            --motion-reveal-duration: 0.65s;
+            --motion-modal-duration: 0.24s;
+            --motion-modal-panel-duration: 0.28s;
         }
 
         body {
@@ -188,6 +193,87 @@
             color: #fde7ba;
         }
 
+        .btn-primary,
+        .btn-secondary,
+        .btn-consult {
+            transform: translateZ(0);
+        }
+
+        .btn-primary i,
+        .btn-secondary i,
+        .btn-consult i {
+            transition: transform 0.25s ease;
+        }
+
+        .btn-primary:hover,
+        .btn-secondary:hover,
+        .btn-consult:hover {
+            transform: translateY(-1px) scale(var(--motion-hover-scale));
+        }
+
+        .btn-primary:hover i,
+        .btn-secondary:hover i,
+        .btn-consult:hover i {
+            transform: translateX(var(--motion-icon-shift));
+        }
+
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(18px) scale(0.985);
+            transition: opacity var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1),
+                        transform var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--reveal-delay, 0ms);
+            will-change: opacity, transform;
+        }
+
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 70;
+            pointer-events: none;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        #scroll-progress-bar {
+            width: 100%;
+            height: 100%;
+            transform-origin: left center;
+            transform: scaleX(0);
+            background: linear-gradient(90deg, rgba(185, 74, 97, 0.9), rgba(185, 74, 97, 0.55));
+            box-shadow: 0 0 8px rgba(185, 74, 97, 0.28);
+        }
+
+        .modal-root {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear var(--motion-modal-duration);
+        }
+
+        .modal-root.modal-active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-root .modal-panel {
+            opacity: 0;
+            transform: translateY(12px) scale(0.96);
+            transition: transform var(--motion-modal-panel-duration) cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+        }
+
+        .modal-root.modal-active .modal-panel {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
         .hero-section {
             background:
                 repeating-linear-gradient(90deg, rgba(255,255,255,0.024) 0 1px, transparent 1px 36px),
@@ -243,6 +329,18 @@
         }
 
         @media (max-width: 640px) {
+            :root {
+                --motion-hover-scale: 1.012;
+                --motion-icon-shift: 2px;
+                --motion-reveal-duration: 0.52s;
+                --motion-modal-duration: 0.2s;
+                --motion-modal-panel-duration: 0.22s;
+            }
+
+            .reveal-item {
+                transform: translateY(12px) scale(0.99);
+            }
+
             .modal-footer {
                 gap: 8px;
                 margin-top: 24px;
@@ -271,9 +369,23 @@
         #modal-body hr { border-color: #f1f5f9; margin: 1.25rem 0; }
         #modal-body strong { font-weight: 700; }
         #modal-body code { background: #f1f5f9; padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.85em; font-family: monospace; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal-item,
+            .modal-root,
+            .modal-root .modal-panel,
+            .btn-primary,
+            .btn-secondary,
+            .btn-consult {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body class="bg-[#0b0f19] text-slate-100 antialiased selection:bg-brand-500 selection:text-white">
+    <div id="scroll-progress" aria-hidden="true"><div id="scroll-progress-bar"></div></div>
 
     <!-- Header / Navigation -->
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav border-b border-slate-200/60 transition-all duration-300">
@@ -737,8 +849,8 @@
 </div>
 
     <!-- News Detail Modal (DB-less Popup) -->
-    <div id="news-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white text-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto shadow-2xl">
+    <div id="news-modal" class="modal-root fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="modal-panel bg-white text-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-8 relative max-h-[90vh] overflow-y-auto shadow-2xl">
             <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
@@ -749,8 +861,8 @@
     </div>
 
     <!-- Contact CTA Modal -->
-    <div id="contact-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="bg-white text-slate-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+    <div id="contact-modal" class="modal-root fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+        <div class="modal-panel bg-white text-slate-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
             <button onclick="closeContactModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
@@ -772,14 +884,87 @@
     <script>
         lucide.createIcons();
 
+        const isMobileMotion = window.matchMedia('(max-width: 640px)').matches;
+        const MODAL_EXIT_MS = isMobileMotion ? 180 : 220;
+        const scrollProgressBar = document.getElementById('scroll-progress-bar');
+
+        function activateModal(modal) {
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            requestAnimationFrame(() => {
+                modal.classList.add('modal-active');
+            });
+        }
+
+        function deactivateModal(modal, onClosed) {
+            if (!modal) return;
+            modal.classList.remove('modal-active');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                if (typeof onClosed === 'function') onClosed();
+            }, MODAL_EXIT_MS);
+        }
+
+        window.activateModal = activateModal;
+
+        const revealObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+            });
+        }, {
+            threshold: 0.14,
+            rootMargin: '0px 0px -10% 0px'
+        });
+
+        function applyStaggerReveal(containerSelector, stepMs) {
+            const containers = document.querySelectorAll(containerSelector);
+            containers.forEach((container) => {
+                const children = Array.from(container.children);
+                children.forEach((child, index) => {
+                    if (child.dataset.revealBound === 'true') return;
+                    child.dataset.revealBound = 'true';
+                    child.classList.add('reveal-item');
+                    child.style.setProperty('--reveal-delay', Math.min(index * stepMs, 420) + 'ms');
+                    revealObserver.observe(child);
+                });
+            });
+        }
+
+        function initializeRevealAnimations() {
+            const staggerStep = isMobileMotion ? 62 : 95;
+            const newsStaggerStep = isMobileMotion ? 50 : 80;
+            applyStaggerReveal('#about .grid', staggerStep);
+            applyStaggerReveal('#programs .grid', staggerStep);
+            applyStaggerReveal('#news-container', newsStaggerStep);
+        }
+
+        function updateScrollProgress() {
+            if (!scrollProgressBar) return;
+            const maxScrollable = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScrollable > 0 ? window.scrollY / maxScrollable : 0;
+            scrollProgressBar.style.transform = 'scaleX(' + Math.min(Math.max(progress, 0), 1) + ')';
+        }
+
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
         menuToggle.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
 
+        initializeRevealAnimations();
+        updateScrollProgress();
+        window.addEventListener('scroll', updateScrollProgress, { passive: true });
+        window.addEventListener('resize', updateScrollProgress);
+        window.addEventListener('news:rendered', () => {
+            applyStaggerReveal('#news-container', isMobileMotion ? 50 : 80);
+        });
+
         function closeNewsModal() {
-            document.getElementById('news-modal').classList.add('hidden');
-            document.getElementById('news-modal').classList.remove('flex');
-            history.replaceState(null, '', window.location.pathname);
+            deactivateModal(document.getElementById('news-modal'), () => {
+                history.replaceState(null, '', window.location.pathname);
+            });
         }
 
         function showShareToast(message) {
@@ -802,14 +987,12 @@
 
         function openContactModal(title = "선교 동역 문의") {
             document.getElementById('contact-modal-title').innerText = title;
-            document.getElementById('contact-modal').classList.remove('hidden');
-            document.getElementById('contact-modal').classList.add('flex');
+            activateModal(document.getElementById('contact-modal'));
             lucide.createIcons();
         }
 
         function closeContactModal() {
-            document.getElementById('contact-modal').classList.add('hidden');
-            document.getElementById('contact-modal').classList.remove('flex');
+            deactivateModal(document.getElementById('contact-modal'));
         }
     </script>
 
