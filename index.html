@@ -60,7 +60,7 @@
   <link rel="stylesheet" href="./assets/css/styles.css">
 
     <!-- Pretendard Web Font -->
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -276,8 +276,22 @@
         }
 
         .hero-section {
-            background: linear-gradient(180deg, #0b0f19 0%, #0d1320 100%);
-        }
+            position: relative;
+            overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+  /* 기존 격자 및 글로우 배경 유지 */
+            background:
+            repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px),
+            repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px),
+            ;
+    /* 🔥 핵심: 아래쪽 배경(#080c14)과 자연스럽게 연결되는 투명 마스크 */
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+}
 
         .modal-footer {
             display: flex;
@@ -388,10 +402,10 @@
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#" class="flex items-center gap-3 group">
-                <img src="./assets/images/logo.png" alt="K-WAVE MISSION 로고" class="w-10 h-10 rounded-full object-cover shadow-md" />
+                <img src="./assets/images/logo.png" alt="K-WAVE MISSION 로고" class="w-10 h-10 rounded-full object-cover shadow-md">
                 <div>
-                    <span class="text-xl font-bold tracking-tight text-slate-900 block leading-none">K-WAVE MISSION</span>
-                    <span class="text-xs text-brand-200 font-medium tracking-wider uppercase">하나님 나라를 위한 한류 ------</span>
+                    <span class="text-white font-bold text-lg tracking-wider">K-WAVE MISSION</span><p></p>
+                    <p class="text-slate-400 text-xs">하나님 나라를 위한 한류</p>
                 </div>
             </a>
 
@@ -399,7 +413,7 @@
             <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
                 <a href="#about" class="brand-link">미션 소개</a>
                 <a href="#pillars" class="brand-link">주요 사역</a>
-                <a href="#programs" class="brand-link">참여 안내</a>
+                <a href="#programs" class="brand-link">동역 안내</a>
                 <a href="#news" class="brand-link">주간 사역 리포트</a>
                 <a href="#partners" class="brand-link">협력 네트워크</a>
             </nav>
@@ -414,7 +428,7 @@
             </div>
 
             <!-- Mobile Menu Button -->
-            <button id="menu-toggle" class="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none">
+            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
         </div>
@@ -444,14 +458,14 @@
             </div>
             
             <h1 class="hero-title text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight leading-tight sm:leading-none mb-8">
-                선교 현장과 한국교회를 잇는<br />
+                선교 현장과 한국교회를 잇는<br>
                 <span class="text-brand-300">
                     풀스택 선교 플랫폼
                 </span>
             </h1>
             
             <p class="text-base sm:text-xl text-slate-300 font-light max-w-3xl mx-auto mb-10 leading-relaxed">
-                "대한민국의 경제발전과 교회부흥의 경험이<br class="hidden sm:inline" />
+                "대한민국의 경제발전과 교회부흥의 경험이<br class="hidden sm:inline">
                 교육을 통해 세계선교 자원으로 쓰임 받도록 한국 교회와 함께 선교합니다."
             </p>
 
@@ -471,7 +485,7 @@
         </div>
     </section>
 
-    <!-- Integrated Ministry Showcase (Markmonitor Style Bento Grid) -->
+    <!-- Integrated Ministry Showcase -->
     <section id="about" class="py-32 bg-[#080c14] text-white relative overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -479,16 +493,16 @@
             <!-- Section Header -->
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-20">
                 <div>
-                    <span class="tech-tag text-xs text-brand-200 font-medium uppercase tracking-widest block mb-3">[ CORE VALUE & STRATEGY ]</span>
+                    <span class="tech-tag text-xs text-brand-200 font-medium uppercase tracking-widest block mb-3">[ CORE VALUE &amp; STRATEGY ]</span>
                     <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight font-serif">
-                        고등교육선교 전문가 그룹<br />
+                        고등교육선교 전문가 그룹<br>
                         <span class="text-brand-300">
                             케이웨이브 미션
                         </span>
                     </h2>
                 </div>
                 <p class="text-slate-400 text-sm max-w-md mt-6 md:mt-0 font-light leading-relaxed">
-                    K-WAVE MISSION은 한국의 고등교육 자산과 기독교적 가치를 결합하여 선교 현장의 차세대 리더를 세우고 현지 교회를 지원합니다.
+                    K-WAVE MISSION은 한국의 대학교, 크리스천 대학교수, 지역교회, 문화사역단체 등 다양한 선교 자원과 함께 고등교육선교 영역을 개척하고 있습니다.
                 </p>
             </div>
 
@@ -499,24 +513,22 @@
                 <div class="brand-card lg:col-span-2 group relative rounded-3xl overflow-hidden min-h-[380px] flex flex-col justify-between p-8 transition-all duration-300">
                     <!-- Background Visual Image Overlay -->
                     <div class="absolute inset-0 bg-gradient-to-t from-[#080c14] via-[#080c14]/82 to-transparent z-10"></div>
-<img src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1200&auto=format&fit=crop" 
-     alt="Academic Ministry" 
-        class="absolute inset-0 w-full h-full object-cover opacity-18">                    
+                    <img src="./assets/images/academic-bg.jpg" alt="Academic Ministry" class="absolute inset-0 w-full h-full object-cover opacity-18">                    
                     <div class="relative z-20 flex justify-between items-start">
                         <span class="tech-tag px-3 py-1 rounded-full bg-brand-500/20 border border-brand-300/40 text-brand-100 text-[11px] font-medium uppercase tracking-wider">
-                            ACADEMIC MINISTRY
+                            HOLY MINISTRY
                         </span>
                         <span class="tech-tag text-3xl font-semibold text-brand-300/35 group-hover:text-brand-300/70 transition-colors">/ 01</span>
                     </div>
 
                     <div class="relative z-20 mt-12">
-                        <h3 class="text-2xl sm:text-3xl font-semibold text-white mb-3 font-serif">고등교육 & K-학술 사역</h3>
+                        <h3 class="text-2xl sm:text-3xl font-semibold text-white mb-3 font-serif">영혼을 살리는 일</h3>
                         <p class="text-slate-300 text-sm leading-relaxed max-w-lg font-light mb-6">
-                            인도네시아 전국의 협력 대학을 대상으로 선교에 헌신된 전문 교수진을 파송하여 하나님 나라의 미래 지적·영적 리더십을 세웁니다.
+                            한국학과 한국 문화 기반 교육 프로그램을 통해 관계를 형성하고 한국의 다양한 크리스천 기관과 연계하여 은혜의 강물이 현지 영혼들에게 흘러가도록 사역합니다.
                         </p>
                         <ul class="flex flex-wrap gap-4 tech-tag text-xs text-brand-100/90 pt-2">
-                            <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-300"></i> 대학 맞춤 교재 발간</li>
-                            <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-300"></i> 학술 심포지엄 파송</li>
+                            <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-300"></i> 관계 기반 전도사역</li>
+                            <li class="flex items-center gap-1.5"><i data-lucide="check" class="w-3.5 h-3.5 text-brand-300"></i> 기독동아리 인큐베이팅</li>
                         </ul>
                     </div>
                 </div>
@@ -531,13 +543,13 @@
                             <span class="tech-tag text-2xl font-semibold text-slate-700 group-hover:text-brand-300/60 transition-colors">/ 02</span>
                         </div>
                         <span class="tech-tag text-[10px] text-brand-200 font-bold uppercase tracking-wider block mb-2">NEXT-GEN DISCIPLE</span>
-                        <h3 class="text-xl font-semibold text-white mb-3">차세대 리더 양성</h3>
+                        <h3 class="text-xl font-semibold text-white mb-3">교회를 세우는 일</h3>
                         <p class="text-slate-400 text-xs leading-relaxed font-light">
-                            캠퍼스 기독동아리 인큐베이팅 및 문화 교류 지원을 통해 열방을 품을 차세대 리더를 세웁니다.
+                            현지의 오지 교회, 핍박받는 교회를 발굴하여 현지 교회가 지역 사회의 허브가 되도록 한국 교회와 함께 지원합니다.
                         </p>
                     </div>
                     <div class="mt-8 tech-tag text-[11px] text-brand-100/80 flex items-center gap-1">
-                        <span>기독동아리 인큐베이팅</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                        <span>현지 교회 강화사업</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
                     </div>
                 </div>
 
@@ -551,13 +563,13 @@
                             <span class="tech-tag text-2xl font-semibold text-slate-700 group-hover:text-brand-300/60 transition-colors">/ 03</span>
                         </div>
                         <span class="tech-tag text-[10px] text-brand-200 font-bold uppercase tracking-wider block mb-2">GLOBAL BRIDGE</span>
-                        <h3 class="text-xl font-semibold text-white mb-3">교회 인프라 연계</h3>
+                        <h3 class="text-xl font-semibold text-white mb-3">세상을 바꾸는 일</h3>
                         <p class="text-slate-400 text-xs leading-relaxed font-light">
-                            오지 현지 교회를 데이터베이스화하고, 한국 교회와의 1:1 결연 파트너십을 다집니다.
+                            한국교회의 다양한 자원들이 현지 청년들의 미래와 삶의 질 향상에 쓰임받을 수 있도록 자원과 수요를 전략적으로 매칭합니다.
                         </p>
                     </div>
                     <div class="mt-8 tech-tag text-[11px] text-brand-100/80 flex items-center gap-1">
-                        <span>1:1 파트너십 매칭</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                        <span>한국교회 국제화사업</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
                     </div>
                 </div>
 
@@ -568,11 +580,11 @@
                             <span class="tech-tag px-2.5 py-0.5 rounded bg-amber-400/10 text-amber-300 text-[10px] font-bold">FOR CHURCHES</span>
                             <span class="tech-tag text-slate-500 text-xs">/ 04</span>
                         </div>
-                        <h4 class="text-lg font-semibold text-white">기관 파트너십 동역 안내</h4>
-                        <p class="text-xs text-slate-400 font-light">현지 지정 교회 후원 및 교단 차원의 학술 선교에 함께 하세요.</p>
+                        <h4 class="text-lg font-semibold text-white">우리 교회/단체 세계화 프로젝트</h4>
+                        <p class="text-xs text-slate-400 font-light">교회 자원을 세계선교를 통해 공유하며 세계형재의식을 실천합니다.</p>
                     </div>
                     <a href="https://pf.kakao.com" target="_blank" class="btn-consult tech-tag shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-xs">
-                        <span>기관 협력 문의</span> <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>프로젝트 문의</span> <i data-lucide="message-circle" class="w-4 h-4"></i>
                     </a>
                 </div>
 
@@ -583,11 +595,11 @@
                             <span class="tech-tag px-2.5 py-0.5 rounded bg-brand-500/10 text-brand-200 text-[10px] font-bold">FOR INDIVIDUALS</span>
                             <span class="tech-tag text-slate-500 text-xs">/ 05</span>
                         </div>
-                        <h4 class="text-lg font-semibold text-white">개인 후원 & 기도 동역</h4>
-                        <p class="text-xs text-slate-400 font-light">차세대 장학금 및 교재 출판 후원자로 하나님 나라를 넓힙니다.</p>
+                        <h4 class="text-lg font-semibold text-white">여러분의 경험이 선교 자원입니다.</h4>
+                        <p class="text-xs text-slate-400 font-light">케이웨이브 미션이 여러분의 자원과 선교 현장의 필요를 이어 드립니다..</p>
                     </div>
                     <a href="https://pf.kakao.com" target="_blank" class="btn-primary shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-xs">
-                        <span>개인 후원 참여</span> <i data-lucide="heart" class="w-4 h-4"></i>
+                        <span>내 자원 등록하기</span> <i data-lucide="heart" class="w-4 h-4"></i>
                     </a>
                 </div>
 
@@ -605,7 +617,7 @@
       <div class="metric-value" data-target="300">0</div>
       <div class="metric-unit">+</div>
       <div class="metric-title">동역 대학교수선교사</div>
-      <p class="metric-desc">현지 고등교육 사역에 헌신하는 학술 전문 네트워크</p>
+      <p class="metric-desc">고등교육선교 사역에 헌신된 학술 전문 네트워크</p>
     </div>
 
     <div class="metric-card">
@@ -630,84 +642,210 @@
   </div>
 </section>
   
-<!-- Key Participation Programs (Solid Dark Unified Version) -->
-    <section id="programs" class="py-32 bg-[#080c14] text-white relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <!-- Section Header -->
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <span class="tech-tag text-xs text-brand-200 font-medium uppercase tracking-widest block mb-3">[ JOIN THE MISSION ]</span>
-                <h2 class="text-3xl sm:text-5xl font-bold text-white tracking-tight mb-4 font-serif">
-                    우리는 한 팀입니다
-                </h2>
-                <p class="text-slate-400 text-sm sm:text-base leading-relaxed font-light">
-                    K-WAVE MISSION은 한국 교회가 선교의 주체로서 동역할 수 있도록 다양한 실행 프로그램을 운영하고 있습니다.
-                </p>
-            </div>
-
-            <!-- Program Cards (3-Column Dark Grid) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Program 1 -->
-                <div class="brand-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-brand-200 mb-6 transition-colors">
-                            <i data-lucide="graduation-cap" class="w-6 h-6"></i>
-                        </div>
-                        <span class="tech-tag text-[11px] text-brand-200 font-bold uppercase tracking-wider block mb-2">Academic & Cultural Mission</span>
-                        <h3 class="text-xl font-bold text-white mb-3">한국어 강사 / 단기선교사</h3>
-                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-8 font-light">
-                            인도네시아 캠퍼스에서 청년들에게 한국어를 가르치며 자연스럽게 그리스도의 사랑을 나누는 2주~6개월 단기 사역입니다.
-                        </p>
-                    </div>
-                    <button onclick="openContactModal('한국어 강사 파견 문의')" 
-                            class="btn-secondary w-full py-3.5 rounded-2xl text-xs font-medium transition-all flex items-center justify-center gap-2 group/btn">
-                        <span>참여 안내 문의</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover/btn:text-brand-200 group-hover/btn:translate-x-0.5 transition-all"></i>
-                    </button>
-                </div>
-
-                <!-- Program 2 -->
-                <div class="brand-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group relative border-amber-500/35 hover:border-amber-400/65">
-                    <div class="absolute -top-3 right-6 px-3 py-1 rounded-full bg-amber-300/85 text-slate-950 tech-tag text-[10px] font-medium uppercase tracking-wider">
-                        RECOMMENDED
-                    </div>
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-300 mb-6 transition-colors">
-                            <i data-lucide="home" class="w-6 h-6"></i>
-                        </div>
-                        <span class="tech-tag text-[11px] text-amber-300 font-bold uppercase tracking-wider block mb-2">Sharing Life, Sharing Gospel</span>
-                        <h3 class="text-xl font-bold text-white mb-3">은혜로운 한국생활 참여</h3>
-                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-8 font-light">
-                            인도네시아 대학생을 한국의 크리스천 가정에 10일간 초청하여 한국인의 정과 하나님의 사랑을 경험하게 하는 관계 기반 선교입니다.
-                        </p>
-                    </div>
-                    <button onclick="openContactModal('홈스테이 호스트 신청')" 
-                            class="btn-consult tech-tag w-full py-3.5 rounded-2xl text-xs font-medium transition-all flex items-center justify-center gap-2">
-                        <span>호스트 가정 신청 문의</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-
-                <!-- Program 3 -->
-                <div class="brand-card rounded-3xl p-8 flex flex-col justify-between transition-all duration-300 group">
-                    <div>
-                        <div class="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-brand-200 mb-6 transition-colors">
-                            <i data-lucide="compass" class="w-6 h-6"></i>
-                        </div>
-                        <span class="tech-tag text-[11px] text-brand-200 font-bold uppercase tracking-wider block mb-2">Cross-Cultural Insight</span>
-                        <h3 class="text-xl font-bold text-white mb-3">타문화권 선교 워크숍</h3>
-                        <p class="text-slate-400 text-xs sm:text-sm leading-relaxed mb-8 font-light">
-                            목회자, 지도자, 청년을 위한 현장 중심 프로그램. 발리 현지에서 디자인 싱킹 기반 선교 시각을 경험합니다.
-                        </p>
-                    </div>
-                    <button onclick="openContactModal('선교 워크숍 참가 문의')" 
-                            class="btn-secondary w-full py-3.5 rounded-2xl text-xs font-medium transition-all flex items-center justify-center gap-2 group/btn">
-                        <span>워크숍 신청 문의</span>
-                        <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover/btn:text-brand-200 group-hover/btn:translate-x-0.5 transition-all"></i>
-                    </button>
-                </div>
-            </div>
+<!-- Key Participation Programs (Advanced Version) -->
+<section id="programs" class="py-24 bg-[#080c14] text-white relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-10">
+            <span class="font-mono text-xs text-rose-400 font-bold uppercase tracking-widest block mb-3">[ JOIN THE MISSION ]</span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 font-serif">
+                우리는 한 팀입니다
+            </h2>
+            <p class="text-slate-400 text-sm sm:text-base leading-relaxed font-light">
+                K-WAVE MISSION은 한국 교회와 성도가 선교의 주체로서 동역할 수 있도록 다양한 실행 프로그램을 운영하고 있습니다.
+            </p>
         </div>
-    </section>
+
+        <!-- 📌 3번 요구사항: 상단 고정 공지사항 배너 -->
+        <div onclick="openMdModal('notice-main')" class="cursor-pointer max-w-4xl mx-auto mb-12 p-4 sm:p-5 rounded-2xl bg-slate-900/90 border border-cyan-500/30 hover:border-cyan-400 transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-lg group">
+            <div class="flex items-center gap-3">
+                <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold border border-cyan-500/30 flex items-center gap-1.5 shrink-0">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    NOTICE
+                </span>
+                <span class="text-slate-200 text-sm font-medium group-hover:text-cyan-300 transition-colors line-clamp-1">
+                    📢 2026년 하반기 인도네시아 단기선교사 및 한국어 강사 모집 안내
+                </span>
+            </div>
+            <span class="text-xs text-slate-400 group-hover:text-cyan-300 transition-colors flex items-center gap-1 shrink-0">
+                자세히 보기 <span class="group-hover:translate-x-1 transition-transform">→</span>
+            </span>
+        </div>
+
+        <!-- 📌 2번 & 4번 요구사항: 상태 필터 탭 -->
+        <!-- HTML 탭 버튼 부분 -->
+        <div class="flex items-center justify-center gap-2 mb-10 flex-wrap">
+            <button type="button" onclick="filterPrograms('all', this)" class="prog-filter-btn active px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-slate-800 text-white border border-slate-700 transition-all">ALL</button>
+            <button type="button" onclick="filterPrograms('recruiting', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-white transition-all">모집 중</button>
+            <button type="button" onclick="filterPrograms('ongoing', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-white transition-all">진행 중</button>
+            <button type="button" onclick="filterPrograms('preparing', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-slate-900/80 text-slate-400 border border-slate-800 hover:text-white transition-all">준비 중</button>
+        </div>
+
+        <!-- 📌 1번 & 4번 요구사항: 프로그램 카드 슬라이더 -->
+        <div class="relative">
+
+        <!-- Left arrow (desktop only) -->
+        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-all shadow-lg">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+        </button>
+
+        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pt-6 pb-4 scrollbar-hide">
+            
+            <!-- 카드 1: 한국어 강사 (모집 중) -->
+            <div class="prog-card recruiting snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-slate-900/70 border border-slate-800 hover:border-slate-700 flex flex-col justify-between transition-all duration-300 group relative">
+                <div>
+                    <!-- 상태 뱃지 & 아이콘 헤더 -->
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-slate-200">
+                            🎓
+                        </div>
+                        <!-- 모집 중 뱃지 -->
+                        <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold font-mono flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            모집 중
+                        </span>
+                    </div>
+                    <span class="font-mono text-[11px] text-rose-400 font-bold uppercase tracking-wider block mb-2">Academic &amp; Cultural Mission</span>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-rose-300 transition-colors">한국어 강사 / 단기선교사</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
+                        인도네시아 캠퍼스에서 청년들에게 한국어를 가르치며 자연스럽게 그리스도의 사랑을 나누는 2주~6개월 단기 사역입니다.
+                    </p>
+                </div>
+                <button type="button" onclick="openMdModal('program-korean')" class="w-full py-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-rose-500 hover:text-white hover:border-rose-500 transition-all flex items-center justify-center gap-2">
+                    <span>참여 안내 및 모집 요강</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <!-- 카드 2: 은혜로운 한국생활 참여 (추천 & 모집 중) -->
+            <div class="prog-card recruiting snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-slate-900/90 border border-amber-500/40 flex flex-col justify-between transition-all duration-300 group relative shadow-xl shadow-amber-500/5">
+                <div class="absolute -top-3 right-6 px-3 py-1 rounded-full bg-amber-400 text-slate-950 font-mono text-[10px] font-bold uppercase tracking-wider">
+                    RECOMMENDED
+                </div>
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                            🏠
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold font-mono flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                            모집 중
+                        </span>
+                    </div>
+                    <span class="font-mono text-[11px] text-amber-400 font-bold uppercase tracking-wider block mb-2">Sharing Life, Sharing Gospel</span>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">은혜로운 한국생활 참여</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
+                        인도네시아 대학생을 한국의 크리스천 가정에 10일간 초청하여 한국인의 정과 하나님의 사랑을 경험하게 합니다.
+                    </p>
+                </div>
+                <button type="button" onclick="openMdModal('program-homestay')" class="w-full py-3.5 rounded-2xl bg-amber-500/10 border border-amber-500/40 text-amber-300 text-xs font-semibold hover:bg-amber-400 hover:text-slate-950 transition-all flex items-center justify-center gap-2">
+                    <span>호스트 가정 신청 문의</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <!-- 카드 3: 타문화권 선교 워크숍 (진행 중) -->
+            <div class="prog-card ongoing snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-slate-900/70 border border-slate-800 hover:border-slate-700 flex flex-col justify-between transition-all duration-300 group relative">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/60 flex items-center justify-center text-slate-200">
+                            🧭
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
+                            진행 중
+                        </span>
+                    </div>
+                    <span class="font-mono text-[11px] text-cyan-400 font-bold uppercase tracking-wider block mb-2">Cross-Cultural Insight</span>
+                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">타문화권 선교 워크숍</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
+                        목회자, 지도자, 청년을 위한 현장 중심 프로그램. 발리 현지에서 디자인 싱킹 기반 선교 시각을 경험합니다.
+                    </p>
+                </div>
+                <button type="button" onclick="openMdModal('program-workshop')" class="w-full py-3.5 rounded-2xl bg-slate-800/80 border border-slate-700 text-slate-300 text-xs font-semibold hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-all flex items-center justify-center gap-2">
+                    <span>워크숍 일정 및 신청</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+            <!-- 카드 4: 현지 고등교육 학술 교류 (준비 중) -->
+            <div class="prog-card preparing snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-slate-900/50 border border-slate-800/60 opacity-80 hover:opacity-100 flex flex-col justify-between transition-all duration-300 group relative">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-slate-800/50 border border-slate-700/40 flex items-center justify-center text-slate-400">
+                            📚
+                        </div>
+                        <span class="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-xs font-bold font-mono">
+                            준비 중
+                        </span>
+                    </div>
+                    <span class="font-mono text-[11px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Higher Education Cooperation</span>
+                    <h3 class="text-xl font-bold text-slate-200 mb-3">K-학술 교재 개척 파송</h3>
+                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
+                        인도네시아 명문 대학을 중심으로 기독교적 가치관이 포괄된 교재를 개척하고 학술 리더십을 지원합니다.
+                    </p>
+                </div>
+                <button type="button" onclick="openMdModal('program-academic')" class="w-full py-3.5 rounded-2xl bg-slate-800/40 border border-slate-700/50 text-slate-400 text-xs font-semibold hover:bg-slate-700 hover:text-white transition-all flex items-center justify-center gap-2">
+                    <span>사역 준비 현황 보기</span>
+                    <span>→</span>
+                </button>
+            </div>
+
+        </div><!-- end prog-slider -->
+
+        <!-- Right arrow (desktop only) -->
+        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:bg-slate-700 transition-all shadow-lg">
+            <i data-lucide="chevron-right" class="w-5 h-5"></i>
+        </button>
+
+        </div><!-- end slider wrapper -->
+    </div>
+</section>
+
+<!-- 필터링 제어 JavaScript -->
+<script>
+function filterPrograms(type, btnElement) {
+    // 1. 탭 버튼 활성화 스타일 제어
+    const btns = document.querySelectorAll('.prog-filter-btn');
+    btns.forEach(btn => {
+        btn.classList.remove('bg-slate-800', 'text-white');
+        btn.classList.add('bg-slate-900/80', 'text-slate-400');
+    });
+    
+    // 클릭된 버튼 스타일 적용
+    const activeBtn = btnElement || event.currentTarget;
+    activeBtn.classList.remove('bg-slate-900/80', 'text-slate-400');
+    activeBtn.classList.add('bg-slate-800', 'text-white');
+
+    // 2. 카드 노출 제어 및 슬라이더 처음으로 리셋
+    const slider = document.getElementById('prog-slider');
+    const cards = document.querySelectorAll('.prog-card');
+
+    cards.forEach(card => {
+        if (type === 'all' || card.classList.contains(type)) {
+            card.style.display = 'flex';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    if (slider) slider.scrollTo({ left: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    filterPrograms('all');
+
+    const slider = document.getElementById('prog-slider');
+    const cardWidth = () => slider.querySelector('.prog-card')?.offsetWidth + 24 || 380;
+    document.getElementById('prog-prev')?.addEventListener('click', () =>
+        slider.scrollBy({ left: -cardWidth(), behavior: 'smooth' })
+    );
+    document.getElementById('prog-next')?.addEventListener('click', () =>
+        slider.scrollBy({ left: cardWidth(), behavior: 'smooth' })
+    );
+});
+
+</script>
 
     <!-- DB-less Weekly Mission News Section (Dark Integrated Version) -->
     <section id="news" class="py-32 bg-[#080c14] text-white relative overflow-hidden">
@@ -761,25 +899,7 @@
     </div>
 </section>
 
-<!-- Footer Section / MarkMonitor Center-Aligned Refined -->
-<footer class="bg-[#080c14] text-slate-400 py-12">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-        
-        <!-- 1. Top Call-to-Action Banner -->
-        <div class="bg-slate-900/72 border border-slate-800/80 p-7 sm:p-8 rounded-3xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-5 text-left">
-            <div class="space-y-2">
-                <span class="tech-tag text-xs text-brand-200 font-medium uppercase tracking-widest">[ INVEST IN MISSION ]</span>
-                <h3 class="font-serif text-xl sm:text-2xl font-semibold text-white tracking-tight">하나님 나라의 확장, 동역으로 완성됩니다</h3>
-                <p class="text-xs sm:text-sm text-slate-400 font-light">국민은행 <span class="text-slate-200 font-medium tracking-wide">233001-04-416923</span> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
-            </div>
-            <button onclick="navigator.clipboard.writeText('23300104416923'); if(typeof showShareToast === 'function') showShareToast('계좌번호가 복사되었습니다.');" 
-                    class="btn-secondary px-5 py-3 text-xs sm:text-sm font-medium transition-all rounded-2xl shrink-0 flex items-center gap-2">
-                <span>계좌번호 복사</span>
-                <i data-lucide="copy" class="w-4 h-4"></i>
-            </button>
-        </div>
-
-        <!-- Minimalist Unified Footer -->
+<!-- Minimalist Unified Footer -->
 <footer class="bg-[#080c14] py-16 sm:py-20 relative overflow-hidden">
     <!-- [Footer 상단] 은은하게 사라지는 가로 구분선 -->
     <div class="w-full max-w-7xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent mb-12 sm:mb-16"></div>
@@ -809,13 +929,13 @@
 <!-- Legal Terms Modal -->
 <div id="legal-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
-        <button onclick="closeLegalModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors">
+        <button type="button" aria-label="닫기" onclick="closeLegalModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors">
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
-        <h3 id="legal-modal-title" class="font-serif text-xl font-bold text-white"></h3>
+        <h3 id="legal-modal-title" aria-live="polite" class="font-serif text-xl font-bold text-white">&#8203;</h3>
         <div id="legal-modal-body" class="text-xs sm:text-sm text-slate-300 space-y-4 max-h-[60vh] overflow-y-auto leading-relaxed pr-2 font-light"></div>
         <div class="text-right pt-4 border-t border-slate-800">
-            <button onclick="closeLegalModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 rounded-xl font-semibold">닫기</button>
+            <button type="button" onclick="closeLegalModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 rounded-xl font-semibold">닫기</button>
         </div>
     </div>
 </div>
@@ -823,7 +943,7 @@
     <!-- News Detail Modal (DB-less Popup) -->
     <div id="news-modal" class="modal-root fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="modal-panel bg-white text-slate-800 rounded-2xl max-w-2xl w-full p-6 sm:p-7 relative max-h-[90vh] overflow-y-auto shadow-xl border border-slate-200">
-            <button onclick="closeNewsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+            <button type="button" aria-label="닫기" onclick="closeNewsModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i data-lucide="x" class="w-6 h-6"></i>
             </button>
             <div id="modal-content">
@@ -835,7 +955,7 @@
     <!-- Contact CTA Modal -->
     <div id="contact-modal" class="modal-root fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
         <div class="modal-panel bg-white text-slate-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button onclick="closeContactModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
+            <button type="button" aria-label="닫기" onclick="closeContactModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <h3 id="contact-modal-title" class="text-xl font-bold text-slate-900 mb-2">선교 동역 문의</h3>
