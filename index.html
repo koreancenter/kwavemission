@@ -910,14 +910,14 @@ document.addEventListener('DOMContentLoaded', () => {
             Since 2011, Connecting South Korea and Indonesia
         </p>
 
-        <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
-        <div class="flex items-center justify-center gap-3 sm:gap-4 text-xs text-slate-500 font-light mb-8">
-            <a href="#" class="hover:text-slate-300 transition-colors">Terms of Use</a>
-            <span class="text-slate-800 select-none">|</span>
-            <a href="#" class="hover:text-slate-300 transition-colors">Privacy Policy</a>
-            <span class="text-slate-800 select-none">|</span>
-            <a href="#" class="hover:text-slate-300 transition-colors">Contact Us</a>
-        </div>
+    <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
+    <div class="flex items-center gap-4 text-xs text-slate-500 mb-6">
+        <button type="button" onclick="openMdModal('terms')" class="hover:text-slate-300 transition-colors">Terms of Use</button>
+        <span class="text-slate-800 select-none">|</span>
+        <button type="button" onclick="openMdModal('privacy')" class="hover:text-slate-300 transition-colors">Privacy Policy</button>
+        <span class="text-slate-800 select-none">|</span>
+        <button type="button" onclick="openMdModal('contact')" class="hover:text-slate-300 transition-colors">Contact Us</button>
+    </div>
 
         <!-- [하단] Copyright -->
         <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-widest">
@@ -973,6 +973,8 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
 
     <!-- JavaScript logic -->
+    <!-- 1. marked.js 라이브러리를 먼저 로드 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script>
         lucide.createIcons();
 
@@ -1086,12 +1088,66 @@ document.addEventListener('DOMContentLoaded', () => {
         function closeContactModal() {
             deactivateModal(document.getElementById('contact-modal'));
         }
+        
+    // 마크다운 모달 제어 함수 추가
+    async function openMdModal(slug) {
+      const modal = document.getElementById('md-modal');
+      const container = document.getElementById('md-modal-content');
+      const title = document.getElementById('md-modal-title');
+      
+      const titles = {
+        'terms': '이용약관',
+        'privacy': '개인정보처리방침',
+        'contact': 'Contact Us'
+      };
+      if (title) title.innerText = titles[slug] ? titles[slug] : '안내';
+
+      if (container) container.innerHTML = '<div class="text-center py-10 text-slate-400">문서를 불러오는 중입니다...</div>';
+      if (modal) modal.classList.remove('hidden');
+
+      try {
+        const res = await fetch(`/api/get-md?slug=${slug}`);
+        if (!res.ok) throw new Error('문서를 불러올 수 없습니다.');
+        
+        const markdownText = await res.text();
+        if (container) container.innerHTML = marked.parse(markdownText);
+      } catch (err) {
+        if (container) container.innerHTML = `<div class="text-center py-10 text-rose-400">${err.message}</div>`;
+      }
+    }
+
+    function closeMdModal() {
+      const modal = document.getElementById('md-modal');
+      if (modal) modal.classList.add('hidden');
+    }
     </script>
 
+    <!-- 3. 나머지 외부 스크립트 파일들 -->
     <script src="./assets/js/news-loader.js"></script>
     <script src="./assets/js/metrics-counter.js"></script>
     <script src="./assets/js/main.js"></script>
     <script src="./assets/js/legal-modal.js"></script>
-    <!-- End of JavaScript logic -->    
+    <script src="./assets/js/privacy-modal.js"></script>
+    <!-- End of JavaScript logic -->   
+     
+    <!-- 마크다운 공통 모달 -->
+<div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-800 text-slate-200 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl">
+        <!-- 모달 헤더 -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800">
+            <h3 id="md-modal-title" class="text-lg font-semibold text-slate-100">안내</h3>
+            <button type="button" onclick="closeMdModal()" class="text-slate-400 hover:text-white text-2xl font-bold px-2">&times;</button>
+        </div>
+        <!-- 모달 본문 (마크다운 파싱 결과) -->
+        <div id="md-modal-content" class="p-6 overflow-y-auto prose prose-invert max-w-none text-sm leading-relaxed space-y-4">
+            <!-- JavaScript가 이곳에 마크다운 HTML을 삽입합니다 -->
+        </div>
+        <!-- 모달 푸터 -->
+        <div class="px-6 py-3 border-t border-slate-800 flex justify-end">
+            <button type="button" onclick="closeMdModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm font-medium transition-colors">닫기</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
