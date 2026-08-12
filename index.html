@@ -419,13 +419,12 @@
             </nav>
 
             <div class="hidden md:flex items-center gap-3">
-                <!-- Header Navigation 우측 버튼 -->
-                <a href="https://pf.kakao.com" target="_blank" id="kakao-header-btn" 
-                    class="btn-consult tech-tag inline-flex items-center gap-2 px-4 py-2 text-xs font-medium tracking-wider group">
-                    <i data-lucide="message-circle" class="w-4 h-4 text-amber-300"></i>
-                    <span>Partner Connect</span>
-                </a>
-            </div>
+             <!-- Header Partner Connect Button (Desktop) -->
+            <button type="button" 
+        onclick="openPartnerModal()" 
+        class="px-4 py-2 bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 hover:border-amber-400/60 rounded-xl font-mono text-xs font-bold transition-all shadow-sm">
+    Partner Connect
+            </button>
 
             <!-- Mobile Menu Button -->
             <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none">
@@ -441,9 +440,11 @@
             <a href="#news" class="block brand-link">주간 사역 리포트</a>
             <a href="#partners" class="block brand-link">협력 네트워크</a>
             <div class="pt-2 flex flex-col gap-2">
-                <a href="https://pf.kakao.com" target="_blank" class="btn-consult flex items-center justify-center gap-2 py-2.5 rounded-xl font-medium text-sm">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i> 카카오톡 1:1 상담
-                </a>
+                <button type="button" 
+                onclick="openPartnerModal(); const mm = document.getElementById('mobile-menu'); if(mm) mm.classList.add('hidden');" 
+            class="btn-consult flex items-center justify-center gap-2 py-2.5 w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl font-mono text-xs font-bold transition-all">
+                <i data-lucide="handshake" class="w-4 h-4"></i> Partner Connect
+                </button>
             </div>
         </div>
     </header>
@@ -595,7 +596,7 @@
                             <span class="tech-tag px-2.5 py-0.5 rounded bg-brand-500/10 text-brand-200 text-[10px] font-bold">FOR INDIVIDUALS</span>
                             <span class="tech-tag text-slate-500 text-xs">/ 05</span>
                         </div>
-                        <h4 class="text-lg font-semibold text-white">여러분의 경험이 선교 자원입니다.</h4>
+                        <h4 class="text-lg font-semibold text-white">여러분의 지식이 선교 자원입니다.</h4>
                         <p class="text-xs text-slate-400 font-light">케이웨이브 미션이 여러분의 자원과 선교 현장의 필요를 이어 드립니다..</p>
                     </div>
                     <a href="https://pf.kakao.com" target="_blank" class="btn-primary shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-xs">
@@ -802,51 +803,6 @@
     </div>
 </section>
 
-<!-- 필터링 제어 JavaScript -->
-<script>
-function filterPrograms(type, btnElement) {
-    // 1. 탭 버튼 활성화 스타일 제어
-    const btns = document.querySelectorAll('.prog-filter-btn');
-    btns.forEach(btn => {
-        btn.classList.remove('bg-slate-800', 'text-white');
-        btn.classList.add('bg-slate-900/80', 'text-slate-400');
-    });
-    
-    // 클릭된 버튼 스타일 적용
-    const activeBtn = btnElement || event.currentTarget;
-    activeBtn.classList.remove('bg-slate-900/80', 'text-slate-400');
-    activeBtn.classList.add('bg-slate-800', 'text-white');
-
-    // 2. 카드 노출 제어 및 슬라이더 처음으로 리셋
-    const slider = document.getElementById('prog-slider');
-    const cards = document.querySelectorAll('.prog-card');
-
-    cards.forEach(card => {
-        if (type === 'all' || card.classList.contains(type)) {
-            card.style.display = 'flex';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-
-    if (slider) slider.scrollTo({ left: 0, behavior: 'smooth' });
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    filterPrograms('all');
-
-    const slider = document.getElementById('prog-slider');
-    const cardWidth = () => slider.querySelector('.prog-card')?.offsetWidth + 24 || 380;
-    document.getElementById('prog-prev')?.addEventListener('click', () =>
-        slider.scrollBy({ left: -cardWidth(), behavior: 'smooth' })
-    );
-    document.getElementById('prog-next')?.addEventListener('click', () =>
-        slider.scrollBy({ left: cardWidth(), behavior: 'smooth' })
-    );
-});
-
-</script>
-
     <!-- DB-less Weekly Mission News Section (Dark Integrated Version) -->
     <section id="news" class="py-32 bg-[#080c14] text-white relative overflow-hidden">
 
@@ -897,34 +853,118 @@ document.addEventListener('DOMContentLoaded', () => {
             </span>
         </div>
     </div>
-</section>
 
-<!-- Minimalist Unified Footer -->
-<footer class="bg-[#080c14] py-16 sm:py-20 relative overflow-hidden">
-    <!-- [Footer 상단] 은은하게 사라지는 가로 구분선 -->
-    <div class="w-full max-w-7xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent mb-12 sm:mb-16"></div>
+        <!-- Donation & Support CTA Banner -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 mb-16 sm:mb-20">
+            <div class="bg-gradient-to-r from-slate-900 via-slate-900/90 to-rose-950/30 border border-slate-800/90 p-8 sm:p-10 rounded-3xl shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+                <div class="space-y-2">
+                    <span class="font-mono text-xs text-rose-400 font-bold uppercase tracking-widest">[ INVEST IN MISSION ]</span>
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white tracking-tight">하나님 나라의 확장, 동역으로 완성됩니다</h3>
+                    <p class="text-xs sm:text-sm text-slate-400 font-light">국민은행 <span class="font-mono text-amber-300 font-bold">233001-04-416923</span> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
+                </div>
+                <button type="button" 
+                        onclick="navigator.clipboard.writeText('23300104416923'); if(typeof showShareToast === 'function') showShareToast('계좌번호가 복사되었습니다.'); else alert('계좌번호가 복사되었습니다.');" 
+                        class="px-6 py-3.5 bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm text-amber-300 rounded-2xl font-mono font-bold transition-all border border-amber-500/30 hover:border-amber-400/60 shadow-lg shrink-0 flex items-center gap-2">
+                    <span>자발적 후원 안내</span>
+                    <span>📋</span>
+                </button>
+            </div>
+        </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-        <!-- [중앙 섹션 1] 사명 재확인 (Monospace, Uppercase, Wide Tracking) -->
-        <p class="font-mono text-xs sm:text-sm text-slate-400 font-medium uppercase tracking-[0.25em] mb-6">
-            Since 2011, Connecting South Korea and Indonesia
-        </p>
+        <!-- Minimalist Unified Footer -->
+        <footer class="bg-[#080c14] py-16 sm:py-20 relative overflow-hidden">
+            <!-- [Footer 상단] 은은하게 사라지는 가로 구분선 -->
+            <div class="w-full max-w-7xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent mb-12 sm:mb-16"></div>
 
-    <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
-    <div class="flex items-center gap-4 text-xs text-slate-500 mb-6">
-        <button type="button" onclick="openMdModal('terms')" class="hover:text-slate-300 transition-colors">Terms of Use</button>
-        <span class="text-slate-800 select-none">|</span>
-        <button type="button" onclick="openMdModal('privacy')" class="hover:text-slate-300 transition-colors">Privacy Policy</button>
-        <span class="text-slate-800 select-none">|</span>
-        <button type="button" onclick="openMdModal('contact')" class="hover:text-slate-300 transition-colors">Contact Us</button>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+                <!-- [중앙 섹션 1] 사명 재확인 (Monospace, Uppercase, Wide Tracking) -->
+                <p class="font-mono text-xs sm:text-sm text-slate-400 font-medium uppercase tracking-[0.25em] mb-6">
+                    Since 2011, Connecting South Korea and Indonesia
+                </p>
+
+                <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
+                <div class="flex items-center gap-4 text-xs text-slate-500 mb-6">
+                    <button type="button" onclick="openMdModal('terms')" class="hover:text-slate-300 transition-colors">Terms of Use</button>
+                    <span class="text-slate-800 select-none">|</span>
+                    <button type="button" onclick="openMdModal('privacy')" class="hover:text-slate-300 transition-colors">Privacy Policy</button>
+                    <span class="text-slate-800 select-none">|</span>
+                    <!-- Footer Contact Us Button -->
+                    <button type="button" onclick="openMdModal('contact-us')" class="hover:text-slate-300 transition-colors">Contact Us</button>
+                </div>
+
+                <!-- [하단] Copyright -->
+                <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-widest">
+                    © 2026 K-WAVE MISSION. All rights reserved.
+                </p>
+            </div>
+        </footer>
+
+        <!-- Partner Connect Modal -->
+<div id="partner-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
+        <!-- 닫기 버튼 -->
+        <button type="button" onclick="closePartnerModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white transition-colors">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+
+        <!-- 모달 헤더 -->
+        <div>
+            <span class="font-mono text-xs text-rose-400 font-bold uppercase tracking-widest">[ PARTNER CONNECT ]</span>
+            <h3 class="font-serif text-2xl font-bold text-white mt-1">협력 제안하기</h3>
+            <p class="text-xs sm:text-sm text-slate-400 font-light mt-1">
+                K-Wave Mission과 함께 한국문화 기반 고등교육선교 사역을 확장할 파트너를 기다립니다.
+            </p>
+        </div>
+
+        <!-- 프로세스 신뢰 지표 (Step Indicator) -->
+        <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-800/80 text-center bg-slate-950/50 rounded-2xl">
+            <div class="text-[11px] text-slate-400"><span class="block text-amber-400 font-mono font-bold">STEP 1</span>제안 접수</div>
+            <div class="text-[11px] text-slate-400"><span class="block text-slate-500 font-mono font-bold">STEP 2</span>담당자 확인</div>
+            <div class="text-[11px] text-slate-400"><span class="block text-slate-500 font-mono font-bold">STEP 3</span>온라인 미팅</div>
+        </div>
+
+        <!-- 작성 폼 -->
+        <form id="partner-form" onsubmit="submitPartnerForm(event)" class="space-y-4 text-left">
+            <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1">교회 / 단체명 (또는 성함) <span class="text-rose-400">*</span></label>
+                <input type="text" id="partner-org" required placeholder="예: OO교회 / 이사야" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1">담당자 이메일 <span class="text-rose-400">*</span></label>
+                    <input type="email" id="partner-email" required placeholder="example@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-300 font-medium mb-1">연락처</label>
+                    <input type="tel" id="partner-phone" placeholder="010-0000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
+                </div>
+            </div>
+
+            <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1">협력 유형 <span class="text-rose-400">*</span></label>
+                <select id="partner-type" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50">
+                    <option value="">선택해주세요</option>
+                    <option value="program">교육/장학 프로그램 협력</option>
+                    <option value="venue">오지 교회 강화사업 지원</option>
+                    <option value="sponsor">후원 및 물품 협찬</option>
+                    <option value="other">기타 제휴/협력 문의</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-xs text-slate-300 font-medium mb-1">제안 요약 내용 <span class="text-rose-400">*</span></label>
+                <textarea id="partner-message" required rows="4" placeholder="협력하고자 하는 내용이나 주요 제안 개요를 간단히 적어주세요." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 resize-none"></textarea>
+            </div>
+
+            <button type="submit" id="partner-submit-btn" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg text-sm">
+                제안서 보내기
+            </button>
+        </form>
     </div>
-
-        <!-- [하단] Copyright -->
-        <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-widest">
-            © 2026 K-WAVE MISSION. All rights reserved.
-        </p>
-    </div>
-</footer>
+</div>
 
 <!-- Legal Terms Modal -->
 <div id="legal-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md items-center justify-center p-4">
@@ -952,183 +992,18 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
     </div>
 
-    <!-- Contact CTA Modal -->
-    <div id="contact-modal" class="modal-root fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-        <div class="modal-panel bg-white text-slate-800 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
-            <button type="button" aria-label="닫기" onclick="closeContactModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-2">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <h3 id="contact-modal-title" class="text-xl font-bold text-slate-900 mb-2">선교 동역 문의</h3>
-            <p class="text-xs text-slate-500 mb-6">문의 주셔서 감사합니다. 카카오톡 또는 이메일로 메세지를 남겨주시면 대표 선교사가 직접 연락드리겠습니다.</p>
-            
-            <div class="space-y-3">
-                <a href="https://pf.kakao.com" target="_blank" class="w-full flex items-center justify-center gap-2 bg-[#FEE500] text-[#191919] py-3 rounded-xl font-medium text-sm hover:bg-[#fada0a] transition-colors">
-                    <i data-lucide="message-circle" class="w-4 h-4"></i> 카카오톡 1:1 오픈채팅 연결
-                </a>
-                <a href="mailto:mrpark@kwavemission.org" class="w-full flex items-center justify-center gap-2 bg-slate-900 text-white py-3 rounded-xl font-medium text-sm hover:bg-slate-800 transition-colors">
-                    <i data-lucide="mail" class="w-4 h-4"></i> 대표 이메일 발송 (admin@kwavemission.org)
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript logic -->
-    <!-- 1. marked.js 라이브러리를 먼저 로드 -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    <script>
-        lucide.createIcons();
-
-        const isMobileMotion = window.matchMedia('(max-width: 640px)').matches;
-        const MODAL_EXIT_MS = isMobileMotion ? 180 : 220;
-        const scrollProgressBar = document.getElementById('scroll-progress-bar');
-
-        function activateModal(modal) {
-            if (!modal) return;
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            requestAnimationFrame(() => {
-                modal.classList.add('modal-active');
-            });
-        }
-
-        function deactivateModal(modal, onClosed) {
-            if (!modal) return;
-            modal.classList.remove('modal-active');
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-                if (typeof onClosed === 'function') onClosed();
-            }, MODAL_EXIT_MS);
-        }
-
-        window.activateModal = activateModal;
-
-        const revealObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('is-visible');
-                observer.unobserve(entry.target);
-            });
-        }, {
-            threshold: 0.14,
-            rootMargin: '0px 0px -10% 0px'
-        });
-
-        function applyStaggerReveal(containerSelector, stepMs) {
-            const containers = document.querySelectorAll(containerSelector);
-            containers.forEach((container) => {
-                const children = Array.from(container.children);
-                children.forEach((child, index) => {
-                    if (child.dataset.revealBound === 'true') return;
-                    child.dataset.revealBound = 'true';
-                    child.classList.add('reveal-item');
-                    child.style.setProperty('--reveal-delay', Math.min(index * stepMs, 420) + 'ms');
-                    revealObserver.observe(child);
-                });
-            });
-        }
-
-        function initializeRevealAnimations() {
-            const staggerStep = isMobileMotion ? 44 : 72;
-            const newsStaggerStep = isMobileMotion ? 36 : 62;
-            applyStaggerReveal('#about .grid', staggerStep);
-            applyStaggerReveal('#programs .grid', staggerStep);
-            applyStaggerReveal('#news-container', newsStaggerStep);
-        }
-
-        function updateScrollProgress() {
-            if (!scrollProgressBar) return;
-            const maxScrollable = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = maxScrollable > 0 ? window.scrollY / maxScrollable : 0;
-            scrollProgressBar.style.transform = 'scaleX(' + Math.min(Math.max(progress, 0), 1) + ')';
-        }
-
-        const menuToggle = document.getElementById('menu-toggle');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuToggle.addEventListener('click', () => { mobileMenu.classList.toggle('hidden'); });
-
-        initializeRevealAnimations();
-        updateScrollProgress();
-        window.addEventListener('scroll', updateScrollProgress, { passive: true });
-        window.addEventListener('resize', updateScrollProgress);
-        window.addEventListener('news:rendered', () => {
-            applyStaggerReveal('#news-container', isMobileMotion ? 36 : 62);
-        });
-
-        function closeNewsModal() {
-            deactivateModal(document.getElementById('news-modal'), () => {
-                history.replaceState(null, '', window.location.pathname);
-            });
-        }
-
-        function showShareToast(message) {
-            let toast = document.getElementById('share-toast');
-            if (!toast) {
-                toast = document.createElement('div');
-                toast.id = 'share-toast';
-                toast.className = 'fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] bg-slate-900 text-white text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow-xl opacity-0 pointer-events-none transition-opacity duration-200';
-                document.body.appendChild(toast);
-            }
-            toast.textContent = message;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-            clearTimeout(showShareToast._timer);
-            showShareToast._timer = setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 1800);
-        }
-
-        function openContactModal(title = "선교 동역 문의") {
-            document.getElementById('contact-modal-title').innerText = title;
-            activateModal(document.getElementById('contact-modal'));
-            lucide.createIcons();
-        }
-
-        function closeContactModal() {
-            deactivateModal(document.getElementById('contact-modal'));
-        }
-        
-    // 마크다운 모달 제어 함수 추가
-    async function openMdModal(slug) {
-      const modal = document.getElementById('md-modal');
-      const container = document.getElementById('md-modal-content');
-      const title = document.getElementById('md-modal-title');
-      
-      const titles = {
-        'terms': '이용약관',
-        'privacy': '개인정보처리방침',
-        'contact': 'Contact Us'
-      };
-      if (title) title.innerText = titles[slug] ? titles[slug] : '안내';
-
-      if (container) container.innerHTML = '<div class="text-center py-10 text-slate-400">문서를 불러오는 중입니다...</div>';
-      if (modal) modal.classList.remove('hidden');
-
-      try {
-        const res = await fetch(`/api/get-md?slug=${slug}`);
-        if (!res.ok) throw new Error('문서를 불러올 수 없습니다.');
-        
-        const markdownText = await res.text();
-        if (container) container.innerHTML = marked.parse(markdownText);
-      } catch (err) {
-        if (container) container.innerHTML = `<div class="text-center py-10 text-rose-400">${err.message}</div>`;
-      }
-    }
-
-    function closeMdModal() {
-      const modal = document.getElementById('md-modal');
-      if (modal) modal.classList.add('hidden');
-    }
-    </script>
-
-    <!-- 3. 나머지 외부 스크립트 파일들 -->
+    <!-- JavaScript modules -->
+    <script src="./assets/js/api-service.js"></script>
+    <script src="./assets/js/ui-components.js"></script>
+    <script src="./assets/js/animations.js"></script>
+    <script src="./assets/js/modal-handler.js"></script>
     <script src="./assets/js/news-loader.js"></script>
     <script src="./assets/js/metrics-counter.js"></script>
-    <script src="./assets/js/main.js"></script>
     <script src="./assets/js/legal-modal.js"></script>
     <script src="./assets/js/privacy-modal.js"></script>
-    <!-- End of JavaScript logic -->   
+    <script src="./assets/js/app-init.js"></script>
+    <script src="./assets/js/partner-modal.js"></script>
+    <!-- End of JavaScript modules -->
      
     <!-- 마크다운 공통 모달 -->
 <div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">

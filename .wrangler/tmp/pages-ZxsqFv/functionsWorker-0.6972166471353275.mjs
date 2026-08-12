@@ -3,16 +3,24 @@ var __name = (target, value) => __defProp(target, "name", { value, configurable:
 
 // api/image/[[path]].js
 async function onRequestGet(context) {
-  const key = context.params.path.join("/");
-  const object = await context.env.BUCKET.get(key);
-  if (!object) {
-    return new Response("Image Not Found", { status: 404 });
+  try {
+    const { env, params } = context;
+    const key = Array.isArray(params.path) ? params.path.join("/") : params.path;
+    if (!key) {
+      return new Response("\uC774\uBBF8\uC9C0 \uACBD\uB85C\uAC00 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.", { status: 400 });
+    }
+    const object = await env.BUCKET.get(key);
+    if (!object) {
+      return new Response("\uC774\uBBF8\uC9C0\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.", { status: 404 });
+    }
+    const headers = new Headers();
+    object.writeHttpMetadata(headers);
+    headers.set("etag", object.httpEtag);
+    headers.set("Cache-Control", "public, max-age=31536000");
+    return new Response(object.body, { headers });
+  } catch (err) {
+    return new Response("\uC774\uBBF8\uC9C0 \uB85C\uB4DC \uC911 \uC624\uB958 \uBC1C\uC0DD: " + err.message, { status: 500 });
   }
-  const headers = new Headers();
-  object.writeHttpMetadata(headers);
-  headers.set("etag", object.httpEtag);
-  headers.set("Cache-Control", "public, max-age=31536000");
-  return new Response(object.body, { headers });
 }
 __name(onRequestGet, "onRequestGet");
 
@@ -48,8 +56,70 @@ async function onRequestPost(context) {
 }
 __name(onRequestPost, "onRequestPost");
 
-// api/get-posts.js
+// api/delete-program.js
+async function onRequestPost2(context) {
+  try {
+    const { env, request } = context;
+    const formData = await request.formData();
+    const id = formData.get("id");
+    const password = formData.get("password");
+    if (!id) {
+      return new Response(JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uD504\uB85C\uADF8\uB7A8 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    await env.DB.prepare("DELETE FROM programs WHERE id = ?").bind(id).run();
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestPost2, "onRequestPost");
+
+// api/get-md.js
 async function onRequestGet2(context) {
+  try {
+    const { request } = context;
+    const url = new URL(request.url);
+    const slug = url.searchParams.get("slug");
+    if (!slug) {
+      return new Response("slug \uD30C\uB77C\uBBF8\uD130\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4.", { status: 400 });
+    }
+    if (!/^[a-zA-Z0-9_-]+$/.test(slug)) {
+      return new Response("\uC720\uD6A8\uD558\uC9C0 \uC54A\uC740 slug \uD615\uC2DD\uC785\uB2C8\uB2E4.", { status: 400 });
+    }
+    const docUrl = new URL(`/docs/${slug}.md`, url.origin);
+    const res = await fetch(docUrl.toString());
+    if (!res.ok) {
+      return new Response("\uD574\uB2F9 \uBB38\uC11C\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.", { status: 404 });
+    }
+    const markdownText = await res.text();
+    return new Response(markdownText, {
+      headers: {
+        "Content-Type": "text/markdown; charset=utf-8",
+        "Cache-Control": "public, max-age=3600"
+      }
+    });
+  } catch (err) {
+    return new Response(`\uC624\uB958 \uBC1C\uC0DD: ${err.message}`, { status: 500 });
+  }
+}
+__name(onRequestGet2, "onRequestGet");
+
+// api/get-posts.js
+async function onRequestGet3(context) {
   try {
     const { env, request } = context;
     const url = new URL(request.url);
@@ -84,10 +154,48 @@ async function onRequestGet2(context) {
     });
   }
 }
-__name(onRequestGet2, "onRequestGet");
+__name(onRequestGet3, "onRequestGet");
+
+// api/get-programs.js
+async function onRequestGet4(context) {
+  try {
+    const { env, request } = context;
+    const url = new URL(request.url);
+    const id = url.searchParams.get("id");
+    const status = url.searchParams.get("status");
+    if (id) {
+      const program = await env.DB.prepare(
+        "SELECT * FROM programs WHERE id = ?"
+      ).bind(id).first();
+      return new Response(JSON.stringify(program || {}), {
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    let stmt;
+    if (status && status !== "all") {
+      stmt = env.DB.prepare(
+        "SELECT * FROM programs WHERE status = ? ORDER BY display_order ASC, id DESC"
+      ).bind(status);
+    } else {
+      stmt = env.DB.prepare(
+        "SELECT * FROM programs ORDER BY display_order ASC, id DESC"
+      );
+    }
+    const { results } = await stmt.all();
+    return new Response(JSON.stringify(results || []), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestGet4, "onRequestGet");
 
 // api/update-post.js
-async function onRequestPost2(context) {
+async function onRequestPost3(context) {
   try {
     const { env, request } = context;
     const formData = await request.formData();
@@ -97,6 +205,7 @@ async function onRequestPost2(context) {
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
+    const thumbnailUrl = formData.get("thumbnail_url");
     if (!id) {
       return new Response(JSON.stringify({ error: "\uC218\uC815\uD560 \uAE00 ID\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." }), { status: 400 });
     }
@@ -107,13 +216,27 @@ async function onRequestPost2(context) {
       return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC740 \uD544\uC218 \uC785\uB825 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), { status: 400 });
     }
     let imageUrl = null;
-    if (imageFile && imageFile.name) {
-      const fileExtension = imageFile.name.split(".").pop();
-      const fileName = `images/${Date.now()}.${fileExtension}`;
-      await env.BUCKET.put(fileName, imageFile.stream(), {
-        httpMetadata: { contentType: imageFile.type }
+    const hasUpload = imageFile && typeof imageFile.arrayBuffer === "function" && Number(imageFile.size || 0) > 0;
+    if (hasUpload) {
+      const mimeToExt = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/gif": "gif",
+        "image/webp": "webp",
+        "image/svg+xml": "svg",
+        "image/avif": "avif"
+      };
+      const fallbackExt = mimeToExt[imageFile.type] || "bin";
+      const nameExt = typeof imageFile.name === "string" && imageFile.name.includes(".") ? imageFile.name.split(".").pop().toLowerCase() : "";
+      const fileExtension = nameExt || fallbackExt;
+      const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+      const fileBody = await imageFile.arrayBuffer();
+      await env.BUCKET.put(fileName, fileBody, {
+        httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
       imageUrl = `/api/image/${fileName}`;
+    } else if (typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
+      imageUrl = thumbnailUrl.trim();
     }
     if (imageUrl) {
       await env.DB.prepare(
@@ -134,10 +257,10 @@ async function onRequestPost2(context) {
     });
   }
 }
-__name(onRequestPost2, "onRequestPost");
+__name(onRequestPost3, "onRequestPost");
 
 // api/write-post.js
-async function onRequestPost3(context) {
+async function onRequestPost4(context) {
   try {
     const { env, request } = context;
     const formData = await request.formData();
@@ -146,6 +269,7 @@ async function onRequestPost3(context) {
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
+    const thumbnailUrl = formData.get("thumbnail_url");
     if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
         status: 401,
@@ -159,15 +283,29 @@ async function onRequestPost3(context) {
       });
     }
     let imageUrl = null;
-    if (imageFile && imageFile.name) {
-      const fileExtension = imageFile.name.split(".").pop();
-      const fileName = `images/${Date.now()}.${fileExtension}`;
-      await env.BUCKET.put(fileName, imageFile.stream(), {
-        httpMetadata: { contentType: imageFile.type }
+    const hasUpload = imageFile && typeof imageFile.arrayBuffer === "function" && Number(imageFile.size || 0) > 0;
+    if (hasUpload) {
+      const mimeToExt = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/gif": "gif",
+        "image/webp": "webp",
+        "image/svg+xml": "svg",
+        "image/avif": "avif"
+      };
+      const fallbackExt = mimeToExt[imageFile.type] || "bin";
+      const nameExt = typeof imageFile.name === "string" && imageFile.name.includes(".") ? imageFile.name.split(".").pop().toLowerCase() : "";
+      const fileExtension = nameExt || fallbackExt;
+      const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
+      const fileBody = await imageFile.arrayBuffer();
+      await context.env.BUCKET.put(fileName, fileBody, {
+        httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
       imageUrl = `/api/image/${fileName}`;
+    } else if (typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
+      imageUrl = thumbnailUrl.trim();
     }
-    const info = await env.DB.prepare(
+    const info = await context.env.DB.prepare(
       "INSERT INTO posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
     ).bind(type, title, content, imageUrl).run();
     return new Response(JSON.stringify({ success: true, url: imageUrl, info }), {
@@ -180,9 +318,62 @@ async function onRequestPost3(context) {
     });
   }
 }
-__name(onRequestPost3, "onRequestPost");
+__name(onRequestPost4, "onRequestPost");
 
-// ../.wrangler/tmp/pages-rGbLpj/functionsRoutes-0.748656897682448.mjs
+// api/write-program.js
+async function onRequestPost5(context) {
+  try {
+    const { env, request } = context;
+    const formData = await request.formData();
+    const id = formData.get("id");
+    const password = formData.get("password");
+    const slug = formData.get("slug");
+    const category = formData.get("category");
+    const title = formData.get("title");
+    const description = formData.get("description");
+    const status = formData.get("status") || "recruiting";
+    const icon = formData.get("icon") || "\u{1F393}";
+    const is_recommended = formData.get("is_recommended") === "1" ? 1 : 0;
+    const display_order = parseInt(formData.get("display_order") || "0", 10);
+    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
+        status: 401,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    if (!slug || !category || !title || !description) {
+      return new Response(JSON.stringify({ error: "\uC2AC\uB7EC\uADF8, \uCE74\uD14C\uACE0\uB9AC, \uC81C\uBAA9, \uC124\uBA85\uC740 \uD544\uC218 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    if (id) {
+      await env.DB.prepare(
+        `UPDATE programs 
+         SET slug = ?, category = ?, title = ?, description = ?, status = ?, icon = ?, is_recommended = ?, display_order = ?
+         WHERE id = ?`
+      ).bind(slug, category, title, description, status, icon, is_recommended, display_order, id).run();
+      return new Response(JSON.stringify({ success: true, message: "\uD504\uB85C\uADF8\uB7A8\uC774 \uC218\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4." }), {
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      });
+    }
+    const info = await env.DB.prepare(
+      `INSERT INTO programs (slug, category, title, description, status, icon, is_recommended, display_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+    ).bind(slug, category, title, description, status, icon, is_recommended, display_order).run();
+    return new Response(JSON.stringify({ success: true, info }), {
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json; charset=utf-8" }
+    });
+  }
+}
+__name(onRequestPost5, "onRequestPost");
+
+// ../.wrangler/tmp/pages-ZxsqFv/functionsRoutes-0.6150405775192912.mjs
 var routes = [
   {
     routePath: "/api/image/:path*",
@@ -199,25 +390,53 @@ var routes = [
     modules: [onRequestPost]
   },
   {
-    routePath: "/api/get-posts",
-    mountPath: "/api",
-    method: "GET",
-    middlewares: [],
-    modules: [onRequestGet2]
-  },
-  {
-    routePath: "/api/update-post",
+    routePath: "/api/delete-program",
     mountPath: "/api",
     method: "POST",
     middlewares: [],
     modules: [onRequestPost2]
   },
   {
-    routePath: "/api/write-post",
+    routePath: "/api/get-md",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet2]
+  },
+  {
+    routePath: "/api/get-posts",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet3]
+  },
+  {
+    routePath: "/api/get-programs",
+    mountPath: "/api",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet4]
+  },
+  {
+    routePath: "/api/update-post",
     mountPath: "/api",
     method: "POST",
     middlewares: [],
     modules: [onRequestPost3]
+  },
+  {
+    routePath: "/api/write-post",
+    mountPath: "/api",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost4]
+  },
+  {
+    routePath: "/api/write-program",
+    mountPath: "/api",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost5]
   }
 ];
 
@@ -666,6 +885,186 @@ var cloneResponse = /* @__PURE__ */ __name((response) => (
     response
   )
 ), "cloneResponse");
-export {
-  pages_template_worker_default as default
+
+// ../../../../.npm/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
+var drainBody = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } finally {
+    try {
+      if (request.body !== null && !request.bodyUsed) {
+        const reader = request.body.getReader();
+        while (!(await reader.read()).done) {
+        }
+      }
+    } catch (e) {
+      console.error("Failed to drain the unused request body.", e);
+    }
+  }
+}, "drainBody");
+var middleware_ensure_req_body_drained_default = drainBody;
+
+// ../../../../.npm/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-miniflare3-json-error.ts
+function reduceError(e) {
+  return {
+    name: e?.name,
+    message: e?.message ?? String(e),
+    stack: e?.stack,
+    cause: e?.cause === void 0 ? void 0 : reduceError(e.cause)
+  };
+}
+__name(reduceError, "reduceError");
+var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+  try {
+    return await middlewareCtx.next(request, env);
+  } catch (e) {
+    const error = reduceError(e);
+    const body = JSON.stringify(error);
+    const headers = {
+      "Content-Type": "application/json",
+      "MF-Experimental-Error-Stack": "true"
+    };
+    const encoded = encodeURIComponent(body);
+    if (encoded.length <= 8192) {
+      headers["MF-Experimental-Error-Stack-Payload"] = encoded;
+    }
+    return new Response(body, { status: 500, headers });
+  }
+}, "jsonError");
+var middleware_miniflare3_json_error_default = jsonError;
+
+// ../.wrangler/tmp/bundle-iEAFwG/middleware-insertion-facade.js
+var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
+  middleware_ensure_req_body_drained_default,
+  middleware_miniflare3_json_error_default
+];
+var middleware_insertion_facade_default = pages_template_worker_default;
+
+// ../../../../.npm/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/common.ts
+var __facade_middleware__ = [];
+function __facade_register__(...args) {
+  __facade_middleware__.push(...args.flat());
+}
+__name(__facade_register__, "__facade_register__");
+function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
+  const [head, ...tail] = middlewareChain;
+  const middlewareCtx = {
+    dispatch,
+    next(newRequest, newEnv) {
+      return __facade_invokeChain__(newRequest, newEnv, ctx, dispatch, tail);
+    }
+  };
+  return head(request, env, ctx, middlewareCtx);
+}
+__name(__facade_invokeChain__, "__facade_invokeChain__");
+function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__(request, env, ctx, dispatch, [
+    ...__facade_middleware__,
+    finalMiddleware
+  ]);
+}
+__name(__facade_invoke__, "__facade_invoke__");
+
+// ../.wrangler/tmp/bundle-iEAFwG/middleware-loader.entry.ts
+var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
+  constructor(scheduledTime, cron, noRetry) {
+    this.scheduledTime = scheduledTime;
+    this.cron = cron;
+    this.#noRetry = noRetry;
+  }
+  scheduledTime;
+  cron;
+  static {
+    __name(this, "__Facade_ScheduledController__");
+  }
+  #noRetry;
+  noRetry() {
+    if (!(this instanceof ___Facade_ScheduledController__)) {
+      throw new TypeError("Illegal invocation");
+    }
+    this.#noRetry();
+  }
 };
+function wrapExportedHandler(worker) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+    return worker;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
+    __facade_register__(middleware);
+  }
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+    if (worker.fetch === void 0) {
+      throw new Error("Handler does not export a fetch() function.");
+    }
+    return worker.fetch(request, env, ctx);
+  }, "fetchDispatcher");
+  return {
+    ...worker,
+    fetch(request, env, ctx) {
+      const dispatcher = /* @__PURE__ */ __name(function(type, init) {
+        if (type === "scheduled" && worker.scheduled !== void 0) {
+          const controller = new __Facade_ScheduledController__(
+            Date.now(),
+            init.cron ?? "",
+            () => {
+            }
+          );
+          return worker.scheduled(controller, env, ctx);
+        }
+      }, "dispatcher");
+      return __facade_invoke__(request, env, ctx, dispatcher, fetchDispatcher);
+    }
+  };
+}
+__name(wrapExportedHandler, "wrapExportedHandler");
+function wrapWorkerEntrypoint(klass) {
+  if (__INTERNAL_WRANGLER_MIDDLEWARE__ === void 0 || __INTERNAL_WRANGLER_MIDDLEWARE__.length === 0) {
+    return klass;
+  }
+  for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
+    __facade_register__(middleware);
+  }
+  return class extends klass {
+    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
+      this.env = env;
+      this.ctx = ctx;
+      if (super.fetch === void 0) {
+        throw new Error("Entrypoint class does not define a fetch() function.");
+      }
+      return super.fetch(request);
+    }, "#fetchDispatcher");
+    #dispatcher = /* @__PURE__ */ __name((type, init) => {
+      if (type === "scheduled" && super.scheduled !== void 0) {
+        const controller = new __Facade_ScheduledController__(
+          Date.now(),
+          init.cron ?? "",
+          () => {
+          }
+        );
+        return super.scheduled(controller);
+      }
+    }, "#dispatcher");
+    fetch(request) {
+      return __facade_invoke__(
+        request,
+        this.env,
+        this.ctx,
+        this.#dispatcher,
+        this.#fetchDispatcher
+      );
+    }
+  };
+}
+__name(wrapWorkerEntrypoint, "wrapWorkerEntrypoint");
+var WRAPPED_ENTRY;
+if (typeof middleware_insertion_facade_default === "object") {
+  WRAPPED_ENTRY = wrapExportedHandler(middleware_insertion_facade_default);
+} else if (typeof middleware_insertion_facade_default === "function") {
+  WRAPPED_ENTRY = wrapWorkerEntrypoint(middleware_insertion_facade_default);
+}
+var middleware_loader_entry_default = WRAPPED_ENTRY;
+export {
+  __INTERNAL_WRANGLER_MIDDLEWARE__,
+  middleware_loader_entry_default as default
+};
+//# sourceMappingURL=functionsWorker-0.6972166471353275.mjs.map

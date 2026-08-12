@@ -34,7 +34,7 @@
             // 1. 대표 상단 리포트 (Featured Briefing - 2 Columns)
             if (index === 0) {
                 return (
-                    '<div class="md:col-span-2 news-feature-card group relative" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
+                    '<div class="md:col-span-2 news-feature-card group relative cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
                         '<div class="news-feature-media" style="background-image:url(\'' + post.thumbnail + '\')"></div>' +
                         '<div class="news-feature-overlay"></div>' +
                         '<div class="news-feature-inner">' +
@@ -61,22 +61,23 @@
             }
 
             // 2. 서브 필드 로그 리포트 (Field Log - 1 Column)
+            // aspect-[16/9] 및 object-cover로 비율 고정 처리
             return (
-                '<div class="md:col-span-1 news-card group" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
+                '<div class="md:col-span-1 news-card group cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
                     '<div>' +
-                        '<div class="news-card-image-wrap">' +
-                            '<img src="' + post.thumbnail + '" alt="" class="news-card-image" onerror="this.style.display=\'none\';this.parentElement.innerHTML+=\'<span style=&quot;font-size:2.5rem&quot;>📰</span>\'">' +
+                        '<div class="news-card-image-wrap aspect-[16/9] w-full overflow-hidden bg-slate-900 relative rounded-t-xl">' +
+                            '<img src="' + post.thumbnail + '" alt="" class="news-card-image w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105" onerror="this.style.display=\'none\';this.parentElement.innerHTML+=\'<div class=&quot;w-full h-full flex items-center justify-center bg-slate-800 text-3xl&quot;>📰</div>\'">' +
                             '<div class="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent"></div>' +
                         '</div>' +
-                        '<div class="news-card-content">' +
-                            '<div class="news-card-meta">' +
-                                '<span class="news-card-tag">[FIELD LOG]</span>' +
+                        '<div class="news-card-content p-4">' +
+                            '<div class="news-card-meta flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">' +
+                                '<span class="news-card-tag font-semibold text-brand-300">[FIELD LOG]</span>' +
                                 '<span>' + post.date + '</span>' +
                             '</div>' +
-                            '<h3 class="news-card-title line-clamp-2">' + post.title + '</h3>' +
+                            '<h3 class="news-card-title line-clamp-2 text-base font-medium text-slate-100 group-hover:text-brand-200 transition-colors">' + post.title + '</h3>' +
                         '</div>' +
                     '</div>' +
-                    '<div class="news-card-footer">' +
+                    '<div class="news-card-footer px-4 pb-4 flex items-center justify-between text-xs">' +
                         '<span class="font-mono text-slate-400">✍️ ' + post.author + '</span>' +
                         '<i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-brand-300 group-hover:translate-x-[1px] transition-transform"></i>' +
                     '</div>' +
@@ -102,14 +103,14 @@
                 '<span>' + category + '</span><span>&nbsp;•&nbsp;</span><span>' + date + '</span>' +
             '</div>' +
             '<h2 class="font-serif text-[1.75rem] leading-tight font-semibold text-slate-900 mb-5">' + title + '</h2>' +
-            '<div id="modal-body" class="text-sm text-slate-700 leading-relaxed mb-7">' +
+            '<div id="modal-body" class="text-sm text-slate-700 leading-relaxed mb-7 overflow-x-hidden">' +
                 '<p class="text-slate-400">내용을 불러오는 중...</p>' +
             '</div>' +
-            '<div class="modal-footer">' +
-                '<button onclick="shareCurrentPost()" class="btn-share-footer">' +
+            '<div class="modal-footer flex items-center justify-between border-t border-slate-100 pt-4 mt-6">' +
+                '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition-colors">' +
                     '<i data-lucide="link-2" class="w-4 h-4"></i> 링크 공유' +
                 '</button>' +
-                '<button onclick="closeNewsModal()" class="btn-close-footer">닫기</button>' +
+                '<button onclick="closeNewsModal()" class="btn-close-footer px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors">닫기</button>' +
             '</div>';
 
         var modal = document.getElementById('news-modal');
@@ -131,12 +132,13 @@
                 // Rewrite relative image paths in markdown to be root-relative
                 var basePath = file.replace(/[^/]+$/, '');
                 var renderer = new marked.Renderer();
+                
+                // 마크다운 이미지 출력 커스텀 (세로 통 이미지 및 비율 유지 지원)
                 renderer.image = function (hrefOrToken, title, text) {
                     var href = hrefOrToken;
                     var caption = text;
                     var imageTitle = title;
 
-                    // marked versions may pass a token object instead of positional args.
                     if (hrefOrToken && typeof hrefOrToken === 'object') {
                         href = hrefOrToken.href || hrefOrToken.url || '';
                         caption = hrefOrToken.text || hrefOrToken.alt || '';
@@ -154,13 +156,18 @@
                         }
                     }
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
-                    return '<img src="' + src + '" alt="' + (caption || '') + '"' + titleAttr + ' style="max-width:100%;border-radius:0.5rem;margin:1rem 0">';
+                    
+                    // w-full max-w-full h-auto 구조로 일반 사진 및 장문 통 이미지 모두 지원
+                    return '<div class="my-4 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-50">' +
+                               '<img src="' + src + '" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-xl shadow-sm" loading="lazy" />' +
+                               (caption ? '<span class="text-xs text-slate-400 mt-2 text-center">' + caption + '</span>' : '') +
+                           '</div>';
                 };
                 bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
             }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
-            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-500 text-sm">내용을 불러올 수 없습니다.</p>';
+            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-500 text-sm py-4">내용을 불러올 수 없습니다.</p>';
         }
     };
 
