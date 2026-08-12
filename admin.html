@@ -22,8 +22,10 @@
     .form-row { display: flex; gap: 15px; }
     .form-row .form-group { flex: 1; }
     label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
-    input[type="text"], input[type="number"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; }
+    input[type="text"], input[type="number"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
     textarea { height: 160px; resize: vertical; }
+    .field-invalid { border-color: #dc3545 !important; background: #fff5f5; box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15); }
+    .field-valid { border-color: #198754; box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.12); }
     
     .btn-group { display: flex; gap: 10px; margin-top: 15px; }
     button { background: #0056b3; color: white; border: none; padding: 12px 20px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; }
@@ -37,7 +39,17 @@
     button.sm { padding: 5px 10px; font-size: 13px; font-weight: normal; }
 
     #preview-img { max-width: 200px; margin-top: 10px; display: none; border-radius: 6px; border: 1px solid #ddd; }
-    .status-msg { margin-top: 15px; font-weight: bold; text-align: center; }
+    .status-msg { margin-top: 15px; min-height: 44px; padding: 10px 12px; border-radius: 8px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0; transform: translateY(2px); transition: opacity .2s ease, transform .2s ease; }
+    .status-msg.visible { opacity: 1; transform: translateY(0); }
+    .status-msg.is-loading { background: #eef5ff; color: #084298; border: 1px solid #b6d4fe; }
+    .status-msg.is-success { background: #e8f5e9; color: #1b5e20; border: 1px solid #c3e6cb; }
+    .status-msg.is-error { background: #ffebee; color: #b71c1c; border: 1px solid #f5c2c7; }
+    .status-spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.85s linear infinite; }
+    .status-sub { display: block; font-size: 12px; font-weight: 600; opacity: 0.85; margin-top: 2px; }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
     /* 모드 표시 상태바 */
     .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-left: 10px; }
@@ -48,6 +60,14 @@
     .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
     .filter-btn { background: #f8f9fa; color: #495057; border: 1px solid #ced4da; padding: 6px 14px; border-radius: 20px; font-size: 14px; cursor: pointer; }
     .filter-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
+    .list-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+    .list-controls input[type="text"], .list-controls select { min-width: 180px; max-width: 320px; }
+    .bulk-actions { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+    .bulk-meta { font-size: 13px; color: #555; }
+    .pagination { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .pagination button { padding: 8px 14px; font-size: 13px; }
+    .pagination .page-info { font-size: 13px; color: #495057; min-width: 180px; text-align: center; }
+    .select-col { width: 36px; text-align: center; }
 
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { border-bottom: 1px solid #eee; padding: 12px 8px; text-align: left; font-size: 14px; }
@@ -136,15 +156,25 @@
     <div class="card">
       <h2>게시글 목록 및 관리</h2>
 
+      <div class="list-controls">
+        <input type="text" id="postSearchInput" placeholder="제목으로 검색...">
+      </div>
+
       <div class="filter-tabs">
         <button class="filter-btn active" data-type="all">전체보기</button>
         <button class="filter-btn" data-type="news">뉴스만</button>
         <button class="filter-btn" data-type="notice">공지사항만</button>
       </div>
 
+      <div class="bulk-actions">
+        <button type="button" id="postBulkDeleteBtn" class="danger">선택 항목 삭제</button>
+        <span id="postBulkMeta" class="bulk-meta">선택된 항목 없음</span>
+      </div>
+
       <table>
         <thead>
           <tr>
+            <th class="select-col"><input type="checkbox" id="postSelectAll"></th>
             <th style="width: 50px;">ID</th>
             <th style="width: 60px;">사진</th>
             <th style="width: 80px;">분류</th>
@@ -154,9 +184,10 @@
           </tr>
         </thead>
         <tbody id="postTableBody">
-          <tr><td colspan="6" style="text-align:center;">등록된 글을 불러오는 중...</td></tr>
+          <tr><td colspan="7" style="text-align:center;">등록된 글을 불러오는 중...</td></tr>
         </tbody>
       </table>
+      <div id="postPagination" class="pagination"></div>
     </div>
   </div>
 
@@ -232,9 +263,28 @@
     <!-- 프로그램 목록 -->
     <div class="card">
       <h2>등록된 프로그램 목록</h2>
+
+      <div class="list-controls">
+        <input type="text" id="programSearchInput" placeholder="프로그램명으로 검색...">
+        <select id="programCategoryFilter">
+          <option value="all">전체 카테고리</option>
+        </select>
+      </div>
+      <div class="filter-tabs" id="programStatusFilters">
+        <button class="filter-btn active" data-status="all">전체 상태</button>
+        <button class="filter-btn" data-status="recruiting">모집중</button>
+        <button class="filter-btn" data-status="ongoing">진행중</button>
+        <button class="filter-btn" data-status="preparing">준비중</button>
+      </div>
+      <div class="bulk-actions">
+        <button type="button" id="programBulkDeleteBtn" class="danger">선택 항목 삭제</button>
+        <span id="programBulkMeta" class="bulk-meta">선택된 항목 없음</span>
+      </div>
+
       <table>
         <thead>
           <tr>
+            <th class="select-col"><input type="checkbox" id="programSelectAll"></th>
             <th style="width: 50px;">ID</th>
             <th style="width: 50px;">아이콘</th>
             <th style="width: 120px;">슬러그</th>
@@ -246,9 +296,10 @@
           </tr>
         </thead>
         <tbody id="programTableBody">
-          <tr><td colspan="8" style="text-align:center;">등록된 프로그램을 불러오는 중...</td></tr>
+          <tr><td colspan="9" style="text-align:center;">등록된 프로그램을 불러오는 중...</td></tr>
         </tbody>
       </table>
+      <div id="programPagination" class="pagination"></div>
     </div>
   </div>
 
@@ -273,6 +324,79 @@
 
     function apiUrl(path) { return apiBase + path; }
     function getPassword() { return document.getElementById('globalPassword').value; }
+
+    function clearStatus(statusEl) {
+      if (!statusEl) return;
+      if (statusEl._clearTimer) clearTimeout(statusEl._clearTimer);
+      if (statusEl._progressTimer) clearInterval(statusEl._progressTimer);
+      statusEl.textContent = '';
+      statusEl.className = 'status-msg';
+    }
+
+    function setStatus(statusEl, type, mainText, subText) {
+      if (!statusEl) return;
+      clearStatus(statusEl);
+      statusEl.classList.add('visible');
+
+      if (type === 'loading') {
+        statusEl.classList.add('is-loading');
+        statusEl.innerHTML = '<span class="status-spinner" aria-hidden="true"></span><span><span>' + mainText + '</span>' + (subText ? '<span class="status-sub">' + subText + '</span>' : '') + '</span>';
+        return;
+      }
+
+      statusEl.classList.add(type === 'success' ? 'is-success' : 'is-error');
+      statusEl.textContent = mainText;
+      statusEl._clearTimer = setTimeout(() => {
+        statusEl.classList.remove('visible');
+        setTimeout(() => clearStatus(statusEl), 220);
+      }, 3200);
+    }
+
+    function startSavingStatus(statusEl, initialText) {
+      const startedAt = Date.now();
+      setStatus(statusEl, 'loading', initialText, '네트워크 상태에 따라 시간이 걸릴 수 있습니다.');
+
+      statusEl._progressTimer = setInterval(() => {
+        const seconds = Math.floor((Date.now() - startedAt) / 1000);
+        const detail = seconds >= 6
+          ? `처리 중... ${seconds}초 경과 (잠시만 기다려 주세요)`
+          : `처리 중... ${seconds}초 경과`;
+        statusEl.innerHTML = '<span class="status-spinner" aria-hidden="true"></span><span><span>' + initialText + '</span><span class="status-sub">' + detail + '</span></span>';
+      }, 1000);
+    }
+
+    function isValueEmpty(el) {
+      if (!el) return true;
+      if (el.type === 'checkbox') return false;
+      if (el.type === 'file') return el.required && (!el.files || el.files.length === 0);
+      return !String(el.value || '').trim();
+    }
+
+    function validateField(el) {
+      if (!el || !el.required) return true;
+      const valid = !isValueEmpty(el) && el.checkValidity();
+      el.classList.toggle('field-invalid', !valid);
+      el.classList.toggle('field-valid', valid);
+      return valid;
+    }
+
+    function validateRequiredFields(fields) {
+      let firstInvalid = null;
+      fields.forEach((field) => {
+        const ok = validateField(field);
+        if (!ok && !firstInvalid) firstInvalid = field;
+      });
+      if (firstInvalid) firstInvalid.focus();
+      return !firstInvalid;
+    }
+
+    function bindRealtimeValidation(fields) {
+      fields.forEach((field) => {
+        const eventName = (field.tagName === 'SELECT' || field.type === 'checkbox' || field.type === 'file') ? 'change' : 'input';
+        field.addEventListener(eventName, () => validateField(field));
+        field.addEventListener('blur', () => validateField(field));
+      });
+    }
 
     // 탭 전환
     function switchTab(tabName) {
@@ -315,8 +439,34 @@
     const previewImg = document.getElementById('preview-img');
     const postStatusDiv = document.getElementById('postStatus');
     const postTableBody = document.getElementById('postTableBody');
+    const postSearchInput = document.getElementById('postSearchInput');
+    const postPagination = document.getElementById('postPagination');
+    const postSelectAll = document.getElementById('postSelectAll');
+    const postBulkDeleteBtn = document.getElementById('postBulkDeleteBtn');
+    const postBulkMeta = document.getElementById('postBulkMeta');
+    const globalPasswordInput = document.getElementById('globalPassword');
 
+    const postRequiredFields = [
+      document.getElementById('postTitle'),
+      document.getElementById('postContent')
+    ];
+    const programRequiredFields = [
+      document.getElementById('programSlug'),
+      document.getElementById('programCategory'),
+      document.getElementById('programTitle'),
+      document.getElementById('programDescription')
+    ];
+
+    bindRealtimeValidation(postRequiredFields);
+    bindRealtimeValidation(programRequiredFields);
+    bindRealtimeValidation([globalPasswordInput]);
+
+    const PAGE_SIZE = 20;
     let currentFilter = 'all';
+    let postSearchTerm = '';
+    let postCurrentPage = 1;
+    let postListCache = [];
+    const selectedPostIds = new Set();
 
     function getPreviewImageUrl() { return previewImg.dataset.imageUrl || ''; }
     function setPreviewImageUrl(rawUrl) {
@@ -331,53 +481,150 @@
       }
     }
 
+    function getFilteredPosts() {
+      return postListCache.filter((post) => {
+        const typeMatch = currentFilter === 'all' || post.type === currentFilter;
+        const title = String(post.title || '').toLowerCase();
+        const searchMatch = !postSearchTerm || title.includes(postSearchTerm);
+        return typeMatch && searchMatch;
+      });
+    }
+
+    function updatePostBulkMeta() {
+      const count = selectedPostIds.size;
+      postBulkMeta.textContent = count > 0 ? `${count}개 선택됨` : '선택된 항목 없음';
+    }
+
+    function renderPostPagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+      if (postCurrentPage > totalPages) postCurrentPage = totalPages;
+
+      if (totalItems <= PAGE_SIZE) {
+        postPagination.innerHTML = '';
+        return totalPages;
+      }
+
+      postPagination.innerHTML = `
+        <button type="button" class="secondary" onclick="changePostPage(-1)" ${postCurrentPage === 1 ? 'disabled' : ''}>이전</button>
+        <span class="page-info">${postCurrentPage} / ${totalPages} 페이지 (총 ${totalItems}개)</span>
+        <button type="button" class="secondary" onclick="changePostPage(1)" ${postCurrentPage === totalPages ? 'disabled' : ''}>다음</button>
+      `;
+      return totalPages;
+    }
+
+    function renderPostRows() {
+      const filteredPosts = getFilteredPosts();
+      const totalPages = renderPostPagination(filteredPosts.length);
+      const startIndex = (postCurrentPage - 1) * PAGE_SIZE;
+      const pagedPosts = filteredPosts.slice(startIndex, startIndex + PAGE_SIZE);
+
+      if (filteredPosts.length === 0) {
+        postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">조건에 맞는 게시글이 없습니다.</td></tr>';
+        postSelectAll.checked = false;
+        updatePostBulkMeta();
+        return;
+      }
+
+      if (postCurrentPage > totalPages) {
+        postCurrentPage = totalPages;
+      }
+
+      postTableBody.innerHTML = pagedPosts.map(post => {
+        const isNews = post.type === 'news';
+        const typeLabel = isNews ? '뉴스' : '공지사항';
+        const typeClass = isNews ? 'type-news' : 'type-notice';
+        const createdDate = post.created_at ? post.created_at.substring(0, 10) : '-';
+        const thumbnailUrl = normalizeImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
+        const thumbHtml = thumbnailUrl
+          ? `<img src="${thumbnailUrl}" class="list-thumb">`
+          : `<span style="color:#ccc; font-size:12px;">없음</span>`;
+
+        return `
+          <tr>
+            <td class="select-col"><input type="checkbox" class="post-row-check" data-id="${post.id}" ${selectedPostIds.has(Number(post.id)) ? 'checked' : ''}></td>
+            <td>${post.id}</td>
+            <td>${thumbHtml}</td>
+            <td><span class="type-chip ${typeClass}">${typeLabel}</span></td>
+            <td><strong>${escapeHtml(post.title)}</strong></td>
+            <td>${createdDate}</td>
+            <td>
+              <button class="sm outline" onclick="openPostPreview(${post.id})">보기</button>
+              <button class="sm secondary" onclick="editPost(${post.id})">수정</button>
+              <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const visibleIds = pagedPosts.map((p) => Number(p.id));
+      const allVisibleChecked = visibleIds.length > 0 && visibleIds.every((id) => selectedPostIds.has(id));
+      postSelectAll.checked = allVisibleChecked;
+      updatePostBulkMeta();
+    }
+
+    window.changePostPage = function (delta) {
+      const filteredCount = getFilteredPosts().length;
+      const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
+      postCurrentPage = Math.min(totalPages, Math.max(1, postCurrentPage + delta));
+      renderPostRows();
+    };
+
     async function loadPostList() {
       try {
-        const res = await fetch(apiUrl(`/api/get-posts?type=${currentFilter}`));
+        const res = await fetch(apiUrl('/api/get-posts?type=all'));
         const posts = await res.json();
 
         if (!Array.isArray(posts) || posts.length === 0) {
-          postTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#777;">등록된 게시글이 없습니다.</td></tr>';
+          postListCache = [];
+          postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">등록된 게시글이 없습니다.</td></tr>';
+          postPagination.innerHTML = '';
+          selectedPostIds.clear();
+          postSelectAll.checked = false;
+          updatePostBulkMeta();
           return;
         }
 
-        postTableBody.innerHTML = posts.map(post => {
-          const isNews = post.type === 'news';
-          const typeLabel = isNews ? '뉴스' : '공지사항';
-          const typeClass = isNews ? 'type-news' : 'type-notice';
-          const createdDate = post.created_at ? post.created_at.substring(0, 10) : '-';
-          const thumbnailUrl = normalizeImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
-          const thumbHtml = thumbnailUrl
-            ? `<img src="${thumbnailUrl}" class="list-thumb">`
-            : `<span style="color:#ccc; font-size:12px;">없음</span>`;
-
-          return `
-            <tr>
-              <td>${post.id}</td>
-              <td>${thumbHtml}</td>
-              <td><span class="type-chip ${typeClass}">${typeLabel}</span></td>
-              <td><strong>${escapeHtml(post.title)}</strong></td>
-              <td>${createdDate}</td>
-              <td>
-                <button class="sm outline" onclick="openPostPreview(${post.id})">보기</button>
-                <button class="sm secondary" onclick="editPost(${post.id})">수정</button>
-                <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
+        postListCache = posts;
+        renderPostRows();
       } catch (err) {
-        postTableBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">목록을 불러오는 중 오류 발생</td></tr>';
+        postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">목록을 불러오는 중 오류 발생</td></tr>';
+        postPagination.innerHTML = '';
       }
     }
 
-    document.querySelectorAll('.filter-btn').forEach(btn => {
+    document.querySelectorAll('.filter-tabs .filter-btn[data-type]').forEach(btn => {
       btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.filter-tabs .filter-btn[data-type]').forEach(b => b.classList.remove('active'));
         e.target.classList.add('active');
         currentFilter = e.target.dataset.type;
-        loadPostList();
+        postCurrentPage = 1;
+        renderPostRows();
       });
+    });
+
+    postSearchInput.addEventListener('input', (e) => {
+      postSearchTerm = String(e.target.value || '').trim().toLowerCase();
+      postCurrentPage = 1;
+      renderPostRows();
+    });
+
+    postTableBody.addEventListener('change', (e) => {
+      if (!e.target.classList.contains('post-row-check')) return;
+      const id = parseInt(e.target.dataset.id, 10);
+      if (e.target.checked) selectedPostIds.add(id);
+      else selectedPostIds.delete(id);
+      renderPostRows();
+    });
+
+    postSelectAll.addEventListener('change', () => {
+      const filteredPosts = getFilteredPosts();
+      const startIndex = (postCurrentPage - 1) * PAGE_SIZE;
+      const visiblePosts = filteredPosts.slice(startIndex, startIndex + PAGE_SIZE);
+      visiblePosts.forEach((post) => {
+        if (postSelectAll.checked) selectedPostIds.add(Number(post.id));
+        else selectedPostIds.delete(Number(post.id));
+      });
+      renderPostRows();
     });
 
     postImageInput.addEventListener('change', (e) => {
@@ -428,8 +675,18 @@
       postModeBadge.className = 'mode-badge mode-create';
       postSubmitBtn.textContent = '글 등록하기';
       postResetBtn.style.display = 'none';
-      postStatusDiv.textContent = '';
+      clearStatus(postStatusDiv);
     });
+
+    async function deletePostById(id, password) {
+      const formData = new FormData();
+      formData.append('id', id);
+      formData.append('password', password);
+
+      const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || '오류 발생');
+    }
 
     async function deletePost(id) {
       const password = getPassword();
@@ -441,25 +698,65 @@
 
       if (!confirm(`정말 #${id}번 글을 삭제하시겠습니까?`)) return;
 
-      const formData = new FormData();
-      formData.append('id', id);
-      formData.append('password', password);
-
       try {
-        const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
-        const result = await res.json();
-
-        if (res.ok && result.success) {
-          alert('성공적으로 삭제되었습니다.');
-          loadPostList();
-          if (postIdInput.value == id) postResetBtn.click();
-        } else {
-          alert('삭제 실패: ' + (result.error || '오류 발생'));
-        }
+        await deletePostById(id, password);
+        alert('성공적으로 삭제되었습니다.');
+        selectedPostIds.delete(id);
+        loadPostList();
+        if (postIdInput.value == id) postResetBtn.click();
       } catch (err) {
-        alert('통신 에러가 발생했습니다.');
+        alert('삭제 실패: ' + (err.message || '오류 발생'));
       }
     }
+
+    postBulkDeleteBtn.addEventListener('click', async () => {
+      const ids = Array.from(selectedPostIds);
+      if (ids.length === 0) {
+        alert('먼저 삭제할 항목을 선택해 주세요.');
+        return;
+      }
+
+      const password = getPassword();
+      if (!password) {
+        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
+        document.getElementById('globalPassword').focus();
+        return;
+      }
+
+      if (!confirm(`선택한 ${ids.length}개 게시글을 삭제하시겠습니까?`)) return;
+
+      let successCount = 0;
+      startSavingStatus(postStatusDiv, `선택 항목 삭제 중... (0/${ids.length})`);
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        try {
+          await deletePostById(id, password);
+          selectedPostIds.delete(id);
+          successCount++;
+          postStatusDiv.innerHTML = `<span class="status-spinner" aria-hidden="true"></span><span><span>선택 항목 삭제 중... (${i + 1}/${ids.length})</span><span class="status-sub">잠시만 기다려 주세요.</span></span>`;
+          if (postIdInput.value == id) {
+            postForm.reset();
+            postIdInput.value = '';
+            setPreviewImageUrl('');
+            postFormTitle.textContent = '새 글 작성';
+            postModeBadge.textContent = '작성 모드';
+            postModeBadge.className = 'mode-badge mode-create';
+            postSubmitBtn.textContent = '글 등록하기';
+            postResetBtn.style.display = 'none';
+            postRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
+          }
+        } catch (err) {
+          console.error('Post bulk delete failed:', id, err);
+        }
+      }
+
+      if (successCount === ids.length) {
+        setStatus(postStatusDiv, 'success', `${successCount}개 게시글이 삭제되었습니다.`);
+      } else {
+        setStatus(postStatusDiv, 'error', `${successCount}/${ids.length}개 삭제 완료. 일부 항목 삭제에 실패했습니다.`);
+      }
+      loadPostList();
+    });
 
     postForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -467,14 +764,20 @@
       if (!password) {
         alert('상단에서 관리자 비밀번호를 입력해 주세요.');
         document.getElementById('globalPassword').focus();
+        validateField(globalPasswordInput);
+        return;
+      }
+
+      const fieldsOk = validateRequiredFields(postRequiredFields);
+      if (!fieldsOk) {
+        setStatus(postStatusDiv, 'error', '필수 입력값을 확인해 주세요.');
         return;
       }
 
       const isEdit = Boolean(postIdInput.value);
       const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
 
-      postStatusDiv.textContent = isEdit ? '수정사항 저장 중...' : '등록 중...';
-      postStatusDiv.style.color = '#333';
+      startSavingStatus(postStatusDiv, isEdit ? '수정사항 저장 중...' : '등록 중...');
 
       const formData = new FormData();
       if (isEdit) formData.append('id', postIdInput.value);
@@ -492,18 +795,24 @@
         const result = await response.json();
 
         if (response.ok && result.success) {
-          postStatusDiv.textContent = isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!';
-          postStatusDiv.style.color = 'green';
+          setStatus(postStatusDiv, 'success', isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!');
 
-          postResetBtn.click();
+          postForm.reset();
+          postIdInput.value = '';
+          setPreviewImageUrl('');
+          postFormTitle.textContent = '새 글 작성';
+          postModeBadge.textContent = '작성 모드';
+          postModeBadge.className = 'mode-badge mode-create';
+          postSubmitBtn.textContent = '글 등록하기';
+          postResetBtn.style.display = 'none';
+          postRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
+
           loadPostList();
         } else {
-          postStatusDiv.textContent = '처리 실패: ' + (result.error || '오류 발생');
-          postStatusDiv.style.color = 'red';
+          setStatus(postStatusDiv, 'error', '처리 실패: ' + (result.error || '오류 발생'));
         }
       } catch (err) {
-        postStatusDiv.textContent = '통신 에러가 발생했습니다.';
-        postStatusDiv.style.color = 'red';
+        setStatus(postStatusDiv, 'error', '통신 에러가 발생했습니다.');
       }
     });
 
@@ -518,6 +827,224 @@
     const programResetBtn = document.getElementById('programResetBtn');
     const programStatusMsg = document.getElementById('programStatusMsg');
     const programTableBody = document.getElementById('programTableBody');
+    const programSearchInput = document.getElementById('programSearchInput');
+    const programCategoryFilter = document.getElementById('programCategoryFilter');
+    const programStatusFilters = document.getElementById('programStatusFilters');
+    const programPagination = document.getElementById('programPagination');
+    const programSelectAll = document.getElementById('programSelectAll');
+    const programBulkDeleteBtn = document.getElementById('programBulkDeleteBtn');
+    const programBulkMeta = document.getElementById('programBulkMeta');
+    const programSlugInput = document.getElementById('programSlug');
+    const programCategoryInput = document.getElementById('programCategory');
+    const programTitleInput = document.getElementById('programTitle');
+    const programIconInput = document.getElementById('programIcon');
+    const programStatusInput = document.getElementById('programStatus');
+
+    let programListCache = [];
+    let programCurrentPage = 1;
+    let programSearchTerm = '';
+    let programStatusFilter = 'all';
+    let programCategoryValue = 'all';
+    const selectedProgramIds = new Set();
+    let isSlugManuallyEdited = false;
+    let isIconManuallyEdited = false;
+    let isStatusManuallyEdited = false;
+    let suppressAutoFieldTracking = false;
+
+    function slugifyProgramTitle(rawTitle) {
+      const source = String(rawTitle || '').trim();
+      if (!source) return '';
+
+      const koreanWordMap = [
+        ['한국어', 'korean'],
+        ['프로그램', 'program'],
+        ['특별', 'special'],
+        ['선교', 'mission'],
+        ['캠프', 'camp'],
+        ['워크숍', 'workshop'],
+        ['세미나', 'seminar'],
+        ['훈련', 'training'],
+        ['교육', 'education'],
+        ['학술', 'academic'],
+        ['청년', 'youth'],
+        ['교회', 'church'],
+        ['사역', 'ministry'],
+        ['발리', 'bali'],
+        ['인도네시아', 'indonesia'],
+        ['타문화권', 'cross-cultural'],
+        ['비전트립', 'vision-trip'],
+        ['대학', 'university'],
+        ['교회', 'church'],
+        ['호스트', 'host'],
+        ['패밀리', 'family'],
+        ['한국', 'korea'],
+        ['생활', 'life'],
+        ['모집', 'recruiting'],
+        ['안내', 'infomation'],
+        ['학교', 'school']      
+      ];
+
+      let normalized = source;
+      koreanWordMap.forEach(([ko, en]) => {
+        normalized = normalized.replace(new RegExp(ko, 'g'), ' ' + en + ' ');
+      });
+
+      return normalized
+        .toLowerCase()
+        .normalize('NFKD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s-]/g, ' ')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    }
+
+    function isValidSlug(slug) {
+      return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(slug || '').trim());
+    }
+
+    function getSmartProgramIcon(title, category) {
+      const source = `${title || ''} ${category || ''}`.toLowerCase();
+      if (/camp|캠프|수련|retreat/.test(source)) return '🔥';
+      if (/school|학술|교육|study|class|course/.test(source)) return '📚';
+      if (/korean|한국어|language|언어/.test(source)) return '🎓';
+      if (/workshop|세미나|seminar|training|훈련/.test(source)) return '🧭';
+      if (/교회|church|예배|worship/.test(source)) return '⛪';
+      return '🎓';
+    }
+
+    function applyProgramSmartDefaults(options = {}) {
+      const force = Boolean(options.force);
+      const canAutoApply = !programIdInput.value;
+      if (!canAutoApply && !force) return;
+
+      const title = programTitleInput.value;
+      const category = programCategoryInput.value;
+
+      if (force || (!isIconManuallyEdited && !String(programIconInput.value || '').trim())) {
+        programIconInput.value = getSmartProgramIcon(title, category);
+      }
+
+      if (force || (!isStatusManuallyEdited && !String(programStatusInput.value || '').trim())) {
+        programStatusInput.value = 'recruiting';
+      }
+    }
+
+    function syncProgramSlugFromTitle() {
+      if (programIdInput.value) return;
+
+      const currentSlug = String(programSlugInput.value || '').trim();
+      if (isSlugManuallyEdited && isValidSlug(currentSlug)) return;
+
+      const nextSlug = slugifyProgramTitle(programTitleInput.value);
+      suppressAutoFieldTracking = true;
+      programSlugInput.value = nextSlug;
+      suppressAutoFieldTracking = false;
+      validateField(programSlugInput);
+    }
+
+    function initializeProgramCreateDefaults() {
+      suppressAutoFieldTracking = true;
+      isSlugManuallyEdited = false;
+      isIconManuallyEdited = false;
+      isStatusManuallyEdited = false;
+      suppressAutoFieldTracking = false;
+
+      syncProgramSlugFromTitle();
+      applyProgramSmartDefaults({ force: true });
+      validateField(programSlugInput);
+    }
+
+    function updateProgramCategoryFilterOptions() {
+      const categories = Array.from(new Set(programListCache.map((p) => String(p.category || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+      const currentValue = programCategoryFilter.value || 'all';
+      programCategoryFilter.innerHTML = '<option value="all">전체 카테고리</option>' + categories.map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+      programCategoryFilter.value = categories.includes(currentValue) ? currentValue : 'all';
+      programCategoryValue = programCategoryFilter.value;
+    }
+
+    function getFilteredPrograms() {
+      return programListCache.filter((prog) => {
+        const statusMatch = programStatusFilter === 'all' || prog.status === programStatusFilter;
+        const categoryMatch = programCategoryValue === 'all' || String(prog.category || '') === programCategoryValue;
+        const title = String(prog.title || '').toLowerCase();
+        const searchMatch = !programSearchTerm || title.includes(programSearchTerm);
+        return statusMatch && categoryMatch && searchMatch;
+      });
+    }
+
+    function updateProgramBulkMeta() {
+      const count = selectedProgramIds.size;
+      programBulkMeta.textContent = count > 0 ? `${count}개 선택됨` : '선택된 항목 없음';
+    }
+
+    function renderProgramPagination(totalItems) {
+      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+      if (programCurrentPage > totalPages) programCurrentPage = totalPages;
+
+      if (totalItems <= PAGE_SIZE) {
+        programPagination.innerHTML = '';
+        return totalPages;
+      }
+
+      programPagination.innerHTML = `
+        <button type="button" class="secondary" onclick="changeProgramPage(-1)" ${programCurrentPage === 1 ? 'disabled' : ''}>이전</button>
+        <span class="page-info">${programCurrentPage} / ${totalPages} 페이지 (총 ${totalItems}개)</span>
+        <button type="button" class="secondary" onclick="changeProgramPage(1)" ${programCurrentPage === totalPages ? 'disabled' : ''}>다음</button>
+      `;
+      return totalPages;
+    }
+
+    function renderProgramRows() {
+      const filteredPrograms = getFilteredPrograms();
+      const totalPages = renderProgramPagination(filteredPrograms.length);
+      const startIndex = (programCurrentPage - 1) * PAGE_SIZE;
+      const pagedPrograms = filteredPrograms.slice(startIndex, startIndex + PAGE_SIZE);
+
+      if (filteredPrograms.length === 0) {
+        programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#777;">조건에 맞는 프로그램이 없습니다.</td></tr>';
+        programSelectAll.checked = false;
+        updateProgramBulkMeta();
+        return;
+      }
+
+      if (programCurrentPage > totalPages) {
+        programCurrentPage = totalPages;
+      }
+
+      programTableBody.innerHTML = pagedPrograms.map(prog => {
+        const statusClass = `status-${prog.status}`;
+        const isRec = prog.is_recommended ? '⭐' : '-';
+
+        return `
+          <tr>
+            <td class="select-col"><input type="checkbox" class="program-row-check" data-id="${prog.id}" ${selectedProgramIds.has(Number(prog.id)) ? 'checked' : ''}></td>
+            <td>${prog.id}</td>
+            <td style="font-size: 20px;">${prog.icon || '🎓'}</td>
+            <td><code>${escapeHtml(prog.slug)}</code></td>
+            <td><span class="type-chip">${escapeHtml(prog.category)}</span></td>
+            <td><strong>${escapeHtml(prog.title)}</strong></td>
+            <td><span class="type-chip ${statusClass}">${prog.status}</span></td>
+            <td style="text-align:center;">${isRec}</td>
+            <td>
+              <button class="sm secondary" onclick="editProgram(${prog.id})">수정</button>
+              <button class="sm danger" onclick="deleteProgram(${prog.id})">삭제</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      const visibleIds = pagedPrograms.map((p) => Number(p.id));
+      const allVisibleChecked = visibleIds.length > 0 && visibleIds.every((id) => selectedProgramIds.has(id));
+      programSelectAll.checked = allVisibleChecked;
+      updateProgramBulkMeta();
+    }
+
+    window.changeProgramPage = function (delta) {
+      const filteredCount = getFilteredPrograms().length;
+      const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
+      programCurrentPage = Math.min(totalPages, Math.max(1, programCurrentPage + delta));
+      renderProgramRows();
+    };
 
     async function loadProgramList() {
       try {
@@ -525,34 +1052,89 @@
         const programs = await res.json();
 
         if (!Array.isArray(programs) || programs.length === 0) {
-          programTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:#777;">등록된 프로그램이 없습니다.</td></tr>';
+          programListCache = [];
+          programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#777;">등록된 프로그램이 없습니다.</td></tr>';
+          programPagination.innerHTML = '';
+          programCategoryFilter.innerHTML = '<option value="all">전체 카테고리</option>';
+          selectedProgramIds.clear();
+          programSelectAll.checked = false;
+          updateProgramBulkMeta();
           return;
         }
 
-        programTableBody.innerHTML = programs.map(prog => {
-          const statusClass = `status-${prog.status}`;
-          const isRec = prog.is_recommended ? '⭐' : '-';
-
-          return `
-            <tr>
-              <td>${prog.id}</td>
-              <td style="font-size: 20px;">${prog.icon || '🎓'}</td>
-              <td><code>${escapeHtml(prog.slug)}</code></td>
-              <td><span class="type-chip">${escapeHtml(prog.category)}</span></td>
-              <td><strong>${escapeHtml(prog.title)}</strong></td>
-              <td><span class="type-chip ${statusClass}">${prog.status}</span></td>
-              <td style="text-align:center;">${isRec}</td>
-              <td>
-                <button class="sm secondary" onclick="editProgram(${prog.id})">수정</button>
-                <button class="sm danger" onclick="deleteProgram(${prog.id})">삭제</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
+        programListCache = programs;
+        updateProgramCategoryFilterOptions();
+        renderProgramRows();
       } catch (err) {
-        programTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">프로그램 목록을 불러오는 중 오류 발생</td></tr>';
+        programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">프로그램 목록을 불러오는 중 오류 발생</td></tr>';
+        programPagination.innerHTML = '';
       }
     }
+
+    programSearchInput.addEventListener('input', (e) => {
+      programSearchTerm = String(e.target.value || '').trim().toLowerCase();
+      programCurrentPage = 1;
+      renderProgramRows();
+    });
+
+    programCategoryFilter.addEventListener('change', (e) => {
+      programCategoryValue = e.target.value;
+      programCurrentPage = 1;
+      renderProgramRows();
+    });
+
+    programStatusFilters.querySelectorAll('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        programStatusFilters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
+        e.target.classList.add('active');
+        programStatusFilter = e.target.dataset.status;
+        programCurrentPage = 1;
+        renderProgramRows();
+      });
+    });
+
+    programSlugInput.addEventListener('input', () => {
+      if (suppressAutoFieldTracking) return;
+      isSlugManuallyEdited = true;
+    });
+
+    programIconInput.addEventListener('input', () => {
+      if (suppressAutoFieldTracking) return;
+      isIconManuallyEdited = true;
+    });
+
+    programStatusInput.addEventListener('change', () => {
+      if (suppressAutoFieldTracking) return;
+      isStatusManuallyEdited = true;
+    });
+
+    programTitleInput.addEventListener('input', () => {
+      syncProgramSlugFromTitle();
+      applyProgramSmartDefaults();
+    });
+
+    programCategoryInput.addEventListener('input', () => {
+      applyProgramSmartDefaults();
+    });
+
+    programTableBody.addEventListener('change', (e) => {
+      if (!e.target.classList.contains('program-row-check')) return;
+      const id = parseInt(e.target.dataset.id, 10);
+      if (e.target.checked) selectedProgramIds.add(id);
+      else selectedProgramIds.delete(id);
+      renderProgramRows();
+    });
+
+    programSelectAll.addEventListener('change', () => {
+      const filteredPrograms = getFilteredPrograms();
+      const startIndex = (programCurrentPage - 1) * PAGE_SIZE;
+      const visiblePrograms = filteredPrograms.slice(startIndex, startIndex + PAGE_SIZE);
+      visiblePrograms.forEach((prog) => {
+        if (programSelectAll.checked) selectedProgramIds.add(Number(prog.id));
+        else selectedProgramIds.delete(Number(prog.id));
+      });
+      renderProgramRows();
+    });
 
     async function editProgram(id) {
       try {
@@ -560,15 +1142,20 @@
         const prog = await res.json();
 
         if (prog && prog.id) {
+          suppressAutoFieldTracking = true;
+          isSlugManuallyEdited = true;
+          isIconManuallyEdited = true;
+          isStatusManuallyEdited = true;
           programIdInput.value = prog.id;
-          document.getElementById('programSlug').value = prog.slug;
-          document.getElementById('programCategory').value = prog.category;
-          document.getElementById('programTitle').value = prog.title;
-          document.getElementById('programIcon').value = prog.icon || '🎓';
-          document.getElementById('programStatus').value = prog.status || 'recruiting';
+          programSlugInput.value = prog.slug;
+          programCategoryInput.value = prog.category;
+          programTitleInput.value = prog.title;
+          programIconInput.value = prog.icon || '🎓';
+          programStatusInput.value = prog.status || 'recruiting';
           document.getElementById('programOrder').value = prog.display_order || 0;
           document.getElementById('programIsRecommended').checked = Boolean(prog.is_recommended);
           document.getElementById('programDescription').value = prog.description;
+          suppressAutoFieldTracking = false;
 
           programFormTitle.textContent = `프로그램 수정 (ID: #${prog.id})`;
           programModeBadge.textContent = '수정 모드';
@@ -586,13 +1173,24 @@
     programResetBtn.addEventListener('click', () => {
       programForm.reset();
       programIdInput.value = '';
+      initializeProgramCreateDefaults();
       programFormTitle.textContent = '새 프로그램 등록';
       programModeBadge.textContent = '작성 모드';
       programModeBadge.className = 'mode-badge mode-create';
       programSubmitBtn.textContent = '프로그램 등록하기';
       programResetBtn.style.display = 'none';
-      programStatusMsg.textContent = '';
+      clearStatus(programStatusMsg);
     });
+
+    async function deleteProgramById(id, password) {
+      const res = await fetch(apiUrl('/api/delete-program'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, password })
+      });
+      const result = await res.json();
+      if (!res.ok || !result.success) throw new Error(result.error || '오류 발생');
+    }
 
     async function deleteProgram(id) {
       const password = getPassword();
@@ -605,47 +1203,97 @@
       if (!confirm(`정말 #${id}번 프로그램을 삭제하시겠습니까?`)) return;
 
       try {
-        const res = await fetch(apiUrl('/api/delete-program'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, password })
-        });
-        const result = await res.json();
-
-        if (res.ok && result.success) {
-          alert('성공적으로 삭제되었습니다.');
-          loadProgramList();
-          if (programIdInput.value == id) programResetBtn.click();
-        } else {
-          alert('삭제 실패: ' + (result.error || '오류 발생'));
-        }
+        await deleteProgramById(id, password);
+        alert('성공적으로 삭제되었습니다.');
+        selectedProgramIds.delete(id);
+        loadProgramList();
+        if (programIdInput.value == id) programResetBtn.click();
       } catch (err) {
-        alert('통신 에러가 발생했습니다.');
+        alert('삭제 실패: ' + (err.message || '오류 발생'));
       }
     }
 
+    programBulkDeleteBtn.addEventListener('click', async () => {
+      const ids = Array.from(selectedProgramIds);
+      if (ids.length === 0) {
+        alert('먼저 삭제할 항목을 선택해 주세요.');
+        return;
+      }
+
+      const password = getPassword();
+      if (!password) {
+        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
+        document.getElementById('globalPassword').focus();
+        return;
+      }
+
+      if (!confirm(`선택한 ${ids.length}개 프로그램을 삭제하시겠습니까?`)) return;
+
+      let successCount = 0;
+      startSavingStatus(programStatusMsg, `선택 항목 삭제 중... (0/${ids.length})`);
+      for (let i = 0; i < ids.length; i++) {
+        const id = ids[i];
+        try {
+          await deleteProgramById(id, password);
+          selectedProgramIds.delete(id);
+          successCount++;
+          programStatusMsg.innerHTML = `<span class="status-spinner" aria-hidden="true"></span><span><span>선택 항목 삭제 중... (${i + 1}/${ids.length})</span><span class="status-sub">잠시만 기다려 주세요.</span></span>`;
+          if (programIdInput.value == id) {
+            programForm.reset();
+            programIdInput.value = '';
+            initializeProgramCreateDefaults();
+            programFormTitle.textContent = '새 프로그램 등록';
+            programModeBadge.textContent = '작성 모드';
+            programModeBadge.className = 'mode-badge mode-create';
+            programSubmitBtn.textContent = '프로그램 등록하기';
+            programResetBtn.style.display = 'none';
+            programRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
+          }
+        } catch (err) {
+          console.error('Program bulk delete failed:', id, err);
+        }
+      }
+
+      if (successCount === ids.length) {
+        setStatus(programStatusMsg, 'success', `${successCount}개 프로그램이 삭제되었습니다.`);
+      } else {
+        setStatus(programStatusMsg, 'error', `${successCount}/${ids.length}개 삭제 완료. 일부 항목 삭제에 실패했습니다.`);
+      }
+      loadProgramList();
+    });
+
     programForm.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      syncProgramSlugFromTitle();
+      applyProgramSmartDefaults();
+
       const password = getPassword();
       if (!password) {
         alert('상단에서 관리자 비밀번호를 입력해 주세요.');
         document.getElementById('globalPassword').focus();
+        validateField(globalPasswordInput);
+        return;
+      }
+
+      const fieldsOk = validateRequiredFields(programRequiredFields);
+      if (!fieldsOk) {
+        setStatus(programStatusMsg, 'error', '필수 입력값을 확인해 주세요.');
         return;
       }
 
       const isEdit = Boolean(programIdInput.value);
       const endpoint = isEdit ? '/api/update-program' : '/api/write-program';
 
-      programStatusMsg.textContent = isEdit ? '수정사항 저장 중...' : '등록 중...';
-      programStatusMsg.style.color = '#333';
+      startSavingStatus(programStatusMsg, isEdit ? '수정사항 저장 중...' : '등록 중...');
 
       const payload = {
         password: password,
-        slug: document.getElementById('programSlug').value,
-        category: document.getElementById('programCategory').value,
-        title: document.getElementById('programTitle').value,
-        icon: document.getElementById('programIcon').value,
-        status: document.getElementById('programStatus').value,
+        slug: programSlugInput.value,
+        category: programCategoryInput.value,
+        title: programTitleInput.value,
+        icon: programIconInput.value,
+        status: programStatusInput.value,
         display_order: parseInt(document.getElementById('programOrder').value, 10) || 0,
         is_recommended: document.getElementById('programIsRecommended').checked ? 1 : 0,
         description: document.getElementById('programDescription').value
@@ -662,20 +1310,28 @@
         const result = await response.json();
 
         if (response.ok && result.success) {
-          programStatusMsg.textContent = isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!';
-          programStatusMsg.style.color = 'green';
+          setStatus(programStatusMsg, 'success', isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!');
 
-          programResetBtn.click();
+          programForm.reset();
+          programIdInput.value = '';
+          initializeProgramCreateDefaults();
+          programFormTitle.textContent = '새 프로그램 등록';
+          programModeBadge.textContent = '작성 모드';
+          programModeBadge.className = 'mode-badge mode-create';
+          programSubmitBtn.textContent = '프로그램 등록하기';
+          programResetBtn.style.display = 'none';
+          programRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
+
           loadProgramList();
         } else {
-          programStatusMsg.textContent = '처리 실패: ' + (result.error || '오류 발생');
-          programStatusMsg.style.color = 'red';
+          setStatus(programStatusMsg, 'error', '처리 실패: ' + (result.error || '오류 발생'));
         }
       } catch (err) {
-        programStatusMsg.textContent = '통신 에러가 발생했습니다.';
-        programStatusMsg.style.color = 'red';
+        setStatus(programStatusMsg, 'error', '통신 에러가 발생했습니다.');
       }
     });
+
+    initializeProgramCreateDefaults();
 
     // ==========================================
     // 3. 모달 & 문자열 보조 함수
