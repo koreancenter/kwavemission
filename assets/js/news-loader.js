@@ -237,18 +237,19 @@
 
         var modalContent = document.getElementById('modal-content');
         modalContent.innerHTML =
-            '<div class="flex items-center gap-2 text-xs text-slate-500 font-medium mb-2 font-mono tracking-wide">' +
-                '<span>' + _escapeHtml(category) + '</span><span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
+            '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-2 font-mono tracking-wide">' +
+                '<span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
+                '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
             '</div>' +
-            '<h2 class="font-serif text-[1.75rem] leading-tight font-semibold text-slate-900 mb-5">' + _escapeHtml(title) + '</h2>' +
-            '<div id="modal-body" class="text-sm text-slate-700 leading-relaxed mb-7 overflow-x-hidden">' +
+            '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-5 border-b border-slate-800 pb-4">' + _escapeHtml(title) + '</h2>' +
+            '<div id="modal-body" class="text-sm text-slate-300 leading-relaxed mb-7 overflow-x-hidden">' +
                 '<p class="text-slate-400">내용을 불러오는 중...</p>' +
             '</div>' +
-            '<div class="modal-footer flex items-center justify-between border-t border-slate-100 pt-4 mt-6">' +
-                '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 text-xs text-slate-600 hover:text-slate-900 transition-colors">' +
+            '<div class="modal-footer flex items-center justify-between border-t border-slate-800 pt-4 mt-6">' +
+                '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer">' +
                     '<i data-lucide="link-2" class="w-4 h-4"></i> 링크 공유' +
                 '</button>' +
-                '<button onclick="closeNewsModal()" class="btn-close-footer px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-lg transition-colors">닫기</button>' +
+                '<button onclick="closeNewsModal()" class="btn-close-footer px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">닫기</button>' +
             '</div>';
 
         var modal = document.getElementById('news-modal');
@@ -307,7 +308,14 @@
                                (caption ? '<span class="text-xs text-slate-400 mt-2 text-center">' + caption + '</span>' : '') +
                            '</div>';
                 };
-                bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
+
+                // 📌 HTML 구조 감지 분기 처리
+                var trimmed = (md || '').trim();
+                if (trimmed.startsWith('<div') || trimmed.startsWith('<p') || trimmed.startsWith('<!--')) {
+                    bodyEl.innerHTML = md;
+                } else {
+                    bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
+                }
             }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
