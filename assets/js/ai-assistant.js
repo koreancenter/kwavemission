@@ -9,10 +9,13 @@ const AIAssistant = {
     geminiKey: localStorage.getItem('ai_gemini_key') || '',
     ollamaUrl: localStorage.getItem('ai_ollama_url') || 'http://100.81.172.90:11434',
     selectedModel: localStorage.getItem('ai_selected_model') || '',
-    cachedOllamaModels: []
+    cachedOllamaModels: [],
+    // 💡 불러올 외부 페르소나 md 파일 경로 (필요에 따라 경로 수정 가능)
+    personaUrl: '/docs/persona.md' 
   },
 
-  // 💡 AI 작업 전 원본 텍스트를 저장할 히스토리 객체
+  // 💡 페르소나 캐싱용 변수 및 원본 백업 히스토리
+  cachedPersona: null,
   undoHistory: {},
 
   init() {
@@ -148,6 +151,28 @@ const AIAssistant = {
     });
   },
 
+  // 💡 [2번 기능 구현] 외부 .md 파일 읽어오는 비동기 함수
+  async loadPersona() {
+    if (this.cachedPersona) return this.cachedPersona;
+
+    try {
+      const res = await fetch(this.config.personaUrl);
+      if (!res.ok) throw new Error('페르소나 파일(.md)을 찾을 수 없습니다.');
+      
+      const text = await res.text();
+      this.cachedPersona = text.trim();
+      return this.cachedPersona;
+    } catch (err) {
+      console.warn('⚠️ 외부 페르소나 로드 실패, 기본 Fallback 페르소나를 사용합니다:', err);
+      return `
+[AI 페르소나 설정]
+- 당신은 기독교 선교 미디어 및 언론 저널리즘 분야의 수석 편집장이다.
+- 정중한 편지체는 배제하고 객관적이고 신뢰감 있는 저널리즘 보도체(~했다, ~밝혔다)로 서술할 것.
+- 완성된 본문 알맹이만 출력한다.
+      `.trim();
+    }
+  },
+
   async verifyGemini(quiet = false, keyOverride = null) {
     const key = keyOverride || this.config.geminiKey;
     if (!key) return;
@@ -199,14 +224,10 @@ const AIAssistant = {
     // 💡 [백업] AI 작업 전 현재 작성 중인 텍스트 원본 백업
     this.undoHistory[targetId] = targetArea.value;
 
-    // 🎭 AI 페르소나 설정
-    const SYSTEM_PERSONA = `
-[AI 페르소나 설정]
-- 당신은 'K-Wave Mission'의 대표 수석 카피라이터이자 웹 에디터입니다.
-- 주요 대상: 청년, 다음 세대, 선교 및 문화 사역에 관심 있는 구독자
-- 톤앤매너: 친근하면서도 격식 있고, 담백하고 산뜻하면서도 진정성과 울림이 느껴지는 신뢰감 있는 문체
-- 주의사항: 인사말이나 "네, 수정해 드렸습니다" 같은 답변 서두는 절대 출력하지 말고, 오직 완성된 본문 알맹이만 출력하세요.
-    `.trim();
+    this.setStatus(container, '🤖 외부 페르소나 및 지침 불러오는 중...');
+
+    // 💡 [3번 기능 적용] 외부 .md 파일에서 동적으로 페르소나 불러오기 (209~218번 대치)
+    const SYSTEM_PERSONA = await this.loadPersona();
 
     let prompt = '';
     if (taskType === 'refine') {
@@ -271,7 +292,7 @@ ${sourceText}
     }
   },
 
-  // 💡 [신규] 원본으로 되돌리기 동작 함수
+  // 💡 원본으로 되돌리기 동작 함수
   restoreOriginalText(targetId, container) {
     const targetArea = document.getElementById(targetId);
     if (!targetArea) return;
