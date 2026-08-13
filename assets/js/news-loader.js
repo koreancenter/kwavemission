@@ -96,9 +96,6 @@
         return noticePost ? _normalizeFilePost(noticePost) : null;
     }
 
-    // ==========================================
-    // 1. 상단 고정 공지사항 배너 로딩 함수 (방어 코드 강화)
-    // ==========================================
     async function loadMainNoticeBanner() {
         const titleEl = document.getElementById('main-notice-title');
         if (!titleEl) return;
@@ -127,7 +124,6 @@
         }
     }
 
-    // 전역에서 배너 클릭 시 실행할 함수
     window.openNoticeBannerModal = function () {
         if (_currentNoticePost) {
             window.openNewsModal(
@@ -143,9 +139,6 @@
         }
     };
 
-    // ==========================================
-    // 2. 메인 사역 리포트 로딩 함수
-    // ==========================================
     async function loadNews() {
         const container = document.getElementById('news-container');
         if (!container) return;
@@ -160,7 +153,6 @@
             return;
         }
 
-        // 메인 페이지 Bento Grid 노출용 5개 상위 리포트 제한
         const displayPosts = posts.slice(0, 5);
 
         container.innerHTML = displayPosts.map(function (post, index) {
@@ -172,7 +164,6 @@
             var sourceJson = JSON.stringify(post.source || 'file');
             var onclick = 'openNewsModal(' + fileJson + ',' + titleJson + ',' + dateJson + ',' + categoryJson + ',' + idJson + ',' + sourceJson + ')';
 
-            // 1. 대표 상단 리포트 (Featured Briefing - 2 Columns)
             if (index === 0) {
                 return (
                     '<div class="md:col-span-2 news-feature-card group relative cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
@@ -201,7 +192,6 @@
                 );
             }
 
-            // 2. 서브 필드 로그 리포트 (Field Log - 1 Column)
             return (
                 '<div class="md:col-span-1 news-card group cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
                     '<div>' +
@@ -236,20 +226,26 @@
         _currentPost = { file: file, title: title, date: date, category: category, id: postId, source: postSource };
 
         var modalContent = document.getElementById('modal-content');
+        
+        // 📌 모달 레이어 자체의 배경색 및 테두리를 다크 테마(slate-900)로 직접 변경
+        if (modalContent) {
+            modalContent.className = 'relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-slate-900 text-slate-100 p-6 sm:p-10 rounded-2xl shadow-2xl border border-slate-800 font-serif';
+        }
+
         modalContent.innerHTML =
-            '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-2 font-mono tracking-wide">' +
-                '<span class="px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
+            '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 font-mono tracking-wide">' +
+                '<span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
                 '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
             '</div>' +
-            '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-5 border-b border-slate-800 pb-4">' + _escapeHtml(title) + '</h2>' +
-            '<div id="modal-body" class="text-sm text-slate-300 leading-relaxed mb-7 overflow-x-hidden">' +
-                '<p class="text-slate-400">내용을 불러오는 중...</p>' +
+            '<h2 class="font-serif text-2xl sm:text-3xl leading-snug font-bold text-slate-100 mb-6 border-b border-slate-800 pb-5">' + _escapeHtml(title) + '</h2>' +
+            '<div id="modal-body" class="text-base sm:text-lg text-slate-200 leading-relaxed font-serif overflow-x-hidden">' +
+                '<p class="text-slate-400 font-sans">내용을 불러오는 중...</p>' +
             '</div>' +
-            '<div class="modal-footer flex items-center justify-between border-t border-slate-800 pt-4 mt-6">' +
+            '<div class="modal-footer flex items-center justify-between border-t border-slate-800 pt-5 mt-8 font-sans">' +
                 '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer">' +
                     '<i data-lucide="link-2" class="w-4 h-4"></i> 링크 공유' +
                 '</button>' +
-                '<button onclick="closeNewsModal()" class="btn-close-footer px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">닫기</button>' +
+                '<button onclick="closeNewsModal()" class="btn-close-footer px-5 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
             '</div>';
 
         var modal = document.getElementById('news-modal');
@@ -303,13 +299,12 @@
                     }
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
                     
-                    return '<div class="my-4 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-50">' +
-                               '<img src="' + src + '" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-xl shadow-sm" loading="lazy" />' +
-                               (caption ? '<span class="text-xs text-slate-400 mt-2 text-center">' + caption + '</span>' : '') +
+                    return '<div class="my-6 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-950 p-2">' +
+                               '<img src="' + src + '" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-md" loading="lazy" />' +
+                               (caption ? '<span class="text-xs text-slate-400 mt-2 text-center font-sans">' + caption + '</span>' : '') +
                            '</div>';
                 };
 
-                // 📌 HTML 구조 감지 분기 처리
                 var trimmed = (md || '').trim();
                 if (trimmed.startsWith('<div') || trimmed.startsWith('<p') || trimmed.startsWith('<!--')) {
                     bodyEl.innerHTML = md;
@@ -319,7 +314,7 @@
             }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
-            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-500 text-sm py-4">내용을 불러올 수 없습니다.</p>';
+            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-400 text-sm py-4 font-sans">내용을 불러올 수 없습니다.</p>';
         }
     };
 
@@ -358,7 +353,6 @@
         if (post) window.openNewsModal(post.file, post.title, post.date, post.category, post.id, post.source);
     }
 
-    // DOM 완료 시 메인 리포트와 상단 공지사항 배너를 모두 로드
     document.addEventListener('DOMContentLoaded', function () {
         loadNews();
         loadMainNoticeBanner();
