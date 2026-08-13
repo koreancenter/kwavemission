@@ -311,7 +311,7 @@ ${sourceText}
 
   async callGemini(prompt) {
     if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.config.geminiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-flahs-lite:generateContent?key=${this.config.geminiKey}`;
     const res = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
