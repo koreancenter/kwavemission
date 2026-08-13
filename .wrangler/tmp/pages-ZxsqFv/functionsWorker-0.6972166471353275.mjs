@@ -29,24 +29,53 @@ async function onRequestPost(context) {
   try {
     const { env, request } = context;
     const formData = await request.formData();
-    const id = formData.get("id");
     const password = formData.get("password");
-    if (!id) {
-      return new Response(JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uAE00 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+    const idInput = formData.getAll("ids").concat(formData.getAll("id"));
+    let idList = [];
+    for (const item of idInput) {
+      if (typeof item === "string") {
+        if (item.startsWith("[")) {
+          try {
+            idList.push(...JSON.parse(item));
+          } catch (e) {
+            idList.push(item);
+          }
+        } else if (item.includes(",")) {
+          idList.push(...item.split(","));
+        } else {
+          idList.push(item);
+        }
+      }
+    }
+    idList = idList.map((i) => String(i).trim()).filter(Boolean);
+    if (idList.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uAC8C\uC2DC\uAE00 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        }
+      );
     }
     if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
-        status: 401,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+      return new Response(
+        JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        }
+      );
     }
-    await env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id).run();
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    const statements = idList.map(
+      (id) => env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id)
+    );
+    await env.DB.batch(statements);
+    return new Response(
+      JSON.stringify({ success: true, count: idList.length }),
+      {
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      }
+    );
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
@@ -61,24 +90,53 @@ async function onRequestPost2(context) {
   try {
     const { env, request } = context;
     const formData = await request.formData();
-    const id = formData.get("id");
     const password = formData.get("password");
-    if (!id) {
-      return new Response(JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uD504\uB85C\uADF8\uB7A8 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+    const idInput = formData.getAll("ids").concat(formData.getAll("id"));
+    let idList = [];
+    for (const item of idInput) {
+      if (typeof item === "string") {
+        if (item.startsWith("[")) {
+          try {
+            idList.push(...JSON.parse(item));
+          } catch (e) {
+            idList.push(item);
+          }
+        } else if (item.includes(",")) {
+          idList.push(...item.split(","));
+        } else {
+          idList.push(item);
+        }
+      }
+    }
+    idList = idList.map((i) => String(i).trim()).filter(Boolean);
+    if (idList.length === 0) {
+      return new Response(
+        JSON.stringify({ error: "\uC0AD\uC81C\uD560 \uD504\uB85C\uADF8\uB7A8 ID\uAC00 \uD544\uC694\uD569\uB2C8\uB2E4." }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        }
+      );
     }
     if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
-        status: 401,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+      return new Response(
+        JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }),
+        {
+          status: 401,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        }
+      );
     }
-    await env.DB.prepare("DELETE FROM programs WHERE id = ?").bind(id).run();
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    const statements = idList.map(
+      (id) => env.DB.prepare("DELETE FROM programs WHERE id = ?").bind(id)
+    );
+    await env.DB.batch(statements);
+    return new Response(
+      JSON.stringify({ success: true, count: idList.length }),
+      {
+        headers: { "Content-Type": "application/json; charset=utf-8" }
+      }
+    );
   } catch (err) {
     return new Response(JSON.stringify({ error: err.message }), {
       status: 500,
@@ -933,7 +991,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-iEAFwG/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-Ss0F66/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -965,7 +1023,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-iEAFwG/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-Ss0F66/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

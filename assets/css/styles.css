@@ -417,3 +417,23 @@ h6,
     padding: 0.64rem 1rem 0.86rem;
   }
 }
+
+/* 📌 위에서 진자처럼 자연스럽게 바운스하며 내려오는 키프레임 */
+@keyframes pendulumDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-40px) rotate(-2deg);
+    }
+    70% {
+        transform: translateY(6px) rotate(1deg);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) rotate(0deg);
+    }
+}
+
+.animate-card-drop {
+    opacity: 0; /* 초기 상태 숨김 */
+    animation: pendulumDrop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
