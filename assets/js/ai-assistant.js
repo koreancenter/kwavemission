@@ -1,6 +1,6 @@
 /**
  * K-Wave Mission - AI Assistant Module (ai-assistant.js)
- * Post & Program 지원 버전 (다중 에디터 지원)
+ * Post & Program 지원 버전 (다중 에디터 및 되돌리기 기능 지원)
  */
 
 const AIAssistant = {
@@ -11,6 +11,9 @@ const AIAssistant = {
     selectedModel: localStorage.getItem('ai_selected_model') || '',
     cachedOllamaModels: []
   },
+
+  // 💡 AI 작업 전 원본 텍스트를 저장할 히스토리 객체
+  undoHistory: {},
 
   init() {
     const boxes = document.querySelectorAll('.ai-assistant-box');
@@ -57,9 +60,10 @@ const AIAssistant = {
         </div>
 
         <!-- AI 작업 버튼 -->
-        <div style="margin-top: 12px; display: flex; gap: 10px; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+        <div style="margin-top: 12px; display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; flex-wrap: wrap;">
           <button type="button" class="btnAIRefine sm outline">✨ AI Refine (문장 다듬기)</button>
           <button type="button" class="btnAIHtmlEditor sm outline">🎨 AI HTML Editor (카드/스타일 변환)</button>
+          <button type="button" class="btnAIUndo sm secondary" style="display: none; background-color: #64748b; color: #ffffff; border: none;">↩️ 원본 되돌리기</button>
           <span class="aiStatusText" style="font-size: 12px; color: #64748b; align-self: center; margin-left: auto;"></span>
         </div>
       </div>
@@ -72,6 +76,7 @@ const AIAssistant = {
     const btnOllama = container.querySelector('.btnFetchOllama');
     const btnRefine = container.querySelector('.btnAIRefine');
     const btnHtml = container.querySelector('.btnAIHtmlEditor');
+    const btnUndo = container.querySelector('.btnAIUndo');
     const modelSelect = container.querySelector('.ollamaModelSelect');
     const targetId = container.dataset.target;
 
@@ -106,6 +111,9 @@ const AIAssistant = {
     // AI 실행 버튼
     btnRefine?.addEventListener('click', () => this.processAI('refine', targetId, container));
     btnHtml?.addEventListener('click', () => this.processAI('html_editor', targetId, container));
+
+    // 💡 원본 되돌리기 버튼
+    btnUndo?.addEventListener('click', () => this.restoreOriginalText(targetId, container));
   },
 
   setStatus(container, msg, isError = false) {
@@ -188,13 +196,16 @@ const AIAssistant = {
     const sourceText = targetArea.value.trim();
     if (!sourceText) return alert('본문 내용을 먼저 입력해 주세요.');
 
-    // 🎭 AI 페르소나 설정 (필요에 따라 문구를 정교하게 수정해 보세요!)
+    // 💡 [백업] AI 작업 전 현재 작성 중인 텍스트 원본 백업
+    this.undoHistory[targetId] = targetArea.value;
+
+    // 🎭 AI 페르소나 설정
     const SYSTEM_PERSONA = `
-  [AI 페르소나 설정]
-  - 당신은 'K-Wave Mission'의 대표 수석 카피라이터이자 웹 에디터입니다.
-  - 주요 대상: 청년, 다음 세대, 선교 및 문화 사역에 관심 있는 구독자
-  - 톤앤매너: 친근하면서도 격식 있고, 담백하고 산뜻하면서도 진정성과 울림이 느껴지는 신뢰감 있는 문체
-  - 주의사항: 인사말이나 "네, 수정해 드렸습니다" 같은 답변 서두는 절대 출력하지 말고, 오직 완성된 본문 알맹이만 출력하세요.
+[AI 페르소나 설정]
+- 당신은 'K-Wave Mission'의 대표 수석 카피라이터이자 웹 에디터입니다.
+- 주요 대상: 청년, 다음 세대, 선교 및 문화 사역에 관심 있는 구독자
+- 톤앤매너: 친근하면서도 격식 있고, 담백하고 산뜻하면서도 진정성과 울림이 느껴지는 신뢰감 있는 문체
+- 주의사항: 인사말이나 "네, 수정해 드렸습니다" 같은 답변 서두는 절대 출력하지 말고, 오직 완성된 본문 알맹이만 출력하세요.
     `.trim();
 
     let prompt = '';
@@ -202,8 +213,8 @@ const AIAssistant = {
       prompt = `
 ${SYSTEM_PERSONA}
 
-  [작업 지시: 문장 교정 및 리파인]
-  다음 전달받은 초안 텍스트의 오탈자를 바로잡고, 독자들에게 매끄럽고 인상 깊게 읽히도록 문장을 전문적으로 다듬어주세요.
+[작업 지시: 문장 교정 및 리파인]
+다음 전달받은 초안 텍스트의 오탈자를 바로잡고, 독자들에게 매끄럽고 인상 깊게 읽히도록 문장을 전문적으로 다듬어주세요.
 
 [원본 텍스트]
 ${sourceText}
@@ -212,40 +223,33 @@ ${sourceText}
       prompt = `
 ${SYSTEM_PERSONA}
 
-[작업 지시: 스탠다드 디자인 템플릿(13번 스타일) 기반 HTML 생성]
-다음 입력받은 텍스트를 반드시 아래 [디자인 규격 및 가이드라인]에 맞추어 인라인 CSS가 적용된 HTML로 변환해 주세요.
-내용에 따라 약간의 유연성은 가지되, 전체적인 컬러 톤과 구조적 틀은 스탠다드 스타일을 엄격히 유지해야 합니다.
+[작업 지시: 모던 다크 스타일 HTML 카드 생성]
+입력받은 텍스트를 바탕으로 웹페이지에 삽입할 HTML 코드를 생성하세요.
 
-[디자인 규격 및 가이드라인 (STANDARD)]
-1. **전체 배경 & 컨테이너**:
-   - 바탕색: 차분하고 깊은 다크 톤 배경 (\`background-color: #0f172a;\` 또는 \`#0b1329;\`)
-   - 테두리 & 여백: 곡률 \`border-radius: 12px;\`, 테두리 \`border: 1px solid #1e293b;\`, 여백 \`padding: 30px;\`, 글자색 \`color: #e2e8f0;\`
+[🚨 절대 금지 사항 - 위반 시 감점]
+1. 상단에 큰 영문 제목 배너(예: INDONESIA MISSION UPDATE, NEWSLETTER 등)나 그래디언트 박스를 절대 만들지 마세요.
+2. 카드 본문 배경에 흰색(#ffffff)이나 밝은색을 절대 사용하지 마세요. 전체 배경은 무조건 차분한 다크 톤이어야 합니다.
+3. 마크다운 코드블록(\`\`\`html) 표기 없이 순수 <div> HTML만 출력하세요.
 
-2. **소제목 (H3 / H4 스타일)**:
-   - 제목 앞에 **골드/오렌지 포인트 세로선** 필수 삽입 (\`border-left: 4px solid #f59e0b;\` 또는 \`#d97706;\`)
-   - 왼쪽 여백(\`padding-left: 10px;\`), 볼드체(\`font-weight: bold;\`), 글자색 밝은 톤 (\`color: #f8fafc;\`)
-
-3. **강조 키워드 및 태그**:
-   - 강조 텍스트/뱃지: 딥블루/테일 배경에 노란색 또는 금색 글자 (\`background: #1e293b; color: #f59e0b; padding: 2px 8px; border-radius: 4px;\`)
-
-4. **인용구 / 메시지 상자 (Quote Box)**:
-   - 왼쪽 골드 포인트 바가 들어간 박스 (\`border-left: 3px solid #f59e0b;\` \`background: #1e293b;\` \`border-radius: 8px;\`)
-   - 텍스트는 이탤릭체(\`font-style: italic;\`), 강조색 표현
-
-5. **기도제목 / 요약 체크리스트 상자 (Callout Box)**:
-   - 박스 형태: \`background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 20px;\`
-   - 상단 타이틀: 노란색/금색 점 또는 이모지와 함께 영문 대문자 타이틀 (\`color: #f59e0b; font-weight: bold;\`)
-   - 목록: \`<ul>\` / \`<li>\` 구조를 활용해 정돈된 리스트로 표현
-
-6. **출력 규칙**:
-   - 마크다운 코드블록(\`\`\`html) 표기 없이, 바로 웹에 삽입 가능한 순수 HTML 태그만 출력하세요.
+[🎨 13번 글 스탠다드 디자인 가이드]
+- **전체 감싸는 컨테이너**: 
+  \`<div style="background-color: #0b1329; color: #e2e8f0; padding: 25px; border-radius: 12px; border: 1px solid #1e293b;">\`
+- **본문 일반 텍스트**:
+  \`<p style="line-height: 1.7; color: #cbd5e1; font-size: 15px; margin-bottom: 16px;">\`
+- **소제목 (섹션 구분)**:
+  세로 포인트 바를 넣은 텍스트
+  \`<h3 style="border-left: 4px solid #f59e0b; padding-left: 10px; color: #f8fafc; font-size: 18px; margin-top: 24px; margin-bottom: 12px;">제목</h3>\`
+- **강조/인용구 상자 (Quote Box)**:
+  \`<div style="background-color: #111827; border-left: 3px solid #f59e0b; padding: 16px; border-radius: 6px; margin: 20px 0; font-style: italic; color: #f1f5f9;">인용문 내용</div>\`
+- **기도제목/요약 상자 (Callout Box)**:
+  \`<div style="background-color: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 20px; margin-top: 20px;">\` 내부에 노란색 포인트 타이틀과 <ul>/<li> 사용
 
 [원본 텍스트]
 ${sourceText}
       `.trim();
     }
 
-    this.setStatus(container, '🤖 AI가 페르소나에 맞춰 작성하는 중입니다...');
+    this.setStatus(container, '🤖 AI가 작성하는 중입니다...');
 
     try {
       let resultText = '';
@@ -257,8 +261,30 @@ ${sourceText}
 
       targetArea.value = resultText;
       this.setStatus(container, '✨ AI 작업이 성공적으로 적용되었습니다!');
+
+      // 💡 AI 변환 완료 시 [↩️ 원본 되돌리기] 버튼 노출
+      const btnUndo = container.querySelector('.btnAIUndo');
+      if (btnUndo) btnUndo.style.display = 'inline-block';
+
     } catch (err) {
       this.setStatus(container, '❌ AI 오류: ' + err.message, true);
+    }
+  },
+
+  // 💡 [신규] 원본으로 되돌리기 동작 함수
+  restoreOriginalText(targetId, container) {
+    const targetArea = document.getElementById(targetId);
+    if (!targetArea) return;
+
+    if (this.undoHistory[targetId] !== undefined) {
+      targetArea.value = this.undoHistory[targetId];
+      this.setStatus(container, '↩️ 이전 원본 내용으로 복원되었습니다.');
+
+      // 복원 완료 후 되돌리기 버튼 다시 숨김
+      const btnUndo = container.querySelector('.btnAIUndo');
+      if (btnUndo) btnUndo.style.display = 'none';
+    } else {
+      alert('복원할 이전 작업 내역이 없습니다.');
     }
   },
 
