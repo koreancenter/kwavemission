@@ -229,24 +229,27 @@
         
         // 📌 [수정] 모달 껍데기(#modal-content)의 하얀 배경 클래스를 완전히 지우고 약관 모달과 동일한 다크 스타일 적용
         if (modalContent) {
-            modalContent.className = 'relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-slate-900 border border-slate-800 text-slate-100 p-6 sm:p-8 rounded-2xl shadow-2xl';
+            modalContent.className = 'relative w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar bg-slate-900 border border-slate-800 text-slate-100 p-6 sm:p-8 rounded-2xl shadow-2xl';
         }
 
         modalContent.innerHTML =
-            '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 font-mono tracking-wide">' +
-                '<span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
-                '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
-            '</div>' +
-            '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-5 border-b border-slate-800 pb-4">' + _escapeHtml(title) + '</h2>' +
-            '<div id="modal-body" class="text-base text-slate-200 leading-relaxed overflow-x-hidden">' +
-                '<p class="text-slate-400">내용을 불러오는 중...</p>' +
-            '</div>' +
-            '<div class="modal-footer flex items-center justify-between border-t border-slate-800 pt-4 mt-6">' +
-                '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors cursor-pointer">' +
-                    '<i data-lucide="link-2" class="w-4 h-4"></i> 링크 공유' +
-                '</button>' +
-                '<button onclick="closeNewsModal()" class="btn-close-footer px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
-            '</div>';
+    '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-5 right-5 text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer z-10">' +
+        '<i data-lucide="x" class="w-5 h-5"></i>' +
+    '</button>' +
+    '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 font-mono tracking-wide">' +
+        '<span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
+        '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
+    '</div>' +
+    '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-5 border-b border-slate-800 pb-4 pr-8">' + _escapeHtml(title) + '</h2>' +
+    '<div id="modal-body" class="text-base text-slate-200 leading-relaxed overflow-x-hidden">' +
+        '<p class="text-slate-400">내용을 불러오는 중...</p>' +
+    '</div>' +
+    '<div class="modal-footer flex items-center justify-between border-t border-slate-800/80 pt-5 mt-8 font-sans">' +
+        '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 px-4 py-2 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
+            '<i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유' +
+        '</button>' +
+        '<button onclick="closeNewsModal()" class="btn-close-footer px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
+    '</div>';
 
         var modal = document.getElementById('news-modal');
         if (typeof window.activateModal === 'function') {

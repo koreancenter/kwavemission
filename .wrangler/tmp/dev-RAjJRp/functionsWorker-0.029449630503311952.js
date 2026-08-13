@@ -1,17 +1,945 @@
 var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
-// .wrangler/tmp/pages-ZxsqFv/functionsWorker-0.6972166471353275.mjs
+// .wrangler/tmp/pages-JrqiGd/functionsWorker-0.029449630503311952.mjs
+import { Writable } from "node:stream";
+import { EventEmitter } from "node:events";
 var __defProp2 = Object.defineProperty;
 var __name2 = /* @__PURE__ */ __name((target, value) => __defProp2(target, "name", { value, configurable: true }), "__name");
-async function onRequestGet(context) {
+// @__NO_SIDE_EFFECTS__
+function createNotImplementedError(name) {
+  return new Error(`[unenv] ${name} is not implemented yet!`);
+}
+__name(createNotImplementedError, "createNotImplementedError");
+__name2(createNotImplementedError, "createNotImplementedError");
+// @__NO_SIDE_EFFECTS__
+function notImplemented(name) {
+  const fn = /* @__PURE__ */ __name2(() => {
+    throw /* @__PURE__ */ createNotImplementedError(name);
+  }, "fn");
+  return Object.assign(fn, { __unenv__: true });
+}
+__name(notImplemented, "notImplemented");
+__name2(notImplemented, "notImplemented");
+// @__NO_SIDE_EFFECTS__
+function notImplementedClass(name) {
+  return class {
+    __unenv__ = true;
+    constructor() {
+      throw new Error(`[unenv] ${name} is not implemented yet!`);
+    }
+  };
+}
+__name(notImplementedClass, "notImplementedClass");
+__name2(notImplementedClass, "notImplementedClass");
+var _timeOrigin = globalThis.performance?.timeOrigin ?? Date.now();
+var _performanceNow = globalThis.performance?.now ? globalThis.performance.now.bind(globalThis.performance) : () => Date.now() - _timeOrigin;
+var nodeTiming = {
+  name: "node",
+  entryType: "node",
+  startTime: 0,
+  duration: 0,
+  nodeStart: 0,
+  v8Start: 0,
+  bootstrapComplete: 0,
+  environment: 0,
+  loopStart: 0,
+  loopExit: 0,
+  idleTime: 0,
+  uvMetricsInfo: {
+    loopCount: 0,
+    events: 0,
+    eventsWaiting: 0
+  },
+  detail: void 0,
+  toJSON() {
+    return this;
+  }
+};
+var PerformanceEntry = class {
+  static {
+    __name(this, "PerformanceEntry");
+  }
+  static {
+    __name2(this, "PerformanceEntry");
+  }
+  __unenv__ = true;
+  detail;
+  entryType = "event";
+  name;
+  startTime;
+  constructor(name, options) {
+    this.name = name;
+    this.startTime = options?.startTime || _performanceNow();
+    this.detail = options?.detail;
+  }
+  get duration() {
+    return _performanceNow() - this.startTime;
+  }
+  toJSON() {
+    return {
+      name: this.name,
+      entryType: this.entryType,
+      startTime: this.startTime,
+      duration: this.duration,
+      detail: this.detail
+    };
+  }
+};
+var PerformanceMark = class PerformanceMark2 extends PerformanceEntry {
+  static {
+    __name(this, "PerformanceMark2");
+  }
+  static {
+    __name2(this, "PerformanceMark");
+  }
+  entryType = "mark";
+  constructor() {
+    super(...arguments);
+  }
+  get duration() {
+    return 0;
+  }
+};
+var PerformanceMeasure = class extends PerformanceEntry {
+  static {
+    __name(this, "PerformanceMeasure");
+  }
+  static {
+    __name2(this, "PerformanceMeasure");
+  }
+  entryType = "measure";
+};
+var PerformanceResourceTiming = class extends PerformanceEntry {
+  static {
+    __name(this, "PerformanceResourceTiming");
+  }
+  static {
+    __name2(this, "PerformanceResourceTiming");
+  }
+  entryType = "resource";
+  serverTiming = [];
+  connectEnd = 0;
+  connectStart = 0;
+  decodedBodySize = 0;
+  domainLookupEnd = 0;
+  domainLookupStart = 0;
+  encodedBodySize = 0;
+  fetchStart = 0;
+  initiatorType = "";
+  name = "";
+  nextHopProtocol = "";
+  redirectEnd = 0;
+  redirectStart = 0;
+  requestStart = 0;
+  responseEnd = 0;
+  responseStart = 0;
+  secureConnectionStart = 0;
+  startTime = 0;
+  transferSize = 0;
+  workerStart = 0;
+  responseStatus = 0;
+};
+var PerformanceObserverEntryList = class {
+  static {
+    __name(this, "PerformanceObserverEntryList");
+  }
+  static {
+    __name2(this, "PerformanceObserverEntryList");
+  }
+  __unenv__ = true;
+  getEntries() {
+    return [];
+  }
+  getEntriesByName(_name, _type) {
+    return [];
+  }
+  getEntriesByType(type) {
+    return [];
+  }
+};
+var Performance = class {
+  static {
+    __name(this, "Performance");
+  }
+  static {
+    __name2(this, "Performance");
+  }
+  __unenv__ = true;
+  timeOrigin = _timeOrigin;
+  eventCounts = /* @__PURE__ */ new Map();
+  _entries = [];
+  _resourceTimingBufferSize = 0;
+  navigation = void 0;
+  timing = void 0;
+  timerify(_fn, _options) {
+    throw /* @__PURE__ */ createNotImplementedError("Performance.timerify");
+  }
+  get nodeTiming() {
+    return nodeTiming;
+  }
+  eventLoopUtilization() {
+    return {};
+  }
+  markResourceTiming() {
+    return new PerformanceResourceTiming("");
+  }
+  onresourcetimingbufferfull = null;
+  now() {
+    if (this.timeOrigin === _timeOrigin) {
+      return _performanceNow();
+    }
+    return Date.now() - this.timeOrigin;
+  }
+  clearMarks(markName) {
+    this._entries = markName ? this._entries.filter((e) => e.name !== markName) : this._entries.filter((e) => e.entryType !== "mark");
+  }
+  clearMeasures(measureName) {
+    this._entries = measureName ? this._entries.filter((e) => e.name !== measureName) : this._entries.filter((e) => e.entryType !== "measure");
+  }
+  clearResourceTimings() {
+    this._entries = this._entries.filter((e) => e.entryType !== "resource" || e.entryType !== "navigation");
+  }
+  getEntries() {
+    return this._entries;
+  }
+  getEntriesByName(name, type) {
+    return this._entries.filter((e) => e.name === name && (!type || e.entryType === type));
+  }
+  getEntriesByType(type) {
+    return this._entries.filter((e) => e.entryType === type);
+  }
+  mark(name, options) {
+    const entry = new PerformanceMark(name, options);
+    this._entries.push(entry);
+    return entry;
+  }
+  measure(measureName, startOrMeasureOptions, endMark) {
+    let start;
+    let end;
+    if (typeof startOrMeasureOptions === "string") {
+      start = this.getEntriesByName(startOrMeasureOptions, "mark")[0]?.startTime;
+      end = this.getEntriesByName(endMark, "mark")[0]?.startTime;
+    } else {
+      start = Number.parseFloat(startOrMeasureOptions?.start) || this.now();
+      end = Number.parseFloat(startOrMeasureOptions?.end) || this.now();
+    }
+    const entry = new PerformanceMeasure(measureName, {
+      startTime: start,
+      detail: {
+        start,
+        end
+      }
+    });
+    this._entries.push(entry);
+    return entry;
+  }
+  setResourceTimingBufferSize(maxSize) {
+    this._resourceTimingBufferSize = maxSize;
+  }
+  addEventListener(type, listener, options) {
+    throw /* @__PURE__ */ createNotImplementedError("Performance.addEventListener");
+  }
+  removeEventListener(type, listener, options) {
+    throw /* @__PURE__ */ createNotImplementedError("Performance.removeEventListener");
+  }
+  dispatchEvent(event) {
+    throw /* @__PURE__ */ createNotImplementedError("Performance.dispatchEvent");
+  }
+  toJSON() {
+    return this;
+  }
+};
+var PerformanceObserver = class {
+  static {
+    __name(this, "PerformanceObserver");
+  }
+  static {
+    __name2(this, "PerformanceObserver");
+  }
+  __unenv__ = true;
+  static supportedEntryTypes = [];
+  _callback = null;
+  constructor(callback) {
+    this._callback = callback;
+  }
+  takeRecords() {
+    return [];
+  }
+  disconnect() {
+    throw /* @__PURE__ */ createNotImplementedError("PerformanceObserver.disconnect");
+  }
+  observe(options) {
+    throw /* @__PURE__ */ createNotImplementedError("PerformanceObserver.observe");
+  }
+  bind(fn) {
+    return fn;
+  }
+  runInAsyncScope(fn, thisArg, ...args) {
+    return fn.call(thisArg, ...args);
+  }
+  asyncId() {
+    return 0;
+  }
+  triggerAsyncId() {
+    return 0;
+  }
+  emitDestroy() {
+    return this;
+  }
+};
+var performance = globalThis.performance && "addEventListener" in globalThis.performance ? globalThis.performance : new Performance();
+if (!("__unenv__" in performance)) {
+  const proto = Performance.prototype;
+  for (const key of Object.getOwnPropertyNames(proto)) {
+    if (key !== "constructor" && !(key in performance)) {
+      const desc = Object.getOwnPropertyDescriptor(proto, key);
+      if (desc) {
+        Object.defineProperty(performance, key, desc);
+      }
+    }
+  }
+}
+globalThis.performance = performance;
+globalThis.Performance = Performance;
+globalThis.PerformanceEntry = PerformanceEntry;
+globalThis.PerformanceMark = PerformanceMark;
+globalThis.PerformanceMeasure = PerformanceMeasure;
+globalThis.PerformanceObserver = PerformanceObserver;
+globalThis.PerformanceObserverEntryList = PerformanceObserverEntryList;
+globalThis.PerformanceResourceTiming = PerformanceResourceTiming;
+var noop_default = Object.assign(() => {
+}, { __unenv__: true });
+var _console = globalThis.console;
+var _ignoreErrors = true;
+var _stderr = new Writable();
+var _stdout = new Writable();
+var log = _console?.log ?? noop_default;
+var info = _console?.info ?? log;
+var trace = _console?.trace ?? info;
+var debug = _console?.debug ?? log;
+var table = _console?.table ?? log;
+var error = _console?.error ?? log;
+var warn = _console?.warn ?? error;
+var createTask = _console?.createTask ?? /* @__PURE__ */ notImplemented("console.createTask");
+var clear = _console?.clear ?? noop_default;
+var count = _console?.count ?? noop_default;
+var countReset = _console?.countReset ?? noop_default;
+var dir = _console?.dir ?? noop_default;
+var dirxml = _console?.dirxml ?? noop_default;
+var group = _console?.group ?? noop_default;
+var groupEnd = _console?.groupEnd ?? noop_default;
+var groupCollapsed = _console?.groupCollapsed ?? noop_default;
+var profile = _console?.profile ?? noop_default;
+var profileEnd = _console?.profileEnd ?? noop_default;
+var time = _console?.time ?? noop_default;
+var timeEnd = _console?.timeEnd ?? noop_default;
+var timeLog = _console?.timeLog ?? noop_default;
+var timeStamp = _console?.timeStamp ?? noop_default;
+var Console = _console?.Console ?? /* @__PURE__ */ notImplementedClass("console.Console");
+var _times = /* @__PURE__ */ new Map();
+var _stdoutErrorHandler = noop_default;
+var _stderrErrorHandler = noop_default;
+var workerdConsole = globalThis["console"];
+var {
+  assert,
+  clear: clear2,
+  // @ts-expect-error undocumented public API
+  context,
+  count: count2,
+  countReset: countReset2,
+  // @ts-expect-error undocumented public API
+  createTask: createTask2,
+  debug: debug2,
+  dir: dir2,
+  dirxml: dirxml2,
+  error: error2,
+  group: group2,
+  groupCollapsed: groupCollapsed2,
+  groupEnd: groupEnd2,
+  info: info2,
+  log: log2,
+  profile: profile2,
+  profileEnd: profileEnd2,
+  table: table2,
+  time: time2,
+  timeEnd: timeEnd2,
+  timeLog: timeLog2,
+  timeStamp: timeStamp2,
+  trace: trace2,
+  warn: warn2
+} = workerdConsole;
+Object.assign(workerdConsole, {
+  Console,
+  _ignoreErrors,
+  _stderr,
+  _stderrErrorHandler,
+  _stdout,
+  _stdoutErrorHandler,
+  _times
+});
+var console_default = workerdConsole;
+globalThis.console = console_default;
+var hrtime = /* @__PURE__ */ Object.assign(/* @__PURE__ */ __name2(/* @__PURE__ */ __name(function hrtime2(startTime) {
+  const now = Date.now();
+  const seconds = Math.trunc(now / 1e3);
+  const nanos = now % 1e3 * 1e6;
+  if (startTime) {
+    let diffSeconds = seconds - startTime[0];
+    let diffNanos = nanos - startTime[0];
+    if (diffNanos < 0) {
+      diffSeconds = diffSeconds - 1;
+      diffNanos = 1e9 + diffNanos;
+    }
+    return [diffSeconds, diffNanos];
+  }
+  return [seconds, nanos];
+}, "hrtime2"), "hrtime"), { bigint: /* @__PURE__ */ __name2(/* @__PURE__ */ __name(function bigint() {
+  return BigInt(Date.now() * 1e6);
+}, "bigint"), "bigint") });
+var ReadStream = class {
+  static {
+    __name(this, "ReadStream");
+  }
+  static {
+    __name2(this, "ReadStream");
+  }
+  fd;
+  isRaw = false;
+  isTTY = false;
+  constructor(fd) {
+    this.fd = fd;
+  }
+  setRawMode(mode) {
+    this.isRaw = mode;
+    return this;
+  }
+};
+var WriteStream = class {
+  static {
+    __name(this, "WriteStream");
+  }
+  static {
+    __name2(this, "WriteStream");
+  }
+  fd;
+  columns = 80;
+  rows = 24;
+  isTTY = false;
+  constructor(fd) {
+    this.fd = fd;
+  }
+  clearLine(dir3, callback) {
+    callback && callback();
+    return false;
+  }
+  clearScreenDown(callback) {
+    callback && callback();
+    return false;
+  }
+  cursorTo(x, y, callback) {
+    callback && typeof callback === "function" && callback();
+    return false;
+  }
+  moveCursor(dx, dy, callback) {
+    callback && callback();
+    return false;
+  }
+  getColorDepth(env2) {
+    return 1;
+  }
+  hasColors(count3, env2) {
+    return false;
+  }
+  getWindowSize() {
+    return [this.columns, this.rows];
+  }
+  write(str, encoding, cb) {
+    if (str instanceof Uint8Array) {
+      str = new TextDecoder().decode(str);
+    }
+    try {
+      console.log(str);
+    } catch {
+    }
+    cb && typeof cb === "function" && cb();
+    return false;
+  }
+};
+var NODE_VERSION = "22.14.0";
+var Process = class _Process extends EventEmitter {
+  static {
+    __name(this, "_Process");
+  }
+  static {
+    __name2(this, "Process");
+  }
+  env;
+  hrtime;
+  nextTick;
+  constructor(impl) {
+    super();
+    this.env = impl.env;
+    this.hrtime = impl.hrtime;
+    this.nextTick = impl.nextTick;
+    for (const prop of [...Object.getOwnPropertyNames(_Process.prototype), ...Object.getOwnPropertyNames(EventEmitter.prototype)]) {
+      const value = this[prop];
+      if (typeof value === "function") {
+        this[prop] = value.bind(this);
+      }
+    }
+  }
+  // --- event emitter ---
+  emitWarning(warning, type, code) {
+    console.warn(`${code ? `[${code}] ` : ""}${type ? `${type}: ` : ""}${warning}`);
+  }
+  emit(...args) {
+    return super.emit(...args);
+  }
+  listeners(eventName) {
+    return super.listeners(eventName);
+  }
+  // --- stdio (lazy initializers) ---
+  #stdin;
+  #stdout;
+  #stderr;
+  get stdin() {
+    return this.#stdin ??= new ReadStream(0);
+  }
+  get stdout() {
+    return this.#stdout ??= new WriteStream(1);
+  }
+  get stderr() {
+    return this.#stderr ??= new WriteStream(2);
+  }
+  // --- cwd ---
+  #cwd = "/";
+  chdir(cwd2) {
+    this.#cwd = cwd2;
+  }
+  cwd() {
+    return this.#cwd;
+  }
+  // --- dummy props and getters ---
+  arch = "";
+  platform = "";
+  argv = [];
+  argv0 = "";
+  execArgv = [];
+  execPath = "";
+  title = "";
+  pid = 200;
+  ppid = 100;
+  get version() {
+    return `v${NODE_VERSION}`;
+  }
+  get versions() {
+    return { node: NODE_VERSION };
+  }
+  get allowedNodeEnvironmentFlags() {
+    return /* @__PURE__ */ new Set();
+  }
+  get sourceMapsEnabled() {
+    return false;
+  }
+  get debugPort() {
+    return 0;
+  }
+  get throwDeprecation() {
+    return false;
+  }
+  get traceDeprecation() {
+    return false;
+  }
+  get features() {
+    return {};
+  }
+  get release() {
+    return {};
+  }
+  get connected() {
+    return false;
+  }
+  get config() {
+    return {};
+  }
+  get moduleLoadList() {
+    return [];
+  }
+  constrainedMemory() {
+    return 0;
+  }
+  availableMemory() {
+    return 0;
+  }
+  uptime() {
+    return 0;
+  }
+  resourceUsage() {
+    return {};
+  }
+  // --- noop methods ---
+  ref() {
+  }
+  unref() {
+  }
+  // --- unimplemented methods ---
+  umask() {
+    throw /* @__PURE__ */ createNotImplementedError("process.umask");
+  }
+  getBuiltinModule() {
+    return void 0;
+  }
+  getActiveResourcesInfo() {
+    throw /* @__PURE__ */ createNotImplementedError("process.getActiveResourcesInfo");
+  }
+  exit() {
+    throw /* @__PURE__ */ createNotImplementedError("process.exit");
+  }
+  reallyExit() {
+    throw /* @__PURE__ */ createNotImplementedError("process.reallyExit");
+  }
+  kill() {
+    throw /* @__PURE__ */ createNotImplementedError("process.kill");
+  }
+  abort() {
+    throw /* @__PURE__ */ createNotImplementedError("process.abort");
+  }
+  dlopen() {
+    throw /* @__PURE__ */ createNotImplementedError("process.dlopen");
+  }
+  setSourceMapsEnabled() {
+    throw /* @__PURE__ */ createNotImplementedError("process.setSourceMapsEnabled");
+  }
+  loadEnvFile() {
+    throw /* @__PURE__ */ createNotImplementedError("process.loadEnvFile");
+  }
+  disconnect() {
+    throw /* @__PURE__ */ createNotImplementedError("process.disconnect");
+  }
+  cpuUsage() {
+    throw /* @__PURE__ */ createNotImplementedError("process.cpuUsage");
+  }
+  setUncaughtExceptionCaptureCallback() {
+    throw /* @__PURE__ */ createNotImplementedError("process.setUncaughtExceptionCaptureCallback");
+  }
+  hasUncaughtExceptionCaptureCallback() {
+    throw /* @__PURE__ */ createNotImplementedError("process.hasUncaughtExceptionCaptureCallback");
+  }
+  initgroups() {
+    throw /* @__PURE__ */ createNotImplementedError("process.initgroups");
+  }
+  openStdin() {
+    throw /* @__PURE__ */ createNotImplementedError("process.openStdin");
+  }
+  assert() {
+    throw /* @__PURE__ */ createNotImplementedError("process.assert");
+  }
+  binding() {
+    throw /* @__PURE__ */ createNotImplementedError("process.binding");
+  }
+  // --- attached interfaces ---
+  permission = { has: /* @__PURE__ */ notImplemented("process.permission.has") };
+  report = {
+    directory: "",
+    filename: "",
+    signal: "SIGUSR2",
+    compact: false,
+    reportOnFatalError: false,
+    reportOnSignal: false,
+    reportOnUncaughtException: false,
+    getReport: /* @__PURE__ */ notImplemented("process.report.getReport"),
+    writeReport: /* @__PURE__ */ notImplemented("process.report.writeReport")
+  };
+  finalization = {
+    register: /* @__PURE__ */ notImplemented("process.finalization.register"),
+    unregister: /* @__PURE__ */ notImplemented("process.finalization.unregister"),
+    registerBeforeExit: /* @__PURE__ */ notImplemented("process.finalization.registerBeforeExit")
+  };
+  memoryUsage = Object.assign(() => ({
+    arrayBuffers: 0,
+    rss: 0,
+    external: 0,
+    heapTotal: 0,
+    heapUsed: 0
+  }), { rss: /* @__PURE__ */ __name2(() => 0, "rss") });
+  // --- undefined props ---
+  mainModule = void 0;
+  domain = void 0;
+  // optional
+  send = void 0;
+  exitCode = void 0;
+  channel = void 0;
+  getegid = void 0;
+  geteuid = void 0;
+  getgid = void 0;
+  getgroups = void 0;
+  getuid = void 0;
+  setegid = void 0;
+  seteuid = void 0;
+  setgid = void 0;
+  setgroups = void 0;
+  setuid = void 0;
+  // internals
+  _events = void 0;
+  _eventsCount = void 0;
+  _exiting = void 0;
+  _maxListeners = void 0;
+  _debugEnd = void 0;
+  _debugProcess = void 0;
+  _fatalException = void 0;
+  _getActiveHandles = void 0;
+  _getActiveRequests = void 0;
+  _kill = void 0;
+  _preload_modules = void 0;
+  _rawDebug = void 0;
+  _startProfilerIdleNotifier = void 0;
+  _stopProfilerIdleNotifier = void 0;
+  _tickCallback = void 0;
+  _disconnect = void 0;
+  _handleQueue = void 0;
+  _pendingMessage = void 0;
+  _channel = void 0;
+  _send = void 0;
+  _linkedBinding = void 0;
+};
+var globalProcess = globalThis["process"];
+var getBuiltinModule = globalProcess.getBuiltinModule;
+var workerdProcess = getBuiltinModule("node:process");
+var unenvProcess = new Process({
+  env: globalProcess.env,
+  hrtime,
+  // `nextTick` is available from workerd process v1
+  nextTick: workerdProcess.nextTick
+});
+var { exit, features, platform } = workerdProcess;
+var {
+  _channel,
+  _debugEnd,
+  _debugProcess,
+  _disconnect,
+  _events,
+  _eventsCount,
+  _exiting,
+  _fatalException,
+  _getActiveHandles,
+  _getActiveRequests,
+  _handleQueue,
+  _kill,
+  _linkedBinding,
+  _maxListeners,
+  _pendingMessage,
+  _preload_modules,
+  _rawDebug,
+  _send,
+  _startProfilerIdleNotifier,
+  _stopProfilerIdleNotifier,
+  _tickCallback,
+  abort,
+  addListener,
+  allowedNodeEnvironmentFlags,
+  arch,
+  argv,
+  argv0,
+  assert: assert2,
+  availableMemory,
+  binding,
+  channel,
+  chdir,
+  config,
+  connected,
+  constrainedMemory,
+  cpuUsage,
+  cwd,
+  debugPort,
+  disconnect,
+  dlopen,
+  domain,
+  emit,
+  emitWarning,
+  env,
+  eventNames,
+  execArgv,
+  execPath,
+  exitCode,
+  finalization,
+  getActiveResourcesInfo,
+  getegid,
+  geteuid,
+  getgid,
+  getgroups,
+  getMaxListeners,
+  getuid,
+  hasUncaughtExceptionCaptureCallback,
+  hrtime: hrtime3,
+  initgroups,
+  kill,
+  listenerCount,
+  listeners,
+  loadEnvFile,
+  mainModule,
+  memoryUsage,
+  moduleLoadList,
+  nextTick,
+  off,
+  on,
+  once,
+  openStdin,
+  permission,
+  pid,
+  ppid,
+  prependListener,
+  prependOnceListener,
+  rawListeners,
+  reallyExit,
+  ref,
+  release,
+  removeAllListeners,
+  removeListener,
+  report,
+  resourceUsage,
+  send,
+  setegid,
+  seteuid,
+  setgid,
+  setgroups,
+  setMaxListeners,
+  setSourceMapsEnabled,
+  setuid,
+  setUncaughtExceptionCaptureCallback,
+  sourceMapsEnabled,
+  stderr,
+  stdin,
+  stdout,
+  throwDeprecation,
+  title,
+  traceDeprecation,
+  umask,
+  unref,
+  uptime,
+  version,
+  versions
+} = unenvProcess;
+var _process = {
+  abort,
+  addListener,
+  allowedNodeEnvironmentFlags,
+  hasUncaughtExceptionCaptureCallback,
+  setUncaughtExceptionCaptureCallback,
+  loadEnvFile,
+  sourceMapsEnabled,
+  arch,
+  argv,
+  argv0,
+  chdir,
+  config,
+  connected,
+  constrainedMemory,
+  availableMemory,
+  cpuUsage,
+  cwd,
+  debugPort,
+  dlopen,
+  disconnect,
+  emit,
+  emitWarning,
+  env,
+  eventNames,
+  execArgv,
+  execPath,
+  exit,
+  finalization,
+  features,
+  getBuiltinModule,
+  getActiveResourcesInfo,
+  getMaxListeners,
+  hrtime: hrtime3,
+  kill,
+  listeners,
+  listenerCount,
+  memoryUsage,
+  nextTick,
+  on,
+  off,
+  once,
+  pid,
+  platform,
+  ppid,
+  prependListener,
+  prependOnceListener,
+  rawListeners,
+  release,
+  removeAllListeners,
+  removeListener,
+  report,
+  resourceUsage,
+  setMaxListeners,
+  setSourceMapsEnabled,
+  stderr,
+  stdin,
+  stdout,
+  title,
+  throwDeprecation,
+  traceDeprecation,
+  umask,
+  uptime,
+  version,
+  versions,
+  // @ts-expect-error old API
+  domain,
+  initgroups,
+  moduleLoadList,
+  reallyExit,
+  openStdin,
+  assert: assert2,
+  binding,
+  send,
+  exitCode,
+  channel,
+  getegid,
+  geteuid,
+  getgid,
+  getgroups,
+  getuid,
+  setegid,
+  seteuid,
+  setgid,
+  setgroups,
+  setuid,
+  permission,
+  mainModule,
+  _events,
+  _eventsCount,
+  _exiting,
+  _maxListeners,
+  _debugEnd,
+  _debugProcess,
+  _fatalException,
+  _getActiveHandles,
+  _getActiveRequests,
+  _kill,
+  _preload_modules,
+  _rawDebug,
+  _startProfilerIdleNotifier,
+  _stopProfilerIdleNotifier,
+  _tickCallback,
+  _disconnect,
+  _handleQueue,
+  _pendingMessage,
+  _channel,
+  _send,
+  _linkedBinding
+};
+var process_default = _process;
+globalThis.process = process_default;
+async function onRequestGet(context2) {
   try {
-    const { env, params } = context;
+    const { env: env2, params } = context2;
     const key = Array.isArray(params.path) ? params.path.join("/") : params.path;
     if (!key) {
       return new Response("\uC774\uBBF8\uC9C0 \uACBD\uB85C\uAC00 \uC62C\uBC14\uB974\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4.", { status: 400 });
     }
-    const object = await env.BUCKET.get(key);
+    const object = await env2.BUCKET.get(key);
     if (!object) {
       return new Response("\uC774\uBBF8\uC9C0\uB97C \uCC3E\uC744 \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.", { status: 404 });
     }
@@ -26,9 +954,9 @@ async function onRequestGet(context) {
 }
 __name(onRequestGet, "onRequestGet");
 __name2(onRequestGet, "onRequestGet");
-async function onRequestPost(context) {
+async function onRequestPost(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const formData = await request.formData();
     const password = formData.get("password");
     const idInput = formData.getAll("ids").concat(formData.getAll("id"));
@@ -58,7 +986,7 @@ async function onRequestPost(context) {
         }
       );
     }
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+    if (env2.ADMIN_PASSWORD && password !== env2.ADMIN_PASSWORD) {
       return new Response(
         JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }),
         {
@@ -68,9 +996,9 @@ async function onRequestPost(context) {
       );
     }
     const statements = idList.map(
-      (id) => env.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id)
+      (id) => env2.DB.prepare("DELETE FROM posts WHERE id = ?").bind(id)
     );
-    await env.DB.batch(statements);
+    await env2.DB.batch(statements);
     return new Response(
       JSON.stringify({ success: true, count: idList.length }),
       {
@@ -86,9 +1014,9 @@ async function onRequestPost(context) {
 }
 __name(onRequestPost, "onRequestPost");
 __name2(onRequestPost, "onRequestPost");
-async function onRequestPost2(context) {
+async function onRequestPost2(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const formData = await request.formData();
     const password = formData.get("password");
     const idInput = formData.getAll("ids").concat(formData.getAll("id"));
@@ -118,7 +1046,7 @@ async function onRequestPost2(context) {
         }
       );
     }
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+    if (env2.ADMIN_PASSWORD && password !== env2.ADMIN_PASSWORD) {
       return new Response(
         JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }),
         {
@@ -128,9 +1056,9 @@ async function onRequestPost2(context) {
       );
     }
     const statements = idList.map(
-      (id) => env.DB.prepare("DELETE FROM programs WHERE id = ?").bind(id)
+      (id) => env2.DB.prepare("DELETE FROM programs WHERE id = ?").bind(id)
     );
-    await env.DB.batch(statements);
+    await env2.DB.batch(statements);
     return new Response(
       JSON.stringify({ success: true, count: idList.length }),
       {
@@ -146,9 +1074,9 @@ async function onRequestPost2(context) {
 }
 __name(onRequestPost2, "onRequestPost2");
 __name2(onRequestPost2, "onRequestPost");
-async function onRequestGet2(context) {
+async function onRequestGet2(context2) {
   try {
-    const { request } = context;
+    const { request } = context2;
     const url = new URL(request.url);
     const slug = url.searchParams.get("slug");
     if (!slug) {
@@ -175,14 +1103,14 @@ async function onRequestGet2(context) {
 }
 __name(onRequestGet2, "onRequestGet2");
 __name2(onRequestGet2, "onRequestGet");
-async function onRequestGet3(context) {
+async function onRequestGet3(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
     const type = url.searchParams.get("type");
     if (id) {
-      const post = await env.DB.prepare(
+      const post = await env2.DB.prepare(
         "SELECT * FROM posts WHERE id = ?"
       ).bind(id).first();
       return new Response(JSON.stringify(post || {}), {
@@ -191,11 +1119,11 @@ async function onRequestGet3(context) {
     }
     let stmt;
     if (type && type !== "all") {
-      stmt = env.DB.prepare(
+      stmt = env2.DB.prepare(
         "SELECT id, type, title, thumbnail_url, created_at FROM posts WHERE type = ? ORDER BY created_at DESC"
       ).bind(type);
     } else {
-      stmt = env.DB.prepare(
+      stmt = env2.DB.prepare(
         "SELECT id, type, title, thumbnail_url, created_at FROM posts ORDER BY created_at DESC"
       );
     }
@@ -203,8 +1131,8 @@ async function onRequestGet3(context) {
     return new Response(JSON.stringify(results || []), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error3) {
+    return new Response(JSON.stringify({ error: error3.message }), {
       status: 500,
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
@@ -212,14 +1140,14 @@ async function onRequestGet3(context) {
 }
 __name(onRequestGet3, "onRequestGet3");
 __name2(onRequestGet3, "onRequestGet");
-async function onRequestGet4(context) {
+async function onRequestGet4(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const url = new URL(request.url);
     const id = url.searchParams.get("id");
     const status = url.searchParams.get("status");
     if (id) {
-      const program = await env.DB.prepare(
+      const program = await env2.DB.prepare(
         "SELECT * FROM programs WHERE id = ?"
       ).bind(id).first();
       return new Response(JSON.stringify(program || {}), {
@@ -228,11 +1156,11 @@ async function onRequestGet4(context) {
     }
     let stmt;
     if (status && status !== "all") {
-      stmt = env.DB.prepare(
+      stmt = env2.DB.prepare(
         "SELECT * FROM programs WHERE status = ? ORDER BY display_order ASC, id DESC"
       ).bind(status);
     } else {
-      stmt = env.DB.prepare(
+      stmt = env2.DB.prepare(
         "SELECT * FROM programs ORDER BY display_order ASC, id DESC"
       );
     }
@@ -240,8 +1168,8 @@ async function onRequestGet4(context) {
     return new Response(JSON.stringify(results || []), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
-  } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+  } catch (error3) {
+    return new Response(JSON.stringify({ error: error3.message }), {
       status: 500,
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
@@ -249,24 +1177,24 @@ async function onRequestGet4(context) {
 }
 __name(onRequestGet4, "onRequestGet4");
 __name2(onRequestGet4, "onRequestGet");
-async function onRequestPost3(context) {
+async function onRequestPost3(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const formData = await request.formData();
     const id = formData.get("id");
     const password = formData.get("password");
     const type = formData.get("type") || "news";
-    const title = formData.get("title");
+    const title2 = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
     const thumbnailUrl = formData.get("thumbnail_url");
     if (!id) {
       return new Response(JSON.stringify({ error: "\uC218\uC815\uD560 \uAE00 ID\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4." }), { status: 400 });
     }
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+    if (env2.ADMIN_PASSWORD && password !== env2.ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), { status: 401 });
     }
-    if (!title || !content) {
+    if (!title2 || !content) {
       return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC740 \uD544\uC218 \uC785\uB825 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), { status: 400 });
     }
     let imageUrl = null;
@@ -285,7 +1213,7 @@ async function onRequestPost3(context) {
       const fileExtension = nameExt || fallbackExt;
       const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
       const fileBody = await imageFile.arrayBuffer();
-      await env.BUCKET.put(fileName, fileBody, {
+      await env2.BUCKET.put(fileName, fileBody, {
         httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
       imageUrl = `/api/image/${fileName}`;
@@ -293,13 +1221,13 @@ async function onRequestPost3(context) {
       imageUrl = thumbnailUrl.trim();
     }
     if (imageUrl) {
-      await env.DB.prepare(
+      await env2.DB.prepare(
         "UPDATE posts SET type = ?, title = ?, content = ?, thumbnail_url = ? WHERE id = ?"
-      ).bind(type, title, content, imageUrl, id).run();
+      ).bind(type, title2, content, imageUrl, id).run();
     } else {
-      await env.DB.prepare(
+      await env2.DB.prepare(
         "UPDATE posts SET type = ?, title = ?, content = ? WHERE id = ?"
-      ).bind(type, title, content, id).run();
+      ).bind(type, title2, content, id).run();
     }
     return new Response(JSON.stringify({ success: true }), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
@@ -313,23 +1241,23 @@ async function onRequestPost3(context) {
 }
 __name(onRequestPost3, "onRequestPost3");
 __name2(onRequestPost3, "onRequestPost");
-async function onRequestPost4(context) {
+async function onRequestPost4(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const formData = await request.formData();
     const password = formData.get("password");
     const type = formData.get("type") || "news";
-    const title = formData.get("title");
+    const title2 = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
     const thumbnailUrl = formData.get("thumbnail_url");
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+    if (env2.ADMIN_PASSWORD && password !== env2.ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
         status: 401,
         headers: { "Content-Type": "application/json; charset=utf-8" }
       });
     }
-    if (!title || !content) {
+    if (!title2 || !content) {
       return new Response(JSON.stringify({ error: "\uC81C\uBAA9\uACFC \uBCF8\uBB38\uC740 \uD544\uC218 \uC785\uB825 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), {
         status: 400,
         headers: { "Content-Type": "application/json; charset=utf-8" }
@@ -351,17 +1279,17 @@ async function onRequestPost4(context) {
       const fileExtension = nameExt || fallbackExt;
       const fileName = `images/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
       const fileBody = await imageFile.arrayBuffer();
-      await context.env.BUCKET.put(fileName, fileBody, {
+      await context2.env.BUCKET.put(fileName, fileBody, {
         httpMetadata: { contentType: imageFile.type || "application/octet-stream" }
       });
       imageUrl = `/api/image/${fileName}`;
     } else if (typeof thumbnailUrl === "string" && thumbnailUrl.trim()) {
       imageUrl = thumbnailUrl.trim();
     }
-    const info = await context.env.DB.prepare(
+    const info3 = await context2.env.DB.prepare(
       "INSERT INTO posts (type, title, content, thumbnail_url) VALUES (?, ?, ?, ?)"
-    ).bind(type, title, content, imageUrl).run();
-    return new Response(JSON.stringify({ success: true, url: imageUrl, info }), {
+    ).bind(type, title2, content, imageUrl).run();
+    return new Response(JSON.stringify({ success: true, url: imageUrl, info: info3 }), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
   } catch (err) {
@@ -373,47 +1301,47 @@ async function onRequestPost4(context) {
 }
 __name(onRequestPost4, "onRequestPost4");
 __name2(onRequestPost4, "onRequestPost");
-async function onRequestPost5(context) {
+async function onRequestPost5(context2) {
   try {
-    const { env, request } = context;
+    const { env: env2, request } = context2;
     const formData = await request.formData();
     const id = formData.get("id");
     const password = formData.get("password");
     const slug = formData.get("slug");
     const category = formData.get("category");
-    const title = formData.get("title");
+    const title2 = formData.get("title");
     const description = formData.get("description");
     const status = formData.get("status") || "recruiting";
     const icon = formData.get("icon") || "\u{1F393}";
     const is_recommended = formData.get("is_recommended") === "1" ? 1 : 0;
     const display_order = parseInt(formData.get("display_order") || "0", 10);
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
+    if (env2.ADMIN_PASSWORD && password !== env2.ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "\uBE44\uBC00\uBC88\uD638\uAC00 \uC77C\uCE58\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4." }), {
         status: 401,
         headers: { "Content-Type": "application/json; charset=utf-8" }
       });
     }
-    if (!slug || !category || !title || !description) {
+    if (!slug || !category || !title2 || !description) {
       return new Response(JSON.stringify({ error: "\uC2AC\uB7EC\uADF8, \uCE74\uD14C\uACE0\uB9AC, \uC81C\uBAA9, \uC124\uBA85\uC740 \uD544\uC218 \uD56D\uBAA9\uC785\uB2C8\uB2E4." }), {
         status: 400,
         headers: { "Content-Type": "application/json; charset=utf-8" }
       });
     }
     if (id) {
-      await env.DB.prepare(
+      await env2.DB.prepare(
         `UPDATE programs 
          SET slug = ?, category = ?, title = ?, description = ?, status = ?, icon = ?, is_recommended = ?, display_order = ?
          WHERE id = ?`
-      ).bind(slug, category, title, description, status, icon, is_recommended, display_order, id).run();
+      ).bind(slug, category, title2, description, status, icon, is_recommended, display_order, id).run();
       return new Response(JSON.stringify({ success: true, message: "\uD504\uB85C\uADF8\uB7A8\uC774 \uC218\uC815\uB418\uC5C8\uC2B5\uB2C8\uB2E4." }), {
         headers: { "Content-Type": "application/json; charset=utf-8" }
       });
     }
-    const info = await env.DB.prepare(
+    const info3 = await env2.DB.prepare(
       `INSERT INTO programs (slug, category, title, description, status, icon, is_recommended, display_order)
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    ).bind(slug, category, title, description, status, icon, is_recommended, display_order).run();
-    return new Response(JSON.stringify({ success: true, info }), {
+    ).bind(slug, category, title2, description, status, icon, is_recommended, display_order).run();
+    return new Response(JSON.stringify({ success: true, info: info3 }), {
       headers: { "Content-Type": "application/json; charset=utf-8" }
     });
   } catch (err) {
@@ -535,7 +1463,7 @@ function lexer(str) {
       continue;
     }
     if (char === "(") {
-      var count = 1;
+      var count3 = 1;
       var pattern = "";
       var j = i + 1;
       if (str[j] === "?") {
@@ -547,20 +1475,20 @@ function lexer(str) {
           continue;
         }
         if (str[j] === ")") {
-          count--;
-          if (count === 0) {
+          count3--;
+          if (count3 === 0) {
             j++;
             break;
           }
         } else if (str[j] === "(") {
-          count++;
+          count3++;
           if (str[j + 1] !== "?") {
             throw new TypeError("Capturing groups are not allowed at ".concat(j));
           }
         }
         pattern += str[j++];
       }
-      if (count)
+      if (count3)
         throw new TypeError("Unbalanced pattern at ".concat(i));
       if (!pattern)
         throw new TypeError("Missing pattern at ".concat(i));
@@ -877,7 +1805,7 @@ function* executeRequest(request) {
 __name(executeRequest, "executeRequest");
 __name2(executeRequest, "executeRequest");
 var pages_template_worker_default = {
-  async fetch(originalRequest, env, workerContext) {
+  async fetch(originalRequest, env2, workerContext) {
     let request = originalRequest;
     const handlerIterator = executeRequest(request);
     let data = {};
@@ -893,7 +1821,7 @@ var pages_template_worker_default = {
       const result = handlerIterator.next();
       if (result.done === false) {
         const { handler, params, path } = result.value;
-        const context = {
+        const context2 = {
           request: new Request(request.clone()),
           functionPath: path,
           next,
@@ -907,19 +1835,19 @@ var pages_template_worker_default = {
             }
             data = value;
           },
-          env,
+          env: env2,
           waitUntil: workerContext.waitUntil.bind(workerContext),
           passThroughOnException: /* @__PURE__ */ __name2(() => {
             isFailOpen = true;
           }, "passThroughOnException")
         };
-        const response = await handler(context);
+        const response = await handler(context2);
         if (!(response instanceof Response)) {
           throw new Error("Your Pages function should return a Response");
         }
         return cloneResponse(response);
       } else if ("ASSETS") {
-        const response = await env["ASSETS"].fetch(request);
+        const response = await env2["ASSETS"].fetch(request);
         return cloneResponse(response);
       } else {
         const response = await fetch(request);
@@ -928,12 +1856,12 @@ var pages_template_worker_default = {
     }, "next");
     try {
       return await next();
-    } catch (error) {
+    } catch (error3) {
       if (isFailOpen) {
-        const response = await env["ASSETS"].fetch(request);
+        const response = await env2["ASSETS"].fetch(request);
         return cloneResponse(response);
       }
-      throw error;
+      throw error3;
     }
   }
 };
@@ -944,9 +1872,9 @@ var cloneResponse = /* @__PURE__ */ __name2((response) => (
     response
   )
 ), "cloneResponse");
-var drainBody = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
+var drainBody = /* @__PURE__ */ __name2(async (request, env2, _ctx, middlewareCtx) => {
   try {
-    return await middlewareCtx.next(request, env);
+    return await middlewareCtx.next(request, env2);
   } finally {
     try {
       if (request.body !== null && !request.bodyUsed) {
@@ -970,12 +1898,12 @@ function reduceError(e) {
 }
 __name(reduceError, "reduceError");
 __name2(reduceError, "reduceError");
-var jsonError = /* @__PURE__ */ __name2(async (request, env, _ctx, middlewareCtx) => {
+var jsonError = /* @__PURE__ */ __name2(async (request, env2, _ctx, middlewareCtx) => {
   try {
-    return await middlewareCtx.next(request, env);
+    return await middlewareCtx.next(request, env2);
   } catch (e) {
-    const error = reduceError(e);
-    const body = JSON.stringify(error);
+    const error3 = reduceError(e);
+    const body = JSON.stringify(error3);
     const headers = {
       "Content-Type": "application/json",
       "MF-Experimental-Error-Stack": "true"
@@ -999,7 +1927,7 @@ function __facade_register__(...args) {
 }
 __name(__facade_register__, "__facade_register__");
 __name2(__facade_register__, "__facade_register__");
-function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
+function __facade_invokeChain__(request, env2, ctx, dispatch, middlewareChain) {
   const [head, ...tail] = middlewareChain;
   const middlewareCtx = {
     dispatch,
@@ -1007,12 +1935,12 @@ function __facade_invokeChain__(request, env, ctx, dispatch, middlewareChain) {
       return __facade_invokeChain__(newRequest, newEnv, ctx, dispatch, tail);
     }
   };
-  return head(request, env, ctx, middlewareCtx);
+  return head(request, env2, ctx, middlewareCtx);
 }
 __name(__facade_invokeChain__, "__facade_invokeChain__");
 __name2(__facade_invokeChain__, "__facade_invokeChain__");
-function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
-  return __facade_invokeChain__(request, env, ctx, dispatch, [
+function __facade_invoke__(request, env2, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__(request, env2, ctx, dispatch, [
     ...__facade_middleware__,
     finalMiddleware
   ]);
@@ -1048,15 +1976,15 @@ function wrapExportedHandler(worker) {
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__) {
     __facade_register__(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name2(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name2(function(request, env2, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
-    return worker.fetch(request, env, ctx);
+    return worker.fetch(request, env2, ctx);
   }, "fetchDispatcher");
   return {
     ...worker,
-    fetch(request, env, ctx) {
+    fetch(request, env2, ctx) {
       const dispatcher = /* @__PURE__ */ __name2(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__(
@@ -1065,10 +1993,10 @@ function wrapExportedHandler(worker) {
             () => {
             }
           );
-          return worker.scheduled(controller, env, ctx);
+          return worker.scheduled(controller, env2, ctx);
         }
       }, "dispatcher");
-      return __facade_invoke__(request, env, ctx, dispatcher, fetchDispatcher);
+      return __facade_invoke__(request, env2, ctx, dispatcher, fetchDispatcher);
     }
   };
 }
@@ -1082,8 +2010,8 @@ function wrapWorkerEntrypoint(klass) {
     __facade_register__(middleware);
   }
   return class extends klass {
-    #fetchDispatcher = /* @__PURE__ */ __name2((request, env, ctx) => {
-      this.env = env;
+    #fetchDispatcher = /* @__PURE__ */ __name2((request, env2, ctx) => {
+      this.env = env2;
       this.ctx = ctx;
       if (super.fetch === void 0) {
         throw new Error("Entrypoint class does not define a fetch() function.");
@@ -1123,9 +2051,9 @@ if (typeof middleware_insertion_facade_default === "object") {
 var middleware_loader_entry_default = WRAPPED_ENTRY;
 
 // ../../../.npm/_npx/32026684e21afda6/node_modules/wrangler/templates/middleware/middleware-ensure-req-body-drained.ts
-var drainBody2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+var drainBody2 = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx) => {
   try {
-    return await middlewareCtx.next(request, env);
+    return await middlewareCtx.next(request, env2);
   } finally {
     try {
       if (request.body !== null && !request.bodyUsed) {
@@ -1150,12 +2078,12 @@ function reduceError2(e) {
   };
 }
 __name(reduceError2, "reduceError");
-var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx) => {
+var jsonError2 = /* @__PURE__ */ __name(async (request, env2, _ctx, middlewareCtx) => {
   try {
-    return await middlewareCtx.next(request, env);
+    return await middlewareCtx.next(request, env2);
   } catch (e) {
-    const error = reduceError2(e);
-    const body = JSON.stringify(error);
+    const error3 = reduceError2(e);
+    const body = JSON.stringify(error3);
     const headers = {
       "Content-Type": "application/json",
       "MF-Experimental-Error-Stack": "true"
@@ -1169,7 +2097,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-jMEqei/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-Eo68zU/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -1182,7 +2110,7 @@ function __facade_register__2(...args) {
   __facade_middleware__2.push(...args.flat());
 }
 __name(__facade_register__2, "__facade_register__");
-function __facade_invokeChain__2(request, env, ctx, dispatch, middlewareChain) {
+function __facade_invokeChain__2(request, env2, ctx, dispatch, middlewareChain) {
   const [head, ...tail] = middlewareChain;
   const middlewareCtx = {
     dispatch,
@@ -1190,18 +2118,18 @@ function __facade_invokeChain__2(request, env, ctx, dispatch, middlewareChain) {
       return __facade_invokeChain__2(newRequest, newEnv, ctx, dispatch, tail);
     }
   };
-  return head(request, env, ctx, middlewareCtx);
+  return head(request, env2, ctx, middlewareCtx);
 }
 __name(__facade_invokeChain__2, "__facade_invokeChain__");
-function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
-  return __facade_invokeChain__2(request, env, ctx, dispatch, [
+function __facade_invoke__2(request, env2, ctx, dispatch, finalMiddleware) {
+  return __facade_invokeChain__2(request, env2, ctx, dispatch, [
     ...__facade_middleware__2,
     finalMiddleware
   ]);
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-jMEqei/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-Eo68zU/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
@@ -1228,15 +2156,15 @@ function wrapExportedHandler2(worker) {
   for (const middleware of __INTERNAL_WRANGLER_MIDDLEWARE__2) {
     __facade_register__2(middleware);
   }
-  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env, ctx) {
+  const fetchDispatcher = /* @__PURE__ */ __name(function(request, env2, ctx) {
     if (worker.fetch === void 0) {
       throw new Error("Handler does not export a fetch() function.");
     }
-    return worker.fetch(request, env, ctx);
+    return worker.fetch(request, env2, ctx);
   }, "fetchDispatcher");
   return {
     ...worker,
-    fetch(request, env, ctx) {
+    fetch(request, env2, ctx) {
       const dispatcher = /* @__PURE__ */ __name(function(type, init) {
         if (type === "scheduled" && worker.scheduled !== void 0) {
           const controller = new __Facade_ScheduledController__2(
@@ -1245,10 +2173,10 @@ function wrapExportedHandler2(worker) {
             () => {
             }
           );
-          return worker.scheduled(controller, env, ctx);
+          return worker.scheduled(controller, env2, ctx);
         }
       }, "dispatcher");
-      return __facade_invoke__2(request, env, ctx, dispatcher, fetchDispatcher);
+      return __facade_invoke__2(request, env2, ctx, dispatcher, fetchDispatcher);
     }
   };
 }
@@ -1261,8 +2189,8 @@ function wrapWorkerEntrypoint2(klass) {
     __facade_register__2(middleware);
   }
   return class extends klass {
-    #fetchDispatcher = /* @__PURE__ */ __name((request, env, ctx) => {
-      this.env = env;
+    #fetchDispatcher = /* @__PURE__ */ __name((request, env2, ctx) => {
+      this.env = env2;
       this.ctx = ctx;
       if (super.fetch === void 0) {
         throw new Error("Entrypoint class does not define a fetch() function.");
@@ -1303,4 +2231,4 @@ export {
   __INTERNAL_WRANGLER_MIDDLEWARE__2 as __INTERNAL_WRANGLER_MIDDLEWARE__,
   middleware_loader_entry_default2 as default
 };
-//# sourceMappingURL=functionsWorker-0.6972166471353275.js.map
+//# sourceMappingURL=functionsWorker-0.029449630503311952.js.map

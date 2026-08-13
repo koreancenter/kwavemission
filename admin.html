@@ -3,101 +3,98 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>K-Wave Mission - 통합 관리자 센터</title>
+  <title>K-Wave Mission - 통합 관리자 Center</title>
   <style>
     * { box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 960px; margin: 30px auto; padding: 0 20px; line-height: 1.6; color: #333; background-color: #f9fafb; }
-    h1, h2 { border-bottom: 2px solid #0056b3; padding-bottom: 8px; color: #111; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1080px; margin: 30px auto; padding: 0 20px; line-height: 1.6; color: #333; background-color: #f8fafc; }
+    h1, h2 { border-bottom: 2px solid #0056b3; padding-bottom: 8px; color: #111; margin-top: 0; }
     
-    /* 관리 탭 스타일 */
-    .nav-tabs { display: flex; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #e1e4e8; padding-bottom: 0; }
-    .nav-tab-btn { background: #f1f3f5; border: 1px solid #ced4da; border-bottom: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 8px 8px 0 0; cursor: pointer; color: #495057; }
+    /* 로그인 모달 레이어 */
+    #loginOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+    .login-box { background: white; padding: 35px 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
+    .login-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; color: #0f172a; }
+
+    /* 상단 헤더 & 네비게이션 */
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid #e1e4e8; margin-bottom: 25px; }
+    .nav-tab-btn { background: #f1f3f5; border: 1px solid #ced4da; border-bottom: none; padding: 12px 24px; font-size: 15px; font-weight: bold; border-radius: 8px 8px 0 0; cursor: pointer; color: #495057; }
     .nav-tab-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
 
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
+    /* 블로거 스타일 뷰 전환 */
+    .view-section { display: none; }
+    .view-section.active { display: block; }
 
-    .card { background: #fff; border: 1px solid #e1e4e8; border-radius: 8px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
     .form-group { margin-bottom: 18px; }
     .form-row { display: flex; gap: 15px; }
     .form-row .form-group { flex: 1; }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
-    input[type="text"], input[type="number"], input[type="password"], input[type="file"], select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease; }
-    textarea { height: 160px; resize: vertical; }
-    .field-invalid { border-color: #dc3545 !important; background: #fff5f5; box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15); }
-    .field-valid { border-color: #198754; box-shadow: 0 0 0 2px rgba(25, 135, 84, 0.12); }
+    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #334155; }
+    input[type="text"], input[type="number"], input[type="password"], input[type="email"], input[type="file"], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; transition: border-color .2s ease; }
+    textarea { height: 260px; resize: vertical; font-family: monospace; line-height: 1.5; }
     
-    .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-    button { background: #0056b3; color: white; border: none; padding: 12px 20px; font-size: 15px; font-weight: bold; border-radius: 4px; cursor: pointer; }
+    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
+    button { background: #0056b3; color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
     button:hover { background: #003d82; }
-    button.secondary { background: #6c757d; }
-    button.secondary:hover { background: #5a6268; }
+    button.secondary { background: #64748b; }
+    button.secondary:hover { background: #475569; }
     button.outline { background: transparent; color: #0056b3; border: 1px solid #0056b3; }
-    button.outline:hover { background: #eef5ff; }
-    button.danger { background: #dc3545; }
-    button.danger:hover { background: #bd2130; }
-    button.sm { padding: 5px 10px; font-size: 13px; font-weight: normal; }
+    button.outline:hover { background: #f0f7ff; }
+    button.danger { background: #dc2626; }
+    button.danger:hover { background: #b91c1c; }
+    button.sm { padding: 6px 12px; font-size: 13px; font-weight: normal; }
 
     #preview-img { max-width: 200px; margin-top: 10px; display: none; border-radius: 6px; border: 1px solid #ddd; }
-    .status-msg { margin-top: 15px; min-height: 44px; padding: 10px 12px; border-radius: 8px; font-weight: 700; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0; transform: translateY(2px); transition: opacity .2s ease, transform .2s ease; }
-    .status-msg.visible { opacity: 1; transform: translateY(0); }
-    .status-msg.is-loading { background: #eef5ff; color: #084298; border: 1px solid #b6d4fe; }
-    .status-msg.is-success { background: #e8f5e9; color: #1b5e20; border: 1px solid #c3e6cb; }
-    .status-msg.is-error { background: #ffebee; color: #b71c1c; border: 1px solid #f5c2c7; }
-    .status-spinner { width: 15px; height: 15px; border-radius: 50%; border: 2px solid currentColor; border-right-color: transparent; animation: spin 0.85s linear infinite; }
-    .status-sub { display: block; font-size: 12px; font-weight: 600; opacity: 0.85; margin-top: 2px; }
+    .status-msg { margin-top: 15px; min-height: 40px; padding: 10px 12px; border-radius: 6px; font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0; transition: opacity .2s ease; }
+    .status-msg.visible { opacity: 1; }
+    .status-msg.is-loading { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .status-msg.is-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .status-msg.is-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* 모드 표시 상태바 */
-    .mode-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; margin-left: 10px; }
-    .mode-create { background: #e3f2fd; color: #0d47a1; }
-    .mode-edit { background: #fff3cd; color: #856404; }
-
-    /* 필터 및 테이블 */
+    /* 목록 컨트롤 & 필터 */
+    .list-header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
-    .filter-btn { background: #f8f9fa; color: #495057; border: 1px solid #ced4da; padding: 6px 14px; border-radius: 20px; font-size: 14px; cursor: pointer; }
+    .filter-btn { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; }
     .filter-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
-    .list-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
-    .list-controls input[type="text"], .list-controls select { min-width: 180px; max-width: 320px; }
-    .bulk-actions { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-    .bulk-meta { font-size: 13px; color: #555; }
-    .pagination { margin-top: 12px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .pagination button { padding: 8px 14px; font-size: 13px; }
-    .pagination .page-info { font-size: 13px; color: #495057; min-width: 180px; text-align: center; }
-    .select-col { width: 36px; text-align: center; }
-
+    
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border-bottom: 1px solid #eee; padding: 12px 8px; text-align: left; font-size: 14px; }
-    th { background: #f8f9fa; font-weight: bold; }
+    th, td { border-bottom: 1px solid #f1f5f9; padding: 12px 10px; text-align: left; font-size: 14px; }
+    th { background: #f8fafc; color: #475569; font-weight: bold; }
     .type-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-    .type-news { background: #e8f5e9; color: #2e7d32; }
-    .type-notice { background: #ffebee; color: #c62828; }
-    .status-recruiting { background: #e3f2fd; color: #0d47a1; }
-    .status-ongoing { background: #e8f5e9; color: #1b5e20; }
-    .status-preparing { background: #f3e5f5; color: #4a148c; }
+    .type-news { background: #dcfce7; color: #15803d; }
+    .type-notice { background: #fee2e2; color: #b91c1c; }
+    .list-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
 
-    .list-thumb { width: 45px; height: 45px; object-fit: cover; border-radius: 4px; }
-
-    /* 미리보기 모달 */
+    /* 미리보기 모달 (렌더링 지원) */
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: white; padding: 30px; border-radius: 8px; max-width: 650px; width: 90%; max-height: 85vh; overflow-y: auto; position: relative; }
-    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; border: none; background: none; }
-    .preview-body { white-space: pre-wrap; margin-top: 15px; line-height: 1.7; word-break: break-all; }
+    .modal-content { background: #0f172a; color: #f8fafc; padding: 30px; border-radius: 12px; max-width: 720px; width: 92%; max-height: 85vh; overflow-y: auto; position: relative; border: 1px solid #334155; }
+    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; border: none; background: none; color: #94a3b8; }
+    .preview-body { margin-top: 20px; line-height: 1.7; word-break: break-word; }
   </style>
 </head>
 <body>
 
-  <h1>K-Wave Mission 관리자 페이지</h1>
-
-  <!-- 공통 비밀번호 입력 (상단 고정) -->
-  <div class="card" style="background: #eef5ff; border-color: #b6d4fe; padding: 15px 20px; margin-bottom: 20px;">
-    <div class="form-group" style="margin-bottom: 0;">
-      <label for="globalPassword" style="color: #084298;">🔑 관리자 비밀번호 <span style="color:red">*</span></label>
-      <input type="password" id="globalPassword" placeholder="모든 데이터 생성/수정/삭제 시 필요한 관리자 비밀번호를 입력하세요" required>
+  <!-- 1. 로그인 전용 레이어 -->
+  <div id="loginOverlay">
+    <div class="login-box">
+      <div class="login-title">🔒 K-Wave Mission 관리자</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">아이디</label>
+          <input type="email" id="loginEmail" value="admin@kwavemission.org" required readonly style="background:#f1f5f9;">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">비밀번호</label>
+          <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" required autofocus>
+        </div>
+        <button type="submit" style="width:100%; justify-content:center; padding: 12px;">로그인</button>
+      </form>
     </div>
+  </div>
+
+  <!-- 2. 메인 관리자 상단 헤더 -->
+  <div class="admin-header">
+    <h1>K-Wave Mission 관리자 센터</h1>
+    <button type="button" class="secondary sm" id="logoutBtn">🔒 로그아웃</button>
   </div>
 
   <!-- 메인 탭 선택 -->
@@ -107,296 +104,232 @@
   </div>
 
   <!-- ================= 탭 1: 게시글 관리 ================= -->
-  <div id="tab-posts" class="tab-content active">
-    <!-- 글 작성 / 수정 폼 -->
-    <div class="card">
-      <h2>
-        <span id="postFormTitle">새 글 작성</span>
-        <span id="postModeBadge" class="mode-badge mode-create">작성 모드</span>
-      </h2>
-
-      <form id="postForm">
-        <input type="hidden" id="postId" value="">
-
-        <div class="form-group">
-          <label for="postType">게시글 분류</label>
-          <select id="postType">
-            <option value="news">뉴스 (news)</option>
-            <option value="notice">공지사항 (notice)</option>
-          </select>
+  <div id="tab-posts" class="tab-content">
+    
+    <!-- A. 게시글 목록 뷰 (기본 화면) -->
+    <div id="postListView" class="view-section active">
+      <div class="card">
+        <div class="list-header-action">
+          <h2>게시글 목록</h2>
+          <button type="button" onclick="showPostEditor()"><span style="font-size:16px;">+</span> 새 글 작성</button>
         </div>
 
-        <div class="form-group">
-          <label for="postTitle">제목 <span style="color:red">*</span></label>
-          <input type="text" id="postTitle" required placeholder="제목을 입력하세요">
+        <div class="filter-tabs">
+          <button class="filter-btn active" data-type="all">전체보기</button>
+          <button class="filter-btn" data-type="news">뉴스만</button>
+          <button class="filter-btn" data-type="notice">공지사항만</button>
         </div>
 
-        <div class="form-group">
-          <label for="postImage">대표 썸네일 이미지</label>
-          <input type="file" id="postImage" accept="image/*">
-          <img id="preview-img" alt="대표 이미지 미리보기">
-        </div>
-
-        <div class="form-group">
-          <label for="postContent">본문 내용 <span style="color:red">*</span></label>
-          <textarea id="postContent" required placeholder="본문 내용을 입력하세요..."></textarea>
-        </div>
-
-        <div class="btn-group">
-          <button type="submit" id="postSubmitBtn">글 등록하기</button>
-          <button type="button" class="outline" id="formPreviewBtn">작성중 내용 미리보기</button>
-          <button type="button" class="secondary" id="postResetBtn" style="display:none;">작성 취소 (새 글 모드)</button>
-        </div>
-      </form>
-
-      <div id="postStatus" class="status-msg"></div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 60px;">ID</th>
+              <th style="width: 70px;">사진</th>
+              <th style="width: 90px;">분류</th>
+              <th>제목</th>
+              <th style="width: 110px;">작성일</th>
+              <th style="width: 160px;">관리</th>
+            </tr>
+          </thead>
+          <tbody id="postTableBody">
+            <tr><td colspan="6" style="text-align:center;">게시글을 불러오는 중...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- 게시글 목록 -->
-    <div class="card">
-      <h2>게시글 목록 및 관리</h2>
+    <!-- B. 게시글 작성/수정 에디터 뷰 -->
+    <div id="postEditorView" class="view-section">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <h2 id="postFormTitle">새 글 작성</h2>
+          <button type="button" class="secondary outline sm" onclick="hidePostEditor()">← 목록으로 돌아가기</button>
+        </div>
 
-      <div class="list-controls">
-        <input type="text" id="postSearchInput" placeholder="제목으로 검색...">
+        <form id="postForm">
+          <input type="hidden" id="postId" value="">
+
+          <div class="form-group">
+            <label for="postType">게시글 분류</label>
+            <select id="postType">
+              <option value="news">뉴스 (news)</option>
+              <option value="notice">공지사항 (notice)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="postTitle">제목 <span style="color:red">*</span></label>
+            <input type="text" id="postTitle" required placeholder="제목을 입력하세요">
+          </div>
+
+          <div class="form-group">
+            <label for="postImage">대표 썸네일 이미지</label>
+            <input type="file" id="postImage" accept="image/*">
+            <img id="preview-img" alt="대표 이미지 미리보기">
+          </div>
+
+          <div class="ai-assistant-box" data-target="postContent"></div>
+
+          <div class="form-group">
+            <label for="postContent">본문 내용 (HTML 가능) <span style="color:red">*</span></label>
+            <textarea id="postContent" required placeholder="본문 내용이나 HTML 양식을 입력하세요..."></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" id="postSubmitBtn">글 저장하기</button>
+            <button type="button" class="outline" id="formPreviewBtn">👁️ 작성중 미리보기 (HTML 렌더링)</button>
+            <button type="button" class="secondary" onclick="hidePostEditor()">취소</button>
+          </div>
+        </form>
+
+        <div id="postStatus" class="status-msg"></div>
       </div>
-
-      <div class="filter-tabs">
-        <button class="filter-btn active" data-type="all">전체보기</button>
-        <button class="filter-btn" data-type="news">뉴스만</button>
-        <button class="filter-btn" data-type="notice">공지사항만</button>
-      </div>
-
-      <div class="bulk-actions">
-        <button type="button" id="postBulkDeleteBtn" class="danger">선택 항목 삭제</button>
-        <span id="postBulkMeta" class="bulk-meta">선택된 항목 없음</span>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th class="select-col"><input type="checkbox" id="postSelectAll"></th>
-            <th style="width: 50px;">ID</th>
-            <th style="width: 60px;">사진</th>
-            <th style="width: 80px;">분류</th>
-            <th>제목</th>
-            <th style="width: 100px;">작성일</th>
-            <th style="width: 170px;">관리</th>
-          </tr>
-        </thead>
-        <tbody id="postTableBody">
-          <tr><td colspan="7" style="text-align:center;">등록된 글을 불러오는 중...</td></tr>
-        </tbody>
-      </table>
-      <div id="postPagination" class="pagination"></div>
     </div>
+
   </div>
 
   <!-- ================= 탭 2: 프로그램 관리 ================= -->
   <div id="tab-programs" class="tab-content">
-    <!-- 프로그램 작성 / 수정 폼 -->
-    <div class="card">
-      <h2>
-        <span id="programFormTitle">새 프로그램 등록</span>
-        <span id="programModeBadge" class="mode-badge mode-create">작성 모드</span>
-      </h2>
-
-      <form id="programForm">
-        <input type="hidden" id="programId" value="">
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="programSlug">슬러그 (영문 식별자) <span style="color:red">*</span></label>
-            <input type="text" id="programSlug" required placeholder="예: vivid-camp, mission-school">
-          </div>
-          <div class="form-group">
-            <label for="programCategory">카테고리 <span style="color:red">*</span></label>
-            <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP">
-          </div>
+    
+    <!-- A. 프로그램 목록 뷰 -->
+    <div id="programListView" class="view-section active">
+      <div class="card">
+        <div class="list-header-action">
+          <h2>등록된 프로그램 목록</h2>
+          <button type="button" onclick="showProgramEditor()"><span style="font-size:16px;">+</span> 새 프로그램 등록</button>
         </div>
 
-        <div class="form-row">
-          <div class="form-group" style="flex: 2;">
-            <label for="programTitle">프로그램명 <span style="color:red">*</span></label>
-            <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026">
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label for="programIcon">아이콘 (이모지)</label>
-            <input type="text" id="programIcon" value="🎓" placeholder="🎓, 🔥 등">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label for="programStatus">모집 상태 <span style="color:red">*</span></label>
-            <select id="programStatus">
-              <option value="recruiting">recruiting (모집중)</option>
-              <option value="ongoing">ongoing (진행중)</option>
-              <option value="preparing">preparing (준비중)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="programOrder">표시 순서 (숫자가 작을수록 상단)</label>
-            <input type="number" id="programOrder" value="0">
-          </div>
-          <div class="form-group" style="display:flex; align-items:center;">
-            <label style="cursor:pointer; display:flex; align-items:center; gap:8px; margin-top:20px;">
-              <input type="checkbox" id="programIsRecommended" value="1">
-              <span>추천 프로그램 노출</span>
-            </label>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label for="programDescription">설명 / 요약 내용 <span style="color:red">*</span></label>
-          <textarea id="programDescription" required placeholder="프로그램에 대한 간단한 설명을 입력하세요..."></textarea>
-        </div>
-
-        <div class="btn-group">
-          <button type="submit" id="programSubmitBtn">프로그램 등록하기</button>
-          <button type="button" class="secondary" id="programResetBtn" style="display:none;">작성 취소 (새 등록 모드)</button>
-        </div>
-      </form>
-
-      <div id="programStatusMsg" class="status-msg"></div>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50px;">ID</th>
+              <th style="width: 50px;">아이콘</th>
+              <th style="width: 120px;">슬러그</th>
+              <th style="width: 120px;">카테고리</th>
+              <th>프로그램명</th>
+              <th style="width: 90px;">상태</th>
+              <th style="width: 130px;">관리</th>
+            </tr>
+          </thead>
+          <tbody id="programTableBody">
+            <tr><td colspan="7" style="text-align:center;">프로그램을 불러오는 중...</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- 프로그램 목록 -->
-    <div class="card">
-      <h2>등록된 프로그램 목록</h2>
+    <!-- B. 프로그램 작성/수정 뷰 -->
+    <div id="programEditorView" class="view-section">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <h2 id="programFormTitle">새 프로그램 등록</h2>
+          <button type="button" class="secondary outline sm" onclick="hideProgramEditor()">← 목록으로 돌아가기</button>
+        </div>
 
-      <div class="list-controls">
-        <input type="text" id="programSearchInput" placeholder="프로그램명으로 검색...">
-        <select id="programCategoryFilter">
-          <option value="all">전체 카테고리</option>
-        </select>
-      </div>
-      <div class="filter-tabs" id="programStatusFilters">
-        <button class="filter-btn active" data-status="all">전체 상태</button>
-        <button class="filter-btn" data-status="recruiting">모집중</button>
-        <button class="filter-btn" data-status="ongoing">진행중</button>
-        <button class="filter-btn" data-status="preparing">준비중</button>
-      </div>
-      <div class="bulk-actions">
-        <button type="button" id="programBulkDeleteBtn" class="danger">선택 항목 삭제</button>
-        <span id="programBulkMeta" class="bulk-meta">선택된 항목 없음</span>
-      </div>
+        <form id="programForm">
+          <input type="hidden" id="programId" value="">
 
-      <table>
-        <thead>
-          <tr>
-            <th class="select-col"><input type="checkbox" id="programSelectAll"></th>
-            <th style="width: 50px;">ID</th>
-            <th style="width: 50px;">아이콘</th>
-            <th style="width: 120px;">슬러그</th>
-            <th style="width: 120px;">카테고리</th>
-            <th>프로그램명</th>
-            <th style="width: 90px;">상태</th>
-            <th style="width: 60px;">추천</th>
-            <th style="width: 130px;">관리</th>
-          </tr>
-        </thead>
-        <tbody id="programTableBody">
-          <tr><td colspan="9" style="text-align:center;">등록된 프로그램을 불러오는 중...</td></tr>
-        </tbody>
-      </table>
-      <div id="programPagination" class="pagination"></div>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="programSlug">슬러그 (영문 식별자) <span style="color:red">*</span></label>
+              <input type="text" id="programSlug" required placeholder="예: vivid-camp">
+            </div>
+            <div class="form-group">
+              <label for="programCategory">카테고리 <span style="color:red">*</span></label>
+              <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" style="flex: 2;">
+              <label for="programTitle">프로그램명 <span style="color:red">*</span></label>
+              <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026">
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label for="programIcon">아이콘 (이모지)</label>
+              <input type="text" id="programIcon" value="🎓">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="programStatus">모집 상태</label>
+              <select id="programStatus">
+                <option value="recruiting">recruiting (모집중)</option>
+                <option value="ongoing">ongoing (진행중)</option>
+                <option value="preparing">preparing (준비중)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="programOrder">표시 순서</label>
+              <input type="number" id="programOrder" value="0">
+            </div>
+          </div>
+
+          <div class="ai-assistant-box" data-target="programDescription"></div>
+
+          <div class="form-group">
+            <label for="programDescription">설명 / 요약 내용 <span style="color:red">*</span></label>
+            <textarea id="programDescription" required style="height:120px;"></textarea>
+          </div>
+
+          <div class="btn-group">
+            <button type="submit" id="programSubmitBtn">프로그램 저장하기</button>
+            <button type="button" class="secondary" onclick="hideProgramEditor()">취소</button>
+          </div>
+        </form>
+
+        <div id="programStatusMsg" class="status-msg"></div>
+      </div>
     </div>
+
   </div>
 
-  <!-- 3. 미리보기 모달 (게시글용) -->
+  <!-- 3. 실시간 HTML 미리보기 모달 -->
   <div id="previewModal" class="modal">
     <div class="modal-content">
       <button class="modal-close" id="modalCloseBtn">&times;</button>
-      <div>
+      <div style="margin-bottom:12px;">
         <span id="modalTypeChip" class="type-chip">뉴스</span>
-        <span id="modalDate" style="color: #777; font-size: 13px; margin-left: 10px;"></span>
+        <span id="modalDate" style="color: #94a3b8; font-size: 13px; margin-left: 10px;"></span>
       </div>
-      <h2 id="modalTitle" style="margin-top: 10px; border:none;"></h2>
-      <img id="modalImg" style="max-width:100%; border-radius: 6px; display:none; margin-top: 10px;">
+      <h2 id="modalTitle" style="color:#ffffff; border:none; margin-bottom:15px;"></h2>
+      <img id="modalImg" style="max-width:100%; border-radius: 8px; display:none; margin-bottom: 20px;">
+      <!-- innerHTML로 프론트엔드 스타일그대로 실시간 렌더링 -->
       <div id="modalContent" class="preview-body"></div>
     </div>
   </div>
 
   <script>
-    // 공통 API 및 설정
     const fallbackApiBase = 'http://localhost:8788';
     const apiBase = (window.location.protocol === 'file:' || window.location.origin === 'null') ? fallbackApiBase : '';
-
     function apiUrl(path) { return apiBase + path; }
-    function getPassword() { return document.getElementById('globalPassword').value; }
 
-    function clearStatus(statusEl) {
-      if (!statusEl) return;
-      if (statusEl._clearTimer) clearTimeout(statusEl._clearTimer);
-      if (statusEl._progressTimer) clearInterval(statusEl._progressTimer);
-      statusEl.textContent = '';
-      statusEl.className = 'status-msg';
+    // 인증 토큰 관리
+    function getPassword() { return sessionStorage.getItem('adminToken') || ''; }
+
+    // 로그인 / 로그아웃 제어
+    const loginOverlay = document.getElementById('loginOverlay');
+    const loginForm = document.getElementById('loginForm');
+
+    if (getPassword()) {
+      loginOverlay.style.display = 'none';
     }
 
-    function setStatus(statusEl, type, mainText, subText) {
-      if (!statusEl) return;
-      clearStatus(statusEl);
-      statusEl.classList.add('visible');
-
-      if (type === 'loading') {
-        statusEl.classList.add('is-loading');
-        statusEl.innerHTML = '<span class="status-spinner" aria-hidden="true"></span><span><span>' + mainText + '</span>' + (subText ? '<span class="status-sub">' + subText + '</span>' : '') + '</span>';
-        return;
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const pwd = document.getElementById('loginPassword').value;
+      if (pwd) {
+        sessionStorage.setItem('adminToken', pwd);
+        loginOverlay.style.display = 'none';
+        loadPostList();
       }
+    });
 
-      statusEl.classList.add(type === 'success' ? 'is-success' : 'is-error');
-      statusEl.textContent = mainText;
-      statusEl._clearTimer = setTimeout(() => {
-        statusEl.classList.remove('visible');
-        setTimeout(() => clearStatus(statusEl), 220);
-      }, 3200);
-    }
-
-    function startSavingStatus(statusEl, initialText) {
-      const startedAt = Date.now();
-      setStatus(statusEl, 'loading', initialText, '네트워크 상태에 따라 시간이 걸릴 수 있습니다.');
-
-      statusEl._progressTimer = setInterval(() => {
-        const seconds = Math.floor((Date.now() - startedAt) / 1000);
-        const detail = seconds >= 6
-          ? `처리 중... ${seconds}초 경과 (잠시만 기다려 주세요)`
-          : `처리 중... ${seconds}초 경과`;
-        statusEl.innerHTML = '<span class="status-spinner" aria-hidden="true"></span><span><span>' + initialText + '</span><span class="status-sub">' + detail + '</span></span>';
-      }, 1000);
-    }
-
-    function isValueEmpty(el) {
-      if (!el) return true;
-      if (el.type === 'checkbox') return false;
-      if (el.type === 'file') return el.required && (!el.files || el.files.length === 0);
-      return !String(el.value || '').trim();
-    }
-
-    function validateField(el) {
-      if (!el || !el.required) return true;
-      const valid = !isValueEmpty(el) && el.checkValidity();
-      el.classList.toggle('field-invalid', !valid);
-      el.classList.toggle('field-valid', valid);
-      return valid;
-    }
-
-    function validateRequiredFields(fields) {
-      let firstInvalid = null;
-      fields.forEach((field) => {
-        const ok = validateField(field);
-        if (!ok && !firstInvalid) firstInvalid = field;
-      });
-      if (firstInvalid) firstInvalid.focus();
-      return !firstInvalid;
-    }
-
-    function bindRealtimeValidation(fields) {
-      fields.forEach((field) => {
-        const eventName = (field.tagName === 'SELECT' || field.type === 'checkbox' || field.type === 'file') ? 'change' : 'input';
-        field.addEventListener(eventName, () => validateField(field));
-        field.addEventListener('blur', () => validateField(field));
-      });
-    }
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      sessionStorage.removeItem('adminToken');
+      location.reload();
+    });
 
     // 탭 전환
     function switchTab(tabName) {
@@ -414,987 +347,186 @@
       }
     }
 
-    // URL 정규화
-    function normalizeImageUrl(rawUrl) {
-      if (!rawUrl) return '';
-      const value = String(rawUrl).trim();
-      if (!value) return '';
-      if (/^(https?:)?\/\//i.test(value) || value.startsWith('data:') || value.startsWith('blob:')) return value;
-      if (value.startsWith('/')) return value;
-      if (value.startsWith('images/')) return '/api/image/' + value;
-      if (value.startsWith('api/image/')) return '/' + value;
-      return '/' + value.replace(/^\.?\//, '');
+    // 게시글 에디터 뷰 전환 (Blogger 방식)
+    function showPostEditor() {
+      document.getElementById('postListView').classList.remove('active');
+      document.getElementById('postEditorView').classList.add('active');
     }
 
-    // ==========================================
-    // 1. 게시글 (News / Notice) 관리 스크립트
-    // ==========================================
-    const postForm = document.getElementById('postForm');
-    const postIdInput = document.getElementById('postId');
-    const postFormTitle = document.getElementById('postFormTitle');
-    const postModeBadge = document.getElementById('postModeBadge');
-    const postSubmitBtn = document.getElementById('postSubmitBtn');
-    const postResetBtn = document.getElementById('postResetBtn');
-    const postImageInput = document.getElementById('postImage');
-    const previewImg = document.getElementById('preview-img');
-    const postStatusDiv = document.getElementById('postStatus');
-    const postTableBody = document.getElementById('postTableBody');
-    const postSearchInput = document.getElementById('postSearchInput');
-    const postPagination = document.getElementById('postPagination');
-    const postSelectAll = document.getElementById('postSelectAll');
-    const postBulkDeleteBtn = document.getElementById('postBulkDeleteBtn');
-    const postBulkMeta = document.getElementById('postBulkMeta');
-    const globalPasswordInput = document.getElementById('globalPassword');
-
-    const postRequiredFields = [
-      document.getElementById('postTitle'),
-      document.getElementById('postContent')
-    ];
-    const programRequiredFields = [
-      document.getElementById('programSlug'),
-      document.getElementById('programCategory'),
-      document.getElementById('programTitle'),
-      document.getElementById('programDescription')
-    ];
-
-    bindRealtimeValidation(postRequiredFields);
-    bindRealtimeValidation(programRequiredFields);
-    bindRealtimeValidation([globalPasswordInput]);
-
-    const PAGE_SIZE = 20;
-    let currentFilter = 'all';
-    let postSearchTerm = '';
-    let postCurrentPage = 1;
-    let postListCache = [];
-    const selectedPostIds = new Set();
-
-    function getPreviewImageUrl() { return previewImg.dataset.imageUrl || ''; }
-    function setPreviewImageUrl(rawUrl) {
-      const normalizedUrl = normalizeImageUrl(rawUrl);
-      previewImg.dataset.imageUrl = normalizedUrl;
-      if (normalizedUrl) {
-        previewImg.src = normalizedUrl;
-        previewImg.style.display = 'block';
-      } else {
-        previewImg.removeAttribute('src');
-        previewImg.style.display = 'none';
-      }
+    function hidePostEditor() {
+      document.getElementById('postForm').reset();
+      document.getElementById('postId').value = '';
+      document.getElementById('preview-img').style.display = 'none';
+      document.getElementById('postFormTitle').textContent = '새 글 작성';
+      document.getElementById('postEditorView').classList.remove('active');
+      document.getElementById('postListView').classList.add('active');
     }
 
-    function getFilteredPosts() {
-      return postListCache.filter((post) => {
-        const typeMatch = currentFilter === 'all' || post.type === currentFilter;
-        const title = String(post.title || '').toLowerCase();
-        const searchMatch = !postSearchTerm || title.includes(postSearchTerm);
-        return typeMatch && searchMatch;
-      });
+    // 프로그램 에디터 뷰 전환
+    function showProgramEditor() {
+      document.getElementById('programListView').classList.remove('active');
+      document.getElementById('programEditorView').classList.add('active');
     }
 
-    function updatePostBulkMeta() {
-      const count = selectedPostIds.size;
-      postBulkMeta.textContent = count > 0 ? `${count}개 선택됨` : '선택된 항목 없음';
+    function hideProgramEditor() {
+      document.getElementById('programForm').reset();
+      document.getElementById('programId').value = '';
+      document.getElementById('programFormTitle').textContent = '새 프로그램 등록';
+      document.getElementById('programEditorView').classList.remove('active');
+      document.getElementById('programListView').classList.add('active');
     }
 
-    function renderPostPagination(totalItems) {
-      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-      if (postCurrentPage > totalPages) postCurrentPage = totalPages;
-
-      if (totalItems <= PAGE_SIZE) {
-        postPagination.innerHTML = '';
-        return totalPages;
-      }
-
-      postPagination.innerHTML = `
-        <button type="button" class="secondary" onclick="changePostPage(-1)" ${postCurrentPage === 1 ? 'disabled' : ''}>이전</button>
-        <span class="page-info">${postCurrentPage} / ${totalPages} 페이지 (총 ${totalItems}개)</span>
-        <button type="button" class="secondary" onclick="changePostPage(1)" ${postCurrentPage === totalPages ? 'disabled' : ''}>다음</button>
-      `;
-      return totalPages;
-    }
-
-    function renderPostRows() {
-      const filteredPosts = getFilteredPosts();
-      const totalPages = renderPostPagination(filteredPosts.length);
-      const startIndex = (postCurrentPage - 1) * PAGE_SIZE;
-      const pagedPosts = filteredPosts.slice(startIndex, startIndex + PAGE_SIZE);
-
-      if (filteredPosts.length === 0) {
-        postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">조건에 맞는 게시글이 없습니다.</td></tr>';
-        postSelectAll.checked = false;
-        updatePostBulkMeta();
-        return;
-      }
-
-      if (postCurrentPage > totalPages) {
-        postCurrentPage = totalPages;
-      }
-
-      postTableBody.innerHTML = pagedPosts.map(post => {
-        const isNews = post.type === 'news';
-        const typeLabel = isNews ? '뉴스' : '공지사항';
-        const typeClass = isNews ? 'type-news' : 'type-notice';
-        const createdDate = post.created_at ? post.created_at.substring(0, 10) : '-';
-        const thumbnailUrl = normalizeImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
-        const thumbHtml = thumbnailUrl
-          ? `<img src="${thumbnailUrl}" class="list-thumb">`
-          : `<span style="color:#ccc; font-size:12px;">없음</span>`;
-
-        return `
-          <tr>
-            <td class="select-col"><input type="checkbox" class="post-row-check" data-id="${post.id}" ${selectedPostIds.has(Number(post.id)) ? 'checked' : ''}></td>
-            <td>${post.id}</td>
-            <td>${thumbHtml}</td>
-            <td><span class="type-chip ${typeClass}">${typeLabel}</span></td>
-            <td><strong>${escapeHtml(post.title)}</strong></td>
-            <td>${createdDate}</td>
-            <td>
-              <button class="sm outline" onclick="openPostPreview(${post.id})">보기</button>
-              <button class="sm secondary" onclick="editPost(${post.id})">수정</button>
-              <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const visibleIds = pagedPosts.map((p) => Number(p.id));
-      const allVisibleChecked = visibleIds.length > 0 && visibleIds.every((id) => selectedPostIds.has(id));
-      postSelectAll.checked = allVisibleChecked;
-      updatePostBulkMeta();
-    }
-
-    window.changePostPage = function (delta) {
-      const filteredCount = getFilteredPosts().length;
-      const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
-      postCurrentPage = Math.min(totalPages, Math.max(1, postCurrentPage + delta));
-      renderPostRows();
-    };
-
+    // 게시글 목록 불러오기
     async function loadPostList() {
       try {
         const res = await fetch(apiUrl('/api/get-posts?type=all'));
         const posts = await res.json();
+        const tbody = document.getElementById('postTableBody');
 
         if (!Array.isArray(posts) || posts.length === 0) {
-          postListCache = [];
-          postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#777;">등록된 게시글이 없습니다.</td></tr>';
-          postPagination.innerHTML = '';
-          selectedPostIds.clear();
-          postSelectAll.checked = false;
-          updatePostBulkMeta();
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">등록된 글이 없습니다.</td></tr>';
           return;
         }
 
-        postListCache = posts;
-        renderPostRows();
+        tbody.innerHTML = posts.map(post => `
+          <tr>
+            <td>${post.id}</td>
+            <td>${post.thumbnail_url ? `<img src="${post.thumbnail_url}" class="list-thumb">` : '-'}</td>
+            <td><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
+            <td><strong>${escapeHtml(post.title)}</strong></td>
+            <td>${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
+            <td>
+              <button class="sm outline" onclick="editPost(${post.id})">수정/편집</button>
+              <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
+            </td>
+          </tr>
+        `).join('');
       } catch (err) {
-        postTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">목록을 불러오는 중 오류 발생</td></tr>';
-        postPagination.innerHTML = '';
+        document.getElementById('postTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">불러오기 오류 발생</td></tr>';
       }
     }
 
-    document.querySelectorAll('.filter-tabs .filter-btn[data-type]').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        document.querySelectorAll('.filter-tabs .filter-btn[data-type]').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        currentFilter = e.target.dataset.type;
-        postCurrentPage = 1;
-        renderPostRows();
-      });
-    });
-
-    postSearchInput.addEventListener('input', (e) => {
-      postSearchTerm = String(e.target.value || '').trim().toLowerCase();
-      postCurrentPage = 1;
-      renderPostRows();
-    });
-
-    postTableBody.addEventListener('change', (e) => {
-      if (!e.target.classList.contains('post-row-check')) return;
-      const id = parseInt(e.target.dataset.id, 10);
-      if (e.target.checked) selectedPostIds.add(id);
-      else selectedPostIds.delete(id);
-      renderPostRows();
-    });
-
-    postSelectAll.addEventListener('change', () => {
-      const filteredPosts = getFilteredPosts();
-      const startIndex = (postCurrentPage - 1) * PAGE_SIZE;
-      const visiblePosts = filteredPosts.slice(startIndex, startIndex + PAGE_SIZE);
-      visiblePosts.forEach((post) => {
-        if (postSelectAll.checked) selectedPostIds.add(Number(post.id));
-        else selectedPostIds.delete(Number(post.id));
-      });
-      renderPostRows();
-    });
-
-    postImageInput.addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          previewImg.dataset.imageUrl = '';
-          previewImg.src = event.target.result;
-          previewImg.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-
+    // 수정 모드 진입
     async function editPost(id) {
       try {
         const res = await fetch(apiUrl(`/api/get-posts?id=${id}`));
         const post = await res.json();
-
         if (post && post.id) {
-          postIdInput.value = post.id;
+          document.getElementById('postId').value = post.id;
           document.getElementById('postType').value = post.type || 'news';
           document.getElementById('postTitle').value = post.title;
           document.getElementById('postContent').value = post.content;
-
-          setPreviewImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
-
-          postFormTitle.textContent = `글 수정 (ID: #${post.id})`;
-          postModeBadge.textContent = '수정 모드';
-          postModeBadge.className = 'mode-badge mode-edit';
-          postSubmitBtn.textContent = '수정사항 저장하기';
-          postResetBtn.style.display = 'inline-block';
-
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          document.getElementById('postFormTitle').textContent = `글 수정 (ID: #${post.id})`;
+          showPostEditor();
         }
-      } catch (err) {
-        alert('글 정보를 가져오지 못했습니다.');
+      } catch (e) {
+        alert('글 정보를 불러올 수 없습니다.');
       }
     }
 
-    postResetBtn.addEventListener('click', () => {
-      postForm.reset();
-      postIdInput.value = '';
-      setPreviewImageUrl('');
-      postFormTitle.textContent = '새 글 작성';
-      postModeBadge.textContent = '작성 모드';
-      postModeBadge.className = 'mode-badge mode-create';
-      postSubmitBtn.textContent = '글 등록하기';
-      postResetBtn.style.display = 'none';
-      clearStatus(postStatusDiv);
-    });
-
-    async function deletePostById(id, password) {
+    // 삭제 처리
+    async function deletePost(id) {
+      if (!confirm(`정말 #${id}번 글을 삭제하시겠습니까?`)) return;
       const formData = new FormData();
       formData.append('id', id);
-      formData.append('password', password);
-
-      const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
-      const result = await res.json();
-      if (!res.ok || !result.success) throw new Error(result.error || '오류 발생');
-    }
-
-    async function deletePost(id) {
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        return;
-      }
-
-      if (!confirm(`정말 #${id}번 글을 삭제하시겠습니까?`)) return;
+      formData.append('password', getPassword());
 
       try {
-        await deletePostById(id, password);
-        alert('성공적으로 삭제되었습니다.');
-        selectedPostIds.delete(id);
-        loadPostList();
-        if (postIdInput.value == id) postResetBtn.click();
-      } catch (err) {
-        alert('삭제 실패: ' + (err.message || '오류 발생'));
-      }
+        const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          alert('삭제되었습니다.');
+          loadPostList();
+        } else {
+          alert('삭제 실패: ' + (result.error || '비밀번호를 확인하세요.'));
+        }
+      } catch (err) { alert('통신 오류'); }
     }
 
-    postBulkDeleteBtn.addEventListener('click', async () => {
-      const ids = Array.from(selectedPostIds);
-      if (ids.length === 0) {
-        alert('먼저 삭제할 항목을 선택해 주세요.');
-        return;
-      }
-
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        return;
-      }
-
-      if (!confirm(`선택한 ${ids.length}개 게시글을 삭제하시겠습니까?`)) return;
-
-      let successCount = 0;
-      startSavingStatus(postStatusDiv, `선택 항목 삭제 중... (0/${ids.length})`);
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i];
-        try {
-          await deletePostById(id, password);
-          selectedPostIds.delete(id);
-          successCount++;
-          postStatusDiv.innerHTML = `<span class="status-spinner" aria-hidden="true"></span><span><span>선택 항목 삭제 중... (${i + 1}/${ids.length})</span><span class="status-sub">잠시만 기다려 주세요.</span></span>`;
-          if (postIdInput.value == id) {
-            postForm.reset();
-            postIdInput.value = '';
-            setPreviewImageUrl('');
-            postFormTitle.textContent = '새 글 작성';
-            postModeBadge.textContent = '작성 모드';
-            postModeBadge.className = 'mode-badge mode-create';
-            postSubmitBtn.textContent = '글 등록하기';
-            postResetBtn.style.display = 'none';
-            postRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
-          }
-        } catch (err) {
-          console.error('Post bulk delete failed:', id, err);
-        }
-      }
-
-      if (successCount === ids.length) {
-        setStatus(postStatusDiv, 'success', `${successCount}개 게시글이 삭제되었습니다.`);
-      } else {
-        setStatus(postStatusDiv, 'error', `${successCount}/${ids.length}개 삭제 완료. 일부 항목 삭제에 실패했습니다.`);
-      }
-      loadPostList();
-    });
-
-    postForm.addEventListener('submit', async (e) => {
+    // 게시글 저장 (등록/수정)
+    document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        validateField(globalPasswordInput);
-        return;
-      }
-
-      const fieldsOk = validateRequiredFields(postRequiredFields);
-      if (!fieldsOk) {
-        setStatus(postStatusDiv, 'error', '필수 입력값을 확인해 주세요.');
-        return;
-      }
-
-      const isEdit = Boolean(postIdInput.value);
+      const isEdit = Boolean(document.getElementById('postId').value);
       const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
 
-      startSavingStatus(postStatusDiv, isEdit ? '수정사항 저장 중...' : '등록 중...');
-
       const formData = new FormData();
-      if (isEdit) formData.append('id', postIdInput.value);
-      formData.append('password', password);
+      if (isEdit) formData.append('id', document.getElementById('postId').value);
+      formData.append('password', getPassword());
       formData.append('type', document.getElementById('postType').value);
       formData.append('title', document.getElementById('postTitle').value);
       formData.append('content', document.getElementById('postContent').value);
 
-      const imageFile = postImageInput.files[0];
-      if (imageFile) formData.append('image', imageFile);
-      else if (isEdit && getPreviewImageUrl()) formData.append('thumbnail_url', getPreviewImageUrl());
+      const file = document.getElementById('postImage').files[0];
+      if (file) formData.append('image', file);
 
       try {
-        const response = await fetch(apiUrl(endpoint), { method: 'POST', body: formData });
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-          setStatus(postStatusDiv, 'success', isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!');
-
-          postForm.reset();
-          postIdInput.value = '';
-          setPreviewImageUrl('');
-          postFormTitle.textContent = '새 글 작성';
-          postModeBadge.textContent = '작성 모드';
-          postModeBadge.className = 'mode-badge mode-create';
-          postSubmitBtn.textContent = '글 등록하기';
-          postResetBtn.style.display = 'none';
-          postRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
-
+        const res = await fetch(apiUrl(endpoint), { method: 'POST', body: formData });
+        const result = await res.json();
+        if (res.ok && result.success) {
+          alert(isEdit ? '수정되었습니다!' : '등록되었습니다!');
+          hidePostEditor();
           loadPostList();
         } else {
-          setStatus(postStatusDiv, 'error', '처리 실패: ' + (result.error || '오류 발생'));
+          alert('저장 실패: ' + (result.error || '오류 발생'));
         }
-      } catch (err) {
-        setStatus(postStatusDiv, 'error', '통신 에러가 발생했습니다.');
-      }
+      } catch (err) { alert('통신 실패'); }
     });
 
-    // ==========================================
-    // 2. 프로그램 (Programs) 관리 스크립트
-    // ==========================================
-    const programForm = document.getElementById('programForm');
-    const programIdInput = document.getElementById('programId');
-    const programFormTitle = document.getElementById('programFormTitle');
-    const programModeBadge = document.getElementById('programModeBadge');
-    const programSubmitBtn = document.getElementById('programSubmitBtn');
-    const programResetBtn = document.getElementById('programResetBtn');
-    const programStatusMsg = document.getElementById('programStatusMsg');
-    const programTableBody = document.getElementById('programTableBody');
-    const programSearchInput = document.getElementById('programSearchInput');
-    const programCategoryFilter = document.getElementById('programCategoryFilter');
-    const programStatusFilters = document.getElementById('programStatusFilters');
-    const programPagination = document.getElementById('programPagination');
-    const programSelectAll = document.getElementById('programSelectAll');
-    const programBulkDeleteBtn = document.getElementById('programBulkDeleteBtn');
-    const programBulkMeta = document.getElementById('programBulkMeta');
-    const programSlugInput = document.getElementById('programSlug');
-    const programCategoryInput = document.getElementById('programCategory');
-    const programTitleInput = document.getElementById('programTitle');
-    const programIconInput = document.getElementById('programIcon');
-    const programStatusInput = document.getElementById('programStatus');
-
-    let programListCache = [];
-    let programCurrentPage = 1;
-    let programSearchTerm = '';
-    let programStatusFilter = 'all';
-    let programCategoryValue = 'all';
-    const selectedProgramIds = new Set();
-    let isSlugManuallyEdited = false;
-    let isIconManuallyEdited = false;
-    let isStatusManuallyEdited = false;
-    let suppressAutoFieldTracking = false;
-
-    function slugifyProgramTitle(rawTitle) {
-      const source = String(rawTitle || '').trim();
-      if (!source) return '';
-
-      const koreanWordMap = [
-        ['한국어', 'korean'],
-        ['프로그램', 'program'],
-        ['특별', 'special'],
-        ['선교', 'mission'],
-        ['캠프', 'camp'],
-        ['워크숍', 'workshop'],
-        ['세미나', 'seminar'],
-        ['훈련', 'training'],
-        ['교육', 'education'],
-        ['학술', 'academic'],
-        ['청년', 'youth'],
-        ['교회', 'church'],
-        ['사역', 'ministry'],
-        ['발리', 'bali'],
-        ['인도네시아', 'indonesia'],
-        ['타문화권', 'cross-cultural'],
-        ['비전트립', 'vision-trip'],
-        ['대학', 'university'],
-        ['교회', 'church'],
-        ['호스트', 'host'],
-        ['패밀리', 'family'],
-        ['한국', 'korea'],
-        ['생활', 'life'],
-        ['모집', 'recruiting'],
-        ['안내', 'infomation'],
-        ['학교', 'school']      
-      ];
-
-      let normalized = source;
-      koreanWordMap.forEach(([ko, en]) => {
-        normalized = normalized.replace(new RegExp(ko, 'g'), ' ' + en + ' ');
-      });
-
-      return normalized
-        .toLowerCase()
-        .normalize('NFKD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/[^a-z0-9\s-]/g, ' ')
-        .replace(/[\s_-]+/g, '-')
-        .replace(/^-+|-+$/g, '');
-    }
-
-    function isValidSlug(slug) {
-      return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(String(slug || '').trim());
-    }
-
-    function getSmartProgramIcon(title, category) {
-      const source = `${title || ''} ${category || ''}`.toLowerCase();
-      if (/camp|캠프|수련|retreat/.test(source)) return '🔥';
-      if (/school|학술|교육|study|class|course/.test(source)) return '📚';
-      if (/korean|한국어|language|언어/.test(source)) return '🎓';
-      if (/workshop|세미나|seminar|training|훈련/.test(source)) return '🧭';
-      if (/교회|church|예배|worship/.test(source)) return '⛪';
-      return '🎓';
-    }
-
-    function applyProgramSmartDefaults(options = {}) {
-      const force = Boolean(options.force);
-      const canAutoApply = !programIdInput.value;
-      if (!canAutoApply && !force) return;
-
-      const title = programTitleInput.value;
-      const category = programCategoryInput.value;
-
-      if (force || (!isIconManuallyEdited && !String(programIconInput.value || '').trim())) {
-        programIconInput.value = getSmartProgramIcon(title, category);
-      }
-
-      if (force || (!isStatusManuallyEdited && !String(programStatusInput.value || '').trim())) {
-        programStatusInput.value = 'recruiting';
-      }
-    }
-
-    function syncProgramSlugFromTitle() {
-      if (programIdInput.value) return;
-
-      const currentSlug = String(programSlugInput.value || '').trim();
-      if (isSlugManuallyEdited && isValidSlug(currentSlug)) return;
-
-      const nextSlug = slugifyProgramTitle(programTitleInput.value);
-      suppressAutoFieldTracking = true;
-      programSlugInput.value = nextSlug;
-      suppressAutoFieldTracking = false;
-      validateField(programSlugInput);
-    }
-
-    function initializeProgramCreateDefaults() {
-      suppressAutoFieldTracking = true;
-      isSlugManuallyEdited = false;
-      isIconManuallyEdited = false;
-      isStatusManuallyEdited = false;
-      suppressAutoFieldTracking = false;
-
-      syncProgramSlugFromTitle();
-      applyProgramSmartDefaults({ force: true });
-      validateField(programSlugInput);
-    }
-
-    function updateProgramCategoryFilterOptions() {
-      const categories = Array.from(new Set(programListCache.map((p) => String(p.category || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
-      const currentValue = programCategoryFilter.value || 'all';
-      programCategoryFilter.innerHTML = '<option value="all">전체 카테고리</option>' + categories.map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
-      programCategoryFilter.value = categories.includes(currentValue) ? currentValue : 'all';
-      programCategoryValue = programCategoryFilter.value;
-    }
-
-    function getFilteredPrograms() {
-      return programListCache.filter((prog) => {
-        const statusMatch = programStatusFilter === 'all' || prog.status === programStatusFilter;
-        const categoryMatch = programCategoryValue === 'all' || String(prog.category || '') === programCategoryValue;
-        const title = String(prog.title || '').toLowerCase();
-        const searchMatch = !programSearchTerm || title.includes(programSearchTerm);
-        return statusMatch && categoryMatch && searchMatch;
-      });
-    }
-
-    function updateProgramBulkMeta() {
-      const count = selectedProgramIds.size;
-      programBulkMeta.textContent = count > 0 ? `${count}개 선택됨` : '선택된 항목 없음';
-    }
-
-    function renderProgramPagination(totalItems) {
-      const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-      if (programCurrentPage > totalPages) programCurrentPage = totalPages;
-
-      if (totalItems <= PAGE_SIZE) {
-        programPagination.innerHTML = '';
-        return totalPages;
-      }
-
-      programPagination.innerHTML = `
-        <button type="button" class="secondary" onclick="changeProgramPage(-1)" ${programCurrentPage === 1 ? 'disabled' : ''}>이전</button>
-        <span class="page-info">${programCurrentPage} / ${totalPages} 페이지 (총 ${totalItems}개)</span>
-        <button type="button" class="secondary" onclick="changeProgramPage(1)" ${programCurrentPage === totalPages ? 'disabled' : ''}>다음</button>
-      `;
-      return totalPages;
-    }
-
-    function renderProgramRows() {
-      const filteredPrograms = getFilteredPrograms();
-      const totalPages = renderProgramPagination(filteredPrograms.length);
-      const startIndex = (programCurrentPage - 1) * PAGE_SIZE;
-      const pagedPrograms = filteredPrograms.slice(startIndex, startIndex + PAGE_SIZE);
-
-      if (filteredPrograms.length === 0) {
-        programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#777;">조건에 맞는 프로그램이 없습니다.</td></tr>';
-        programSelectAll.checked = false;
-        updateProgramBulkMeta();
-        return;
-      }
-
-      if (programCurrentPage > totalPages) {
-        programCurrentPage = totalPages;
-      }
-
-      programTableBody.innerHTML = pagedPrograms.map(prog => {
-        const statusClass = `status-${prog.status}`;
-        const isRec = prog.is_recommended ? '⭐' : '-';
-
-        return `
-          <tr>
-            <td class="select-col"><input type="checkbox" class="program-row-check" data-id="${prog.id}" ${selectedProgramIds.has(Number(prog.id)) ? 'checked' : ''}></td>
-            <td>${prog.id}</td>
-            <td style="font-size: 20px;">${prog.icon || '🎓'}</td>
-            <td><code>${escapeHtml(prog.slug)}</code></td>
-            <td><span class="type-chip">${escapeHtml(prog.category)}</span></td>
-            <td><strong>${escapeHtml(prog.title)}</strong></td>
-            <td><span class="type-chip ${statusClass}">${prog.status}</span></td>
-            <td style="text-align:center;">${isRec}</td>
-            <td>
-              <button class="sm secondary" onclick="editProgram(${prog.id})">수정</button>
-              <button class="sm danger" onclick="deleteProgram(${prog.id})">삭제</button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const visibleIds = pagedPrograms.map((p) => Number(p.id));
-      const allVisibleChecked = visibleIds.length > 0 && visibleIds.every((id) => selectedProgramIds.has(id));
-      programSelectAll.checked = allVisibleChecked;
-      updateProgramBulkMeta();
-    }
-
-    window.changeProgramPage = function (delta) {
-      const filteredCount = getFilteredPrograms().length;
-      const totalPages = Math.max(1, Math.ceil(filteredCount / PAGE_SIZE));
-      programCurrentPage = Math.min(totalPages, Math.max(1, programCurrentPage + delta));
-      renderProgramRows();
-    };
-
-    async function loadProgramList() {
-      try {
-        const res = await fetch(apiUrl('/api/get-programs'));
-        const programs = await res.json();
-
-        if (!Array.isArray(programs) || programs.length === 0) {
-          programListCache = [];
-          programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:#777;">등록된 프로그램이 없습니다.</td></tr>';
-          programPagination.innerHTML = '';
-          programCategoryFilter.innerHTML = '<option value="all">전체 카테고리</option>';
-          selectedProgramIds.clear();
-          programSelectAll.checked = false;
-          updateProgramBulkMeta();
-          return;
-        }
-
-        programListCache = programs;
-        updateProgramCategoryFilterOptions();
-        renderProgramRows();
-      } catch (err) {
-        programTableBody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">프로그램 목록을 불러오는 중 오류 발생</td></tr>';
-        programPagination.innerHTML = '';
-      }
-    }
-
-    programSearchInput.addEventListener('input', (e) => {
-      programSearchTerm = String(e.target.value || '').trim().toLowerCase();
-      programCurrentPage = 1;
-      renderProgramRows();
-    });
-
-    programCategoryFilter.addEventListener('change', (e) => {
-      programCategoryValue = e.target.value;
-      programCurrentPage = 1;
-      renderProgramRows();
-    });
-
-    programStatusFilters.querySelectorAll('.filter-btn').forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        programStatusFilters.querySelectorAll('.filter-btn').forEach((b) => b.classList.remove('active'));
-        e.target.classList.add('active');
-        programStatusFilter = e.target.dataset.status;
-        programCurrentPage = 1;
-        renderProgramRows();
-      });
-    });
-
-    programSlugInput.addEventListener('input', () => {
-      if (suppressAutoFieldTracking) return;
-      isSlugManuallyEdited = true;
-    });
-
-    programIconInput.addEventListener('input', () => {
-      if (suppressAutoFieldTracking) return;
-      isIconManuallyEdited = true;
-    });
-
-    programStatusInput.addEventListener('change', () => {
-      if (suppressAutoFieldTracking) return;
-      isStatusManuallyEdited = true;
-    });
-
-    programTitleInput.addEventListener('input', () => {
-      syncProgramSlugFromTitle();
-      applyProgramSmartDefaults();
-    });
-
-    programCategoryInput.addEventListener('input', () => {
-      applyProgramSmartDefaults();
-    });
-
-    programTableBody.addEventListener('change', (e) => {
-      if (!e.target.classList.contains('program-row-check')) return;
-      const id = parseInt(e.target.dataset.id, 10);
-      if (e.target.checked) selectedProgramIds.add(id);
-      else selectedProgramIds.delete(id);
-      renderProgramRows();
-    });
-
-    programSelectAll.addEventListener('change', () => {
-      const filteredPrograms = getFilteredPrograms();
-      const startIndex = (programCurrentPage - 1) * PAGE_SIZE;
-      const visiblePrograms = filteredPrograms.slice(startIndex, startIndex + PAGE_SIZE);
-      visiblePrograms.forEach((prog) => {
-        if (programSelectAll.checked) selectedProgramIds.add(Number(prog.id));
-        else selectedProgramIds.delete(Number(prog.id));
-      });
-      renderProgramRows();
-    });
-
-    async function editProgram(id) {
-      try {
-        const res = await fetch(apiUrl(`/api/get-programs?id=${id}`));
-        const prog = await res.json();
-
-        if (prog && prog.id) {
-          suppressAutoFieldTracking = true;
-          isSlugManuallyEdited = true;
-          isIconManuallyEdited = true;
-          isStatusManuallyEdited = true;
-          programIdInput.value = prog.id;
-          programSlugInput.value = prog.slug;
-          programCategoryInput.value = prog.category;
-          programTitleInput.value = prog.title;
-          programIconInput.value = prog.icon || '🎓';
-          programStatusInput.value = prog.status || 'recruiting';
-          document.getElementById('programOrder').value = prog.display_order || 0;
-          document.getElementById('programIsRecommended').checked = Boolean(prog.is_recommended);
-          document.getElementById('programDescription').value = prog.description;
-          suppressAutoFieldTracking = false;
-
-          programFormTitle.textContent = `프로그램 수정 (ID: #${prog.id})`;
-          programModeBadge.textContent = '수정 모드';
-          programModeBadge.className = 'mode-badge mode-edit';
-          programSubmitBtn.textContent = '수정사항 저장하기';
-          programResetBtn.style.display = 'inline-block';
-
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-      } catch (err) {
-        alert('프로그램 정보를 불러오지 못했습니다.');
-      }
-    }
-
-    programResetBtn.addEventListener('click', () => {
-      programForm.reset();
-      programIdInput.value = '';
-      initializeProgramCreateDefaults();
-      programFormTitle.textContent = '새 프로그램 등록';
-      programModeBadge.textContent = '작성 모드';
-      programModeBadge.className = 'mode-badge mode-create';
-      programSubmitBtn.textContent = '프로그램 등록하기';
-      programResetBtn.style.display = 'none';
-      clearStatus(programStatusMsg);
-    });
-
-    async function deleteProgramById(id, password) {
-      const res = await fetch(apiUrl('/api/delete-program'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id, password })
-      });
-      const result = await res.json();
-      if (!res.ok || !result.success) throw new Error(result.error || '오류 발생');
-    }
-
-    async function deleteProgram(id) {
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        return;
-      }
-
-      if (!confirm(`정말 #${id}번 프로그램을 삭제하시겠습니까?`)) return;
-
-      try {
-        await deleteProgramById(id, password);
-        alert('성공적으로 삭제되었습니다.');
-        selectedProgramIds.delete(id);
-        loadProgramList();
-        if (programIdInput.value == id) programResetBtn.click();
-      } catch (err) {
-        alert('삭제 실패: ' + (err.message || '오류 발생'));
-      }
-    }
-
-    programBulkDeleteBtn.addEventListener('click', async () => {
-      const ids = Array.from(selectedProgramIds);
-      if (ids.length === 0) {
-        alert('먼저 삭제할 항목을 선택해 주세요.');
-        return;
-      }
-
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 먼저 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        return;
-      }
-
-      if (!confirm(`선택한 ${ids.length}개 프로그램을 삭제하시겠습니까?`)) return;
-
-      let successCount = 0;
-      startSavingStatus(programStatusMsg, `선택 항목 삭제 중... (0/${ids.length})`);
-      for (let i = 0; i < ids.length; i++) {
-        const id = ids[i];
-        try {
-          await deleteProgramById(id, password);
-          selectedProgramIds.delete(id);
-          successCount++;
-          programStatusMsg.innerHTML = `<span class="status-spinner" aria-hidden="true"></span><span><span>선택 항목 삭제 중... (${i + 1}/${ids.length})</span><span class="status-sub">잠시만 기다려 주세요.</span></span>`;
-          if (programIdInput.value == id) {
-            programForm.reset();
-            programIdInput.value = '';
-            initializeProgramCreateDefaults();
-            programFormTitle.textContent = '새 프로그램 등록';
-            programModeBadge.textContent = '작성 모드';
-            programModeBadge.className = 'mode-badge mode-create';
-            programSubmitBtn.textContent = '프로그램 등록하기';
-            programResetBtn.style.display = 'none';
-            programRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
-          }
-        } catch (err) {
-          console.error('Program bulk delete failed:', id, err);
-        }
-      }
-
-      if (successCount === ids.length) {
-        setStatus(programStatusMsg, 'success', `${successCount}개 프로그램이 삭제되었습니다.`);
-      } else {
-        setStatus(programStatusMsg, 'error', `${successCount}/${ids.length}개 삭제 완료. 일부 항목 삭제에 실패했습니다.`);
-      }
-      loadProgramList();
-    });
-
-    programForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      syncProgramSlugFromTitle();
-      applyProgramSmartDefaults();
-
-      const password = getPassword();
-      if (!password) {
-        alert('상단에서 관리자 비밀번호를 입력해 주세요.');
-        document.getElementById('globalPassword').focus();
-        validateField(globalPasswordInput);
-        return;
-      }
-
-      const fieldsOk = validateRequiredFields(programRequiredFields);
-      if (!fieldsOk) {
-        setStatus(programStatusMsg, 'error', '필수 입력값을 확인해 주세요.');
-        return;
-      }
-
-      const isEdit = Boolean(programIdInput.value);
-      const endpoint = isEdit ? '/api/update-program' : '/api/write-program';
-
-      startSavingStatus(programStatusMsg, isEdit ? '수정사항 저장 중...' : '등록 중...');
-
-      const payload = {
-        password: password,
-        slug: programSlugInput.value,
-        category: programCategoryInput.value,
-        title: programTitleInput.value,
-        icon: programIconInput.value,
-        status: programStatusInput.value,
-        display_order: parseInt(document.getElementById('programOrder').value, 10) || 0,
-        is_recommended: document.getElementById('programIsRecommended').checked ? 1 : 0,
-        description: document.getElementById('programDescription').value
-      };
-
-      if (isEdit) payload.id = parseInt(programIdInput.value, 10);
-
-      try {
-        const response = await fetch(apiUrl(endpoint), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const result = await response.json();
-
-        if (response.ok && result.success) {
-          setStatus(programStatusMsg, 'success', isEdit ? '성공적으로 수정되었습니다!' : '성공적으로 등록되었습니다!');
-
-          programForm.reset();
-          programIdInput.value = '';
-          initializeProgramCreateDefaults();
-          programFormTitle.textContent = '새 프로그램 등록';
-          programModeBadge.textContent = '작성 모드';
-          programModeBadge.className = 'mode-badge mode-create';
-          programSubmitBtn.textContent = '프로그램 등록하기';
-          programResetBtn.style.display = 'none';
-          programRequiredFields.forEach((field) => field.classList.remove('field-invalid', 'field-valid'));
-
-          loadProgramList();
-        } else {
-          setStatus(programStatusMsg, 'error', '처리 실패: ' + (result.error || '오류 발생'));
-        }
-      } catch (err) {
-        setStatus(programStatusMsg, 'error', '통신 에러가 발생했습니다.');
-      }
-    });
-
-    initializeProgramCreateDefaults();
-
-    // ==========================================
-    // 3. 모달 & 문자열 보조 함수
-    // ==========================================
-    const previewModal = document.getElementById('previewModal');
-    const modalCloseBtn = document.getElementById('modalCloseBtn');
-    const modalTypeChip = document.getElementById('modalTypeChip');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalDate = document.getElementById('modalDate');
-    const modalImg = document.getElementById('modalImg');
-    const modalContent = document.getElementById('modalContent');
-
-    async function openPostPreview(id) {
-      try {
-        const res = await fetch(apiUrl(`/api/get-posts?id=${id}`));
-        const post = await res.json();
-        if (post && post.id) {
-          const thumbnailUrl = normalizeImageUrl(post.thumbnail_url || post.thumbnail || post.image_url);
-          showModal(post.type, post.title, post.created_at, thumbnailUrl, post.content);
-        }
-      } catch (e) {
-        alert('미리보기를 불러올 수 없습니다.');
-      }
-    }
-
+    // 실시간 HTML 미리보기 모달
     document.getElementById('formPreviewBtn').addEventListener('click', () => {
       const type = document.getElementById('postType').value;
       const title = document.getElementById('postTitle').value || '(제목 없음)';
       const content = document.getElementById('postContent').value || '(본문 없음)';
-      const imgSrc = getPreviewImageUrl() || (previewImg.style.display !== 'none' ? previewImg.src : null);
 
-      showModal(type, title, '방금 전 (작성 중 미리보기)', imgSrc, content);
+      document.getElementById('modalTypeChip').textContent = type === 'news' ? '뉴스' : '공지사항';
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalDate').textContent = '방금 전 (미리보기)';
+      
+      // innerHTML 적용으로 카드 스타일 및 HTML 태그가 정상 렌더링됨
+      document.getElementById('modalContent').innerHTML = content;
+      document.getElementById('previewModal').style.display = 'flex';
     });
 
-    function showModal(type, title, date, imgSrc, content) {
-      const isNews = type === 'news';
-      modalTypeChip.textContent = isNews ? '뉴스' : '공지사항';
-      modalTypeChip.className = `type-chip ${isNews ? 'type-news' : 'type-notice'}`;
-      modalTitle.textContent = title;
-      modalDate.textContent = date ? date.substring(0, 10) : '';
+    document.getElementById('modalCloseBtn').onclick = () => document.getElementById('previewModal').style.display = 'none';
 
-      const normalizedImgSrc = normalizeImageUrl(imgSrc);
-      if (normalizedImgSrc && normalizedImgSrc !== 'null' && normalizedImgSrc !== 'undefined') {
-        modalImg.src = normalizedImgSrc;
-        modalImg.style.display = 'block';
-      } else {
-        modalImg.src = '';
-        modalImg.style.display = 'none';
+    // 프로그램 목록 로드
+    async function loadProgramList() {
+      try {
+        const res = await fetch(apiUrl('/api/get-programs'));
+        const programs = await res.json();
+        const tbody = document.getElementById('programTableBody');
+
+        if (!Array.isArray(programs) || programs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">등록된 프로그램이 없습니다.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = programs.map(p => `
+          <tr>
+            <td>${p.id}</td>
+            <td style="font-size:18px;">${p.icon || '🎓'}</td>
+            <td><code>${escapeHtml(p.slug)}</code></td>
+            <td>${escapeHtml(p.category)}</td>
+            <td><strong>${escapeHtml(p.title)}</strong></td>
+            <td>${p.status}</td>
+            <td>
+              <button class="sm secondary" onclick="editProgram(${p.id})">수정</button>
+              <button class="sm danger" onclick="deleteProgram(${p.id})">삭제</button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (err) {
+        document.getElementById('programTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">불러오기 실패</td></tr>';
       }
-
-      modalContent.textContent = content;
-      previewModal.style.display = 'flex';
     }
-
-    modalCloseBtn.addEventListener('click', () => previewModal.style.display = 'none');
-    window.addEventListener('click', (e) => { if (e.target === previewModal) previewModal.style.display = 'none'; });
 
     function escapeHtml(str) {
       return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
 
-    // 초기화 시 게시글 목록 불러오기
-    loadPostList();
+    // 초기 실행
+    if (getPassword()) loadPostList();
   </script>
+  <script src="assets/js/ai-assistant.js"></script>
 </body>
 </html>
