@@ -188,14 +188,64 @@ const AIAssistant = {
     const sourceText = targetArea.value.trim();
     if (!sourceText) return alert('본문 내용을 먼저 입력해 주세요.');
 
+    // 🎭 AI 페르소나 설정 (필요에 따라 문구를 정교하게 수정해 보세요!)
+    const SYSTEM_PERSONA = `
+  [AI 페르소나 설정]
+  - 당신은 'K-Wave Mission'의 대표 수석 카피라이터이자 웹 에디터입니다.
+  - 주요 대상: 청년, 다음 세대, 선교 및 문화 사역에 관심 있는 구독자
+  - 톤앤매너: 친근하면서도 격식 있고, 담백하고 산뜻하면서도 진정성과 울림이 느껴지는 신뢰감 있는 문체
+  - 주의사항: 인사말이나 "네, 수정해 드렸습니다" 같은 답변 서두는 절대 출력하지 말고, 오직 완성된 본문 알맹이만 출력하세요.
+    `.trim();
+
     let prompt = '';
     if (taskType === 'refine') {
-      prompt = `다음 텍스트의 오탈자를 교정하고, 매끄럽고 전문적인 톤앤매너로 다듬어줘. 설명 없이 완성된 본문 내용만 출력해줘:\n\n${sourceText}`;
+      prompt = `
+${SYSTEM_PERSONA}
+
+  [작업 지시: 문장 교정 및 리파인]
+  다음 전달받은 초안 텍스트의 오탈자를 바로잡고, 독자들에게 매끄럽고 인상 깊게 읽히도록 문장을 전문적으로 다듬어주세요.
+
+[원본 텍스트]
+${sourceText}
+      `.trim();
     } else if (taskType === 'html_editor') {
-      prompt = `다음 텍스트 내용을 바탕으로, 인라인 CSS 스타일이 적용된 예쁜 HTML 웹 카드로 변환해줘. 모던한 디자인(둥근 모서리, 여백, 현대적인 색상)을 적용해주고, 마크다운 코드블록 표기(\`\`\`html) 없이 HTML 코드 본문만 출력해줘:\n\n${sourceText}`;
+      prompt = `
+${SYSTEM_PERSONA}
+
+[작업 지시: 스탠다드 디자인 템플릿(13번 스타일) 기반 HTML 생성]
+다음 입력받은 텍스트를 반드시 아래 [디자인 규격 및 가이드라인]에 맞추어 인라인 CSS가 적용된 HTML로 변환해 주세요.
+내용에 따라 약간의 유연성은 가지되, 전체적인 컬러 톤과 구조적 틀은 스탠다드 스타일을 엄격히 유지해야 합니다.
+
+[디자인 규격 및 가이드라인 (STANDARD)]
+1. **전체 배경 & 컨테이너**:
+   - 바탕색: 차분하고 깊은 다크 톤 배경 (\`background-color: #0f172a;\` 또는 \`#0b1329;\`)
+   - 테두리 & 여백: 곡률 \`border-radius: 12px;\`, 테두리 \`border: 1px solid #1e293b;\`, 여백 \`padding: 30px;\`, 글자색 \`color: #e2e8f0;\`
+
+2. **소제목 (H3 / H4 스타일)**:
+   - 제목 앞에 **골드/오렌지 포인트 세로선** 필수 삽입 (\`border-left: 4px solid #f59e0b;\` 또는 \`#d97706;\`)
+   - 왼쪽 여백(\`padding-left: 10px;\`), 볼드체(\`font-weight: bold;\`), 글자색 밝은 톤 (\`color: #f8fafc;\`)
+
+3. **강조 키워드 및 태그**:
+   - 강조 텍스트/뱃지: 딥블루/테일 배경에 노란색 또는 금색 글자 (\`background: #1e293b; color: #f59e0b; padding: 2px 8px; border-radius: 4px;\`)
+
+4. **인용구 / 메시지 상자 (Quote Box)**:
+   - 왼쪽 골드 포인트 바가 들어간 박스 (\`border-left: 3px solid #f59e0b;\` \`background: #1e293b;\` \`border-radius: 8px;\`)
+   - 텍스트는 이탤릭체(\`font-style: italic;\`), 강조색 표현
+
+5. **기도제목 / 요약 체크리스트 상자 (Callout Box)**:
+   - 박스 형태: \`background: #020617; border: 1px solid #1e293b; border-radius: 8px; padding: 20px;\`
+   - 상단 타이틀: 노란색/금색 점 또는 이모지와 함께 영문 대문자 타이틀 (\`color: #f59e0b; font-weight: bold;\`)
+   - 목록: \`<ul>\` / \`<li>\` 구조를 활용해 정돈된 리스트로 표현
+
+6. **출력 규칙**:
+   - 마크다운 코드블록(\`\`\`html) 표기 없이, 바로 웹에 삽입 가능한 순수 HTML 태그만 출력하세요.
+
+[원본 텍스트]
+${sourceText}
+      `.trim();
     }
 
-    this.setStatus(container, '🤖 AI가 답변을 생성하는 중입니다...');
+    this.setStatus(container, '🤖 AI가 페르소나에 맞춰 작성하는 중입니다...');
 
     try {
       let resultText = '';
