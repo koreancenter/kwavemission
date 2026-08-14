@@ -312,8 +312,8 @@ ${sourceText}
   async callGemini(prompt) {
     if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
     
-    // 💡 최신 Gemini API 표준 모델 및 v1beta 호환 엔드포인트 적용
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${this.config.geminiKey}`;
+    // 💡 최신 정식 버전인 gemini-3.6-flash 모델 적용
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${this.config.geminiKey}`;
     
     const res = await fetch(url, {
       method: 'POST',
