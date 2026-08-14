@@ -313,7 +313,7 @@ ${sourceText}
     if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
     
     // 💡 최신 Gemini API 표준 모델 및 v1beta 호환 엔드포인트 적용
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${this.config.geminiKey}`;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash:generateContent?key=${this.config.geminiKey}`;
     
     const res = await fetch(url, {
       method: 'POST',
