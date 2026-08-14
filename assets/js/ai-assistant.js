@@ -310,17 +310,20 @@ ${sourceText}
   },
 
   async callGemini(prompt) {
-    if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${this.config.geminiKey}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Gemini 호출 실패');
-    return data.candidates[0].content.parts[0].text;
-  },
+  if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
+  
+  // 💡 모델명 오타 수정 (gemini-1.5-flash 또는 gemini-2.0-flash 추천)
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${this.config.geminiKey}`;
+  
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'Gemini 호출 실패');
+  return data.candidates[0].content.parts[0].text;
+},
 
   async callOllama(prompt) {
     if (!this.config.selectedModel) throw new Error('Ollama 모델을 먼저 선택해 주세요.');
