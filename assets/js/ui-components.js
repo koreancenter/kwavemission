@@ -4,9 +4,30 @@
     const isMobileMotion = window.matchMedia('(max-width: 640px)').matches;
     const MODAL_EXIT_MS = isMobileMotion ? 180 : 220;
     const scrollProgressBar = document.getElementById('scroll-progress-bar');
+    const scrollLockOwners = new Set();
+    let bodyOverflowBeforeLock = '';
+
+    function lockPageScroll(owner) {
+        if (!owner || scrollLockOwners.has(owner)) return;
+        if (scrollLockOwners.size === 0) {
+            bodyOverflowBeforeLock = document.body.style.overflow;
+            document.body.style.overflow = 'hidden';
+        }
+        scrollLockOwners.add(owner);
+    }
+
+    function unlockPageScroll(owner) {
+        if (!owner) return;
+        scrollLockOwners.delete(owner);
+        if (scrollLockOwners.size === 0) {
+            document.body.style.overflow = bodyOverflowBeforeLock;
+            bodyOverflowBeforeLock = '';
+        }
+    }
 
     function activateModal(modal) {
         if (!modal) return;
+        lockPageScroll(modal);
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         requestAnimationFrame(function () {
@@ -20,6 +41,7 @@
         setTimeout(function () {
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+            unlockPageScroll(modal);
             if (typeof onClosed === 'function') onClosed();
         }, MODAL_EXIT_MS);
     }
@@ -112,6 +134,8 @@
 
     window.activateModal = activateModal;
     window.deactivateModal = deactivateModal;
+    window.lockPageScroll = lockPageScroll;
+    window.unlockPageScroll = unlockPageScroll;
     window.showShareToast = showShareToast;
     window.filterPrograms = filterPrograms;
     window.setupMobileMenuToggle = setupMobileMenuToggle;

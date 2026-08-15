@@ -551,6 +551,19 @@ code {
   padding: 2rem;
 }
 
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.overscroll-contain {
+  overscroll-behavior: contain;
+}
+
 .modal-close {
   position: absolute;
   top: 1rem;

@@ -1,6 +1,6 @@
 /**
  * K-Wave Mission - AI Assistant Module (ai-assistant.js)
- * 다중 페르소나 지원 (News, Reporter, Letter)
+ * 다중 페르소나 지원 (News, Reporter, Letter, Notice)
  * Mixed Content 및 네트워크 예외 처리 강화 버전
  */
 
@@ -8,7 +8,7 @@ const AIAssistant = {
   config: {
     provider: localStorage.getItem('ai_provider') || 'gemini',
     geminiKey: localStorage.getItem('ai_gemini_key') || '',
-    ollamaUrl: localStorage.getItem('ai_ollama_url') || 'http://100.81.172.90:11434',
+    ollamaUrl: localStorage.getItem('ai_ollama_url') || 'https://mrpark-bali.taile6b19b.ts.net',
     selectedModel: localStorage.getItem('ai_selected_model') || '',
     cachedOllamaModels: []
   },
@@ -57,7 +57,7 @@ const AIAssistant = {
         <!-- Ollama 설정 -->
         <div class="ai-sec-ollama" style="display: ${this.config.provider === 'ollama' ? 'block' : 'none'};">
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" class="ollamaBaseUrl" placeholder="http://100.81.172.90:11434" value="${this.config.ollamaUrl}" style="flex:1;">
+            <input type="text" class="ollamaBaseUrl" placeholder="https://mrpark-bali.taile6b19b.ts.net" value="${this.config.ollamaUrl}" style="flex:1;">
             <button type="button" class="btnFetchOllama sm secondary">서버 연결 및 모델 불러오기</button>
           </div>
           <select class="ollamaModelSelect" style="display:none; width: 100%;">
@@ -65,13 +65,14 @@ const AIAssistant = {
           </select>
         </div>
 
-        <!-- 💡 3가지 페르소나 실행 버튼 -->
+        <!-- 💡 4가지 페르소나 및 되돌리기 실행 버튼 -->
         <div style="margin-top: 12px; display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; flex-wrap: wrap;">
-          <button type="button" class="btnAINews sm outline">📰 News (기사체)</button>
-          <button type="button" class="btnAIReporter sm outline">🎙️ Reporter (현장 리포트)</button>
-          <button type="button" class="btnAILetter sm outline">✉️ Letter (서신체)</button>
-          <button type="button" class="btnAIUndo sm secondary" style="display: none; background-color: #64748b; color: #ffffff; border: none;">↩️ 원본 되돌리기</button>
-          <span class="aiStatusText" style="font-size: 12px; color: #64748b; align-self: center; margin-left: auto;"></span>
+          <button type="button" class="btnAINews sm outline">📰 기사문</button>
+          <button type="button" class="btnAIReporter sm outline">🎙️ 방송문</button>
+          <button type="button" class="btnAILetter sm outline">✉️ 편지문</button>
+          <button type="button" class="btnAINotice sm outline">📢 공고문</button>
+          <button type="button" class="btnAIUndo sm secondary" style="display: none; background-color: #64748b; color: #ffffff; border: none; margin-left: auto;">↩️ 원본 되돌리기</button>
+          <span class="aiStatusText" style="font-size: 12px; color: #64748b; align-self: center;"></span>
         </div>
       </div>
     `;
@@ -85,6 +86,7 @@ const AIAssistant = {
     const btnNews = container.querySelector('.btnAINews');
     const btnReporter = container.querySelector('.btnAIReporter');
     const btnLetter = container.querySelector('.btnAILetter');
+    const btnNotice = container.querySelector('.btnAINotice');
     const btnUndo = container.querySelector('.btnAIUndo');
 
     const modelSelect = container.querySelector('.ollamaModelSelect');
@@ -117,6 +119,7 @@ const AIAssistant = {
     btnNews?.addEventListener('click', () => this.processAI('news', targetId, container));
     btnReporter?.addEventListener('click', () => this.processAI('reporter', targetId, container));
     btnLetter?.addEventListener('click', () => this.processAI('letter', targetId, container));
+    btnNotice?.addEventListener('click', () => this.processAI('notice', targetId, container));
 
     btnUndo?.addEventListener('click', () => this.restoreOriginalText(targetId, container));
   },
@@ -156,7 +159,7 @@ const AIAssistant = {
   async loadPersona(type) {
     if (this.cachedPersonas[type]) return this.cachedPersonas[type];
 
-    const targetUrl = `/docs/persona_${type}.md`;
+    const targetUrl = `./docs/persona_${type}.md`;
     try {
       const res = await fetch(targetUrl);
       if (!res.ok) throw new Error(`persona_${type}.md 파일을 찾을 수 없습니다.`);
@@ -226,31 +229,30 @@ const AIAssistant = {
     const sourceText = targetArea.value.trim();
     if (!sourceText) return alert('본문 내용을 먼저 입력해 주세요.');
 
-    this.undoHistory[targetId] = targetArea.value;
+    // 최초 변환 전 원본 텍스트 기록
+    if (this.undoHistory[targetId] === undefined) {
+      this.undoHistory[targetId] = targetArea.value;
+    }
 
-    this.setStatus(container, `🤖 ${personaType.toUpperCase()} 페르소나 지침 불러오는 중...`);
+    const personaNames = {
+      news: '기사문',
+      reporter: '방송문',
+      letter: '편지문',
+      notice: '공고문'
+    };
+    const personaLabel = personaNames[personaType] || personaType.toUpperCase();
+
+    this.setStatus(container, `🤖 ${personaLabel} 지침 불러오는 중...`);
 
     const SYSTEM_PERSONA = await this.loadPersona(personaType);
-
-    const prompt = `
-${SYSTEM_PERSONA}
-
-[원본 텍스트]
-${sourceText}
-    `.trim();
 
     this.setStatus(container, '🤖 AI가 작성하는 중입니다...');
 
     try {
-      let resultText = '';
-      if (this.config.provider === 'gemini') {
-        resultText = await this.callGemini(prompt);
-      } else {
-        resultText = await this.callOllama(prompt);
-      }
+      const resultText = await this.requestGeneration(sourceText, SYSTEM_PERSONA);
 
       targetArea.value = resultText;
-      this.setStatus(container, '✨ AI 작업이 성공적으로 적용되었습니다!');
+      this.setStatus(container, `✨ [${personaLabel}] 변환이 완료되었습니다!`);
 
       const btnUndo = container.querySelector('.btnAIUndo');
       if (btnUndo) btnUndo.style.display = 'inline-block';
@@ -266,6 +268,7 @@ ${sourceText}
 
     if (this.undoHistory[targetId] !== undefined) {
       targetArea.value = this.undoHistory[targetId];
+      delete this.undoHistory[targetId]; // 원본 복원 후 히스토리 초기화
       this.setStatus(container, '↩️ 이전 원본 내용으로 복원되었습니다.');
 
       const btnUndo = container.querySelector('.btnAIUndo');
@@ -275,33 +278,27 @@ ${sourceText}
     }
   },
 
-  async callGemini(prompt) {
-    if (!this.config.geminiKey) throw new Error('Gemini API Key를 먼저 검증해 주세요.');
-    
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${this.config.geminiKey}`;
-    
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-    });
-    
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Gemini 호출 실패');
-    
-    return data.candidates[0].content.parts[0].text;
-  },
+  async requestGeneration(text, systemPrompt) {
+    if (!window.AdminApi?.api) throw new Error('관리자 API를 사용할 수 없습니다.');
+    if (this.config.provider === 'gemini' && !this.config.geminiKey) {
+      throw new Error('Gemini API Key를 먼저 검증해 주세요.');
+    }
+    if (this.config.provider === 'ollama' && !this.config.selectedModel) {
+      throw new Error('Ollama 모델을 먼저 선택해 주세요.');
+    }
 
-  async callOllama(prompt) {
-    if (!this.config.selectedModel) throw new Error('Ollama 모델을 먼저 선택해 주세요.');
-    const res = await fetch(`${this.config.ollamaUrl}/api/generate`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: this.config.selectedModel, prompt: prompt, stream: false })
+    const result = await window.AdminApi.api.post('/api/generate-ai', {
+      provider: this.config.provider,
+      text,
+      systemPrompt,
+      apiKey: this.config.provider === 'gemini' ? this.config.geminiKey : undefined,
+      ollamaUrl: this.config.provider === 'ollama' ? this.config.ollamaUrl : undefined,
+      model: this.config.provider === 'ollama' ? this.config.selectedModel : undefined
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error('Ollama 호출 실패');
-    return data.response;
+
+    const generatedText = typeof result === 'string' ? result : result?.text;
+    if (!generatedText) throw new Error('AI가 생성된 텍스트를 반환하지 않았습니다.');
+    return generatedText;
   }
 };
 

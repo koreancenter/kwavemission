@@ -189,11 +189,19 @@
             return;
         }
 
+        var landscapeImages = [
+            './assets/images/indonesia-landscape.jpg',
+            './assets/images/indonesia-landscape2.jpg',
+            './assets/images/indonesia-landscape3.jpg',
+            './assets/images/indonesia-landscape4.jpg'
+        ];
+        var randomImg = landscapeImages[Math.floor(Math.random() * landscapeImages.length)];
+
         var summary = _escapeHtml(_postSummary(featuredPost));
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img src="./assets/images/indonesia-landscape.jpg" alt="인도네시아의 비식별 풍경 이미지" loading="lazy" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
+                    '<img src="' + randomImg + '" alt="인도네시아의 비식별 풍경 이미지" loading="lazy" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
@@ -211,7 +219,7 @@
                         '<span class="font-mono text-slate-500">' + _escapeHtml(featuredPost.author) + '</span>' +
                     '</div>' +
                 '</div>' +
-            '</article>' +
+            '</article>';
             '<p class="news-security-caption">' +
                 '<i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>' +
                 '<span>K-Wave Mission은 현지 협력 기관과의 안전하고 지속 가능한 교류를 위해 국제 표준 개인정보 보호 및 보안 가이드라인(Security Protocol)을 엄격히 준수합니다. 이에 따라 일부 현장 사진 및 인물 정보는 비식별 처리되어 공개됩니다.</span>' +
@@ -262,7 +270,7 @@
         
         // 📌 [수정] 모달 껍데기(#modal-content)의 하얀 배경 클래스를 완전히 지우고 약관 모달과 동일한 다크 스타일 적용
         if (modalContent) {
-            modalContent.className = 'relative w-full max-w-xl max-h-[85vh] overflow-y-auto no-scrollbar bg-slate-900 border border-slate-800 text-slate-100 p-8 sm:p-12 rounded-2xl shadow-2xl';
+            modalContent.className = 'relative w-full max-w-xl max-h-[85vh] overflow-y-auto no-scrollbar overscroll-contain bg-slate-900 border border-slate-800 text-slate-100 p-8 sm:p-12 rounded-2xl shadow-2xl';
         }
 
         // 📌 수정된 modalContent.innerHTML 예시
@@ -289,6 +297,7 @@ modalContent.innerHTML =
         if (typeof window.activateModal === 'function') {
             window.activateModal(modal);
         } else {
+            document.body.style.overflow = 'hidden';
             modal.classList.remove('hidden');
             modal.classList.add('flex');
         }

@@ -174,6 +174,7 @@
             if (typeof window.activateModal === 'function') {
                 window.activateModal(modal);
             } else {
+                document.body.style.overflow = 'hidden';
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
             }
@@ -182,9 +183,14 @@
         try {
             const markdownText = await window.KWaveApi.fetchMarkdownBySlug(slug);
             if (container) container.innerHTML = marked.parse(markdownText);
+            
+            // 📌 이 위치에 코드를 추가해 주세요!
+            if (window.lucide) {
+                window.lucide.createIcons();
+            }
         } catch (err) {
             if (container) container.innerHTML = '<div class="text-center py-10 text-rose-400">' + err.message + '</div>';
-        }
+        }     
     }
 
     function closeMdModal() {
@@ -195,6 +201,7 @@
             } else {
                 modal.classList.add('hidden');
                 modal.classList.remove('flex');
+                document.body.style.overflow = '';
             }
         }
     }

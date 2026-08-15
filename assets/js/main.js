@@ -204,7 +204,10 @@
 
     if (closeBtn) {
       closeBtn.onclick = () => {
-        if (modal) modal.style.display = 'none';
+        if (modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
       };
     }
 
@@ -223,7 +226,10 @@
         if (modalTitle) modalTitle.textContent = title;
         if (modalDate) modalDate.textContent = '방금 전 (미리보기)';
         if (modalContent) modalContent.innerHTML = content;
-        if (modal) modal.style.display = 'flex';
+        if (modal) {
+          modal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
       });
     }
   }

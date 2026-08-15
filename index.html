@@ -57,7 +57,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" rel="stylesheet">
 
   <!-- Stylesheet -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260815-news-media-fixed">
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260815-modal-scroll-lock">
 
     <!-- Pretendard Web Font -->
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
@@ -524,33 +524,19 @@
                 <button type="button" onclick="openKWaveDrawer()" class="brand-link text-left">K-Wave</button>
             </nav>
 
-            <!-- 헤더 메뉴 수정 후 코드 -->
-            <div class="flex items-center gap-3">
-            <!-- 1. 데스크톱용 파도타기 버튼 (모바일에서는 감춤) -->
-                <button id="partner-connect-btn" type="button" onclick="handlePartnerConnect()" class="hidden md:inline-flex btn-primary partner-action no-shadow px-4 py-2 font-mono text-xs font-bold">
-        CONNECT <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
-                </button>
-
-            <!-- 2. 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤) -->
-                <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden p-2 text-slate-600 hover:text-slate-900 focus:outline-none cursor-pointer">
-                    <i data-lucide="menu" class="w-6 h-6"></i>
-                </button>
-            </div>
+            <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤) -->
+            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden p-2 text-slate-400 hover:text-white">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
 
             <!-- Mobile Nav Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 px-6 py-4 space-y-4 font-medium text-slate-300">
-                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="block brand-link">소개</a>
-                <a href="#about" onclick="navigateToSection(event, 'about')" class="block brand-link">사역</a>
-                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="block brand-link">동역</a>
-                <a href="#news" onclick="navigateToSection(event, 'news')" class="block brand-link">리포트</a>
-                <a href="#partners" onclick="navigateToSection(event, 'partners')" class="block brand-link">협력</a>
-                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="block w-full brand-link text-left">K-Wave</button>
-            <div class="pt-2 flex flex-col gap-2">
-                <button type="button" 
-                onclick="openPartnerModal(); const mm = document.getElementById('mobile-menu'); if(mm) mm.classList.add('hidden');" 
-            class="btn-consult flex items-center justify-center gap-2 py-2.5 w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-xl font-mono text-xs font-bold transition-all">
-                <i data-lucide="handshake" class="w-4 h-4"></i> CONNECT
-                </button>
+            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea] backdrop-blur-md border-b border-slate-800/80 px-6 py-5 space-y-4 text-right font-medium text-slate-300 shadow-2xl z-50">
+                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">소개</a>
+                <a href="#about" onclick="navigateToSection(event, 'about')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">사역</a>
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">동역</a>
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">리포트</a>
+                <a href="#partners" onclick="navigateToSection(event, 'partners')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">협력</a>
+                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="block w-full brand-link text-right py-1 text-slate-200 hover:text-white transition-colors">K-Wave</button>
             </div>
         </div>
     </header>
@@ -766,19 +752,25 @@
 <!-- 📌 상단 고정 공지사항 배너 (동적 연동 영역) -->
 <div id="main-notice-banner" 
      onclick="openNoticeBannerModal()" 
-    class="cursor-pointer max-w-4xl mx-auto mb-12 p-4 sm:p-5 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] transition-all group flex items-center justify-between">
-    <div class="flex items-center gap-3">
-        <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold flex items-center gap-1.5">
-            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+     class="cursor-pointer max-w-4xl mx-auto mb-12 p-3.5 sm:p-5 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] transition-all group flex items-center justify-between gap-3 overflow-hidden">
+    
+    <!-- Left: 배지 + 공지 제목 영역 -->
+    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
             NOTICE
         </span>
-        <!-- JS가 최신 공지 제목을 넣는 자리 -->
-        <span id="main-notice-title" class="text-slate-200 text-sm font-medium group-hover:text-cyan-300 transition-colors">
+        
+        <!-- JS가 최신 공지 제목을 넣는 자리 (모바일 한 줄 말줄임 truncate 적용) -->
+        <span id="main-notice-title" class="truncate text-slate-200 text-xs sm:text-sm font-medium group-hover:text-cyan-300 transition-colors">
             📢 최신 공지사항을 불러오는 중입니다...
         </span>
     </div>
-    <span class="group/notice-details text-xs text-slate-400 group-hover:text-cyan-300 transition-colors flex items-center gap-1">
-        <span class="inline-block w-14 group-hover/notice-details:font-bold transition-all duration-200">자세히 보기</span><i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
+
+    <!-- Right: 자세히 보기 영역 (크기 축소 방지 shrink-0 적용) -->
+    <span class="shrink-0 group/notice-details text-xs text-slate-400 group-hover:text-cyan-300 transition-colors flex items-center gap-1">
+        <span class="whitespace-nowrap group-hover/notice-details:font-bold transition-all duration-200">자세히 보기</span>
+        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
     </span>
 </div>
 
@@ -1019,7 +1011,7 @@
 
 <!-- 📌 컴팩트 자승형 Floating Drawer (화면 높이에 맞춰 자동 크기 조절) -->
 <div id="kwave-drawer" 
-    class="fixed left-0 top-1/2 -translate-y-1/2 w-96 h-fit max-h-screen bg-[#F6F4EF] border-r border-y border-amber-500/20 rounded-r-3xl py-[1.68rem] px-5 shadow-2xl z-50 transition-all duration-300 ease-out -translate-x-full overflow-y-auto hidden">
+    class="fixed left-0 top-1/2 -translate-y-1/2 w-96 h-fit max-h-screen bg-[#F6F4EF] border-r border-y border-amber-500/20 rounded-r-3xl py-[1.68rem] px-5 shadow-2xl z-50 transition-all duration-300 ease-out -translate-x-full overflow-y-auto no-scrollbar overscroll-contain hidden">
     
     <!-- 1. 헤더 -->
     <div class="flex items-center justify-between mb-3">
@@ -1080,71 +1072,6 @@
     </div>
 </div>
 
-        <!-- Partner Connect Modal -->
-<div id="partner-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 relative shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
-        <!-- 닫기 버튼 -->
-        <button type="button" onclick="closePartnerModal()" class="absolute top-6 right-6 bg-transparent hover:bg-transparent text-slate-400 hover:text-white transition-colors">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-        </button>
-
-        <!-- 모달 헤더 -->
-        <div>
-            <span class="font-mono text-xs text-rose-400 font-bold uppercase tracking-widest">[ PARTNER CONNECT ]</span>
-            <h3 class="font-serif text-2xl font-bold text-white mt-1">CONNECT</h3>
-            <p class="text-xs sm:text-sm text-slate-400 font-light mt-1">K-Wave Mission과 함께 한국학 기반 고등교육선교 사역의 파도를 함께 탈 파트너를 기다립니다.</p>
-        </div>
-
-        <!-- 프로세스 신뢰 지표 (Step Indicator) -->
-        <div class="grid grid-cols-3 gap-2 py-3 border-y border-slate-800/80 text-center bg-slate-950/50 rounded-2xl">
-            <div class="text-[11px] text-slate-400"><span class="block text-amber-400 font-mono font-bold">STEP 1</span>제안 접수</div>
-            <div class="text-[11px] text-slate-400"><span class="block text-slate-500 font-mono font-bold">STEP 2</span>담당자 확인</div>
-            <div class="text-[11px] text-slate-400"><span class="block text-slate-500 font-mono font-bold">STEP 3</span>온라인 미팅</div>
-        </div>
-
-        <!-- 작성 폼 -->
-        <form id="partner-form" onsubmit="submitPartnerForm(event)" class="space-y-4 text-left">
-            <div>
-                <label class="block text-xs text-slate-300 font-medium mb-1">교회 / 단체명 (또는 성함) <span class="text-rose-400">*</span></label>
-                <input type="text" id="partner-org" required placeholder="예: OO교회 / 이사야" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
-            </div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-xs text-slate-300 font-medium mb-1">담당자 이메일 <span class="text-rose-400">*</span></label>
-                    <input type="email" id="partner-email" required placeholder="example@email.com" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
-                </div>
-                <div>
-                    <label class="block text-xs text-slate-300 font-medium mb-1">연락처</label>
-                    <input type="tel" id="partner-phone" placeholder="010-0000-0000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50">
-                </div>
-            </div>
-
-            <div>
-                <label class="block text-xs text-slate-300 font-medium mb-1">협력 유형 <span class="text-rose-400">*</span></label>
-                <select id="partner-type" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-amber-500/50">
-                    <option value="">선택해주세요</option>
-                    <option value="program">교육/장학 프로그램 협력</option>
-                    <option value="venue">오지 교회 강화사업 지원</option>
-                    <option value="sponsor">후원 및 물품 협찬</option>
-                    <option value="other">기타 제휴/협력 문의</option>
-                </select>
-            </div>
-
-            <div>
-                <label class="block text-xs text-slate-300 font-medium mb-1">제안 요약 내용 <span class="text-rose-400">*</span></label>
-                <textarea id="partner-message" required rows="4" placeholder="협력하고자 하는 내용이나 주요 제안 개요를 간단히 적어주세요." class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-amber-500/50 resize-none"></textarea>
-            </div>
-
-            <button type="submit" id="partner-submit-btn" class="w-full py-3.5 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl transition-all shadow-lg text-sm">
-                제안서 보내기
-            </button>
-        </form>
-    </div>
-</div>
-
 <!-- Legal Terms Modal -->
 <div id="legal-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 rounded-3xl max-w-2xl w-full p-6 sm:p-8 relative shadow-2xl space-y-6">
@@ -1152,7 +1079,7 @@
             <i data-lucide="x" class="w-6 h-6"></i>
         </button>
         <h3 id="legal-modal-title" aria-live="polite" class="font-serif text-xl font-bold text-white">&#8203;</h3>
-        <div id="legal-modal-body" class="text-xs sm:text-sm text-slate-300 space-y-4 max-h-[60vh] overflow-y-auto leading-relaxed pr-2 font-light"></div>
+        <div id="legal-modal-body" class="text-xs sm:text-sm text-slate-300 space-y-4 max-h-[60vh] overflow-y-auto no-scrollbar overscroll-contain leading-relaxed pr-2 font-light"></div>
         <div class="text-right pt-4 border-t border-slate-800">
             <button type="button" onclick="closeLegalModal()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-xs text-slate-200 rounded-xl font-semibold">닫기</button>
         </div>
@@ -1162,33 +1089,31 @@
 <!-- News Detail Modal (DB-less Popup) -->
 <div id="news-modal" class="modal-root fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
     <!-- 단일 다크 컨테이너로 통합 -->
-    <div id="modal-content" class="relative w-full max-w-[34.2rem] max-h-[90vh] overflow-y-auto bg-slate-900 text-slate-100 p-[1.8rem] sm:p-[2.4rem] rounded-2xl shadow-2xl border border-slate-800">
+    <div id="modal-content" class="relative w-full max-w-[34.2rem] max-h-[90vh] overflow-y-auto no-scrollbar overscroll-contain bg-slate-900 text-slate-100 p-[1.8rem] sm:p-[2.4rem] rounded-2xl shadow-2xl border border-slate-800">
         <!-- JS(openNewsModal)에서 동적으로 렌더링됨 -->
     </div>
 </div>
 
     <!-- JavaScript modules -->
     <script src="./assets/js/api-service.js?v=20260815-markdown-text-fix"></script>
-    <script src="./assets/js/ui-components.js"></script>
+    <script src="./assets/js/ui-components.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/animations.js"></script>
-    <script src="./assets/js/modal-handler.js?v=20260815-footer-modal-fix"></script>
-    <script src="./assets/js/news-loader.js?v=20260815-nav-links"></script>
+    <script src="./assets/js/modal-handler.js?v=20260815-modal-scroll-lock"></script>
+    <script src="./assets/js/news-loader.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/metrics-counter.js"></script>
-    <script src="./assets/js/kwave-drawer.js"></script>
+    <script src="./assets/js/kwave-drawer.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/app-init.js"></script>
-    <script src="./assets/js/partner-modal.js"></script>
     <!-- End of JavaScript modules -->
      
     <!-- 마크다운 공통 모달 -->
 <div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-    <div class="bg-slate-900 border border-slate-800 text-slate-200 rounded-2xl w-full max-w-3xl max-h-[85vh] flex flex-col shadow-2xl">
-        <!-- 모달 헤더 -->
+    <div class="bg-slate-900 border border-slate-800 text-slate-200 rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col shadow-2xl">        <!-- 모달 헤더 -->
         <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800">
             <h3 id="md-modal-title" class="text-lg font-semibold text-slate-100">안내</h3>
             <button type="button" onclick="closeMdModal()" class="bg-transparent hover:bg-transparent text-slate-400 hover:text-white text-2xl font-bold px-2">&times;</button>
         </div>
         <!-- 모달 본문 (마크다운 파싱 결과) -->
-        <div id="md-modal-content" class="p-6 overflow-y-auto prose prose-invert max-w-none text-sm leading-relaxed space-y-4">
+        <div id="md-modal-content" class="p-6 overflow-y-auto no-scrollbar overscroll-contain prose prose-invert max-w-none text-sm leading-relaxed space-y-4">
             <!-- JavaScript가 이곳에 마크다운 HTML을 삽입합니다 -->
         </div>
         <!-- 모달 푸터 -->

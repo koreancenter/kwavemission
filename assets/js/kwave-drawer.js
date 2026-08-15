@@ -21,6 +21,11 @@
         if (!drawer) return;
 
         clearTimeout(closeTimer);
+        if (typeof window.lockPageScroll === 'function') {
+            window.lockPageScroll(drawer);
+        } else {
+            document.body.style.overflow = 'hidden';
+        }
         drawer.style.removeProperty('transform');
         drawer.style.removeProperty('transition');
 
@@ -79,6 +84,11 @@
             drawer.style.removeProperty('transition');
             if (backdrop) {
                 backdrop.classList.add('hidden');
+            }
+            if (typeof window.unlockPageScroll === 'function') {
+                window.unlockPageScroll(drawer);
+            } else {
+                document.body.style.overflow = '';
             }
         }, closesToRight ? SWIPE_TRANSITION_MS : DRAWER_TRANSITION_MS);
     };
@@ -182,9 +192,6 @@
         setTimeout(function () {
             if (typeof window.openPartnerModal === 'function') {
                 window.openPartnerModal();
-            } else {
-                const partnerBtn = document.getElementById('partner-connect-btn');
-                if (partnerBtn && document.activeElement !== partnerBtn) partnerBtn.click();
             }
         }, drawerIsOpen ? DRAWER_TRANSITION_MS : 0);
     };

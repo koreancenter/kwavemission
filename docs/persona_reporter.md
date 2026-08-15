@@ -44,7 +44,7 @@
 > — [Interviewee Name and Title]
 ```
 
-# Executive Summary Box
+### Executive Summary Box
 
 * Footer Notice Box
   * Include contact info and copyright notice at the bottom using `<div style="font-size: 0.9em; line-height: 1.6;">`.
