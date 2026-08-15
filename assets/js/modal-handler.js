@@ -165,7 +165,7 @@
         const titles = {
             terms: '이용약관',
             privacy: '개인정보처리방침',
-            contact: 'Contact Us'
+            'contact-us': 'Contact Us'
         };
 
         if (title) title.innerText = titles[slug] ? titles[slug] : '안내';

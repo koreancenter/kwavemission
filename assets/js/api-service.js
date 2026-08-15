@@ -307,8 +307,21 @@
         },
 
         async fetchMarkdownBySlug(slug) {
-            const result = await this.api.get('/api/get-md?slug=' + encodeURIComponent(slug));
-            return result;
+            const response = await fetch(this.api.buildUrl('/api/get-md?slug=' + encodeURIComponent(slug)), {
+                method: 'GET',
+                credentials: 'same-origin'
+            });
+            const markdownText = await response.text();
+
+            if (!response.ok) {
+                throw ApiClient.normalizeError(
+                    response,
+                    ApiClient.parsePayload(markdownText),
+                    '문서를 불러오지 못했습니다.'
+                );
+            }
+
+            return markdownText;
         }
     };
 })();
