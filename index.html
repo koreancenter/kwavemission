@@ -792,104 +792,9 @@
         </button>
 
         <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pt-6 pb-4 scrollbar-hide">
-            
-            <!-- 카드 1: 한국어 강사 (모집 중) -->
-            <div class="prog-card recruiting snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] flex flex-col justify-between transition-all duration-300 group relative">
-                <div>
-                    <!-- 상태 뱃지 & 아이콘 헤더 -->
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] flex items-center justify-center text-slate-200">
-                            🎓
-                        </div>
-                        <!-- 모집 중 뱃지 -->
-                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
-                            모집 중
-                        </span>
-                    </div>
-                    <span class="font-mono text-[11px] text-rose-400 font-bold uppercase tracking-wider block mb-2">Academic &amp; Cultural Mission</span>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-rose-300 transition-colors">한국어 강사 / 단기선교사</h3>
-                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
-                        인도네시아 캠퍼스에서 청년들에게 한국어를 가르치며 자연스럽게 그리스도의 사랑을 나누는 2주~6개월 단기 사역입니다.
-                    </p>
-                </div>
-                <button type="button" onclick="openMdModal('program-korean')" class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-slate-700 text-slate-300 text-xs font-semibold hover:text-white hover:border-rose-500 transition-all flex items-center justify-center gap-2">
-                    <span>참여 안내 및 모집 요강</span>
-                    <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
-                </button>
+            <div class="w-full min-h-[180px] flex items-center justify-center text-center text-slate-500 text-sm">
+                프로그램을 불러오는 중입니다...
             </div>
-
-            <!-- 카드 2: 은혜로운 한국생활 참여 (추천 & 모집 중) -->
-            <div class="prog-card recruiting snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] flex flex-col justify-between transition-all duration-300 group relative">
-                <div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-[rgba(55,65,81,0.15)] text-slate-950 font-mono text-[10px] font-bold uppercase tracking-wider">
-                    RECOMMENDED
-                </div>
-                <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] flex items-center justify-center text-amber-400">
-                            🏠
-                        </div>
-                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
-                            모집 중
-                        </span>
-                    </div>
-                    <span class="font-mono text-[11px] text-amber-400 font-bold uppercase tracking-wider block mb-2">Sharing Life, Sharing Gospel</span>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-amber-300 transition-colors">은혜로운 한국생활 참여</h3>
-                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
-                        인도네시아 대학생을 한국의 크리스천 가정에 10일간 초청하여 한국인의 정과 하나님의 사랑을 경험하게 합니다.
-                    </p>
-                </div>
-                <button type="button" onclick="openMdModal('program-homestay')" class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-amber-500/40 text-amber-300 text-xs font-semibold hover:text-slate-950 transition-all flex items-center justify-center gap-2">
-                    <span>호스트 가정 신청 문의</span>
-                    <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
-                </button>
-            </div>
-
-            <!-- 카드 3: 타문화권 선교 워크숍 (진행 중) -->
-            <div class="prog-card ongoing snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] flex flex-col justify-between transition-all duration-300 group relative">
-                <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] flex items-center justify-center text-slate-200">
-                            🧭
-                        </div>
-                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
-                            진행 중
-                        </span>
-                    </div>
-                    <span class="font-mono text-[11px] text-cyan-400 font-bold uppercase tracking-wider block mb-2">Cross-Cultural Insight</span>
-                    <h3 class="text-xl font-bold text-white mb-3 group-hover:text-cyan-300 transition-colors">타문화권 선교 워크숍</h3>
-                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
-                        목회자, 지도자, 청년을 위한 현장 중심 프로그램. 발리 현지에서 디자인 싱킹 기반 선교 시각을 경험합니다.
-                    </p>
-                </div>
-                <button type="button" onclick="openMdModal('program-workshop')" class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-slate-700 text-slate-300 text-xs font-semibold hover:text-white hover:border-cyan-500 transition-all flex items-center justify-center gap-2">
-                    <span>워크숍 일정 및 신청</span>
-                    <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
-                </button>
-            </div>
-
-            <!-- 카드 4: 현지 고등교육 학술 교류 (준비 중) -->
-            <div class="prog-card preparing snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] opacity-80 hover:opacity-100 flex flex-col justify-between transition-all duration-300 group relative">
-                <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] flex items-center justify-center text-slate-400">
-                            📚
-                        </div>
-                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
-                            준비 중
-                        </span>
-                    </div>
-                    <span class="font-mono text-[11px] text-slate-500 font-bold uppercase tracking-wider block mb-2">Higher Education Cooperation</span>
-                    <h3 class="text-xl font-bold text-slate-200 mb-3">K-학술 교재 개척 파송</h3>
-                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
-                        인도네시아 명문 대학을 중심으로 기독교적 가치관이 포괄된 교재를 개척하고 학술 리더십을 지원합니다.
-                    </p>
-                </div>
-                <button type="button" onclick="openMdModal('program-academic')" class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-slate-700/50 text-slate-400 text-xs font-semibold hover:text-white transition-all flex items-center justify-center gap-2">
-                    <span>사역 준비 현황 보기</span>
-                    <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
-                </button>
-            </div>
-
         </div><!-- end prog-slider -->
 
         <!-- Right arrow (desktop only) -->
@@ -1102,9 +1007,10 @@
     <script src="./assets/js/ui-components.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/animations.js"></script>
     <script src="./assets/js/modal-handler.js?v=20260816-d1-program-markdown"></script>
-    <script src="./assets/js/news-loader.js?v=20260816-fixed-publisher-label"></script>
+    <script src="./assets/js/news-loader.js?v=20260816-d1-only"></script>
     <script src="./assets/js/metrics-counter.js"></script>
     <script src="./assets/js/kwave-drawer.js?v=20260815-modal-scroll-lock"></script>
+    <script src="./assets/js/program-loader.js?v=20260816-d1-only"></script>
     <script src="./assets/js/app-init.js"></script>
     <!-- End of JavaScript modules -->
      

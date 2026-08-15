@@ -36,6 +36,11 @@
         return _escapeHtml(url);
     }
 
+    function _unwrapItems(payload) {
+        if (Array.isArray(payload)) return payload;
+        return payload && Array.isArray(payload.data) ? payload.data : [];
+    }
+
     function _postSummary(post) {
         if (post.summary) return post.summary;
         return post.author + '의 현장 기록을 통해 이번 주 사역의 흐름과 기도 제목을 전합니다.';
@@ -60,69 +65,22 @@
         };
     }
 
-    function _normalizeFilePost(post) {
-        return {
-            id: post.id,
-            file: post.file,
-            title: post.title || '(제목 없음)',
-            date: post.date || '-',
-            category: post.category || '주간 선교 소식',
-            author: post.author || 'K-WAVE MISSION',
-            summary: post.summary || post.excerpt || '',
-            thumbnail: post.thumbnail || '',
-            source: 'file',
-            type: String(post.type || '').toLowerCase()
-        };
-    }
-
     async function _fetchNewsPosts() {
-        if (window.KWaveApi && typeof window.KWaveApi.fetchPosts === 'function') {
-            try {
-                const dbNews = await window.KWaveApi.fetchPosts('news');
-                if (Array.isArray(dbNews) && dbNews.length > 0) {
-                    return dbNews.map(_normalizeDbPost);
-                }
-
-                const dbAll = await window.KWaveApi.fetchPosts('all');
-                if (Array.isArray(dbAll) && dbAll.length > 0) {
-                    return dbAll
-                        .map(_normalizeDbPost)
-                        .filter(function (p) { return p.type !== 'notice'; });
-                }
-            } catch (err) {
-                console.warn('DB posts fetch failed, fallback to posts.json:', err);
-            }
+        if (!window.KWaveApi || typeof window.KWaveApi.fetchPosts !== 'function') {
+            throw new Error('게시글 API를 사용할 수 없습니다.');
         }
 
-        const res = await fetch('./posts/posts.json');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const json = await res.json();
-        return Array.isArray(json) ? json.map(_normalizeFilePost) : [];
+        const dbNews = _unwrapItems(await window.KWaveApi.fetchPosts('news'));
+        return dbNews.map(_normalizeDbPost);
     }
 
     async function _fetchNoticePost() {
-        if (window.KWaveApi && typeof window.KWaveApi.fetchPosts === 'function') {
-            try {
-                const notices = await window.KWaveApi.fetchPosts('notice');
-                if (Array.isArray(notices) && notices.length > 0) {
-                    return _normalizeDbPost(notices[0]);
-                }
-            } catch (err) {
-                console.warn('DB notice fetch failed, fallback to posts.json:', err);
-            }
+        if (!window.KWaveApi || typeof window.KWaveApi.fetchPosts !== 'function') {
+            throw new Error('공지사항 API를 사용할 수 없습니다.');
         }
 
-        const res = await fetch('./posts/posts.json');
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const posts = await res.json();
-        if (!Array.isArray(posts) || posts.length === 0) return null;
-
-        const noticePost = posts.find(function (p) {
-            const category = String(p.category || p.type || '').trim().toUpperCase();
-            return category === '공지사항' || category === 'NOTICE' || p.isMainNotice === true;
-        });
-
-        return noticePost ? _normalizeFilePost(noticePost) : null;
+        const notices = _unwrapItems(await window.KWaveApi.fetchPosts('notice'));
+        return notices.length > 0 ? _normalizeDbPost(notices[0]) : null;
     }
 
     async function loadMainNoticeBanner() {
@@ -220,7 +178,7 @@
                         '<span class="news-feature-publisher font-mono text-slate-500">' + FEATURED_PUBLISHER_LABEL + '</span>' +
                     '</div>' +
                 '</div>' +
-            '</article>';
+            '</article>' +
             '<p class="news-security-caption">' +
                 '<i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>' +
                 '<span>K-Wave Mission은 현지 협력 기관과의 안전하고 지속 가능한 교류를 위해 국제 표준 개인정보 보호 및 보안 가이드라인(Security Protocol)을 엄격히 준수합니다. 이에 따라 일부 현장 사진 및 인물 정보는 비식별 처리되어 공개됩니다.</span>' +

@@ -9,6 +9,11 @@
     currentPostType: 'all'
   });
 
+  function unwrapItems(payload) {
+    if (Array.isArray(payload)) return payload;
+    return payload && Array.isArray(payload.data) ? payload.data : [];
+  }
+
   function renderPostList() {
     const tbody = document.getElementById('postTableBody');
     const filteredPosts = getFilteredPosts();
@@ -49,8 +54,8 @@
 
   async function loadPostList() {
     try {
-      const posts = await window.AdminApi.api.get('/api/get-posts?type=all');
-      state.posts = Array.isArray(posts) ? posts : [];
+      const posts = unwrapItems(await window.AdminApi.api.get('/api/get-posts?type=all'));
+      state.posts = posts;
       state.postVisibleCount = 12;
       renderPostList();
     } catch (err) {

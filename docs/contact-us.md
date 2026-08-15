@@ -23,9 +23,9 @@
                 <i data-lucide="mail" class="w-5 h-5"></i>
             </div>
             <div class="min-w-0 flex-1 text-left">
-                <h4 class="font-bold text-slate-900 text-sm mb-0.5">이메일 문의</h4>
+                <h4 class="font-bold text-slate-900 text-sm mb-0.5">이메일</h4>
                 <a href="mailto:admin@kwavemission.org" class="block max-w-full font-mono text-sm text-rose-600 break-all hover:underline">admin@kwavemission.org</a>
-                <p class="text-xs text-slate-500 mt-1">대한민국 부천시 / 인도네시아 발리</p>
+                <p class="text-xs text-slate-500 mt-1">대한민국 | 인도네시아 발리, 자카르타 외 전국 거점 도시</p>
             </div>
             <a href="mailto:admin@kwavemission.org" aria-label="이메일 보내기" title="이메일 보내기" class="w-9 h-9 shrink-0 rounded-lg text-slate-500 flex items-center justify-center hover:bg-slate-200 hover:text-slate-900 transition-colors">
                 <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
@@ -37,7 +37,7 @@
             </div>
             <div class="min-w-0 flex-1 text-left">
                 <h4 class="font-bold text-slate-900 text-sm mb-0.5">선교 동역 안내</h4>
-                <p class="text-xs text-slate-600 leading-snug">사역 참여 및 파트너십 안내는 동역 신청을 이용해 주세요.</p>
+                <p class="text-xs text-slate-600 leading-snug">사역 문의 및 파트너십 안내는 동역 신청을 이용해 주세요.</p>
             </div>
             <button onclick="openPartnerModal(); closeMdModal();" class="shrink-0 px-3 py-2 rounded-lg bg-slate-900 text-white font-mono text-xs font-semibold hover:bg-slate-800 transition-colors inline-flex items-center gap-1.5">
                 동역 신청 <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>

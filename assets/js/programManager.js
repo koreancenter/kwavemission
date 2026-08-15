@@ -8,6 +8,11 @@
     programVisibleCount: 12
   });
 
+  function unwrapItems(payload) {
+    if (Array.isArray(payload)) return payload;
+    return payload && Array.isArray(payload.data) ? payload.data : [];
+  }
+
   function renderProgramList() {
     const tbody = document.getElementById('programTableBody');
     const filteredPrograms = getFilteredPrograms();
@@ -46,8 +51,8 @@
 
   async function loadProgramList() {
     try {
-      const programs = await window.AdminApi.api.get('/api/get-programs');
-      state.programs = Array.isArray(programs) ? programs : [];
+      const programs = unwrapItems(await window.AdminApi.api.get('/api/get-programs'));
+      state.programs = programs;
       state.programVisibleCount = 12;
       renderProgramList();
     } catch (err) {
@@ -71,7 +76,8 @@
 
   async function editProgram(id) {
     try {
-      const program = (await window.AdminApi.api.get('/api/get-programs')).find((item) => Number(item.id) === Number(id));
+      const programs = unwrapItems(await window.AdminApi.api.get('/api/get-programs'));
+      const program = programs.find((item) => Number(item.id) === Number(id));
       if (!program) return;
       document.getElementById('programId').value = program.id;
       document.getElementById('programSlug').value = program.slug || '';
