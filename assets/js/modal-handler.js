@@ -136,9 +136,8 @@
 
     function closeNewsModal() {
         if (typeof window.deactivateModal !== 'function') return;
-        window.deactivateModal(document.getElementById('news-modal'), function () {
-            history.replaceState(null, '', window.location.pathname + window.location.search);
-        });
+        window.deactivateModal(document.getElementById('news-modal'));
+        history.replaceState(null, '', window.location.pathname);
     }
 
     function openContactModal(title) {

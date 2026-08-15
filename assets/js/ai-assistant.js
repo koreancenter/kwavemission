@@ -67,10 +67,10 @@ const AIAssistant = {
 
         <!-- 💡 4가지 페르소나 및 되돌리기 실행 버튼 -->
         <div style="margin-top: 12px; display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; flex-wrap: wrap;">
-          <button type="button" class="btnAINews sm outline">📰 기사문</button>
-          <button type="button" class="btnAIReporter sm outline">🎙️ 방송문</button>
-          <button type="button" class="btnAILetter sm outline">✉️ 편지문</button>
-          <button type="button" class="btnAINotice sm outline">📢 공고문</button>
+          <button type="button" class="btnAINews sm outline">기사문</button>
+          <button type="button" class="btnAIReporter sm outline">방송문</button>
+          <button type="button" class="btnAILetter sm outline">편지문</button>
+          <button type="button" class="btnAINotice sm outline">공고문</button>
           <button type="button" class="btnAIUndo sm secondary" style="display: none; background-color: #64748b; color: #ffffff; border: none; margin-left: auto;">↩️ 원본 되돌리기</button>
           <span class="aiStatusText" style="font-size: 12px; color: #64748b; align-self: center;"></span>
         </div>

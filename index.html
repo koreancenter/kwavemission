@@ -933,23 +933,24 @@
         </p>
         
         <!-- 파트너 칩 -->
-        <div class="flex flex-wrap justify-center items-center gap-3.5 sm:gap-5">
-            <span class="px-6 py-3.5 rounded-2xl border border-slate-800 text-slate-200 font-medium text-sm sm:text-base shadow-sm">
+        <div class="grid grid-cols-2 gap-2.5 px-4 max-w-md mx-auto">
+            <a href="#" class="flex items-center justify-center px-3 py-3 text-xs font-medium text-slate-700 bg-white/60 border border-slate-300/80 rounded-xl text-center shadow-xs">
                 글로벌미래고등교육원
-            </span>
-            <a href="https://www.ishema.kr/" target="_blank" class="group/partner-link inline-flex items-center gap-1 px-6 py-3.5 rounded-2xl border border-slate-800 text-slate-200 font-medium text-sm sm:text-base shadow-sm">
-                쉐마글로벌학교 <i data-lucide="arrow-up-right" class="w-4 h-4 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
             </a>
-            <span class="px-6 py-3.5 rounded-2xl border border-slate-800 text-slate-200 font-medium text-sm sm:text-base shadow-sm">
+            <a href="https://www.ishema.kr/" class="flex items-center justify-center px-3 py-3 text-xs font-medium text-slate-700 bg-white/60 border border-slate-300/80 rounded-xl text-center shadow-xs">
+                쉐마글로벌학교 ↗
+            </a>
+            <a href="#" class="flex items-center justify-center px-3 py-3 text-xs font-medium text-slate-700 bg-white/60 border border-slate-300/80 rounded-xl text-center shadow-xs">
                 21세기SMF선교회
-            </span>
-            <a href="https://www.koreancenter.net/" target="_blank" class="group/partner-link inline-flex items-center gap-1 px-6 py-3.5 rounded-2xl border border-slate-800 text-slate-200 font-medium text-sm sm:text-base shadow-sm">
-                한국센터글로벌네트워크 <i data-lucide="arrow-up-right" class="w-4 h-4 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
             </a>
-            <span class="px-6 py-3.5 rounded-2xl border border-slate-800 text-slate-200 font-medium text-sm sm:text-base shadow-sm">
-                인도네시아센터
-            </span>
-        </div>
+            <a href="#" class="flex items-center justify-center px-3 py-3 text-xs font-medium text-slate-700 bg-white/60 border border-slate-300/80 rounded-xl text-center shadow-xs">
+                인도네시아센터 ↗
+            </a>
+            <!-- 5번째 항목: 홀수 시 2열 전체 차지 -->
+            <a href="https://www.koreancenter.net/" class="col-span-2 flex items-center justify-center px-3 py-3 text-xs font-medium text-slate-700 bg-white/60 border border-slate-300/80 rounded-xl text-center shadow-xs">
+                한국센터글로벌네트워크 ↗
+            </a>
+</div>
     </div>
 
         <!-- Donation & Support CTA Banner -->
@@ -1088,8 +1089,7 @@
 
 <!-- News Detail Modal (DB-less Popup) -->
 <div id="news-modal" class="modal-root fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <!-- 단일 다크 컨테이너로 통합 -->
-    <div id="modal-content" class="relative w-full max-w-[34.2rem] max-h-[90vh] overflow-y-auto no-scrollbar overscroll-contain bg-slate-900 text-slate-100 p-[1.8rem] sm:p-[2.4rem] rounded-2xl shadow-2xl border border-slate-800">
+    <div id="modal-content" class="modal-panel relative w-full max-w-xl h-[85vh] max-h-[85vh] overflow-hidden bg-slate-900 text-slate-100 rounded-2xl shadow-2xl border border-slate-800 flex flex-col">
         <!-- JS(openNewsModal)에서 동적으로 렌더링됨 -->
     </div>
 </div>
@@ -1099,7 +1099,7 @@
     <script src="./assets/js/ui-components.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/animations.js"></script>
     <script src="./assets/js/modal-handler.js?v=20260815-modal-scroll-lock"></script>
-    <script src="./assets/js/news-loader.js?v=20260815-modal-scroll-lock"></script>
+    <script src="./assets/js/news-loader.js?v=20260816-fixed-modal-regions"></script>
     <script src="./assets/js/metrics-counter.js"></script>
     <script src="./assets/js/kwave-drawer.js?v=20260815-modal-scroll-lock"></script>
     <script src="./assets/js/app-init.js"></script>
