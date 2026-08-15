@@ -5,6 +5,21 @@
     let _currentPost = null;
     let _currentNoticePost = null;
 
+    const FIELD_VOICES = [
+        {
+            label: '은혜로운 한국생활 참가자',
+            quote: '이번 한국에서의 10일 살기를 통해 한국이 왜 발전한 나라가 되었는지 알게 되었습니다.'
+        },
+        {
+            label: '한국어 수업 섬김 선생님',
+            quote: '수업을 통해 순수한 현지 청년들을 만나게 되어 기뻤습니다. 더욱 사랑으로 기도겠습니다.'
+        },
+        {
+            label: '경기OO교회 김OO 안수집사님',
+            quote: '교환학생으로 한국에 가는 학생들이 예수님을 인격적으로 만날 수 있기를 간절히 기도하겠습니다.'
+        }
+    ];
+
     function _escapeHtml(value) {
         return String(value == null ? '' : value)
             .replace(/&/g, '&amp;')
@@ -12,6 +27,17 @@
             .replace(/>/g, '&gt;')
             .replace(/"/g, '&quot;')
             .replace(/'/g, '&#39;');
+    }
+
+    function _safeImageUrl(value) {
+        var url = String(value || '').trim();
+        if (!url || /^(javascript|data|vbscript):/i.test(url)) return '';
+        return _escapeHtml(url);
+    }
+
+    function _postSummary(post) {
+        if (post.summary) return post.summary;
+        return post.author + '의 현장 기록을 통해 이번 주 사역의 흐름과 기도 제목을 전합니다.';
     }
 
     function _normalizeDbPost(post) {
@@ -26,6 +52,7 @@
             date: date || '-',
             category: type === 'notice' ? '공지사항' : '주간 선교 소식',
             author: post.author || 'K-WAVE MISSION',
+            summary: post.summary || post.excerpt || '',
             thumbnail: post.thumbnail_url || post.thumbnail || '',
             source: 'db',
             type: type
@@ -40,6 +67,7 @@
             date: post.date || '-',
             category: post.category || '주간 선교 소식',
             author: post.author || 'K-WAVE MISSION',
+            summary: post.summary || post.excerpt || '',
             thumbnail: post.thumbnail || '',
             source: 'file',
             type: String(post.type || '').toLowerCase()
@@ -153,67 +181,72 @@
             return;
         }
 
-        const displayPosts = posts.slice(0, 5);
+        const displayPosts = posts.slice(0, 1);
+        const featuredPost = displayPosts[0];
 
-        container.innerHTML = displayPosts.map(function (post, index) {
-            var fileJson = JSON.stringify(post.file);
-            var titleJson = JSON.stringify(post.title);
-            var dateJson = JSON.stringify(post.date);
-            var categoryJson = JSON.stringify(post.category);
-            var idJson = JSON.stringify(post.id);
-            var sourceJson = JSON.stringify(post.source || 'file');
-            var onclick = 'openNewsModal(' + fileJson + ',' + titleJson + ',' + dateJson + ',' + categoryJson + ',' + idJson + ',' + sourceJson + ')';
+        if (!featuredPost) {
+            container.innerHTML = '<p class="text-slate-500 text-sm text-center py-8">등록된 미션 리포트가 없습니다.</p>';
+            return;
+        }
 
-            if (index === 0) {
-                return (
-                    '<div class="md:col-span-2 news-feature-card group relative cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
-                        '<div class="news-feature-media" style="background-image:url(\'' + post.thumbnail + '\')"></div>' +
-                        '<div class="news-feature-overlay"></div>' +
-                        '<div class="news-feature-inner">' +
-                            '<div class="flex items-center justify-between">' +
-                                '<span class="news-badge">[FEATURED BRIEFING]</span>' +
-                                '<span class="font-mono text-xs text-slate-300/80">' + post.date + '</span>' +
-                            '</div>' +
-                            '<div class="max-w-2xl my-6">' +
-                                '<div class="mb-3 flex items-center gap-2 text-xs text-slate-300 font-mono">' +
-                                    '<span class="rounded-full border border-white/12 bg-white/5 px-2.5 py-0.5">' + _escapeHtml(post.category) + '</span>' +
-                                '</div>' +
-                                '<h3 class="news-feature-title">' + _escapeHtml(post.title) + '</h3>' +
-                                '<p class="news-feature-desc">' + _escapeHtml(post.author) + '의 현장 브리핑으로 이번 주 사역의 핵심 흐름을 먼저 확인합니다.</p>' +
-                            '</div>' +
-                            '<div class="news-feature-footer">' +
-                                '<span class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/20 px-3 py-1.5 text-brand-200 transition-transform group-hover:translate-x-[1px]">' +
-                                    '<i data-lucide="arrow-right" class="w-4 h-4"></i> 상세 리포트 보기' +
-                                '</span>' +
-                                '<span class="font-mono text-slate-300/90">✍️ ' + _escapeHtml(post.author) + '</span>' +
-                            '</div>' +
-                        '</div>' +
-                    '</div>'
-                );
-            }
-
-            return (
-                '<div class="md:col-span-1 news-card group cursor-pointer" onclick="' + onclick.replace(/"/g, '&quot;') + '">' +
+        var summary = _escapeHtml(_postSummary(featuredPost));
+        container.innerHTML =
+            '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
+                '<div class="news-feature-media">' +
+                    '<img src="./assets/images/indonesia-landscape.jpg" alt="인도네시아의 비식별 풍경 이미지" loading="lazy" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
+                    '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
+                '</div>' +
+                '<div class="news-feature-inner">' +
+                    '<div class="news-feature-meta">' +
+                        '<span class="news-badge">FEATURED REPORT</span>' +
+                        '<span class="font-mono text-xs text-slate-500">' + _escapeHtml(featuredPost.date) + '</span>' +
+                    '</div>' +
                     '<div>' +
-                        '<div class="news-card-image-wrap aspect-[16/9] w-full overflow-hidden bg-slate-900 relative rounded-t-xl">' +
-                            '<img src="' + post.thumbnail + '" alt="" class="news-card-image w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105" onerror="this.style.display=\'none\';this.parentElement.innerHTML+=\'<div class=&quot;w-full h-full flex items-center justify-center bg-slate-800 text-3xl&quot;>📰</div>\'">' +
-                            '<div class="absolute inset-0 bg-gradient-to-t from-slate-950/45 via-transparent to-transparent"></div>' +
-                        '</div>' +
-                        '<div class="news-card-content p-4">' +
-                            '<div class="news-card-meta flex items-center justify-between text-xs text-slate-400 mb-2 font-mono">' +
-                                '<span class="news-card-tag font-semibold text-brand-300">[FIELD LOG]</span>' +
-                                '<span>' + _escapeHtml(post.date) + '</span>' +
-                            '</div>' +
-                            '<h3 class="news-card-title line-clamp-2 text-base font-medium text-slate-100 group-hover:text-brand-200 transition-colors">' + _escapeHtml(post.title) + '</h3>' +
-                        '</div>' +
+                        '<span class="news-feature-category">' + _escapeHtml(featuredPost.category) + '</span>' +
+                        '<h3 class="news-feature-title">' + _escapeHtml(featuredPost.title) + '</h3>' +
+                        '<p class="news-feature-desc">' + summary + '</p>' +
                     '</div>' +
-                    '<div class="news-card-footer px-4 pb-4 flex items-center justify-between text-xs">' +
-                        '<span class="font-mono text-slate-400">✍️ ' + _escapeHtml(post.author) + '</span>' +
-                        '<i data-lucide="chevron-right" class="w-4 h-4 text-slate-400 group-hover:text-brand-300 group-hover:translate-x-[1px] transition-transform"></i>' +
+                    '<div class="news-feature-footer">' +
+                        '<span class="news-read-link">자세히 보기 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>' +
+                        '<span class="font-mono text-slate-500">' + _escapeHtml(featuredPost.author) + '</span>' +
                     '</div>' +
-                '</div>'
-            );
-        }).join('');
+                '</div>' +
+            '</article>' +
+            '<p class="news-security-caption">' +
+                '<i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>' +
+                '<span>K-Wave Mission은 현지 협력 기관과의 안전하고 지속 가능한 교류를 위해 국제 표준 개인정보 보호 및 보안 가이드라인(Security Protocol)을 엄격히 준수합니다. 이에 따라 일부 현장 사진 및 인물 정보는 비식별 처리되어 공개됩니다.</span>' +
+            '</p>' +
+            '<section class="field-voices" aria-labelledby="field-voices-title">' +
+                '<div class="field-voices-heading">' +
+                    '<span class="font-mono text-[11px] text-slate-500 tracking-widest">ANONYMISED TESTIMONIES</span>' +
+                    '<h3 id="field-voices-title">VOICES FROM THE FIELD</h3>' +
+                '</div>' +
+                '<div class="field-voices-grid">' +
+                    FIELD_VOICES.map(function (voice) {
+                        return '<blockquote class="field-voice-card">' +
+                            '<span class="field-voice-mark" aria-hidden="true">“</span>' +
+                            '<p>' + _escapeHtml(voice.quote) + '</p>' +
+                            '<footer>' + _escapeHtml(voice.label) + '</footer>' +
+                        '</blockquote>';
+                    }).join('') +
+                '</div>' +
+            '</section>';
+
+        container.querySelectorAll('[data-news-index]').forEach(function (card) {
+            var openPost = function () {
+                var post = displayPosts[Number(card.dataset.newsIndex)];
+                if (!post) return;
+                window.openNewsModal(post.file, post.title, post.date, post.category, post.id, post.source || 'file');
+            };
+
+            card.addEventListener('click', openPost);
+            card.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    openPost();
+                }
+            });
+        });
 
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
@@ -229,22 +262,23 @@
         
         // 📌 [수정] 모달 껍데기(#modal-content)의 하얀 배경 클래스를 완전히 지우고 약관 모달과 동일한 다크 스타일 적용
         if (modalContent) {
-            modalContent.className = 'relative w-full max-w-2xl max-h-[85vh] overflow-y-auto no-scrollbar bg-slate-900 border border-slate-800 text-slate-100 p-6 sm:p-8 rounded-2xl shadow-2xl';
+            modalContent.className = 'relative w-full max-w-xl max-h-[85vh] overflow-y-auto no-scrollbar bg-slate-900 border border-slate-800 text-slate-100 p-8 sm:p-12 rounded-2xl shadow-2xl';
         }
 
-        modalContent.innerHTML =
-    '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-5 right-5 text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer z-10">' +
+        // 📌 수정된 modalContent.innerHTML 예시
+modalContent.innerHTML =
+    '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-6 right-6 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer z-10">' +
         '<i data-lucide="x" class="w-5 h-5"></i>' +
     '</button>' +
-    '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 font-mono tracking-wide">' +
+    '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-4 font-mono tracking-wide">' +
         '<span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
         '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
     '</div>' +
-    '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-5 border-b border-slate-800 pb-4 pr-8">' + _escapeHtml(title) + '</h2>' +
-    '<div id="modal-body" class="text-base text-slate-200 leading-relaxed overflow-x-hidden">' +
+    '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 mb-8 border-b border-slate-800 pb-6 pr-8">' + _escapeHtml(title) + '</h2>' +
+    '<div id="modal-body" class="text-base text-slate-200 leading-relaxed overflow-x-hidden space-y-4">' +
         '<p class="text-slate-400">내용을 불러오는 중...</p>' +
     '</div>' +
-    '<div class="modal-footer flex items-center justify-between border-t border-slate-800/80 pt-5 mt-8 font-sans">' +
+    '<div class="modal-footer flex items-center justify-between border-t border-slate-800/80 pt-6 mt-10 font-sans">' +
         '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 px-4 py-2 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
             '<i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유' +
         '</button>' +
@@ -355,6 +389,33 @@
         var post = posts.find(function (p) { return String(p.id) === id; });
         if (post) window.openNewsModal(post.file, post.title, post.date, post.category, post.id, post.source);
     }
+
+    window.navigateToSection = function (event, sectionId) {
+        if (event) event.preventDefault();
+
+        var section = document.getElementById(sectionId);
+        if (!section) return;
+
+        var completeNavigation = function () {
+            var url = new URL(window.location.href);
+            url.searchParams.delete('id');
+            url.hash = sectionId;
+            history.replaceState(null, '', url.pathname + url.search + url.hash);
+
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) mobileMenu.classList.add('hidden');
+        };
+
+        var modal = document.getElementById('news-modal');
+        if (modal && !modal.classList.contains('hidden') && typeof window.deactivateModal === 'function') {
+            window.deactivateModal(modal, completeNavigation);
+            return;
+        }
+
+        completeNavigation();
+    };
 
     document.addEventListener('DOMContentLoaded', function () {
         loadNews();

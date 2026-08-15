@@ -1,9 +1,21 @@
+import { getAdminAuthContext } from './_admin-auth.js';
+
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
 
     const formData = await request.formData();
-    const password = formData.get("password");
+
+    const authContext = await getAdminAuthContext(context);
+    if (!authContext.ok) {
+      const legacyPassword = formData.get("password");
+      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
+        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
+          status: authContext.status,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
+    }
 
     // 단일 id 또는 다중 ids 수신
     const idInput = formData.getAll("ids").concat(formData.getAll("id"));
@@ -34,17 +46,6 @@ export async function onRequestPost(context) {
         JSON.stringify({ error: "삭제할 게시글 ID가 필요합니다." }),
         {
           status: 400,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        }
-      );
-    }
-
-    // 관리자 비밀번호 검증
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(
-        JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }),
-        {
-          status: 401,
           headers: { "Content-Type": "application/json; charset=utf-8" }
         }
       );

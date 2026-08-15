@@ -1,10 +1,11 @@
+import { getAdminAuthContext } from './_admin-auth.js';
+
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
 
     const formData = await request.formData();
     const id = formData.get("id"); // ID가 있으면 UPDATE, 없으면 INSERT
-    const password = formData.get("password");
 
     const slug = formData.get("slug");
     const category = formData.get("category");
@@ -15,12 +16,15 @@ export async function onRequestPost(context) {
     const is_recommended = formData.get("is_recommended") === "1" ? 1 : 0;
     const display_order = parseInt(formData.get("display_order") || "0", 10);
 
-    // 관리자 비밀번호 검증
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }), {
-        status: 401,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+    const authContext = await getAdminAuthContext(context);
+    if (!authContext.ok) {
+      const legacyPassword = formData.get("password");
+      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
+        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
+          status: authContext.status,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
     }
 
     // 필수 입력값 검증

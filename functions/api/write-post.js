@@ -1,22 +1,26 @@
+import { getAdminAuthContext, getAdminSecret } from './_admin-auth.js';
+
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
 
     // 1. 이미지 파일 첨부를 위해 request.formData()로 수신
     const formData = await request.formData();
-    const password = formData.get("password");
     const type = formData.get("type") || "news";
     const title = formData.get("title");
     const content = formData.get("content");
     const imageFile = formData.get("image");
     const thumbnailUrl = formData.get("thumbnail_url");
 
-    // 2. 관리자 비밀번호 검증 (환경 변수에 ADMIN_PASSWORD가 설정된 경우)
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }), {
-        status: 401,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+    const authContext = await getAdminAuthContext(context);
+    if (!authContext.ok) {
+      const legacyPassword = formData.get("password");
+      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
+        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
+          status: authContext.status,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
     }
 
     // 3. 필수 입력값 검증

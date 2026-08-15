@@ -4,72 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>K-Wave Mission - 통합 관리자 Center</title>
-  <style>
-    * { box-sizing: border-box; }
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; max-width: 1080px; margin: 30px auto; padding: 0 20px; line-height: 1.6; color: #333; background-color: #f8fafc; }
-    h1, h2 { border-bottom: 2px solid #0056b3; padding-bottom: 8px; color: #111; margin-top: 0; }
-    
-    /* 로그인 모달 레이어 */
-    #loginOverlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-    .login-box { background: white; padding: 35px 30px; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3); }
-    .login-title { font-size: 20px; font-weight: bold; margin-bottom: 20px; text-align: center; color: #0f172a; }
-
-    /* 상단 헤더 & 네비게이션 */
-    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .nav-tabs { display: flex; gap: 10px; border-bottom: 2px solid #e1e4e8; margin-bottom: 25px; }
-    .nav-tab-btn { background: #f1f3f5; border: 1px solid #ced4da; border-bottom: none; padding: 12px 24px; font-size: 15px; font-weight: bold; border-radius: 8px 8px 0 0; cursor: pointer; color: #495057; }
-    .nav-tab-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
-
-    /* 블로거 스타일 뷰 전환 */
-    .view-section { display: none; }
-    .view-section.active { display: block; }
-
-    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 24px; margin-bottom: 25px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
-    .form-group { margin-bottom: 18px; }
-    .form-row { display: flex; gap: 15px; }
-    .form-row .form-group { flex: 1; }
-    label { display: block; font-weight: bold; margin-bottom: 6px; font-size: 14px; color: #334155; }
-    input[type="text"], input[type="number"], input[type="password"], input[type="email"], input[type="file"], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 14px; transition: border-color .2s ease; }
-    textarea { height: 260px; resize: vertical; font-family: monospace; line-height: 1.5; }
-    
-    .btn-group { display: flex; gap: 10px; margin-top: 20px; }
-    button { background: #0056b3; color: white; border: none; padding: 10px 18px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-    button:hover { background: #003d82; }
-    button.secondary { background: #64748b; }
-    button.secondary:hover { background: #475569; }
-    button.outline { background: transparent; color: #0056b3; border: 1px solid #0056b3; }
-    button.outline:hover { background: #f0f7ff; }
-    button.danger { background: #dc2626; }
-    button.danger:hover { background: #b91c1c; }
-    button.sm { padding: 6px 12px; font-size: 13px; font-weight: normal; }
-
-    #preview-img { max-width: 200px; margin-top: 10px; display: none; border-radius: 6px; border: 1px solid #ddd; }
-    .status-msg { margin-top: 15px; min-height: 40px; padding: 10px 12px; border-radius: 6px; font-weight: bold; text-align: center; display: flex; align-items: center; justify-content: center; gap: 10px; opacity: 0; transition: opacity .2s ease; }
-    .status-msg.visible { opacity: 1; }
-    .status-msg.is-loading { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
-    .status-msg.is-success { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
-    .status-msg.is-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; }
-
-    /* 목록 컨트롤 & 필터 */
-    .list-header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .filter-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
-    .filter-btn { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; }
-    .filter-btn.active { background: #0056b3; color: white; border-color: #0056b3; }
-    
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border-bottom: 1px solid #f1f5f9; padding: 12px 10px; text-align: left; font-size: 14px; }
-    th { background: #f8fafc; color: #475569; font-weight: bold; }
-    .type-chip { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
-    .type-news { background: #dcfce7; color: #15803d; }
-    .type-notice { background: #fee2e2; color: #b91c1c; }
-    .list-thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 6px; }
-
-    /* 미리보기 모달 (렌더링 지원) */
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: #0f172a; color: #f8fafc; padding: 30px; border-radius: 12px; max-width: 720px; width: 92%; max-height: 85vh; overflow-y: auto; position: relative; border: 1px solid #334155; }
-    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; border: none; background: none; color: #94a3b8; }
-    .preview-body { margin-top: 20px; line-height: 1.7; word-break: break-word; }
-  </style>
+  <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
 
@@ -80,13 +15,13 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="loginEmail">아이디</label>
-          <input type="email" id="loginEmail" value="admin@kwavemission.org" required readonly style="background:#f1f5f9;">
+          <input type="email" id="loginEmail" value="admin@kwavemission.org" required readonly class="readonly-field">
         </div>
         <div class="form-group">
           <label for="loginPassword">비밀번호</label>
           <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" required autofocus>
         </div>
-        <button type="submit" style="width:100%; justify-content:center; padding: 12px;">로그인</button>
+        <button type="submit" class="full-width-action">로그인</button>
       </form>
     </div>
   </div>
@@ -99,8 +34,8 @@
 
   <!-- 메인 탭 선택 -->
   <div class="nav-tabs">
-    <button class="nav-tab-btn active" onclick="switchTab('posts')">📰 게시글 관리 (뉴스 / 공지사항)</button>
-    <button class="nav-tab-btn" onclick="switchTab('programs')">🎓 프로그램 관리 (Programs)</button>
+    <button class="nav-tab-btn active" data-tab="posts">📰 게시글 관리</button>
+    <button class="nav-tab-btn" data-tab="programs">🎓 프로그램 관리</button>
   </div>
 
   <!-- ================= 탭 1: 게시글 관리 ================= -->
@@ -111,7 +46,7 @@
       <div class="card">
         <div class="list-header-action">
           <h2>게시글 목록</h2>
-          <button type="button" onclick="showPostEditor()"><span style="font-size:16px;">+</span> 새 글 작성</button>
+          <button type="button" data-action="show-post-editor"><span class="action-icon">+</span> 새 글 작성</button>
         </div>
 
         <div class="filter-tabs">
@@ -120,30 +55,43 @@
           <button class="filter-btn" data-type="notice">공지사항만</button>
         </div>
 
+        <div class="list-toolbar">
+          <div class="search-box">
+            <span>🔎</span>
+            <input id="postSearchInput" type="search" placeholder="키워드, 날짜(2026-07), 상태(status:news) 검색">
+          </div>
+          <button type="button" class="secondary outline sm" id="postResetBtn">초기화</button>
+        </div>
+
         <table>
           <thead>
             <tr>
-              <th style="width: 60px;">ID</th>
-              <th style="width: 70px;">사진</th>
-              <th style="width: 90px;">분류</th>
+              <th class="col-post-id">ID</th>
+              <th class="col-post-image">사진</th>
+              <th class="col-post-type">분류</th>
               <th>제목</th>
-              <th style="width: 110px;">작성일</th>
-              <th style="width: 160px;">관리</th>
+              <th class="col-post-date">작성일</th>
+              <th class="col-post-actions">관리</th>
             </tr>
           </thead>
           <tbody id="postTableBody">
-            <tr><td colspan="6" style="text-align:center;">게시글을 불러오는 중...</td></tr>
+            <tr><td colspan="6" class="table-message">게시글을 불러오는 중...</td></tr>
           </tbody>
         </table>
+
+        <div class="list-footer">
+          <div class="list-meta" id="postListMeta">0개 항목</div>
+          <button type="button" class="secondary outline list-load-more" id="postLoadMoreBtn">더 보기</button>
+        </div>
       </div>
     </div>
 
     <!-- B. 게시글 작성/수정 에디터 뷰 -->
     <div id="postEditorView" class="view-section">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <div class="editor-heading">
           <h2 id="postFormTitle">새 글 작성</h2>
-          <button type="button" class="secondary outline sm" onclick="hidePostEditor()">← 목록으로 돌아가기</button>
+          <button type="button" class="secondary outline sm" data-action="hide-post-editor">← 목록으로 돌아가기</button>
         </div>
 
         <form id="postForm">
@@ -158,7 +106,7 @@
           </div>
 
           <div class="form-group">
-            <label for="postTitle">제목 <span style="color:red">*</span></label>
+            <label for="postTitle">제목 <span class="required-mark">*</span></label>
             <input type="text" id="postTitle" required placeholder="제목을 입력하세요">
           </div>
 
@@ -171,14 +119,14 @@
           <div class="ai-assistant-box" data-target="postContent"></div>
 
           <div class="form-group">
-            <label for="postContent">본문 내용 (HTML 가능) <span style="color:red">*</span></label>
+            <label for="postContent">본문 내용 (HTML 가능) <span class="required-mark">*</span></label>
             <textarea id="postContent" required placeholder="본문 내용이나 HTML 양식을 입력하세요..."></textarea>
           </div>
 
           <div class="btn-group">
             <button type="submit" id="postSubmitBtn">글 저장하기</button>
             <button type="button" class="outline" id="formPreviewBtn">👁️ 작성중 미리보기 (HTML 렌더링)</button>
-            <button type="button" class="secondary" onclick="hidePostEditor()">취소</button>
+            <button type="button" class="secondary" data-action="hide-post-editor">취소</button>
           </div>
         </form>
 
@@ -196,34 +144,47 @@
       <div class="card">
         <div class="list-header-action">
           <h2>등록된 프로그램 목록</h2>
-          <button type="button" onclick="showProgramEditor()"><span style="font-size:16px;">+</span> 새 프로그램 등록</button>
+          <button type="button" data-action="show-program-editor"><span class="action-icon">+</span> 새 프로그램 등록</button>
+        </div>
+
+        <div class="list-toolbar">
+          <div class="search-box">
+            <span>🔎</span>
+            <input id="programSearchInput" type="search" placeholder="키워드, 날짜, 상태(status:recruiting) 검색">
+          </div>
+          <button type="button" class="secondary outline sm" id="programResetBtn">초기화</button>
         </div>
 
         <table>
           <thead>
             <tr>
-              <th style="width: 50px;">ID</th>
-              <th style="width: 50px;">아이콘</th>
-              <th style="width: 120px;">슬러그</th>
-              <th style="width: 120px;">카테고리</th>
+              <th class="col-program-id">ID</th>
+              <th class="col-program-icon">아이콘</th>
+              <th class="col-program-slug">슬러그</th>
+              <th class="col-program-category">카테고리</th>
               <th>프로그램명</th>
-              <th style="width: 90px;">상태</th>
-              <th style="width: 130px;">관리</th>
+              <th class="col-program-status">상태</th>
+              <th class="col-program-actions">관리</th>
             </tr>
           </thead>
           <tbody id="programTableBody">
-            <tr><td colspan="7" style="text-align:center;">프로그램을 불러오는 중...</td></tr>
+            <tr><td colspan="7" class="table-message">프로그램을 불러오는 중...</td></tr>
           </tbody>
         </table>
+
+        <div class="list-footer">
+          <div class="list-meta" id="programListMeta">0개 항목</div>
+          <button type="button" class="secondary outline list-load-more" id="programLoadMoreBtn">더 보기</button>
+        </div>
       </div>
     </div>
 
     <!-- B. 프로그램 작성/수정 뷰 -->
     <div id="programEditorView" class="view-section">
       <div class="card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+        <div class="editor-heading">
           <h2 id="programFormTitle">새 프로그램 등록</h2>
-          <button type="button" class="secondary outline sm" onclick="hideProgramEditor()">← 목록으로 돌아가기</button>
+          <button type="button" class="secondary outline sm" data-action="hide-program-editor">← 목록으로 돌아가기</button>
         </div>
 
         <form id="programForm">
@@ -231,21 +192,21 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label for="programSlug">슬러그 (영문 식별자) <span style="color:red">*</span></label>
+              <label for="programSlug">슬러그 (영문 식별자) <span class="required-mark">*</span></label>
               <input type="text" id="programSlug" required placeholder="예: vivid-camp">
             </div>
             <div class="form-group">
-              <label for="programCategory">카테고리 <span style="color:red">*</span></label>
+              <label for="programCategory">카테고리 <span class="required-mark">*</span></label>
               <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP">
             </div>
           </div>
 
           <div class="form-row">
-            <div class="form-group" style="flex: 2;">
-              <label for="programTitle">프로그램명 <span style="color:red">*</span></label>
+            <div class="form-group form-group-wide">
+              <label for="programTitle">프로그램명 <span class="required-mark">*</span></label>
               <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026">
             </div>
-            <div class="form-group" style="flex: 1;">
+            <div class="form-group form-group-narrow">
               <label for="programIcon">아이콘 (이모지)</label>
               <input type="text" id="programIcon" value="🎓">
             </div>
@@ -269,13 +230,13 @@
           <div class="ai-assistant-box" data-target="programDescription"></div>
 
           <div class="form-group">
-            <label for="programDescription">설명 / 요약 내용 <span style="color:red">*</span></label>
-            <textarea id="programDescription" required style="height:120px;"></textarea>
+            <label for="programDescription">설명 / 요약 내용 <span class="required-mark">*</span></label>
+            <textarea id="programDescription" required class="textarea-medium"></textarea>
           </div>
 
           <div class="btn-group">
             <button type="submit" id="programSubmitBtn">프로그램 저장하기</button>
-            <button type="button" class="secondary" onclick="hideProgramEditor()">취소</button>
+            <button type="button" class="secondary" data-action="hide-program-editor">취소</button>
           </div>
         </form>
 
@@ -289,244 +250,22 @@
   <div id="previewModal" class="modal">
     <div class="modal-content">
       <button class="modal-close" id="modalCloseBtn">&times;</button>
-      <div style="margin-bottom:12px;">
+      <div class="modal-meta">
         <span id="modalTypeChip" class="type-chip">뉴스</span>
-        <span id="modalDate" style="color: #94a3b8; font-size: 13px; margin-left: 10px;"></span>
+        <span id="modalDate" class="modal-date"></span>
       </div>
-      <h2 id="modalTitle" style="color:#ffffff; border:none; margin-bottom:15px;"></h2>
-      <img id="modalImg" style="max-width:100%; border-radius: 8px; display:none; margin-bottom: 20px;">
+      <h2 id="modalTitle" class="modal-title"></h2>
+      <img id="modalImg" class="modal-image">
       <!-- innerHTML로 프론트엔드 스타일그대로 실시간 렌더링 -->
       <div id="modalContent" class="preview-body"></div>
     </div>
   </div>
 
-  <script>
-    const fallbackApiBase = 'http://localhost:8788';
-    const apiBase = (window.location.protocol === 'file:' || window.location.origin === 'null') ? fallbackApiBase : '';
-    function apiUrl(path) { return apiBase + path; }
-
-    // 인증 토큰 관리
-    function getPassword() { return sessionStorage.getItem('adminToken') || ''; }
-
-    // 로그인 / 로그아웃 제어
-    const loginOverlay = document.getElementById('loginOverlay');
-    const loginForm = document.getElementById('loginForm');
-
-    if (getPassword()) {
-      loginOverlay.style.display = 'none';
-    }
-
-    loginForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const pwd = document.getElementById('loginPassword').value;
-      if (pwd) {
-        sessionStorage.setItem('adminToken', pwd);
-        loginOverlay.style.display = 'none';
-        loadPostList();
-      }
-    });
-
-    document.getElementById('logoutBtn').addEventListener('click', () => {
-      sessionStorage.removeItem('adminToken');
-      location.reload();
-    });
-
-    // 탭 전환
-    function switchTab(tabName) {
-      document.querySelectorAll('.nav-tab-btn').forEach(btn => btn.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-
-      if (tabName === 'posts') {
-        document.querySelectorAll('.nav-tab-btn')[0].classList.add('active');
-        document.getElementById('tab-posts').classList.add('active');
-        loadPostList();
-      } else {
-        document.querySelectorAll('.nav-tab-btn')[1].classList.add('active');
-        document.getElementById('tab-programs').classList.add('active');
-        loadProgramList();
-      }
-    }
-
-    // 게시글 에디터 뷰 전환 (Blogger 방식)
-    function showPostEditor() {
-      document.getElementById('postListView').classList.remove('active');
-      document.getElementById('postEditorView').classList.add('active');
-    }
-
-    function hidePostEditor() {
-      document.getElementById('postForm').reset();
-      document.getElementById('postId').value = '';
-      document.getElementById('preview-img').style.display = 'none';
-      document.getElementById('postFormTitle').textContent = '새 글 작성';
-      document.getElementById('postEditorView').classList.remove('active');
-      document.getElementById('postListView').classList.add('active');
-    }
-
-    // 프로그램 에디터 뷰 전환
-    function showProgramEditor() {
-      document.getElementById('programListView').classList.remove('active');
-      document.getElementById('programEditorView').classList.add('active');
-    }
-
-    function hideProgramEditor() {
-      document.getElementById('programForm').reset();
-      document.getElementById('programId').value = '';
-      document.getElementById('programFormTitle').textContent = '새 프로그램 등록';
-      document.getElementById('programEditorView').classList.remove('active');
-      document.getElementById('programListView').classList.add('active');
-    }
-
-    // 게시글 목록 불러오기
-    async function loadPostList() {
-      try {
-        const res = await fetch(apiUrl('/api/get-posts?type=all'));
-        const posts = await res.json();
-        const tbody = document.getElementById('postTableBody');
-
-        if (!Array.isArray(posts) || posts.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">등록된 글이 없습니다.</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = posts.map(post => `
-          <tr>
-            <td>${post.id}</td>
-            <td>${post.thumbnail_url ? `<img src="${post.thumbnail_url}" class="list-thumb">` : '-'}</td>
-            <td><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
-            <td><strong>${escapeHtml(post.title)}</strong></td>
-            <td>${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
-            <td>
-              <button class="sm outline" onclick="editPost(${post.id})">수정/편집</button>
-              <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
-            </td>
-          </tr>
-        `).join('');
-      } catch (err) {
-        document.getElementById('postTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">불러오기 오류 발생</td></tr>';
-      }
-    }
-
-    // 수정 모드 진입
-    async function editPost(id) {
-      try {
-        const res = await fetch(apiUrl(`/api/get-posts?id=${id}`));
-        const post = await res.json();
-        if (post && post.id) {
-          document.getElementById('postId').value = post.id;
-          document.getElementById('postType').value = post.type || 'news';
-          document.getElementById('postTitle').value = post.title;
-          document.getElementById('postContent').value = post.content;
-          document.getElementById('postFormTitle').textContent = `글 수정 (ID: #${post.id})`;
-          showPostEditor();
-        }
-      } catch (e) {
-        alert('글 정보를 불러올 수 없습니다.');
-      }
-    }
-
-    // 삭제 처리
-    async function deletePost(id) {
-      if (!confirm(`정말 #${id}번 글을 삭제하시겠습니까?`)) return;
-      const formData = new FormData();
-      formData.append('id', id);
-      formData.append('password', getPassword());
-
-      try {
-        const res = await fetch(apiUrl('/api/delete-post'), { method: 'POST', body: formData });
-        const result = await res.json();
-        if (res.ok && result.success) {
-          alert('삭제되었습니다.');
-          loadPostList();
-        } else {
-          alert('삭제 실패: ' + (result.error || '비밀번호를 확인하세요.'));
-        }
-      } catch (err) { alert('통신 오류'); }
-    }
-
-    // 게시글 저장 (등록/수정)
-    document.getElementById('postForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const isEdit = Boolean(document.getElementById('postId').value);
-      const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
-
-      const formData = new FormData();
-      if (isEdit) formData.append('id', document.getElementById('postId').value);
-      formData.append('password', getPassword());
-      formData.append('type', document.getElementById('postType').value);
-      formData.append('title', document.getElementById('postTitle').value);
-      formData.append('content', document.getElementById('postContent').value);
-
-      const file = document.getElementById('postImage').files[0];
-      if (file) formData.append('image', file);
-
-      try {
-        const res = await fetch(apiUrl(endpoint), { method: 'POST', body: formData });
-        const result = await res.json();
-        if (res.ok && result.success) {
-          alert(isEdit ? '수정되었습니다!' : '등록되었습니다!');
-          hidePostEditor();
-          loadPostList();
-        } else {
-          alert('저장 실패: ' + (result.error || '오류 발생'));
-        }
-      } catch (err) { alert('통신 실패'); }
-    });
-
-    // 실시간 HTML 미리보기 모달
-    document.getElementById('formPreviewBtn').addEventListener('click', () => {
-      const type = document.getElementById('postType').value;
-      const title = document.getElementById('postTitle').value || '(제목 없음)';
-      const content = document.getElementById('postContent').value || '(본문 없음)';
-
-      document.getElementById('modalTypeChip').textContent = type === 'news' ? '뉴스' : '공지사항';
-      document.getElementById('modalTitle').textContent = title;
-      document.getElementById('modalDate').textContent = '방금 전 (미리보기)';
-      
-      // innerHTML 적용으로 카드 스타일 및 HTML 태그가 정상 렌더링됨
-      document.getElementById('modalContent').innerHTML = content;
-      document.getElementById('previewModal').style.display = 'flex';
-    });
-
-    document.getElementById('modalCloseBtn').onclick = () => document.getElementById('previewModal').style.display = 'none';
-
-    // 프로그램 목록 로드
-    async function loadProgramList() {
-      try {
-        const res = await fetch(apiUrl('/api/get-programs'));
-        const programs = await res.json();
-        const tbody = document.getElementById('programTableBody');
-
-        if (!Array.isArray(programs) || programs.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">등록된 프로그램이 없습니다.</td></tr>';
-          return;
-        }
-
-        tbody.innerHTML = programs.map(p => `
-          <tr>
-            <td>${p.id}</td>
-            <td style="font-size:18px;">${p.icon || '🎓'}</td>
-            <td><code>${escapeHtml(p.slug)}</code></td>
-            <td>${escapeHtml(p.category)}</td>
-            <td><strong>${escapeHtml(p.title)}</strong></td>
-            <td>${p.status}</td>
-            <td>
-              <button class="sm secondary" onclick="editProgram(${p.id})">수정</button>
-              <button class="sm danger" onclick="deleteProgram(${p.id})">삭제</button>
-            </td>
-          </tr>
-        `).join('');
-      } catch (err) {
-        document.getElementById('programTableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">불러오기 실패</td></tr>';
-      }
-    }
-
-    function escapeHtml(str) {
-      return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    // 초기 실행
-    if (getPassword()) loadPostList();
-  </script>
-  <script src="assets/js/ai-assistant.js"></script>
+  <script src="./assets/js/api.js"></script>
+  <script src="./assets/js/uiHelper.js"></script>
+  <script src="./assets/js/postManager.js"></script>
+  <script src="./assets/js/programManager.js"></script>
+  <script src="./assets/js/main.js"></script>
+  <script src="./assets/js/ai-assistant.js"></script>
 </body>
 </html>

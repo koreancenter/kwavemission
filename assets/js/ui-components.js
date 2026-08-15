@@ -67,14 +67,12 @@
     function filterPrograms(type, btnElement) {
         const btns = document.querySelectorAll('.prog-filter-btn');
         btns.forEach(function (btn) {
-            btn.classList.remove('bg-slate-800', 'text-white');
-            btn.classList.add('bg-slate-900/80', 'text-slate-400');
+            btn.classList.remove('active');
         });
 
         const activeBtn = btnElement || document.querySelector('.prog-filter-btn[onclick*="\'' + type + '\'"]') || document.querySelector('.prog-filter-btn');
         if (activeBtn) {
-            activeBtn.classList.remove('bg-slate-900/80', 'text-slate-400');
-            activeBtn.classList.add('bg-slate-800', 'text-white');
+            activeBtn.classList.add('active');
         }
 
         const slider = document.getElementById('prog-slider');

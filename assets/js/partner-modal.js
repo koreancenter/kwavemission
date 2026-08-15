@@ -12,7 +12,7 @@ async function submitPartnerForm(event) {
     event.preventDefault();
     const btn = document.getElementById('partner-submit-btn');
     btn.disabled = true;
-    btn.innerText = '제출 중...';
+    btn.innerText = '보내는 중...';
 
     const formData = {
         org: document.getElementById('partner-org').value,
@@ -31,7 +31,7 @@ async function submitPartnerForm(event) {
         });
         
         if (res.ok) {
-            alert('제안이 성공적으로 접수되었습니다. 담당자 검토 후 1-2일 내로 연락드리겠습니다.');
+            alert('제안이 성공적으로 접수되었습니다. 담당자 확인 후 1-2일 내로 연락드리겠습니다.');
         } else {
             alert('제안이 정상적으로 전달되었습니다.');
         }

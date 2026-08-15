@@ -1,10 +1,11 @@
+import { getAdminAuthContext } from './_admin-auth.js';
+
 export async function onRequestPost(context) {
   try {
     const { env, request } = context;
 
     const formData = await request.formData();
     const id = formData.get("id");
-    const password = formData.get("password");
     const type = formData.get("type") || "news";
     const title = formData.get("title");
     const content = formData.get("content");
@@ -15,9 +16,15 @@ export async function onRequestPost(context) {
       return new Response(JSON.stringify({ error: "수정할 글 ID가 없습니다." }), { status: 400 });
     }
 
-    // 관리자 비밀번호 검증
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }), { status: 401 });
+    const authContext = await getAdminAuthContext(context);
+    if (!authContext.ok) {
+      const legacyPassword = formData.get("password");
+      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
+        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
+          status: authContext.status,
+          headers: { "Content-Type": "application/json; charset=utf-8" }
+        });
+      }
     }
 
     if (!title || !content) {
