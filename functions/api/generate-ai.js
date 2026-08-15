@@ -1,14 +1,8 @@
 import { getAdminAuthContext } from './_admin-auth.js';
+import { errorMessage, jsonError, jsonResponse } from './_api-utils.js';
 
 const MAX_TEXT_LENGTH = 50000;
 const MAX_PROMPT_LENGTH = 50000;
-
-function jsonResponse(payload, status = 200) {
-  return new Response(JSON.stringify(payload), {
-    status,
-    headers: { 'Content-Type': 'application/json; charset=utf-8' }
-  });
-}
 
 async function generateWithGemini(env, payload) {
   const apiKey = env.GEMINI_API_KEY || payload.apiKey;
@@ -74,21 +68,21 @@ export async function onRequestPost(context) {
   try {
     const authContext = await getAdminAuthContext(context);
     if (!authContext.ok) {
-      return jsonResponse({ success: false, message: authContext.error }, authContext.status);
+      return jsonError(authContext.error, authContext.status);
     }
 
     const payload = await context.request.json().catch(() => null);
     if (!payload || typeof payload.text !== 'string' || typeof payload.systemPrompt !== 'string') {
-      return jsonResponse({ success: false, message: 'text와 systemPrompt는 필수 문자열입니다.' }, 400);
+      return jsonError('text와 systemPrompt는 필수 문자열입니다.', 400);
     }
 
     const text = payload.text.trim();
     const systemPrompt = payload.systemPrompt.trim();
     if (!text || !systemPrompt) {
-      return jsonResponse({ success: false, message: '원문과 페르소나 프롬프트를 입력해 주세요.' }, 400);
+      return jsonError('원문과 페르소나 프롬프트를 입력해 주세요.', 400);
     }
     if (text.length > MAX_TEXT_LENGTH || systemPrompt.length > MAX_PROMPT_LENGTH) {
-      return jsonResponse({ success: false, message: 'AI 요청 텍스트가 허용된 길이를 초과했습니다.' }, 413);
+      return jsonError('AI 요청 텍스트가 허용된 길이를 초과했습니다.', 413);
     }
 
     const requestPayload = { ...payload, text, systemPrompt };
@@ -99,6 +93,6 @@ export async function onRequestPost(context) {
 
     return jsonResponse({ success: true, data: { text: generatedText } });
   } catch (error) {
-    return jsonResponse({ success: false, message: error.message || 'AI 생성 중 오류가 발생했습니다.' }, 500);
+    return jsonError(errorMessage(error, 'AI 생성 중 오류가 발생했습니다.'), 500);
   }
 }

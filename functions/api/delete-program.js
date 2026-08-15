@@ -1,4 +1,5 @@
-import { getAdminAuthContext } from './_admin-auth.js';
+import { requireAdminAuth } from './_admin-auth.js';
+import { errorMessage, jsonError, jsonSuccess, missingBinding } from './_api-utils.js';
 
 export async function onRequestPost(context) {
   try {
@@ -6,15 +7,12 @@ export async function onRequestPost(context) {
 
     const formData = await request.formData();
 
-    const authContext = await getAdminAuthContext(context);
+    const authContext = await requireAdminAuth(context, formData);
     if (!authContext.ok) {
-      const legacyPassword = formData.get("password");
-      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
-        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
-          status: authContext.status,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        });
-      }
+      return jsonError(authContext.error || "관리자 인증이 필요합니다.", authContext.status || 401);
+    }
+    if (!env.DB) {
+      return missingBinding('DB', 'D1');
     }
 
     // 단일 id 또는 다중 ids 수신
@@ -42,24 +40,7 @@ export async function onRequestPost(context) {
     idList = idList.map((i) => String(i).trim()).filter(Boolean);
 
     if (idList.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "삭제할 프로그램 ID가 필요합니다." }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        }
-      );
-    }
-
-    // 관리자 비밀번호 검증
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(
-        JSON.stringify({ error: "비밀번호가 일치하지 않습니다." }),
-        {
-          status: 401,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        }
-      );
+      return jsonError("삭제할 프로그램 ID가 필요합니다.", 400);
     }
 
     // D1 DB 일괄 삭제 (batch 사용)
@@ -68,16 +49,8 @@ export async function onRequestPost(context) {
     );
     await env.DB.batch(statements);
 
-    return new Response(
-      JSON.stringify({ success: true, count: idList.length }),
-      {
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      }
-    );
+    return jsonSuccess({ count: idList.length });
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonError(errorMessage(err, '프로그램 삭제 중 오류가 발생했습니다.'), 500);
   }
 }

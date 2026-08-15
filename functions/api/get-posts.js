@@ -1,6 +1,12 @@
+import { errorMessage, jsonError, jsonResponse, missingBinding } from './_api-utils.js';
+
 export async function onRequestGet(context) {
   try {
     const { env, request } = context;
+    if (!env.DB) {
+      return missingBinding('DB', 'D1');
+    }
+
     const url = new URL(request.url);
 
     const id = url.searchParams.get('id');
@@ -12,9 +18,7 @@ export async function onRequestGet(context) {
         "SELECT * FROM posts WHERE id = ?"
       ).bind(id).first();
 
-      return new Response(JSON.stringify(post || {}), {
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+      return jsonResponse({ success: true, data: post || null });
     }
 
     // 2. 글 목록 가져오기 (전체 또는 news/notice 구분)
@@ -31,14 +35,9 @@ export async function onRequestGet(context) {
 
     const { results } = await stmt.all();
 
-    return new Response(JSON.stringify(results || []), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonResponse({ success: true, data: results || [] });
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonError(errorMessage(error, '게시글 조회 중 오류가 발생했습니다.'), 500);
   }
 }

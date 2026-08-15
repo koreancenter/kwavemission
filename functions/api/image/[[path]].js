@@ -6,14 +6,18 @@ export async function onRequestGet(context) {
     const key = Array.isArray(params.path) ? params.path.join('/') : params.path;
 
     if (!key) {
-      return new Response("이미지 경로가 올바르지 않습니다.", { status: 400 });
+      return textResponse("이미지 경로가 올바르지 않습니다.", 400);
+    }
+
+    if (!env.BUCKET) {
+      return textResponse("R2 바인딩 'BUCKET'이 설정되지 않았습니다.", 503);
     }
 
     // 2. R2 버킷에서 이미지 파일 가져오기
     const object = await env.BUCKET.get(key);
 
     if (!object) {
-      return new Response("이미지를 찾을 수 없습니다.", { status: 404 });
+      return textResponse("이미지를 찾을 수 없습니다.", 404);
     }
 
     // 3. 이미지 헤더 세팅 및 응답 반환
@@ -25,6 +29,16 @@ export async function onRequestGet(context) {
     return new Response(object.body, { headers });
 
   } catch (err) {
-    return new Response("이미지 로드 중 오류 발생: " + err.message, { status: 500 });
+    return textResponse("이미지 로드 중 오류 발생: " + err.message, 500);
   }
+}
+
+function textResponse(message, status) {
+  return new Response(message, {
+    status,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store"
+    }
+  });
 }

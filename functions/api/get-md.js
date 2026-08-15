@@ -1,35 +1,55 @@
 export async function onRequestGet(context) {
   try {
-    const { request } = context;
+    const { request, env } = context;
     const url = new URL(request.url);
-    const slug = url.searchParams.get("slug");
+    const slug = String(url.searchParams.get("slug") || "").trim();
 
     if (!slug) {
-      return new Response("slug 파라미터가 필요합니다.", { status: 400 });
+      return textResponse("slug 파라미터가 필요합니다.", 400);
     }
 
-    // 파일 이름 검증 (알파벳, 숫자, 하이픈, 언더바만 허용 - 경로 탐색 보안 방지)
     if (!/^[a-zA-Z0-9_-]+$/.test(slug)) {
-      return new Response("유효하지 않은 slug 형식입니다.", { status: 400 });
+      return textResponse("유효하지 않은 slug 형식입니다.", 400);
     }
 
-    // 배포된 웹 사이트의 정적 문서 경로(/docs/slug.md)에서 마크다운 파일 가져오기
-    const docUrl = new URL(`/docs/${slug}.md`, url.origin);
-    const res = await fetch(docUrl.toString());
-
-    if (!res.ok) {
-      return new Response("해당 문서를 찾을 수 없습니다.", { status: 404 });
+    if (!env.DB) {
+      return textResponse("D1 바인딩 'DB'가 설정되지 않았습니다.", 503);
     }
 
-    const markdownText = await res.text();
+    const program = await env.DB.prepare(
+      `SELECT slug, title, category, description
+       FROM programs
+       WHERE slug = ? AND status != 'deleted'
+       LIMIT 1`
+    ).bind(slug).first();
 
-    return new Response(markdownText, {
+    if (!program) {
+      return textResponse("해당 프로그램을 찾을 수 없습니다.", 404);
+    }
+
+    const markdown = [
+      `# ${program.title}`,
+      program.category ? `**${program.category}**` : "",
+      program.description || ""
+    ].filter(Boolean).join("\n\n");
+
+    return new Response(markdown, {
       headers: {
         "Content-Type": "text/markdown; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        "Cache-Control": "no-store"
       },
     });
   } catch (err) {
-    return new Response(`오류 발생: ${err.message}`, { status: 500 });
+    return textResponse(`D1 프로그램 문서 조회 실패: ${err.message}`, 500);
   }
+}
+
+function textResponse(message, status) {
+  return new Response(message, {
+    status,
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Cache-Control": "no-store"
+    }
+  });
 }

@@ -1,4 +1,5 @@
-import { getAdminAuthContext } from './_admin-auth.js';
+import { requireAdminAuth } from './_admin-auth.js';
+import { errorMessage, jsonError, jsonSuccess, missingBinding } from './_api-utils.js';
 
 export async function onRequestPost(context) {
   try {
@@ -12,23 +13,19 @@ export async function onRequestPost(context) {
     const imageFile = formData.get("image");
     const thumbnailUrl = formData.get("thumbnail_url");
 
-    if (!id) {
-      return new Response(JSON.stringify({ error: "수정할 글 ID가 없습니다." }), { status: 400 });
-    }
-
-    const authContext = await getAdminAuthContext(context);
+    const authContext = await requireAdminAuth(context, formData);
     if (!authContext.ok) {
-      const legacyPassword = formData.get("password");
-      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
-        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
-          status: authContext.status,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        });
-      }
+      return jsonError(authContext.error || "관리자 인증이 필요합니다.", authContext.status || 401);
+    }
+    if (!env.DB) {
+      return missingBinding('DB', 'D1');
+    }
+    if (!id) {
+      return jsonError("수정할 글 ID가 없습니다.", 400);
     }
 
     if (!title || !content) {
-      return new Response(JSON.stringify({ error: "제목과 본문은 필수 입력 항목입니다." }), { status: 400 });
+      return jsonError("제목과 본문은 필수 입력 항목입니다.", 400);
     }
 
     let imageUrl = null;
@@ -38,6 +35,10 @@ export async function onRequestPost(context) {
       && Number(imageFile.size || 0) > 0;
 
     if (hasUpload) {
+      if (!env.BUCKET) {
+        return missingBinding('BUCKET', 'R2');
+      }
+
       const mimeToExt = {
         "image/jpeg": "jpg",
         "image/png": "png",
@@ -75,14 +76,9 @@ export async function onRequestPost(context) {
       ).bind(type, title, content, id).run();
     }
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonSuccess();
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { 
-      status: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonError(errorMessage(err, '게시글 수정 중 오류가 발생했습니다.'), 500);
   }
 }

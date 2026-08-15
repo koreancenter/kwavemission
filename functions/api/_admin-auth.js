@@ -25,7 +25,7 @@ function safeBase64UrlDecode(value) {
 }
 
 export function getAdminSecret(env) {
-  return env.JWT_SECRET || env.ADMIN_PASSWORD || 'kwave-mission-admin-secret';
+  return env.JWT_SECRET || '';
 }
 
 export async function signToken(secret, payload, expiresInSeconds = 900) {
@@ -112,6 +112,11 @@ function parseCookies(cookieHeader = '') {
 }
 
 export async function getAdminAuthContext(context) {
+  const secret = getAdminSecret(context.env);
+  if (!secret) {
+    return { ok: false, status: 503, error: 'JWT_SECRET 환경 변수가 설정되지 않았습니다.' };
+  }
+
   const authHeader = context.request.headers.get('authorization') || '';
   const tokenFromHeader = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : '';
   const cookieHeader = context.request.headers.get('cookie') || '';
@@ -122,10 +127,25 @@ export async function getAdminAuthContext(context) {
     return { ok: false, status: 401, error: '인증 토큰이 필요합니다.' };
   }
 
-  const payload = await verifyToken(getAdminSecret(context.env), token);
+  const payload = await verifyToken(secret, token);
   if (!payload || payload.type !== 'admin') {
     return { ok: false, status: 401, error: '인증이 만료되었거나 유효하지 않습니다.' };
   }
 
   return { ok: true, user: payload };
+}
+
+export async function requireAdminAuth(context, formData) {
+  const authContext = await getAdminAuthContext(context);
+  if (authContext.ok) {
+    return authContext;
+  }
+
+  const configuredPassword = String(context.env.ADMIN_PASSWORD || '');
+  const legacyPassword = String(formData?.get('password') || '');
+  if (configuredPassword && legacyPassword === configuredPassword) {
+    return { ok: true, legacy: true };
+  }
+
+  return authContext;
 }

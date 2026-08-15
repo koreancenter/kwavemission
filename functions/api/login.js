@@ -1,10 +1,16 @@
-import { getAdminAuthContext, getAdminSecret, signToken } from './_admin-auth.js';
+import { getAdminSecret, signToken } from './_admin-auth.js';
+import { errorMessage, jsonError, jsonResponse } from './_api-utils.js';
 
 export async function onRequest(context) {
   try {
     const { env, request } = context;
+
+    if (!env.ADMIN_EMAIL || !env.ADMIN_PASSWORD || !env.JWT_SECRET) {
+      return jsonError('관리자 인증 환경 변수가 완전히 설정되지 않았습니다.', 503);
+    }
+
     const contentType = request.headers.get('content-type') || '';
-    const adminEmail = (env.ADMIN_EMAIL || 'admin@kwavemission.org').toLowerCase();
+    const adminEmail = env.ADMIN_EMAIL.toLowerCase();
 
     let body = {};
     if (contentType.includes('application/json')) {
@@ -23,24 +29,15 @@ export async function onRequest(context) {
     const password = String(body.password || '').trim();
 
     if (!email || !password) {
-      return new Response(JSON.stringify({ success: false, message: '이메일과 비밀번호를 입력하세요.' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
-      });
+      return jsonError('이메일과 비밀번호를 입력하세요.', 400);
     }
 
-    if (env.ADMIN_EMAIL && email !== adminEmail) {
-      return new Response(JSON.stringify({ success: false, message: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
-      });
+    if (email !== adminEmail) {
+      return jsonError('Unauthorized', 401);
     }
 
-    if (env.ADMIN_PASSWORD && password !== env.ADMIN_PASSWORD) {
-      return new Response(JSON.stringify({ success: false, message: 'Invalid password' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json; charset=utf-8' }
-      });
+    if (password !== env.ADMIN_PASSWORD) {
+      return jsonError('Invalid password', 401);
     }
 
     const secret = getAdminSecret(env);
@@ -51,7 +48,7 @@ export async function onRequest(context) {
     const refreshCookieOptions = 'Path=/; SameSite=Lax; HttpOnly; Max-Age=604800';
     const sessionCookieOptions = 'Path=/; SameSite=Lax; Max-Age=900';
 
-    return new Response(JSON.stringify({
+    return jsonResponse({
       success: true,
       data: {
         accessToken,
@@ -59,22 +56,15 @@ export async function onRequest(context) {
         expiresIn: 60 * 15,
         tokenType: 'Bearer'
       }
-    }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json; charset=utf-8',
-        'Set-Cookie': [
-          `admin_access_token=${encodeURIComponent(accessToken)};${cookieOptions}`,
-          `admin_refresh_token=${encodeURIComponent(refreshToken)};${refreshCookieOptions}`,
-          `admin_session=active;${sessionCookieOptions}`
-        ].join(', ')
-      }
+    }, 200, {
+      'Set-Cookie': [
+        `admin_access_token=${encodeURIComponent(accessToken)};${cookieOptions}`,
+        `admin_refresh_token=${encodeURIComponent(refreshToken)};${refreshCookieOptions}`,
+        `admin_session=active;${sessionCookieOptions}`
+      ].join(', ')
     });
   } catch (err) {
-    return new Response(JSON.stringify({ success: false, message: err.message || '로그인 처리 중 오류가 발생했습니다.' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json; charset=utf-8' }
-    });
+    return jsonError(errorMessage(err, '로그인 처리 중 오류가 발생했습니다.'), 500);
   }
 }
 

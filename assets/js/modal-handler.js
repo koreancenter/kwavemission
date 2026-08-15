@@ -156,6 +156,20 @@
         }
     }
 
+    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact-us']);
+
+    async function fetchModalMarkdown(slug) {
+        if (!STATIC_DOCUMENT_SLUGS.has(slug)) {
+            return window.KWaveApi.fetchMarkdownBySlug(slug);
+        }
+
+        const response = await fetch('./docs/' + encodeURIComponent(slug) + '.md');
+        if (!response.ok) {
+            throw new Error('문서를 불러오지 못했습니다.');
+        }
+        return response.text();
+    }
+
     async function openMdModal(slug) {
         const modal = document.getElementById('md-modal');
         const container = document.getElementById('md-modal-content');
@@ -180,10 +194,9 @@
         }
 
         try {
-            const markdownText = await window.KWaveApi.fetchMarkdownBySlug(slug);
+            const markdownText = await fetchModalMarkdown(slug);
             if (container) container.innerHTML = marked.parse(markdownText);
-            
-            // 📌 이 위치에 코드를 추가해 주세요!
+
             if (window.lucide) {
                 window.lucide.createIcons();
             }

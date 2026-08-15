@@ -1,4 +1,5 @@
-import { getAdminAuthContext } from './_admin-auth.js';
+import { requireAdminAuth } from './_admin-auth.js';
+import { errorMessage, jsonError, jsonSuccess, missingBinding } from './_api-utils.js';
 
 export async function onRequestPost(context) {
   try {
@@ -16,23 +17,17 @@ export async function onRequestPost(context) {
     const is_recommended = formData.get("is_recommended") === "1" ? 1 : 0;
     const display_order = parseInt(formData.get("display_order") || "0", 10);
 
-    const authContext = await getAdminAuthContext(context);
+    const authContext = await requireAdminAuth(context, formData);
     if (!authContext.ok) {
-      const legacyPassword = formData.get("password");
-      if (env.ADMIN_PASSWORD && legacyPassword !== env.ADMIN_PASSWORD) {
-        return new Response(JSON.stringify({ success: false, message: authContext.error || "비밀번호가 일치하지 않습니다." }), {
-          status: authContext.status,
-          headers: { "Content-Type": "application/json; charset=utf-8" }
-        });
-      }
+      return jsonError(authContext.error || "관리자 인증이 필요합니다.", authContext.status || 401);
+    }
+    if (!env.DB) {
+      return missingBinding('DB', 'D1');
     }
 
     // 필수 입력값 검증
     if (!slug || !category || !title || !description) {
-      return new Response(JSON.stringify({ error: "슬러그, 카테고리, 제목, 설명은 필수 항목입니다." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+      return jsonError("슬러그, 카테고리, 제목, 설명은 필수 항목입니다.", 400);
     }
 
     // 수정 (UPDATE)
@@ -43,9 +38,7 @@ export async function onRequestPost(context) {
          WHERE id = ?`
       ).bind(slug, category, title, description, status, icon, is_recommended, display_order, id).run();
 
-      return new Response(JSON.stringify({ success: true, message: "프로그램이 수정되었습니다." }), {
-        headers: { "Content-Type": "application/json; charset=utf-8" }
-      });
+      return jsonSuccess({ message: "프로그램이 수정되었습니다." });
     }
 
     // 신규 등록 (INSERT)
@@ -54,14 +47,9 @@ export async function onRequestPost(context) {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
     ).bind(slug, category, title, description, status, icon, is_recommended, display_order).run();
 
-    return new Response(JSON.stringify({ success: true, info }), {
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonSuccess({ info });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { 
-      status: 500,
-      headers: { "Content-Type": "application/json; charset=utf-8" }
-    });
+    return jsonError(errorMessage(err, '프로그램 저장 중 오류가 발생했습니다.'), 500);
   }
 }
