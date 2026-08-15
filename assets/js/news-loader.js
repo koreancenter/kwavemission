@@ -4,6 +4,7 @@
     /** Tracks the currently open post for share functionality. */
     let _currentPost = null;
     let _currentNoticePost = null;
+    const FEATURED_PUBLISHER_LABEL = '케이웨이브 미션';
 
     const FIELD_VOICES = [
         {
@@ -216,7 +217,7 @@
                     '</div>' +
                     '<div class="news-feature-footer">' +
                         '<span class="news-read-link">자세히 보기 <i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>' +
-                        '<span class="font-mono text-slate-500">' + _escapeHtml(featuredPost.author) + '</span>' +
+                        '<span class="news-feature-publisher font-mono text-slate-500">' + FEATURED_PUBLISHER_LABEL + '</span>' +
                     '</div>' +
                 '</div>' +
             '</article>';
