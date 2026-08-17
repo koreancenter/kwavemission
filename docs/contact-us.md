@@ -38,7 +38,7 @@
             <div class="min-w-0 flex-1 text-left">
                 <h4 class="font-sans font-bold text-slate-900 text-sm mb-0.5 !m-0 tracking-tight">공식 이메일</h4>
                 <a href="mailto:admin@kwavemission.org" class="block max-w-full font-mono text-sm font-bold text-rose-600 break-all hover:underline">admin@kwavemission.org</a>
-                <p class="text-xs text-slate-500 mt-1 !m-0">대한민국 | 인도네시아  전국 주요 거점 도시</p>
+                <p class="text-xs text-slate-500 mt-1 !m-0">대한민국 | 인도네시아 전국 주요 거점 도시</p>
             </div>
             <a href="mailto:admin@kwavemission.org" aria-label="이메일 보내기" title="이메일 보내기" class="w-10 h-10 shrink-0 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center hover:bg-rose-500 hover:text-white transition-all duration-200 shadow-xs">
                 <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
@@ -49,7 +49,7 @@
         <div class="group/card w-full p-5 rounded-2xl bg-amber-500/10 border border-amber-500/30 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-amber-500/50 hover:shadow-md">
             <div class="min-w-0 flex-1 text-left">
                 <span class="font-mono text-[10px] font-bold text-amber-700 uppercase tracking-widest block mb-1">[ JOIN THE K-ALLIANCE ]</span>
-                <h4 class="font-sans font-bold text-slate-900 text-base mb-1 !m-0 tracking-tight">선교 동역 &amp; 파트너십 신청</h4>
+                <h4 class="font-sans font-bold text-slate-900 text-base mb-1 !m-0 tracking-tight">선교 동역 &amp; 파트너십 문의</h4>
                 <p class="text-xs text-slate-600 font-light leading-snug !m-0">우리 함께 선교하십시다.</p>
             </div>
             <button type="button" onclick="handlePartnerConnect(); closeMdModal();" class="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-mono text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-xs cursor-pointer border-0">
