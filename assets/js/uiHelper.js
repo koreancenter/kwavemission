@@ -87,3 +87,12 @@
     matchSearch
   };
 })();
+
+// uiHelper.js 또는 api.js 상단/하단
+window.unwrapItems = function(response) {
+  if (!response) return [];
+  if (Array.isArray(response)) return response;
+  if (response.data && Array.isArray(response.data)) return response.data;
+  if (response.items && Array.isArray(response.items)) return response.items;
+  return [];
+};
