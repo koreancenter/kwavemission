@@ -1,0 +1,18 @@
+account_id = "b4d3687a74650d2fbb4f263e4dcd840e"
+name = "kwavemission"
+pages_build_output_dir = "."
+compatibility_date = "2026-08-15"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "kwavemission"
+database_id = "019a1533-6e94-4b95-bca3-f4dec0772857"
+
+[vars]
+ADMIN_EMAIL = "admin@kwavemission.org"
+JWT_SECRET = "kwave-mission-secure-jwt-secret-key-2026!"
+ADMIN_PASSWORD = "680923"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "kwavemission-images"

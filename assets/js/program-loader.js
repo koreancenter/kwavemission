@@ -30,6 +30,17 @@
         return payload && Array.isArray(payload.data) ? payload.data : [];
     }
 
+    function toPlainText(value, maxLength = 80) {
+        const source = String(value || '');
+        const documentNode = new DOMParser().parseFromString(source, 'text/html');
+        const plainText = String(documentNode.body.textContent || '')
+            .replace(/\s+/g, ' ')
+            .trim();
+
+        if (plainText.length <= maxLength) return plainText;
+        return plainText.slice(0, maxLength).trimEnd() + '…';
+    }
+
     function getAccentClasses(accent) {
         if (accent === 'rose') {
             return {
@@ -61,6 +72,7 @@
         const preparingClasses = status === 'preparing' ? ' opacity-80 hover:opacity-100' : '';
         const modalAction = slug ? `onclick="openMdModal('${slug}')"` : 'disabled aria-disabled="true"';
         const disabledClasses = slug ? '' : ' opacity-50 cursor-not-allowed';
+        const descriptionPreview = toPlainText(program.description);
 
         return `
             <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}">
@@ -77,7 +89,7 @@
                     <span class="font-mono text-[11px] ${accent.category} font-bold uppercase tracking-wider block mb-2">${escapeHtml(program.category || 'Mission Program')}</span>
                     <h3 class="text-xl font-bold text-white mb-3 ${accent.titleHover} transition-colors">${escapeHtml(program.title || '프로그램 안내')}</h3>
                     <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
-                        ${escapeHtml(program.description || '')}
+                        ${escapeHtml(descriptionPreview)}
                     </p>
                 </div>
                 <button type="button" ${modalAction} class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-slate-700 text-slate-300 text-xs font-semibold hover:text-white ${accent.buttonHover} transition-all flex items-center justify-center gap-2${disabledClasses}">

@@ -226,12 +226,21 @@ const AIAssistant = {
     const targetArea = document.getElementById(targetId);
     if (!targetArea) return alert(`대상이 되는 입력창(#${targetId})을 찾을 수 없습니다.`);
 
-    const sourceText = targetArea.value.trim();
+    // Check if target is postContent with Tiptap Editor
+    const isTiptap = targetId === 'postContent' && window.PostManager && window.PostManager.getTiptapContent;
+    let sourceText = isTiptap ? window.PostManager.getTiptapContent() : targetArea.value.trim();
+
+    // Strip HTML tags for clean text prompt if using Tiptap
+    if (isTiptap && sourceText) {
+      const doc = new DOMParser().parseFromString(sourceText, 'text/html');
+      sourceText = doc.body.textContent.trim();
+    }
+
     if (!sourceText) return alert('본문 내용을 먼저 입력해 주세요.');
 
-    // 최초 변환 전 원본 텍스트 기록
+    // 최초 변환 전 원본 텍스트/HTML 기록
     if (this.undoHistory[targetId] === undefined) {
-      this.undoHistory[targetId] = targetArea.value;
+      this.undoHistory[targetId] = isTiptap ? window.PostManager.getTiptapContent() : targetArea.value;
     }
 
     const personaNames = {
@@ -251,7 +260,18 @@ const AIAssistant = {
     try {
       const resultText = await this.requestGeneration(sourceText, SYSTEM_PERSONA);
 
-      targetArea.value = resultText;
+      // Convert generated markdown to HTML if marked is available, or use paragraphs
+      let formattedHtml = resultText;
+      if (window.marked) {
+        formattedHtml = window.marked.parse(resultText);
+      }
+
+      if (isTiptap) {
+        window.PostManager.setTiptapContent(formattedHtml);
+      } else {
+        targetArea.value = resultText;
+      }
+
       this.setStatus(container, `✨ [${personaLabel}] 변환이 완료되었습니다!`);
 
       const btnUndo = container.querySelector('.btnAIUndo');
@@ -266,8 +286,16 @@ const AIAssistant = {
     const targetArea = document.getElementById(targetId);
     if (!targetArea) return;
 
+    const isTiptap = targetId === 'postContent' && window.PostManager && window.PostManager.setTiptapContent;
+
     if (this.undoHistory[targetId] !== undefined) {
-      targetArea.value = this.undoHistory[targetId];
+      const originalValue = this.undoHistory[targetId];
+      if (isTiptap) {
+        window.PostManager.setTiptapContent(originalValue);
+      } else {
+        targetArea.value = originalValue;
+      }
+
       delete this.undoHistory[targetId]; // 원본 복원 후 히스토리 초기화
       this.setStatus(container, '↩️ 이전 원본 내용으로 복원되었습니다.');
 

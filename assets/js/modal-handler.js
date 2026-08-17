@@ -5,7 +5,8 @@
         partner: 'partner-modal',
         legal: 'legal-modal',
         md: 'md-modal',
-        contact: 'contact-modal'
+        contact: 'contact-modal',
+        'contact-us': 'md-modal'
     };
 
     function getHashKey() {
@@ -141,11 +142,18 @@
     }
 
     function openContactModal(title) {
+        const contactModalEl = document.getElementById('contact-modal');
+        // contact-modal 요소가 없거나 md-modal 연동형 링크인 경우 openMdModal로 자동 전환
+        if (!contactModalEl) {
+            openMdModal('contact-us');
+            return;
+        }
+
         const resolvedTitle = title || '선교 동역 문의';
         const titleEl = document.getElementById('contact-modal-title');
         if (titleEl) titleEl.innerText = resolvedTitle;
         if (typeof window.activateModal === 'function') {
-            window.activateModal(document.getElementById('contact-modal'));
+            window.activateModal(contactModalEl);
         }
         if (typeof lucide !== 'undefined') lucide.createIcons();
     }
@@ -156,18 +164,35 @@
         }
     }
 
-    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact-us']);
+    // contact와 contact-us 슬러그를 모두 정적 문서로 등록
+    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact', 'contact-us']);
 
     async function fetchModalMarkdown(slug) {
+        // 'contact'로 요청이 와도 'contact-us.md' 파일을 불러오도록 맵핑
+        const normalizedSlug = (slug === 'contact') ? 'contact-us' : slug;
+
         if (!STATIC_DOCUMENT_SLUGS.has(slug)) {
             return window.KWaveApi.fetchMarkdownBySlug(slug);
         }
 
-        const response = await fetch('./docs/' + encodeURIComponent(slug) + '.md');
+        const response = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md');
         if (!response.ok) {
             throw new Error('문서를 불러오지 못했습니다.');
         }
         return response.text();
+    }
+
+    function renderModalContent(container, content) {
+        if (!container) return;
+        const strContent = String(content || '').trim();
+
+        if (strContent.startsWith('<')) {
+            container.innerHTML = strContent;
+        } else if (window.marked) {
+            container.innerHTML = window.marked.parse(strContent);
+        } else {
+            container.innerHTML = strContent;
+        }
     }
 
     async function openMdModal(slug) {
@@ -178,10 +203,13 @@
         const titles = {
             terms: '이용약관',
             privacy: '개인정보처리방침',
+            contact: 'Contact Us',
             'contact-us': 'Contact Us'
         };
 
-        if (title) title.innerText = titles[slug] ? titles[slug] : '안내';
+        const targetSlug = slug || 'contact-us';
+
+        if (title) title.innerText = titles[targetSlug] ? titles[targetSlug] : '안내';
         if (container) container.innerHTML = '<div class="text-center py-10 text-slate-400">문서를 불러오는 중입니다...</div>';
         if (modal) {
             if (typeof window.activateModal === 'function') {
@@ -194,8 +222,8 @@
         }
 
         try {
-            const markdownText = await fetchModalMarkdown(slug);
-            if (container) container.innerHTML = marked.parse(markdownText);
+            const markdownText = await fetchModalMarkdown(targetSlug);
+            renderModalContent(container, markdownText);
 
             if (window.lucide) {
                 window.lucide.createIcons();

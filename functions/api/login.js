@@ -1,16 +1,16 @@
-import { getAdminSecret, signToken } from './_admin-auth.js';
+import { getAdminConfig, signToken } from './_admin-auth.js';
 import { errorMessage, jsonError, jsonResponse } from './_api-utils.js';
 
 export async function onRequest(context) {
   try {
     const { env, request } = context;
+    const adminConfig = getAdminConfig(context);
 
-    if (!env.ADMIN_EMAIL || !env.ADMIN_PASSWORD || !env.JWT_SECRET) {
+    if (!adminConfig.email || !adminConfig.password || !adminConfig.secret) {
       return jsonError('관리자 인증 환경 변수가 완전히 설정되지 않았습니다.', 503);
     }
 
     const contentType = request.headers.get('content-type') || '';
-    const adminEmail = env.ADMIN_EMAIL.toLowerCase();
 
     let body = {};
     if (contentType.includes('application/json')) {
@@ -32,15 +32,15 @@ export async function onRequest(context) {
       return jsonError('이메일과 비밀번호를 입력하세요.', 400);
     }
 
-    if (email !== adminEmail) {
+    if (email !== adminConfig.email) {
       return jsonError('Unauthorized', 401);
     }
 
-    if (password !== env.ADMIN_PASSWORD) {
+    if (password !== adminConfig.password) {
       return jsonError('Invalid password', 401);
     }
 
-    const secret = getAdminSecret(env);
+    const secret = adminConfig.secret;
     const accessToken = await signToken(secret, { type: 'admin', email }, 60 * 15);
     const refreshToken = await signToken(secret, { type: 'admin', email, refresh: true }, 60 * 60 * 24 * 7);
 

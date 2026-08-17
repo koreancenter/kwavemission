@@ -1,10 +1,26 @@
+</think>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>K-Wave Mission - 통합 관리자 Center</title>
-  <link rel="stylesheet" href="./assets/css/style.css?v=20260815-modal-scroll-lock">
+
+  <!-- Tailwind CSS & Typography Plugin CDN for Prose classes -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="./assets/css/admin.css?v=20260815-modal-scroll-lock">
+
+  <!-- Tiptap Editor CDN ESM Loader -->
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@2.2.4';
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.2.4';
+
+    window.TiptapEditor = Editor;
+    window.TiptapStarterKit = StarterKit;
+    document.dispatchEvent(new CustomEvent('tiptap:ready'));
+  </script>
 </head>
 <body>
 
@@ -30,6 +46,30 @@
   <div class="admin-header">
     <h1>K-Wave Mission 관리자 센터</h1>
     <button type="button" class="secondary sm" id="logoutBtn">🔒 로그아웃</button>
+  </div>
+
+  <!-- Dashboard Summary Cards (Sleek, responsive overview dashboard metrics) -->
+  <div class="dashboard-grid" id="dashboardStats" style="display: none;">
+    <div class="dashboard-card">
+      <span class="card-title">전체 게시글</span>
+      <span class="card-value" id="stat-total-posts">-</span>
+      <span class="card-desc">뉴스 및 공지사항 총 개수</span>
+    </div>
+    <div class="dashboard-card">
+      <span class="card-title">등록 프로그램</span>
+      <span class="card-value" id="stat-total-programs">-</span>
+      <span class="card-desc">고등교육선교 총 과정 수</span>
+    </div>
+    <div class="dashboard-card">
+      <span class="card-title">모집중 프로그램</span>
+      <span class="card-value" id="stat-recruiting-programs">-</span>
+      <span class="card-desc">현재 활발히 동역자 모집 중</span>
+    </div>
+    <div class="dashboard-card">
+      <span class="card-title">최근 7일 새글</span>
+      <span class="card-value" id="stat-recent-posts">-</span>
+      <span class="card-desc">새로 추가된 사역 업데이트 수</span>
+    </div>
   </div>
 
   <!-- 메인 탭 선택 -->
@@ -118,9 +158,22 @@
 
           <div class="ai-assistant-box" data-target="postContent"></div>
 
+          <!-- Tiptap WYSIWYG Editor Field -->
           <div class="form-group">
-            <label for="postContent">본문 내용 (HTML 가능) <span class="required-mark">*</span></label>
-            <textarea id="postContent" required placeholder="본문 내용이나 HTML 양식을 입력하세요..."></textarea>
+            <label>본문 내용 (WYSIWYG 에디터) <span class="required-mark">*</span></label>
+            <input type="hidden" id="postContent" required>
+
+            <!-- Minimal Toolbar -->
+            <div id="postTiptapToolbar" class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-100 border border-slate-300 rounded-t-lg">
+              <button type="button" data-tiptap-cmd="bold" class="sm outline px-2.5 py-1 text-xs font-bold hover:bg-slate-200 rounded">Bold</button>
+              <button type="button" data-tiptap-cmd="italic" class="sm outline px-2.5 py-1 text-xs italic hover:bg-slate-200 rounded">Italic</button>
+              <button type="button" data-tiptap-cmd="h1" class="sm outline px-2.5 py-1 text-xs font-extrabold hover:bg-slate-200 rounded">H1</button>
+              <button type="button" data-tiptap-cmd="h2" class="sm outline px-2.5 py-1 text-xs font-bold hover:bg-slate-200 rounded">H2</button>
+              <button type="button" data-tiptap-cmd="bulletList" class="sm outline px-2.5 py-1 text-xs hover:bg-slate-200 rounded">Bullet List</button>
+            </div>
+
+            <!-- Editor Container -->
+            <div id="postTiptapEditor" class="prose prose-slate max-w-none border border-t-0 border-slate-300 rounded-b-lg p-4 min-h-[300px] bg-white focus:outline-none"></div>
           </div>
 
           <div class="btn-group">
@@ -263,6 +316,7 @@
 
   <script src="./assets/js/api.js"></script>
   <script src="./assets/js/uiHelper.js"></script>
+  <script src="./assets/js/dashboardManager.js"></script>
   <script src="./assets/js/postManager.js?v=20260816-response-envelope"></script>
   <script src="./assets/js/programManager.js?v=20260816-response-envelope"></script>
   <script src="./assets/js/main.js?v=20260815-modal-scroll-lock"></script>

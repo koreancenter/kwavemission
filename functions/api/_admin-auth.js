@@ -1,5 +1,32 @@
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
+const LOCAL_AUTH_DEFAULTS = Object.freeze({
+  email: 'admin@kwavemission.org',
+  password: 'admin',
+  secret: 'kwave-mission-local-development-secret'
+});
+
+function isLocalRequest(request) {
+  if (!request?.url) return false;
+
+  try {
+    const hostname = new URL(request.url).hostname;
+    return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+  } catch {
+    return false;
+  }
+}
+
+export function getAdminConfig(context) {
+  const env = context?.env || {};
+  const localDefaults = isLocalRequest(context?.request) ? LOCAL_AUTH_DEFAULTS : {};
+
+  return {
+    email: String(env.ADMIN_EMAIL || localDefaults.email || '').trim().toLowerCase(),
+    password: String(env.ADMIN_PASSWORD || localDefaults.password || ''),
+    secret: String(env.JWT_SECRET || localDefaults.secret || '')
+  };
+}
 
 function safeBase64UrlEncode(value) {
   const bytes = typeof value === 'string' ? encoder.encode(value) : value;
@@ -24,8 +51,8 @@ function safeBase64UrlDecode(value) {
   return bytes;
 }
 
-export function getAdminSecret(env) {
-  return env.JWT_SECRET || '';
+export function getAdminSecret(env, request) {
+  return getAdminConfig({ env, request }).secret;
 }
 
 export async function signToken(secret, payload, expiresInSeconds = 900) {
@@ -112,7 +139,7 @@ function parseCookies(cookieHeader = '') {
 }
 
 export async function getAdminAuthContext(context) {
-  const secret = getAdminSecret(context.env);
+  const secret = getAdminConfig(context).secret;
   if (!secret) {
     return { ok: false, status: 503, error: 'JWT_SECRET 환경 변수가 설정되지 않았습니다.' };
   }
@@ -141,7 +168,7 @@ export async function requireAdminAuth(context, formData) {
     return authContext;
   }
 
-  const configuredPassword = String(context.env.ADMIN_PASSWORD || '');
+  const configuredPassword = getAdminConfig(context).password;
   const legacyPassword = String(formData?.get('password') || '');
   if (configuredPassword && legacyPassword === configuredPassword) {
     return { ok: true, legacy: true };

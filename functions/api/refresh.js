@@ -1,10 +1,11 @@
-import { getAdminSecret, signToken, verifyToken } from './_admin-auth.js';
+import { getAdminConfig, signToken, verifyToken } from './_admin-auth.js';
 import { errorMessage, jsonError, jsonResponse } from './_api-utils.js';
 
 export async function onRequest(context) {
   try {
     const { env, request } = context;
-    if (!env.JWT_SECRET) {
+    const adminConfig = getAdminConfig(context);
+    if (!adminConfig.secret) {
       return jsonError('JWT_SECRET 환경 변수가 설정되지 않았습니다.', 503);
     }
 
@@ -22,12 +23,12 @@ export async function onRequest(context) {
       return jsonError('Refresh token is required.', 400);
     }
 
-    const payload = await verifyToken(getAdminSecret(env), refreshToken);
+    const payload = await verifyToken(adminConfig.secret, refreshToken);
     if (!payload || payload.refresh !== true || payload.type !== 'admin') {
       return jsonError('Session expired', 401);
     }
 
-    const accessToken = await signToken(getAdminSecret(env), { type: 'admin', email: payload.email }, 60 * 15);
+    const accessToken = await signToken(adminConfig.secret, { type: 'admin', email: payload.email }, 60 * 15);
 
     return jsonResponse({
       success: true,

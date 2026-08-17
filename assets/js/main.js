@@ -85,6 +85,9 @@
     if (idInput) idInput.value = '';
     const preview = document.getElementById('preview-img');
     if (preview) preview.style.display = 'none';
+    if (window.PostManager && window.PostManager.setTiptapContent) {
+      window.PostManager.setTiptapContent('');
+    }
     const title = document.getElementById('postFormTitle');
     if (title) title.textContent = '새 글 작성';
     const listView = document.getElementById('postListView');
@@ -215,7 +218,7 @@
       previewBtn.addEventListener('click', () => {
         const type = document.getElementById('postType').value;
         const title = document.getElementById('postTitle').value || '(제목 없음)';
-        const content = document.getElementById('postContent').value || '(본문 없음)';
+        const content = window.PostManager?.getTiptapContent ? window.PostManager.getTiptapContent() : (document.getElementById('postContent').value || '(본문 없음)');
 
         const modalTypeChip = document.getElementById('modalTypeChip');
         const modalTitle = document.getElementById('modalTitle');

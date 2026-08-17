@@ -9,9 +9,63 @@
     currentPostType: 'all'
   });
 
-  function unwrapItems(payload) {
-    if (Array.isArray(payload)) return payload;
-    return payload && Array.isArray(payload.data) ? payload.data : [];
+  let tiptapInstance = null;
+
+  function initTiptapEditor() {
+    const container = document.getElementById('postTiptapEditor');
+    if (!container || tiptapInstance) return;
+
+    if (!window.TiptapEditor || !window.TiptapStarterKit) {
+      document.addEventListener('tiptap:ready', initTiptapEditor, { once: true });
+      return;
+    }
+
+    const hiddenInput = document.getElementById('postContent');
+
+    tiptapInstance = new window.TiptapEditor({
+      element: container,
+      extensions: [window.TiptapStarterKit],
+      content: hiddenInput ? hiddenInput.value || '' : '',
+      onUpdate: ({ editor }) => {
+        if (hiddenInput) {
+          hiddenInput.value = editor.getHTML();
+        }
+      }
+    });
+
+    // Toolbar button bindings
+    const toolbar = document.getElementById('postTiptapToolbar');
+    if (toolbar) {
+      toolbar.querySelectorAll('[data-tiptap-cmd]').forEach(button => {
+        button.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!tiptapInstance) return;
+
+          const cmd = button.getAttribute('data-tiptap-cmd');
+          if (cmd === 'bold') tiptapInstance.chain().focus().toggleBold().run();
+          else if (cmd === 'italic') tiptapInstance.chain().focus().toggleItalic().run();
+          else if (cmd === 'h1') tiptapInstance.chain().focus().toggleHeading({ level: 1 }).run();
+          else if (cmd === 'h2') tiptapInstance.chain().focus().toggleHeading({ level: 2 }).run();
+          else if (cmd === 'bulletList') tiptapInstance.chain().focus().toggleBulletList().run();
+        });
+      });
+    }
+  }
+
+  function getTiptapContent() {
+    return tiptapInstance ? tiptapInstance.getHTML() : (document.getElementById('postContent')?.value || '');
+  }
+
+  function setTiptapContent(html) {
+    const hiddenInput = document.getElementById('postContent');
+    if (hiddenInput) hiddenInput.value = html || '';
+    if (tiptapInstance) {
+      tiptapInstance.commands.setContent(html || '');
+    }
+  }
+
+  function clearTiptapContent() {
+    setTiptapContent('');
   }
 
   function renderPostList() {
@@ -71,7 +125,7 @@
         document.getElementById('postId').value = post.id;
         document.getElementById('postType').value = post.type || 'news';
         document.getElementById('postTitle').value = post.title;
-        document.getElementById('postContent').value = post.content;
+        setTiptapContent(post.content || '');
         document.getElementById('postFormTitle').textContent = `글 수정 (ID: #${post.id})`;
         window.showPostEditor();
       }
@@ -160,6 +214,7 @@
   }
 
   function initPostManager() {
+    initTiptapEditor();
     bindPostEvents();
     if (document.getElementById('postTableBody')) {
       loadPostList();
@@ -172,6 +227,9 @@
     loadPostList,
     editPost,
     deletePost,
+    getTiptapContent,
+    setTiptapContent,
+    clearTiptapContent,
     init: initPostManager
   };
 
