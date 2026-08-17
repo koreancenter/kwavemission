@@ -21,6 +21,17 @@
     window.TiptapStarterKit = StarterKit;
     document.dispatchEvent(new CustomEvent('tiptap:ready'));
   </script>
+
+  <!-- Tiptap Editor CDN ESM Loader (캐시 방지 v=20260817 추가) -->
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@2.2.4?v=20260817';
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.2.4?v=20260817';
+
+    window.TiptapEditor = Editor;
+    window.TiptapStarterKit = StarterKit;
+    document.dispatchEvent(new CustomEvent('tiptap:ready'));
+  </script>
+
 </head>
 <body>
 
