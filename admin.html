@@ -1,4 +1,3 @@
-</think>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -6,23 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>K-Wave Mission - 통합 관리자 Center</title>
 
-  <!-- Tailwind CSS & Typography Plugin CDN for Prose classes -->
+  <!-- Tailwind CSS & Typography Plugin CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <link rel="stylesheet" href="./assets/css/admin.css?v=20260815-modal-scroll-lock">
 
   <!-- Tiptap Editor CDN ESM Loader -->
-  <script type="module">
-    import { Editor } from 'https://esm.sh/@tiptap/core@2.2.4';
-    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.2.4';
-
-    window.TiptapEditor = Editor;
-    window.TiptapStarterKit = StarterKit;
-    document.dispatchEvent(new CustomEvent('tiptap:ready'));
-  </script>
-
-  <!-- Tiptap Editor CDN ESM Loader (캐시 방지 v=20260817 추가) -->
   <script type="module">
     import { Editor } from 'https://esm.sh/@tiptap/core@2.2.4?v=20260817';
     import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.2.4?v=20260817';
@@ -31,9 +20,8 @@
     window.TiptapStarterKit = StarterKit;
     document.dispatchEvent(new CustomEvent('tiptap:ready'));
   </script>
-
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans">
 
   <!-- 1. 로그인 전용 레이어 -->
   <div id="loginOverlay">
@@ -54,279 +42,299 @@
   </div>
 
   <!-- 2. 메인 관리자 상단 헤더 -->
-  <div class="admin-header">
-    <h1>K-Wave Mission 관리자 센터</h1>
-    <button type="button" class="secondary sm" id="logoutBtn">🔒 로그아웃</button>
+  <div class="admin-header flex justify-between items-center px-8 py-4 bg-white border-b border-slate-200 shadow-sm">
+    <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">K-Wave Mission 관리자 센터</h1>
+    <button type="button" class="px-3.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors border border-slate-300" id="logoutBtn">🔒 로그아웃</button>
   </div>
 
-  <!-- Dashboard Summary Cards (Sleek, responsive overview dashboard metrics) -->
-  <div class="dashboard-grid" id="dashboardStats" style="display: none;">
-    <div class="dashboard-card">
-      <span class="card-title">전체 게시글</span>
-      <span class="card-value" id="stat-total-posts">-</span>
-      <span class="card-desc">뉴스 및 공지사항 총 개수</span>
-    </div>
-    <div class="dashboard-card">
-      <span class="card-title">등록 프로그램</span>
-      <span class="card-value" id="stat-total-programs">-</span>
-      <span class="card-desc">고등교육선교 총 과정 수</span>
-    </div>
-    <div class="dashboard-card">
-      <span class="card-title">모집중 프로그램</span>
-      <span class="card-value" id="stat-recruiting-programs">-</span>
-      <span class="card-desc">현재 활발히 동역자 모집 중</span>
-    </div>
-    <div class="dashboard-card">
-      <span class="card-title">최근 7일 새글</span>
-      <span class="card-value" id="stat-recent-posts">-</span>
-      <span class="card-desc">새로 추가된 사역 업데이트 수</span>
-    </div>
-  </div>
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
 
-  <!-- 메인 탭 선택 -->
-  <div class="nav-tabs">
-    <button class="nav-tab-btn active" data-tab="posts">📰 게시글 관리</button>
-    <button class="nav-tab-btn" data-tab="programs">🎓 프로그램 관리</button>
-  </div>
-
-  <!-- ================= 탭 1: 게시글 관리 ================= -->
-  <div id="tab-posts" class="tab-content">
-    
-    <!-- A. 게시글 목록 뷰 (기본 화면) -->
-    <div id="postListView" class="view-section active">
-      <div class="card">
-        <div class="list-header-action">
-          <h2>게시글 목록</h2>
-          <button type="button" data-action="show-post-editor"><span class="action-icon">+</span> 새 글 작성</button>
-        </div>
-
-        <div class="filter-tabs">
-          <button class="filter-btn active" data-type="all">전체보기</button>
-          <button class="filter-btn" data-type="news">뉴스만</button>
-          <button class="filter-btn" data-type="notice">공지사항만</button>
-        </div>
-
-        <div class="list-toolbar">
-          <div class="search-box">
-            <span>🔎</span>
-            <input id="postSearchInput" type="search" placeholder="키워드, 날짜(2026-07), 상태(status:news) 검색">
-          </div>
-          <button type="button" class="secondary outline sm" id="postResetBtn">초기화</button>
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th class="col-post-id">ID</th>
-              <th class="col-post-image">사진</th>
-              <th class="col-post-type">분류</th>
-              <th>제목</th>
-              <th class="col-post-date">작성일</th>
-              <th class="col-post-actions">관리</th>
-            </tr>
-          </thead>
-          <tbody id="postTableBody">
-            <tr><td colspan="6" class="table-message">게시글을 불러오는 중...</td></tr>
-          </tbody>
-        </table>
-
-        <div class="list-footer">
-          <div class="list-meta" id="postListMeta">0개 항목</div>
-          <button type="button" class="secondary outline list-load-more" id="postLoadMoreBtn">더 보기</button>
-        </div>
+    <!-- Dashboard Summary Cards -->
+    <div class="dashboard-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboardStats" style="display: none;">
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">전체 게시글</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-posts">-</span>
+        <span class="card-desc text-xs text-slate-400">뉴스 및 공지사항 총 개수</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">등록 프로그램</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-programs">-</span>
+        <span class="card-desc text-xs text-slate-400">고등교육선교 총 과정 수</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">모집중 프로그램</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recruiting-programs">-</span>
+        <span class="card-desc text-xs text-slate-400">현재 활발히 동역자 모집 중</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">최근 7일 새글</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recent-posts">-</span>
+        <span class="card-desc text-xs text-slate-400">새로 추가된 사역 업데이트 수</span>
       </div>
     </div>
 
-    <!-- B. 게시글 작성/수정 에디터 뷰 -->
-    <div id="postEditorView" class="view-section">
-      <div class="card">
-        <div class="editor-heading">
-          <h2 id="postFormTitle">새 글 작성</h2>
-          <button type="button" class="secondary outline sm" data-action="hide-post-editor">← 목록으로 돌아가기</button>
-        </div>
-
-        <form id="postForm">
-          <input type="hidden" id="postId" value="">
-
-          <div class="form-group">
-            <label for="postType">게시글 분류</label>
-            <select id="postType">
-              <option value="news">뉴스 (news)</option>
-              <option value="notice">공지사항 (notice)</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="postTitle">제목 <span class="required-mark">*</span></label>
-            <input type="text" id="postTitle" required placeholder="제목을 입력하세요">
-          </div>
-
-          <div class="form-group">
-            <label for="postImage">대표 썸네일 이미지</label>
-            <input type="file" id="postImage" accept="image/*">
-            <img id="preview-img" alt="대표 이미지 미리보기">
-          </div>
-
-          <div class="ai-assistant-box" data-target="postContent"></div>
-
-          <!-- Tiptap WYSIWYG Editor Field -->
-          <div class="form-group">
-            <label>본문 내용 (WYSIWYG 에디터) <span class="required-mark">*</span></label>
-            <input type="hidden" id="postContent" required>
-
-            <!-- Minimal Toolbar -->
-            <div id="postTiptapToolbar" class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-100 border border-slate-300 rounded-t-lg">
-              <button type="button" data-tiptap-cmd="bold" class="sm outline px-2.5 py-1 text-xs font-bold hover:bg-slate-200 rounded">Bold</button>
-              <button type="button" data-tiptap-cmd="italic" class="sm outline px-2.5 py-1 text-xs italic hover:bg-slate-200 rounded">Italic</button>
-              <button type="button" data-tiptap-cmd="h1" class="sm outline px-2.5 py-1 text-xs font-extrabold hover:bg-slate-200 rounded">H1</button>
-              <button type="button" data-tiptap-cmd="h2" class="sm outline px-2.5 py-1 text-xs font-bold hover:bg-slate-200 rounded">H2</button>
-              <button type="button" data-tiptap-cmd="bulletList" class="sm outline px-2.5 py-1 text-xs hover:bg-slate-200 rounded">Bullet List</button>
-            </div>
-
-            <!-- Editor Container -->
-            <div id="postTiptapEditor" class="prose prose-slate max-w-none border border-t-0 border-slate-300 rounded-b-lg p-4 min-h-[300px] bg-white focus:outline-none"></div>
-          </div>
-
-          <div class="btn-group">
-            <button type="submit" id="postSubmitBtn">글 저장하기</button>
-            <button type="button" class="outline" id="formPreviewBtn">👁️ 작성중 미리보기 (HTML 렌더링)</button>
-            <button type="button" class="secondary" data-action="hide-post-editor">취소</button>
-          </div>
-        </form>
-
-        <div id="postStatus" class="status-msg"></div>
-      </div>
+    <!-- 메인 탭 선택 -->
+    <div class="nav-tabs flex gap-2 border-b border-slate-200 pb-2">
+      <button class="nav-tab-btn active px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="posts">📰 게시글 관리</button>
+      <button class="nav-tab-btn px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="programs">🎓 프로그램 관리</button>
     </div>
 
-  </div>
-
-  <!-- ================= 탭 2: 프로그램 관리 ================= -->
-  <div id="tab-programs" class="tab-content">
-    
-    <!-- A. 프로그램 목록 뷰 -->
-    <div id="programListView" class="view-section active">
-      <div class="card">
-        <div class="list-header-action">
-          <h2>등록된 프로그램 목록</h2>
-          <button type="button" data-action="show-program-editor"><span class="action-icon">+</span> 새 프로그램 등록</button>
-        </div>
-
-        <div class="list-toolbar">
-          <div class="search-box">
-            <span>🔎</span>
-            <input id="programSearchInput" type="search" placeholder="키워드, 날짜, 상태(status:recruiting) 검색">
+    <!-- ================= 탭 1: 게시글 관리 ================= -->
+    <div id="tab-posts" class="tab-content">
+      
+      <!-- A. 게시글 목록 뷰 -->
+      <div id="postListView" class="view-section active">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-800">게시글 목록</h2>
+            <button type="button" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5" data-action="show-post-editor">
+              <span class="action-icon">+</span> 새 글 작성
+            </button>
           </div>
-          <button type="button" class="secondary outline sm" id="programResetBtn">초기화</button>
-        </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th class="col-program-id">ID</th>
-              <th class="col-program-icon">아이콘</th>
-              <th class="col-program-slug">슬러그</th>
-              <th class="col-program-category">카테고리</th>
-              <th>프로그램명</th>
-              <th class="col-program-status">상태</th>
-              <th class="col-program-actions">관리</th>
-            </tr>
-          </thead>
-          <tbody id="programTableBody">
-            <tr><td colspan="7" class="table-message">프로그램을 불러오는 중...</td></tr>
-          </tbody>
-        </table>
+          <div class="filter-tabs flex gap-2">
+            <button class="filter-btn active px-3 py-1.5 text-xs font-semibold rounded-md border border-slate-200" data-type="all">전체보기</button>
+            <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-md border border-slate-200" data-type="news">뉴스만</button>
+            <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-md border border-slate-200" data-type="notice">공지사항만</button>
+          </div>
 
-        <div class="list-footer">
-          <div class="list-meta" id="programListMeta">0개 항목</div>
-          <button type="button" class="secondary outline list-load-more" id="programLoadMoreBtn">더 보기</button>
+          <div class="list-toolbar flex gap-2">
+            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 gap-2">
+              <span class="text-slate-400">🔎</span>
+              <input id="postSearchInput" type="search" placeholder="키워드, 날짜(2026-07), 상태(status:news) 검색" class="w-full bg-transparent text-sm text-slate-800 focus:outline-none">
+            </div>
+            <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="postResetBtn">초기화</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 bg-slate-50">
+                  <th class="p-3 col-post-id">ID</th>
+                  <th class="p-3 col-post-image">사진</th>
+                  <th class="p-3 col-post-type">분류</th>
+                  <th class="p-3">제목</th>
+                  <th class="p-3 col-post-date">작성일</th>
+                  <th class="p-3 col-post-actions text-right">관리</th>
+                </tr>
+              </thead>
+              <tbody id="postTableBody" class="divide-y divide-slate-100 text-sm">
+                <tr><td colspan="6" class="table-message p-4 text-center text-slate-400">게시글을 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="list-footer flex justify-between items-center pt-3 border-t border-slate-100">
+            <div class="list-meta text-xs font-medium text-slate-500" id="postListMeta">0개 항목</div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="postLoadMoreBtn">더 보기</button>
+          </div>
         </div>
       </div>
+
+      <!-- B. 게시글 작성/수정 에디터 뷰 -->
+      <div id="postEditorView" class="view-section">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
+          <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
+            <h2 id="postFormTitle" class="text-xl font-bold text-slate-800">새 글 작성</h2>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors" data-action="hide-post-editor">← 목록으로 돌아가기</button>
+          </div>
+
+          <form id="postForm" class="space-y-5">
+            <input type="hidden" id="postId" value="">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="postType" class="block text-sm font-semibold text-slate-700 mb-1.5">게시글 분류</label>
+                <select id="postType" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+                  <option value="news">뉴스 (news)</option>
+                  <option value="notice">공지사항 (notice)</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="postTitle" class="block text-sm font-semibold text-slate-700 mb-1.5">제목 <span class="text-red-500">*</span></label>
+                <input type="text" id="postTitle" required placeholder="제목을 입력하세요" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+            </div>
+
+            <div>
+              <label for="postImage" class="block text-sm font-semibold text-slate-700 mb-1.5">대표 썸네일 이미지</label>
+              <input type="file" id="postImage" accept="image/*" class="block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 transition-all cursor-pointer">
+              <img id="preview-img" alt="대표 이미지 미리보기" class="mt-3 max-h-40 rounded-lg border border-slate-200 hidden">
+            </div>
+
+            <!-- AI 도우미 타겟 -->
+            <div class="ai-assistant-box" data-target="postContent"></div>
+
+            <!-- Tiptap WYSIWYG Editor Field -->
+            <div class="space-y-1.5">
+              <label class="block text-sm font-semibold text-slate-700">본문 내용 (WYSIWYG 에디터) <span class="text-red-500">*</span></label>
+              <input type="hidden" id="postContent" required>
+
+              <!-- Editor Container -->
+              <div class="border border-slate-300 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-slate-800 transition-all">
+                <!-- Minimal Toolbar -->
+                <div id="postTiptapToolbar" class="flex flex-wrap items-center gap-1.5 p-2 bg-slate-100 border-b border-slate-200">
+                  <button type="button" data-tiptap-cmd="bold" class="px-2.5 py-1 bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 rounded transition-colors">Bold</button>
+                  <button type="button" data-tiptap-cmd="italic" class="px-2.5 py-1 bg-white border border-slate-300 text-xs italic text-slate-700 hover:bg-slate-50 rounded transition-colors">Italic</button>
+                  <button type="button" data-tiptap-cmd="h1" class="px-2.5 py-1 bg-white border border-slate-300 text-xs font-extrabold text-slate-700 hover:bg-slate-50 rounded transition-colors">H1</button>
+                  <button type="button" data-tiptap-cmd="h2" class="px-2.5 py-1 bg-white border border-slate-300 text-xs font-bold text-slate-700 hover:bg-slate-50 rounded transition-colors">H2</button>
+                  <button type="button" data-tiptap-cmd="bulletList" class="px-2.5 py-1 bg-white border border-slate-300 text-xs font-medium text-slate-700 hover:bg-slate-50 rounded transition-colors">Bullet List</button>
+                </div>
+
+                <div id="postTiptapEditor" class="prose prose-slate max-w-none p-4 min-h-[300px] bg-white focus:outline-none"></div>
+              </div>
+            </div>
+
+            <div class="btn-group flex items-center justify-end gap-2 pt-4 border-t border-slate-100">
+              <button type="button" class="px-4 py-2 bg-slate-100 text-slate-700 font-medium rounded-lg text-sm hover:bg-slate-200 transition-colors" data-action="hide-post-editor">취소</button>
+              <button type="button" class="px-4 py-2 bg-slate-200 border border-slate-300 text-slate-800 font-medium rounded-lg text-sm hover:bg-slate-300 transition-colors flex items-center gap-1" id="formPreviewBtn">👁️ 작성중 미리보기 (HTML 렌더링)</button>
+              <button type="submit" id="postSubmitBtn" class="px-5 py-2 bg-slate-900 text-white font-semibold rounded-lg text-sm hover:bg-slate-800 shadow-sm transition-colors">글 저장하기</button>
+            </div>
+          </form>
+
+          <div id="postStatus" class="status-msg text-sm font-medium mt-2"></div>
+        </div>
+      </div>
+
     </div>
 
-    <!-- B. 프로그램 작성/수정 뷰 -->
-    <div id="programEditorView" class="view-section">
-      <div class="card">
-        <div class="editor-heading">
-          <h2 id="programFormTitle">새 프로그램 등록</h2>
-          <button type="button" class="secondary outline sm" data-action="hide-program-editor">← 목록으로 돌아가기</button>
+    <!-- ================= 탭 2: 프로그램 관리 ================= -->
+    <div id="tab-programs" class="tab-content">
+      
+      <!-- A. 프로그램 목록 뷰 -->
+      <div id="programListView" class="view-section active">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-800">등록된 프로그램 목록</h2>
+            <button type="button" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5" data-action="show-program-editor">
+              <span class="action-icon">+</span> 새 프로그램 등록
+            </button>
+          </div>
+
+          <div class="list-toolbar flex gap-2">
+            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 gap-2">
+              <span class="text-slate-400">🔎</span>
+              <input id="programSearchInput" type="search" placeholder="키워드, 날짜, 상태(status:recruiting) 검색" class="w-full bg-transparent text-sm text-slate-800 focus:outline-none">
+            </div>
+            <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="programResetBtn">초기화</button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 bg-slate-50">
+                  <th class="p-3 col-program-id">ID</th>
+                  <th class="p-3 col-program-icon">아이콘</th>
+                  <th class="p-3 col-program-slug">슬러그</th>
+                  <th class="p-3 col-program-category">카테고리</th>
+                  <th class="p-3">프로그램명</th>
+                  <th class="p-3 col-program-status">상태</th>
+                  <th class="p-3 col-program-actions text-right">관리</th>
+                </tr>
+              </thead>
+              <tbody id="programTableBody" class="divide-y divide-slate-100 text-sm">
+                <tr><td colspan="7" class="table-message p-4 text-center text-slate-400">프로그램을 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="list-footer flex justify-between items-center pt-3 border-t border-slate-100">
+            <div class="list-meta text-xs font-medium text-slate-500" id="programListMeta">0개 항목</div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="programLoadMoreBtn">더 보기</button>
+          </div>
         </div>
-
-        <form id="programForm">
-          <input type="hidden" id="programId" value="">
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="programSlug">슬러그 (영문 식별자) <span class="required-mark">*</span></label>
-              <input type="text" id="programSlug" required placeholder="예: vivid-camp">
-            </div>
-            <div class="form-group">
-              <label for="programCategory">카테고리 <span class="required-mark">*</span></label>
-              <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group form-group-wide">
-              <label for="programTitle">프로그램명 <span class="required-mark">*</span></label>
-              <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026">
-            </div>
-            <div class="form-group form-group-narrow">
-              <label for="programIcon">아이콘 (이모지)</label>
-              <input type="text" id="programIcon" value="🎓">
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="programStatus">모집 상태</label>
-              <select id="programStatus">
-                <option value="recruiting">recruiting (모집중)</option>
-                <option value="ongoing">ongoing (진행중)</option>
-                <option value="preparing">preparing (준비중)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="programOrder">표시 순서</label>
-              <input type="number" id="programOrder" value="0">
-            </div>
-          </div>
-
-          <div class="ai-assistant-box" data-target="programDescription"></div>
-
-          <div class="form-group">
-            <label for="programDescription">설명 / 요약 내용 <span class="required-mark">*</span></label>
-            <textarea id="programDescription" required class="textarea-medium"></textarea>
-          </div>
-
-          <div class="btn-group">
-            <button type="submit" id="programSubmitBtn">프로그램 저장하기</button>
-            <button type="button" class="secondary" data-action="hide-program-editor">취소</button>
-          </div>
-        </form>
-
-        <div id="programStatusMsg" class="status-msg"></div>
       </div>
+
+      <!-- B. 프로그램 작성/수정 뷰 -->
+      <div id="programEditorView" class="view-section">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
+          <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
+            <h2 id="programFormTitle" class="text-xl font-bold text-slate-800">새 프로그램 등록</h2>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors" data-action="hide-program-editor">← 목록으로 돌아가기</button>
+          </div>
+
+          <form id="programForm" class="space-y-5">
+            <input type="hidden" id="programId" value="">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="programSlug" class="block text-sm font-semibold text-slate-700 mb-1.5">슬러그 (영문 식별자) <span class="text-red-500">*</span></label>
+                <input type="text" id="programSlug" required placeholder="예: vivid-camp" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+
+              <div>
+                <label for="programCategory" class="block text-sm font-semibold text-slate-700 mb-1.5">카테고리 <span class="text-red-500">*</span></label>
+                <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-5">
+              <div class="md:col-span-3">
+                <label for="programTitle" class="block text-sm font-semibold text-slate-700 mb-1.5">프로그램명 <span class="text-red-500">*</span></label>
+                <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+
+              <div>
+                <label for="programIcon" class="block text-sm font-semibold text-slate-700 mb-1.5">아이콘 (이모지)</label>
+                <input type="text" id="programIcon" value="🎓" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label for="programStatus" class="block text-sm font-semibold text-slate-700 mb-1.5">모집 상태</label>
+                <select id="programStatus" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+                  <option value="recruiting">recruiting (모집중)</option>
+                  <option value="ongoing">ongoing (진행중)</option>
+                  <option value="preparing">preparing (준비중)</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="programOrder" class="block text-sm font-semibold text-slate-700 mb-1.5">표시 순서</label>
+                <input type="number" id="programOrder" value="0" class="w-full h-10 px-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all">
+              </div>
+            </div>
+
+            <!-- AI 도우미 타겟 -->
+            <div class="ai-assistant-box" data-target="programDescription"></div>
+
+            <div>
+              <label for="programDescription" class="block text-sm font-semibold text-slate-700 mb-1.5">설명 / 요약 내용 <span class="text-red-500">*</span></label>
+              <textarea id="programDescription" required rows="6" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 focus:bg-white transition-all resize-y"></textarea>
+            </div>
+
+            <div class="btn-group flex justify-end gap-2 pt-4 border-t border-slate-100">
+              <button type="button" class="px-4 py-2 bg-slate-100 text-slate-700 font-medium rounded-lg text-sm hover:bg-slate-200 transition-colors" data-action="hide-program-editor">취소</button>
+              <button type="submit" id="programSubmitBtn" class="px-5 py-2 bg-slate-900 text-white font-semibold rounded-lg text-sm hover:bg-slate-800 shadow-sm transition-colors">프로그램 저장하기</button>
+            </div>
+          </form>
+
+          <div id="programStatusMsg" class="status-msg text-sm font-medium mt-2"></div>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
   <!-- 3. 실시간 HTML 미리보기 모달 -->
   <div id="previewModal" class="modal">
-    <div class="modal-content no-scrollbar overscroll-contain">
-      <button class="modal-close" id="modalCloseBtn">&times;</button>
-      <div class="modal-meta">
-        <span id="modalTypeChip" class="type-chip">뉴스</span>
-        <span id="modalDate" class="modal-date"></span>
+    <div class="modal-content no-scrollbar overscroll-contain bg-white rounded-2xl shadow-xl max-w-2xl mx-auto p-6 space-y-4">
+      <button class="modal-close text-slate-400 hover:text-slate-600 text-2xl font-bold" id="modalCloseBtn">&times;</button>
+      <div class="modal-meta flex items-center gap-2">
+        <span id="modalTypeChip" class="type-chip px-2.5 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">뉴스</span>
+        <span id="modalDate" class="modal-date text-xs text-slate-400"></span>
       </div>
-      <h2 id="modalTitle" class="modal-title"></h2>
-      <img id="modalImg" class="modal-image">
-      <!-- innerHTML로 프론트엔드 스타일그대로 실시간 렌더링 -->
-      <div id="modalContent" class="preview-body"></div>
+      <h2 id="modalTitle" class="modal-title text-xl font-extrabold text-slate-900"></h2>
+      <img id="modalImg" class="modal-image w-full rounded-xl object-cover max-h-64 hidden">
+      <div id="modalContent" class="preview-body prose prose-slate max-w-none pt-2 border-t border-slate-100"></div>
     </div>
   </div>
 
   <script src="./assets/js/api.js"></script>
-  <script src="./assets/js/uiHelper.js?v=20260817"></script> <!-- unwrapItems 함수 위치 -->
+  <script src="./assets/js/uiHelper.js?v=20260817"></script>
   <script src="./assets/js/dashboardManager.js"></script>
   <script src="./assets/js/postManager.js?v=20260816-response-envelope"></script>
   <script src="./assets/js/programManager.js?v=20260816-response-envelope"></script>
