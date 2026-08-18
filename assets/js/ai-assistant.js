@@ -8,7 +8,7 @@ const AIAssistant = {
   config: {
     provider: localStorage.getItem('ai_provider') || 'gemini',
     geminiKey: localStorage.getItem('ai_gemini_key') || '',
-    ollamaUrl: localStorage.getItem('ai_ollama_url') || 'https://mrpark-bali.taile6b19b.ts.net',
+    ollamaUrl: localStorage.getItem('ai_ollama_url') || 'http://mrpark-bali.taile6b19b.ts.net:11434',
     selectedModel: localStorage.getItem('ai_selected_model') || '',
     cachedOllamaModels: []
   },
@@ -57,7 +57,7 @@ const AIAssistant = {
         <!-- Ollama 설정 -->
         <div class="ai-sec-ollama" style="display: ${this.config.provider === 'ollama' ? 'block' : 'none'};">
           <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" class="ollamaBaseUrl" placeholder="https://mrpark-bali.taile6b19b.ts.net" value="${this.config.ollamaUrl}" style="flex:1;">
+            <input type="text" class="ollamaBaseUrl" placeholder="https://mrpark-bali.taile6b19b.ts.net:11434" value="${this.config.ollamaUrl}" style="flex:1;">
             <button type="button" class="btnFetchOllama sm secondary">서버 연결 및 모델 불러오기</button>
           </div>
           <select class="ollamaModelSelect" style="display:none; width: 100%;">
