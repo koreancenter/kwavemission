@@ -311,13 +311,15 @@ modalContent.innerHTML =
                            '</div>';
                 };
 
-                var trimmed = (md || '').trim();
-                if (trimmed.startsWith('<div') || trimmed.startsWith('<p') || trimmed.startsWith('<!--')) {
-                    bodyEl.innerHTML = md;
-                } else {
-                    bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
-                }
+            var trimmed = (md || '').trim();
+
+            // HTML 태그('<')로 시작하는 경우 marked를 거치지 않고 바로 innerHTML로 출력
+            if (trimmed.startsWith('<')) {
+            bodyEl.innerHTML = md;
+            } else {
+            bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
             }
+        }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
             if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-400 text-sm py-4 font-sans">내용을 불러올 수 없습니다.</p>';
