@@ -11,6 +11,189 @@
 
   let tiptapInstance = null;
 
+  function setupBloggerEditor(containerId, toolbarId, hiddenInputId) {
+    const container = document.getElementById(containerId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    const toolbar = document.getElementById(toolbarId);
+    if (!container) return null;
+
+    // Create HTML source textarea alongside editor container if not exists
+    let sourceTextarea = container.parentNode.querySelector('.blogger-html-source');
+    if (!sourceTextarea) {
+      sourceTextarea = document.createElement('textarea');
+      sourceTextarea.className = 'blogger-html-source hidden w-full min-h-[320px] p-4 font-mono text-xs text-slate-900 bg-slate-50 border border-slate-300 rounded-b-xl focus:outline-none focus:ring-2 focus:ring-slate-800 resize-y';
+      sourceTextarea.placeholder = '여기에 HTML 코드를 직접 입력하거나 수정하세요 (예: <h2>제목</h2><p>내용</p>)...';
+      container.parentNode.insertBefore(sourceTextarea, container.nextSibling);
+
+      sourceTextarea.addEventListener('input', () => {
+        if (hiddenInput) hiddenInput.value = sourceTextarea.value;
+      });
+    }
+
+    const extensions = [window.TiptapStarterKit];
+    if (window.TiptapLink) extensions.push(window.TiptapLink.configure({ openOnClick: false }));
+    if (window.TiptapImage) extensions.push(window.TiptapImage);
+    if (window.TiptapUnderline) extensions.push(window.TiptapUnderline);
+
+    const editor = new window.TiptapEditor({
+      element: container,
+      extensions,
+      content: hiddenInput ? hiddenInput.value || '' : '',
+      editorProps: {
+        handlePaste(view, event) {
+          const text = event.clipboardData?.getData('text/plain');
+          if (text && /<[a-z][\s\S]*>/i.test(text.trim())) {
+            // Automatically parse pasted HTML strings into rendered rich text elements
+            event.preventDefault();
+            editor.commands.insertContent(text.trim());
+            return true;
+          }
+          return false;
+        }
+      },
+      onUpdate: ({ editor }) => {
+        if (hiddenInput) {
+          hiddenInput.value = editor.getHTML();
+        }
+        if (sourceTextarea && container.classList.contains('hidden') === false) {
+          sourceTextarea.value = editor.getHTML();
+        }
+        updateActiveButtons(editor, toolbar);
+      },
+      onSelectionUpdate: ({ editor }) => {
+        updateActiveButtons(editor, toolbar);
+      }
+    });
+
+    if (toolbar) {
+      toolbar.addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-cmd]');
+        if (!btn) return;
+        e.preventDefault();
+
+        const cmd = btn.getAttribute('data-cmd');
+        executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput);
+        updateActiveButtons(editor, toolbar);
+      });
+
+      const headingSelect = toolbar.querySelector('select[data-cmd="headingSelect"]');
+      if (headingSelect) {
+        headingSelect.addEventListener('change', (e) => {
+          const val = e.target.value;
+          if (val === 'p') editor.chain().focus().setParagraph().run();
+          else if (val === 'h1') editor.chain().focus().toggleHeading({ level: 1 }).run();
+          else if (val === 'h2') editor.chain().focus().toggleHeading({ level: 2 }).run();
+          else if (val === 'h3') editor.chain().focus().toggleHeading({ level: 3 }).run();
+        });
+      }
+    }
+
+    return editor;
+  }
+
+  function executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput) {
+    if (!editor) return;
+    switch (cmd) {
+      case 'toggleHtmlView': {
+        if (!container || !sourceTextarea) return;
+        const isSourceActive = !sourceTextarea.classList.contains('hidden');
+        const toggleBtn = document.querySelectorAll(`[data-cmd="toggleHtmlView"]`);
+
+        if (isSourceActive) {
+          // Switch from HTML Source -> Visual WYSIWYG (HTML Code rendered as formatted text)
+          const htmlCode = sourceTextarea.value;
+          editor.commands.setContent(htmlCode || '');
+          if (hiddenInput) hiddenInput.value = htmlCode || '';
+          sourceTextarea.classList.add('hidden');
+          container.classList.remove('hidden');
+
+          toggleBtn.forEach(btn => {
+            btn.innerHTML = '&lt;&gt; HTML 소스';
+            btn.classList.remove('bg-slate-800', 'text-white');
+            btn.classList.add('bg-slate-100', 'text-slate-800');
+          });
+        } else {
+          // Switch from Visual WYSIWYG -> HTML Source
+          const htmlCode = editor.getHTML();
+          sourceTextarea.value = htmlCode;
+          if (hiddenInput) hiddenInput.value = htmlCode;
+          container.classList.add('hidden');
+          sourceTextarea.classList.remove('hidden');
+
+          toggleBtn.forEach(btn => {
+            btn.innerHTML = '✏️ 시각적 편집 (렌더링)';
+            btn.classList.remove('bg-slate-100', 'text-slate-800');
+            btn.classList.add('bg-slate-800', 'text-white');
+          });
+        }
+        break;
+      }
+      case 'undo': editor.chain().focus().undo().run(); break;
+      case 'redo': editor.chain().focus().redo().run(); break;
+      case 'bold': editor.chain().focus().toggleBold().run(); break;
+      case 'italic': editor.chain().focus().toggleItalic().run(); break;
+      case 'underline': if (editor.commands.toggleUnderline) editor.chain().focus().toggleUnderline().run(); break;
+      case 'strike': editor.chain().focus().toggleStrike().run(); break;
+      case 'code': editor.chain().focus().toggleCode().run(); break;
+      case 'link': {
+        const currentUrl = editor.getAttributes('link').href || '';
+        const url = prompt('링크 URL을 입력하세요 (예: https://example.com):', currentUrl || 'https://');
+        if (url === null) return;
+        if (url === '') editor.chain().focus().extendMarkRange('link').unsetLink().run();
+        else editor.chain().focus().extendMarkRange('link').setLink({ href: url }).run();
+        break;
+      }
+      case 'image': {
+        const url = prompt('이미지 URL을 입력하세요:');
+        if (url) editor.chain().focus().setImage({ src: url }).run();
+        break;
+      }
+      case 'hr': editor.chain().focus().setHorizontalRule().run(); break;
+      case 'bulletList': editor.chain().focus().toggleBulletList().run(); break;
+      case 'orderedList': editor.chain().focus().toggleOrderedList().run(); break;
+      case 'blockquote': editor.chain().focus().toggleBlockquote().run(); break;
+      case 'codeBlock': editor.chain().focus().toggleCodeBlock().run(); break;
+      case 'clear': editor.chain().focus().unsetAllMarks().clearNodes().run(); break;
+    }
+  }
+
+  function updateActiveButtons(editor, toolbar) {
+    if (!editor || !toolbar) return;
+
+    const btnMap = {
+      bold: 'bold',
+      italic: 'italic',
+      underline: 'underline',
+      strike: 'strike',
+      code: 'code',
+      bulletList: 'bulletList',
+      orderedList: 'orderedList',
+      blockquote: 'blockquote',
+      codeBlock: 'codeBlock'
+    };
+
+    Object.keys(btnMap).forEach(cmd => {
+      const btn = toolbar.querySelector(`button[data-cmd="${cmd}"]`);
+      if (btn) {
+        if (editor.isActive(btnMap[cmd])) {
+          btn.classList.add('is-active');
+          btn.setAttribute('data-active', 'true');
+        } else {
+          btn.classList.remove('is-active');
+          btn.removeAttribute('data-active');
+        }
+      }
+    });
+
+    const headingSelect = toolbar.querySelector('select[data-cmd="headingSelect"]');
+    if (headingSelect) {
+      if (editor.isActive('heading', { level: 1 })) headingSelect.value = 'h1';
+      else if (editor.isActive('heading', { level: 2 })) headingSelect.value = 'h2';
+      else if (editor.isActive('heading', { level: 3 })) headingSelect.value = 'h3';
+      else headingSelect.value = 'p';
+    }
+  }
+
   function initTiptapEditor() {
     const container = document.getElementById('postTiptapEditor');
     if (!container || tiptapInstance) return;
@@ -20,36 +203,7 @@
       return;
     }
 
-    const hiddenInput = document.getElementById('postContent');
-
-    tiptapInstance = new window.TiptapEditor({
-      element: container,
-      extensions: [window.TiptapStarterKit],
-      content: hiddenInput ? hiddenInput.value || '' : '',
-      onUpdate: ({ editor }) => {
-        if (hiddenInput) {
-          hiddenInput.value = editor.getHTML();
-        }
-      }
-    });
-
-    // Toolbar button bindings
-    const toolbar = document.getElementById('postTiptapToolbar');
-    if (toolbar) {
-      toolbar.querySelectorAll('[data-tiptap-cmd]').forEach(button => {
-        button.addEventListener('click', (e) => {
-          e.preventDefault();
-          if (!tiptapInstance) return;
-
-          const cmd = button.getAttribute('data-tiptap-cmd');
-          if (cmd === 'bold') tiptapInstance.chain().focus().toggleBold().run();
-          else if (cmd === 'italic') tiptapInstance.chain().focus().toggleItalic().run();
-          else if (cmd === 'h1') tiptapInstance.chain().focus().toggleHeading({ level: 1 }).run();
-          else if (cmd === 'h2') tiptapInstance.chain().focus().toggleHeading({ level: 2 }).run();
-          else if (cmd === 'bulletList') tiptapInstance.chain().focus().toggleBulletList().run();
-        });
-      });
-    }
+    tiptapInstance = setupBloggerEditor('postTiptapEditor', 'postTiptapToolbar', 'postContent');
   }
 
   function getTiptapContent() {
@@ -68,38 +222,142 @@
     setTiptapContent('');
   }
 
+  function stripHtmlTags(html) {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+
+  function previewPost(id) {
+    const post = state.posts.find(p => Number(p.id) === Number(id));
+    if (!post) return;
+
+    const modal = document.getElementById('previewModal');
+    const modalTypeChip = document.getElementById('modalTypeChip');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalContent = document.getElementById('modalContent');
+    const modalImg = document.getElementById('modalImg');
+
+    if (modalTypeChip) {
+      modalTypeChip.textContent = post.type === 'news' ? '뉴스' : '공지사항';
+      modalTypeChip.className = `type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'} px-2.5 py-0.5 text-xs font-semibold rounded-full`;
+    }
+    if (modalTitle) modalTitle.textContent = post.title || '(제목 없음)';
+    if (modalDate) modalDate.textContent = post.created_at ? post.created_at.substring(0, 10) : '방금 전';
+
+    let htmlContent = post.content || '(본문 내용 없음)';
+    if (window.marked && typeof window.marked.parse === 'function' && !htmlContent.trim().startsWith('<')) {
+      htmlContent = window.marked.parse(htmlContent);
+    }
+    if (modalContent) modalContent.innerHTML = htmlContent;
+
+    if (modalImg) {
+      if (post.thumbnail_url) {
+        modalImg.src = post.thumbnail_url;
+        modalImg.style.display = 'block';
+        modalImg.classList.remove('hidden');
+      } else {
+        modalImg.src = '';
+        modalImg.style.display = 'none';
+        modalImg.classList.add('hidden');
+      }
+    }
+
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function getSelectedPostIds() {
+    const checkboxes = document.querySelectorAll('.post-select-chk:checked');
+    return Array.from(checkboxes).map(chk => Number(chk.dataset.id));
+  }
+
+  function updateBatchBar() {
+    const selectedIds = getSelectedPostIds();
+    const batchBar = document.getElementById('postBatchBar');
+    const countText = document.getElementById('selectedPostCountText');
+    const selectAllChk = document.getElementById('selectAllPosts');
+
+    if (batchBar) {
+      if (selectedIds.length > 0) {
+        batchBar.classList.remove('hidden');
+        if (countText) countText.textContent = `${selectedIds.length}개 항목 선택됨`;
+      } else {
+        batchBar.classList.add('hidden');
+      }
+    }
+
+    if (selectAllChk) {
+      const allCheckboxes = document.querySelectorAll('.post-select-chk');
+      if (allCheckboxes.length > 0 && selectedIds.length === allCheckboxes.length) {
+        selectAllChk.checked = true;
+        selectAllChk.indeterminate = false;
+      } else if (selectedIds.length > 0) {
+        selectAllChk.checked = false;
+        selectAllChk.indeterminate = true;
+      } else {
+        selectAllChk.checked = false;
+        selectAllChk.indeterminate = false;
+      }
+    }
+  }
+
   function renderPostList() {
     const tbody = document.getElementById('postTableBody');
     const filteredPosts = getFilteredPosts();
     const visiblePosts = filteredPosts.slice(0, state.postVisibleCount);
     const meta = document.getElementById('postListMeta');
 
-    meta.textContent = `${filteredPosts.length}개 항목`;
+    if (meta) meta.textContent = `${filteredPosts.length}개 항목`;
     const loadMoreBtn = document.getElementById('postLoadMoreBtn');
-    loadMoreBtn.disabled = visiblePosts.length >= filteredPosts.length;
+    if (loadMoreBtn) loadMoreBtn.disabled = visiblePosts.length >= filteredPosts.length;
 
     if (!filteredPosts.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">검색 결과가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400">검색 결과가 없습니다.</td></tr>';
+      updateBatchBar();
       return;
     }
 
-    tbody.innerHTML = visiblePosts.map(post => `
-      <tr>
-        <td>${post.id}</td>
-        <td>${post.thumbnail_url ? `<img src="${post.thumbnail_url}" class="list-thumb">` : '-'}</td>
-        <td><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
-        <td><strong>${window.AdminUI.escapeHtml(post.title)}</strong></td>
-        <td>${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
-        <td>
-          <button class="sm outline" onclick="editPost(${post.id})">수정/편집</button>
-          <button class="sm danger" onclick="deletePost(${post.id})">삭제</button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = visiblePosts.map(post => {
+      const plainExcerpt = stripHtmlTags(post.content || '').substring(0, 80);
+      return `
+        <tr class="hover:bg-slate-50/80 transition-colors">
+          <td class="p-3 text-center">
+            <input type="checkbox" class="post-select-chk w-4 h-4 rounded text-slate-900 focus:ring-slate-800 cursor-pointer" data-id="${post.id}">
+          </td>
+          <td class="p-3 text-slate-500 font-mono text-xs">${post.id}</td>
+          <td class="p-3">${post.thumbnail_url ? `<img src="${post.thumbnail_url}" class="w-10 h-10 object-cover rounded-lg border border-slate-200">` : '<div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-xs text-slate-400">📷</div>'}</td>
+          <td class="p-3"><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
+          <td class="p-3">
+            <div class="flex flex-col">
+              <a href="javascript:void(0)" onclick="previewPost(${post.id})" class="font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm">${window.AdminUI.escapeHtml(post.title)}</a>
+              <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '내용 없음')}</span>
+            </div>
+          </td>
+          <td class="p-3 text-xs text-slate-500 font-medium">${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
+          <td class="p-3 text-right">
+            <div class="flex items-center justify-end">
+              <button type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editPost(${post.id})" title="글 수정">✏️ 수정</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach row checkbox event listeners
+    document.querySelectorAll('.post-select-chk').forEach(chk => {
+      chk.addEventListener('change', updateBatchBar);
+    });
+
+    updateBatchBar();
   }
 
   function getFilteredPosts() {
-    const searchText = document.getElementById('postSearchInput').value;
+    const searchInput = document.getElementById('postSearchInput');
+    const searchText = searchInput ? searchInput.value : '';
     return state.posts.filter((post) => {
       const typeMatches = state.currentPostType === 'all' || post.type === state.currentPostType;
       return typeMatches && window.AdminUI.matchSearch(post, searchText);
@@ -113,7 +371,7 @@
       state.postVisibleCount = 12;
       renderPostList();
     } catch (err) {
-      document.getElementById('postTableBody').innerHTML = '<tr><td colspan="6" style="text-align:center; color:red;">불러오기 오류 발생</td></tr>';
+      document.getElementById('postTableBody').innerHTML = '<tr><td colspan="7" class="p-6 text-center text-red-500">불러오기 오류 발생</td></tr>';
       window.AdminUI.showToast(err.message || '게시글을 불러오지 못했습니다.', 'error');
     }
   }
@@ -126,6 +384,20 @@
         document.getElementById('postType').value = post.type || 'news';
         document.getElementById('postTitle').value = post.title;
         setTiptapContent(post.content || '');
+
+        const previewImg = document.getElementById('preview-img');
+        if (previewImg) {
+          if (post.thumbnail_url) {
+            previewImg.src = post.thumbnail_url;
+            previewImg.style.display = 'block';
+            previewImg.classList.remove('hidden');
+          } else {
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            previewImg.classList.add('hidden');
+          }
+        }
+
         document.getElementById('postFormTitle').textContent = `글 수정 (ID: #${post.id})`;
         window.showPostEditor();
       }
@@ -145,8 +417,11 @@
       if (result && result.success) {
         window.AdminUI.showToast('삭제되었습니다.', 'success');
         loadPostList();
+        if (window.DashboardManager && window.DashboardManager.refresh) {
+          window.DashboardManager.refresh();
+        }
       } else {
-        window.AdminUI.showToast(result?.message || result?.error || '비밀번호를 확인하세요.', 'error');
+        window.AdminUI.showToast(result?.message || result?.error || '삭제 중 오류가 발생했습니다.', 'error');
       }
     } catch (err) {
       window.AdminUI.showToast(err.message || '통신 오류', 'error');
@@ -157,27 +432,146 @@
     const searchInput = document.getElementById('postSearchInput');
     const resetBtn = document.getElementById('postResetBtn');
     const loadMoreBtn = document.getElementById('postLoadMoreBtn');
+    const fileInput = document.getElementById('postImage');
+    const previewImg = document.getElementById('preview-img');
+    const selectAllChk = document.getElementById('selectAllPosts');
+    const btnBatchDelete = document.getElementById('btnBatchDeletePosts');
+    const btnBatchNews = document.getElementById('btnBatchChangeTypeNews');
+    const btnBatchNotice = document.getElementById('btnBatchChangeTypeNotice');
+    const btnDeselectAll = document.getElementById('btnDeselectAllPosts');
 
-    searchInput.addEventListener('input', () => {
-      state.postVisibleCount = 12;
-      renderPostList();
-    });
+    if (selectAllChk) {
+      selectAllChk.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll('.post-select-chk').forEach(chk => {
+          chk.checked = isChecked;
+        });
+        updateBatchBar();
+      });
+    }
 
-    resetBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      state.postVisibleCount = 12;
-      renderPostList();
-    });
+    if (btnDeselectAll) {
+      btnDeselectAll.addEventListener('click', () => {
+        document.querySelectorAll('.post-select-chk').forEach(chk => chk.checked = false);
+        if (selectAllChk) selectAllChk.checked = false;
+        updateBatchBar();
+      });
+    }
 
-    loadMoreBtn.addEventListener('click', () => {
-      const filteredPosts = getFilteredPosts();
-      state.postVisibleCount = Math.min(state.postVisibleCount + 12, filteredPosts.length);
-      renderPostList();
-    });
+    if (btnBatchDelete) {
+      btnBatchDelete.addEventListener('click', async () => {
+        const selectedIds = getSelectedPostIds();
+        if (!selectedIds.length) return;
+
+        if (!confirm(`선택한 ${selectedIds.length}개 게시글을 삭제하시겠습니까?`)) return;
+
+        let successCount = 0;
+        for (const id of selectedIds) {
+          const formData = new FormData();
+          formData.append('id', id);
+          try {
+            const res = await window.AdminApi.api.post('/api/delete-post', formData, { isFormData: true });
+            if (res && res.success) successCount++;
+          } catch (e) {
+            console.error('Batch delete item error:', e);
+          }
+        }
+
+        window.AdminUI.showToast(`${successCount}개 게시글이 삭제되었습니다.`, 'success');
+        loadPostList();
+        if (window.DashboardManager && window.DashboardManager.refresh) {
+          window.DashboardManager.refresh();
+        }
+      });
+    }
+
+    const batchChangeType = async (newType) => {
+      const selectedIds = getSelectedPostIds();
+      if (!selectedIds.length) return;
+
+      const typeName = newType === 'news' ? '뉴스' : '공지사항';
+      if (!confirm(`선택한 ${selectedIds.length}개 게시글의 분류를 '${typeName}'(으)로 변경하시겠습니까?`)) return;
+
+      let successCount = 0;
+      for (const id of selectedIds) {
+        const post = state.posts.find(p => Number(p.id) === Number(id));
+        if (!post) continue;
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('type', newType);
+        formData.append('title', post.title);
+        formData.append('content', post.content || '');
+
+        try {
+          const res = await window.AdminApi.api.post('/api/update-post', formData, { isFormData: true });
+          if (res && res.success) successCount++;
+        } catch (e) {
+          console.error('Batch type change error:', e);
+        }
+      }
+
+      window.AdminUI.showToast(`${successCount}개 게시글이 '${typeName}'(으)로 변경되었습니다.`, 'success');
+      loadPostList();
+    };
+
+    if (btnBatchNews) {
+      btnBatchNews.addEventListener('click', () => batchChangeType('news'));
+    }
+
+    if (btnBatchNotice) {
+      btnBatchNotice.addEventListener('click', () => batchChangeType('notice'));
+    }
+
+    if (fileInput && previewImg) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            previewImg.src = evt.target.result;
+            previewImg.style.display = 'block';
+            previewImg.classList.remove('hidden');
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        state.postVisibleCount = 12;
+        renderPostList();
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        state.postVisibleCount = 12;
+        renderPostList();
+      });
+    }
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        const filteredPosts = getFilteredPosts();
+        state.postVisibleCount = Math.min(state.postVisibleCount + 12, filteredPosts.length);
+        renderPostList();
+      });
+    }
 
     document.querySelectorAll('.filter-btn').forEach((button) => {
       button.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach((btn) => btn.classList.toggle('active', btn === button));
+        document.querySelectorAll('.filter-btn').forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('active', isActive);
+          if (isActive) {
+            btn.className = 'filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer';
+          } else {
+            btn.className = 'filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer';
+          }
+        });
         state.currentPostType = button.dataset.type || 'all';
         state.postVisibleCount = 12;
         renderPostList();
@@ -189,11 +583,23 @@
       const isEdit = Boolean(document.getElementById('postId').value);
       const endpoint = isEdit ? '/api/update-post' : '/api/write-post';
 
+      const title = document.getElementById('postTitle').value.trim();
+      const content = getTiptapContent();
+
+      if (!title) {
+        window.AdminUI.showToast('제목을 입력하세요.', 'warning');
+        return;
+      }
+      if (!content || content === '<p></p>') {
+        window.AdminUI.showToast('본문 내용을 입력하세요.', 'warning');
+        return;
+      }
+
       const formData = new FormData();
       if (isEdit) formData.append('id', document.getElementById('postId').value);
       formData.append('type', document.getElementById('postType').value);
-      formData.append('title', document.getElementById('postTitle').value);
-      formData.append('content', document.getElementById('postContent').value);
+      formData.append('title', title);
+      formData.append('content', content);
 
       const file = document.getElementById('postImage').files[0];
       if (file) formData.append('image', file);
@@ -204,6 +610,9 @@
           window.AdminUI.showToast(isEdit ? '수정되었습니다!' : '등록되었습니다!', 'success');
           window.hidePostEditor();
           loadPostList();
+          if (window.DashboardManager && window.DashboardManager.refresh) {
+            window.DashboardManager.refresh();
+          }
         } else {
           window.AdminUI.showToast(result?.message || result?.error || '저장 중 오류가 발생했습니다.', 'error');
         }
@@ -221,19 +630,24 @@
     }
   }
 
+  window.setupBloggerEditor = setupBloggerEditor;
+
   window.PostManager = {
     state,
     renderPostList,
     loadPostList,
     editPost,
     deletePost,
+    previewPost,
     getTiptapContent,
     setTiptapContent,
     clearTiptapContent,
+    setupBloggerEditor,
     init: initPostManager
   };
 
   window.loadPostList = loadPostList;
   window.editPost = editPost;
   window.deletePost = deletePost;
+  window.previewPost = previewPost;
 })();

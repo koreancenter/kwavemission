@@ -1,19 +1,22 @@
 /**
  * K-Wave Mission - AI Assistant Module (ai-assistant.js)
- * 다중 페르소나 지원 (News, Reporter, Letter, Notice)
- * Mixed Content 및 네트워크 예외 처리 강화 버전
+ * [Cloud AI tab] [Local AI tab] 지원
+ * 1) Cloud API Key
+ * 2) Local AI PC (http://localhost:11434)
+ * 3) Local AI Server (SSH / 원격)
  */
 
 const AIAssistant = {
   config: {
-    provider: localStorage.getItem('ai_provider') || 'gemini',
+    activeTab: localStorage.getItem('ai_active_tab') || 'cloud', // 'cloud' | 'local'
+    localMode: localStorage.getItem('ai_local_mode') || 'pc',    // 'pc' | 'server'
     geminiKey: localStorage.getItem('ai_gemini_key') || '',
-    ollamaUrl: localStorage.getItem('ai_ollama_url') || 'http://mrpark-bali.taile6b19b.ts.net:11434',
+    ollamaPcUrl: localStorage.getItem('ai_ollama_pc_url') || 'http://localhost:11434',
+    ollamaServerUrl: localStorage.getItem('ai_ollama_server_url') || 'http://mrpark-bali.taile6b19b.ts.net:11434',
     selectedModel: localStorage.getItem('ai_selected_model') || '',
     cachedOllamaModels: []
   },
 
-  // 💡 페르소나별 독립 캐싱 객체 및 되돌리기 히스토리
   cachedPersonas: {},
   undoHistory: {},
 
@@ -26,63 +29,120 @@ const AIAssistant = {
       this.bindEvents(box, idx);
     });
 
-    // 💡 초기화 시 API 호출 에러가 발생해도 다른 JS 실행이 멈추지 않도록 catch 감싸기
+    this.syncStateUI();
+
     if (this.config.geminiKey) {
       this.verifyGemini(true).catch(err => console.warn('Gemini 자동 검증 건너뜀:', err));
     }
-    if (this.config.ollamaUrl) {
-      this.fetchOllamaModels(true).catch(err => console.warn('Ollama 자동연결 건너뜀:', err));
+
+    const initialOllamaUrl = this.config.localMode === 'pc' ? this.config.ollamaPcUrl : this.config.ollamaServerUrl;
+    if (initialOllamaUrl) {
+      this.fetchOllamaModels(true, initialOllamaUrl).catch(err => console.warn('Ollama 자동연결 건너뜀:', err));
     }
   },
 
   renderUI(container, idx) {
     container.innerHTML = `
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px;">
-          <strong style="font-size: 15px; color: #0f172a;">🤖 AI 도우미</strong>
-          <div style="display:flex; gap: 10px;">
-            <label><input type="radio" name="aiProvider_${idx}" value="gemini" ${this.config.provider === 'gemini' ? 'checked' : ''}> Gemini API</label>
-            <label><input type="radio" name="aiProvider_${idx}" value="ollama" ${this.config.provider === 'ollama' ? 'checked' : ''}> Local Ollama</label>
+      <div class="ai-assistant-card bg-slate-50/90 border border-slate-200 rounded-xl p-4 shadow-2xs space-y-3.5">
+        <!-- 상단 헤더 & 메인 탭 [Cloud AI tab] [Local AI tab] -->
+        <div class="flex flex-wrap justify-between items-center gap-2 pb-2.5 border-b border-slate-200">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-900 text-amber-400 text-xs shadow-2xs">✨</span>
+            <strong class="text-sm font-bold text-slate-800">AI 글작성 도우미</strong>
+          </div>
+
+          <div class="ai-tab-group flex items-center gap-1.5">
+            <button type="button" class="btnTabCloud px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer" data-tab="cloud">
+              ☁️ Cloud AI
+            </button>
+            <button type="button" class="btnTabLocal px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer" data-tab="local">
+              💻 Local AI
+            </button>
           </div>
         </div>
 
-        <!-- Gemini 설정 -->
-        <div class="ai-sec-gemini" style="display: ${this.config.provider === 'gemini' ? 'block' : 'none'};">
-          <div style="display: flex; gap: 8px;">
-            <input type="password" class="geminiApiKey" placeholder="Gemini API Key 입력" value="${this.config.geminiKey}" style="flex:1;">
-            <button type="button" class="btnVerifyGemini sm secondary">API Key 검증</button>
+        <!-- TAB 1: Cloud AI 섹션 -->
+        <div class="ai-panel-cloud space-y-2.5">
+          <div class="flex items-center gap-2 mb-1">
+            <button type="button" class="btnCloudApiKey px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg shadow-2xs flex items-center gap-1 cursor-default">
+              🔑 1) Cloud API Key
+            </button>
+            <span class="text-xs font-medium text-slate-500">Google Gemini API 키 입력</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <input type="password" class="geminiApiKey flex-1 h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all placeholder:text-slate-400" placeholder="Gemini API Key를 입력하세요" value="${this.config.geminiKey}">
+            <button type="button" class="btnVerifyGemini shrink-0 h-9 px-3.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all shadow-2xs cursor-pointer">API Key 검증</button>
           </div>
         </div>
 
-        <!-- Ollama 설정 -->
-        <div class="ai-sec-ollama" style="display: ${this.config.provider === 'ollama' ? 'block' : 'none'};">
-          <div style="display: flex; gap: 8px; margin-bottom: 8px;">
-            <input type="text" class="ollamaBaseUrl" placeholder="https://mrpark-bali.taile6b19b.ts.net:11434" value="${this.config.ollamaUrl}" style="flex:1;">
-            <button type="button" class="btnFetchOllama sm secondary">서버 연결 및 모델 불러오기</button>
+        <!-- TAB 2: Local AI 섹션 -->
+        <div class="ai-panel-local space-y-2.5">
+          <!-- Sub-mode 버튼: [2) Local AI PC] [3) Local AI Server] -->
+          <div class="flex flex-wrap items-center gap-1.5 pb-1 border-b border-slate-200/60">
+            <button type="button" class="btnLocalModePc px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer" data-mode="pc">
+              🖥️ 2) Local AI PC
+            </button>
+            <button type="button" class="btnLocalModeServer px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer" data-mode="server">
+              🌐 3) Local AI Server (SSH)
+            </button>
           </div>
-          <select class="ollamaModelSelect" style="display:none; width: 100%;">
-            <option value="">-- 모델 선택 --</option>
-          </select>
+
+          <!-- Mode 2: Local AI PC (localhost:11434) -->
+          <div class="local-sec-pc space-y-2">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-600 shrink-0 w-28">Ollama 주소:</label>
+              <input type="text" class="ollamaPcUrl flex-1 h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all" placeholder="http://localhost:11434" value="${this.config.ollamaPcUrl}">
+              <button type="button" class="btnFetchOllamaPc shrink-0 h-9 px-3.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all shadow-2xs cursor-pointer">내 PC 연결 및 모델 로드</button>
+            </div>
+          </div>
+
+          <!-- Mode 3: Local AI Server (SSH / 원격) -->
+          <div class="local-sec-server space-y-2">
+            <div class="flex items-center gap-2">
+              <label class="text-xs font-semibold text-slate-600 shrink-0 w-28">SSH/원격 주소:</label>
+              <input type="text" class="ollamaServerUrl flex-1 h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all" placeholder="http://mrpark-bali.taile6b19b.ts.net:11434" value="${this.config.ollamaServerUrl}">
+              <button type="button" class="btnFetchOllamaServer shrink-0 h-9 px-3.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all shadow-2xs cursor-pointer">원격 서버 연결</button>
+            </div>
+          </div>
+
+          <!-- Shared Local AI Model Dropdown -->
+          <div class="flex items-center gap-2 pt-1">
+            <label class="text-xs font-semibold text-slate-600 shrink-0 w-28">Local AI 모델:</label>
+            <select class="ollamaModelSelect flex-1 h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              <option value="">-- 사용할 모델 선택 --</option>
+            </select>
+          </div>
         </div>
 
-        <!-- 💡 4가지 페르소나 및 되돌리기 실행 버튼 -->
-        <div style="margin-top: 12px; display: flex; gap: 8px; border-top: 1px solid #e2e8f0; padding-top: 10px; flex-wrap: wrap;">
-          <button type="button" class="btnAINews sm outline">기사문</button>
-          <button type="button" class="btnAIReporter sm outline">방송문</button>
-          <button type="button" class="btnAILetter sm outline">편지문</button>
-          <button type="button" class="btnAINotice sm outline">공고문</button>
-          <button type="button" class="btnAIUndo sm secondary" style="display: none; background-color: #64748b; color: #ffffff; border: none; margin-left: auto;">↩️ 원본 되돌리기</button>
-          <span class="aiStatusText" style="font-size: 12px; color: #64748b; align-self: center;"></span>
+        <!-- 페르소나 스타일 변환 버튼 & 상태 표시 -->
+        <div class="pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between gap-2">
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-xs font-semibold text-slate-500 mr-1">AI 스타일 변환:</span>
+            <button type="button" class="btnAINews px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">📰 기사문</button>
+            <button type="button" class="btnAIReporter px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">🎙️ 방송문</button>
+            <button type="button" class="btnAILetter px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">✉️ 편지문</button>
+            <button type="button" class="btnAINotice px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">📢 공고문</button>
+          </div>
+          <div class="flex items-center gap-2">
+            <button type="button" class="btnAIUndo hidden px-3 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold rounded-lg transition-all cursor-pointer">↩️ 원본 되돌리기</button>
+            <span class="aiStatusText text-xs font-medium text-slate-500"></span>
+          </div>
         </div>
       </div>
     `;
   },
 
-  bindEvents(container, idx) {
-    const providerRadios = container.querySelectorAll(`input[name="aiProvider_${idx}"]`);
+  bindEvents(container) {
+    const btnTabCloud = container.querySelector('.btnTabCloud');
+    const btnTabLocal = container.querySelector('.btnTabLocal');
+    const btnLocalModePc = container.querySelector('.btnLocalModePc');
+    const btnLocalModeServer = container.querySelector('.btnLocalModeServer');
+
     const btnGemini = container.querySelector('.btnVerifyGemini');
-    const btnOllama = container.querySelector('.btnFetchOllama');
-    
+    const btnFetchPc = container.querySelector('.btnFetchOllamaPc');
+    const btnFetchServer = container.querySelector('.btnFetchOllamaServer');
+
     const btnNews = container.querySelector('.btnAINews');
     const btnReporter = container.querySelector('.btnAIReporter');
     const btnLetter = container.querySelector('.btnAILetter');
@@ -92,12 +152,28 @@ const AIAssistant = {
     const modelSelect = container.querySelector('.ollamaModelSelect');
     const targetId = container.dataset.target;
 
-    providerRadios.forEach(radio => {
-      radio.addEventListener('change', (e) => {
-        this.config.provider = e.target.value;
-        localStorage.setItem('ai_provider', e.target.value);
-        this.syncAllProviders();
-      });
+    btnTabCloud?.addEventListener('click', () => {
+      this.config.activeTab = 'cloud';
+      localStorage.setItem('ai_active_tab', 'cloud');
+      this.syncStateUI();
+    });
+
+    btnTabLocal?.addEventListener('click', () => {
+      this.config.activeTab = 'local';
+      localStorage.setItem('ai_active_tab', 'local');
+      this.syncStateUI();
+    });
+
+    btnLocalModePc?.addEventListener('click', () => {
+      this.config.localMode = 'pc';
+      localStorage.setItem('ai_local_mode', 'pc');
+      this.syncStateUI();
+    });
+
+    btnLocalModeServer?.addEventListener('click', () => {
+      this.config.localMode = 'server';
+      localStorage.setItem('ai_local_mode', 'server');
+      this.syncStateUI();
     });
 
     btnGemini?.addEventListener('click', () => {
@@ -105,8 +181,17 @@ const AIAssistant = {
       this.verifyGemini(false, key);
     });
 
-    btnOllama?.addEventListener('click', () => {
-      const url = container.querySelector('.ollamaBaseUrl').value.trim();
+    btnFetchPc?.addEventListener('click', () => {
+      const url = container.querySelector('.ollamaPcUrl').value.trim() || 'http://localhost:11434';
+      this.config.ollamaPcUrl = url;
+      localStorage.setItem('ai_ollama_pc_url', url);
+      this.fetchOllamaModels(false, url);
+    });
+
+    btnFetchServer?.addEventListener('click', () => {
+      const url = container.querySelector('.ollamaServerUrl').value.trim();
+      this.config.ollamaServerUrl = url;
+      localStorage.setItem('ai_ollama_server_url', url);
       this.fetchOllamaModels(false, url);
     });
 
@@ -132,19 +217,53 @@ const AIAssistant = {
     }
   },
 
-  syncAllProviders() {
-    document.querySelectorAll('.ai-assistant-box').forEach((box, i) => {
-      const radio = box.querySelector(`input[name="aiProvider_${i}"][value="${this.config.provider}"]`);
-      if (radio) radio.checked = true;
+  syncStateUI() {
+    document.querySelectorAll('.ai-assistant-box').forEach((box) => {
+      const isCloud = this.config.activeTab === 'cloud';
+      const isLocalPc = this.config.localMode === 'pc';
 
-      box.querySelector('.ai-sec-gemini').style.display = this.config.provider === 'gemini' ? 'block' : 'none';
-      box.querySelector('.ai-sec-ollama').style.display = this.config.provider === 'ollama' ? 'block' : 'none';
+      const activeBtnClass = 'px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white border border-slate-900 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer';
+      const inactiveBtnClass = 'px-3 py-1.5 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer';
+
+      // Tab Buttons Highlight
+      const btnCloud = box.querySelector('.btnTabCloud');
+      const btnLocal = box.querySelector('.btnTabLocal');
+
+      if (btnCloud) {
+        btnCloud.className = `btnTabCloud ${isCloud ? activeBtnClass : inactiveBtnClass}`;
+      }
+      if (btnLocal) {
+        btnLocal.className = `btnTabLocal ${!isCloud ? activeBtnClass : inactiveBtnClass}`;
+      }
+
+      // Panels Toggle
+      const panelCloud = box.querySelector('.ai-panel-cloud');
+      const panelLocal = box.querySelector('.ai-panel-local');
+      if (panelCloud) panelCloud.style.display = isCloud ? 'block' : 'none';
+      if (panelLocal) panelLocal.style.display = !isCloud ? 'block' : 'none';
+
+      // Local Sub-Modes Highlight & Panel Toggle
+      const btnPc = box.querySelector('.btnLocalModePc');
+      const btnServer = box.querySelector('.btnLocalModeServer');
+      if (btnPc) {
+        btnPc.className = `btnLocalModePc ${isLocalPc ? activeBtnClass : inactiveBtnClass}`;
+      }
+      if (btnServer) {
+        btnServer.className = `btnLocalModeServer ${!isLocalPc ? activeBtnClass : inactiveBtnClass}`;
+      }
+
+      const secPc = box.querySelector('.local-sec-pc');
+      const secServer = box.querySelector('.local-sec-server');
+      if (secPc) secPc.style.display = isLocalPc ? 'block' : 'none';
+      if (secServer) secServer.style.display = !isLocalPc ? 'block' : 'none';
     });
+
+    this.syncModelSelects();
   },
 
   syncModelSelects() {
     document.querySelectorAll('.ollamaModelSelect').forEach(select => {
-      select.innerHTML = '<option value="">-- 사용할 모델을 선택하세요 --</option>';
+      select.innerHTML = '<option value="">-- 사용할 모델 선택 --</option>';
       this.config.cachedOllamaModels.forEach(m => {
         const opt = document.createElement('option');
         opt.value = m.name;
@@ -152,7 +271,6 @@ const AIAssistant = {
         if (m.name === this.config.selectedModel) opt.selected = true;
         select.appendChild(opt);
       });
-      select.style.display = 'block';
     });
   },
 
@@ -195,8 +313,8 @@ const AIAssistant = {
 
   // 💡 Mixed Content 및 Ollama 연결 에러 방어 처리된 메서드
   async fetchOllamaModels(quiet = false, urlOverride = null) {
-    const baseUrl = (urlOverride || this.config.ollamaUrl).replace(/\/$/, '');
-    if (!baseUrl) return;
+    const activeUrl = urlOverride || (this.config.localMode === 'pc' ? this.config.ollamaPcUrl : this.config.ollamaServerUrl);
+    const baseUrl = (activeUrl || 'http://localhost:11434').replace(/\/$/, '');
 
     // HTTPS 페이지에서 HTTP Ollama URL 호출 시 브라우저 경고 안내
     if (window.location.protocol === 'https:' && baseUrl.startsWith('http:')) {
@@ -208,11 +326,18 @@ const AIAssistant = {
       if (!res.ok) throw new Error('서버 응답 없음');
 
       const data = await res.json();
-      this.config.ollamaUrl = baseUrl;
       this.config.cachedOllamaModels = data.models || [];
-      localStorage.setItem('ai_ollama_url', baseUrl);
 
-      document.querySelectorAll('.ollamaBaseUrl').forEach(input => input.value = baseUrl);
+      if (this.config.localMode === 'pc') {
+        this.config.ollamaPcUrl = baseUrl;
+        localStorage.setItem('ai_ollama_pc_url', baseUrl);
+        document.querySelectorAll('.ollamaPcUrl').forEach(input => input.value = baseUrl);
+      } else {
+        this.config.ollamaServerUrl = baseUrl;
+        localStorage.setItem('ai_ollama_server_url', baseUrl);
+        document.querySelectorAll('.ollamaServerUrl').forEach(input => input.value = baseUrl);
+      }
+
       this.syncModelSelects();
 
       if (!quiet) alert('✅ Local Ollama 모델 불러오기 성공!');
@@ -275,7 +400,10 @@ const AIAssistant = {
       this.setStatus(container, `✨ [${personaLabel}] 변환이 완료되었습니다!`);
 
       const btnUndo = container.querySelector('.btnAIUndo');
-      if (btnUndo) btnUndo.style.display = 'inline-block';
+      if (btnUndo) {
+        btnUndo.style.display = 'inline-flex';
+        btnUndo.classList.remove('hidden');
+      }
 
     } catch (err) {
       this.setStatus(container, '❌ AI 오류: ' + err.message, true);
@@ -300,7 +428,10 @@ const AIAssistant = {
       this.setStatus(container, '↩️ 이전 원본 내용으로 복원되었습니다.');
 
       const btnUndo = container.querySelector('.btnAIUndo');
-      if (btnUndo) btnUndo.style.display = 'none';
+      if (btnUndo) {
+        btnUndo.style.display = 'none';
+        btnUndo.classList.add('hidden');
+      }
     } else {
       alert('복원할 이전 작업 내역이 없습니다.');
     }
@@ -308,20 +439,27 @@ const AIAssistant = {
 
   async requestGeneration(text, systemPrompt) {
     if (!window.AdminApi?.api) throw new Error('관리자 API를 사용할 수 없습니다.');
-    if (this.config.provider === 'gemini' && !this.config.geminiKey) {
+
+    const isCloud = this.config.activeTab === 'cloud';
+    const provider = isCloud ? 'gemini' : 'ollama';
+
+    if (isCloud && !this.config.geminiKey) {
       throw new Error('Gemini API Key를 먼저 검증해 주세요.');
     }
-    if (this.config.provider === 'ollama' && !this.config.selectedModel) {
-      throw new Error('Ollama 모델을 먼저 선택해 주세요.');
+
+    const activeOllamaUrl = this.config.localMode === 'pc' ? this.config.ollamaPcUrl : this.config.ollamaServerUrl;
+
+    if (!isCloud && !this.config.selectedModel) {
+      throw new Error('Local AI 모델을 먼저 선택해 주세요.');
     }
 
     const result = await window.AdminApi.api.post('/api/generate-ai', {
-      provider: this.config.provider,
+      provider,
       text,
       systemPrompt,
-      apiKey: this.config.provider === 'gemini' ? this.config.geminiKey : undefined,
-      ollamaUrl: this.config.provider === 'ollama' ? this.config.ollamaUrl : undefined,
-      model: this.config.provider === 'ollama' ? this.config.selectedModel : undefined
+      apiKey: isCloud ? this.config.geminiKey : undefined,
+      ollamaUrl: !isCloud ? activeOllamaUrl : undefined,
+      model: !isCloud ? this.config.selectedModel : undefined
     });
 
     const generatedText = typeof result === 'string' ? result : result?.text;

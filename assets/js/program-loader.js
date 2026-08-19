@@ -75,24 +75,24 @@
         const descriptionPreview = toPlainText(program.description);
 
         return `
-            <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-3xl p-8 bg-transparent border-[1.331px] border-black/[0.1331] flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}">
+            <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-2xl sm:rounded-3xl p-5 sm:p-8 bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}">
                 ${recommended ? '<div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-[rgba(55,65,81,0.15)] text-slate-950 font-mono text-[10px] font-bold uppercase tracking-wider">RECOMMENDED</div>' : ''}
                 <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <div class="w-12 h-12 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] flex items-center justify-center ${statusMeta.iconTone}">
+                    <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl bg-transparent border border-slate-900/20 sm:border-[1.331px] sm:border-black/[0.1331] flex items-center justify-center ${statusMeta.iconTone}">
                             ${escapeHtml(program.icon || '🎓')}
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-bold font-mono">
+                        <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-800 sm:text-cyan-400 text-xs font-bold font-mono">
                             ${statusMeta.label}
                         </span>
                     </div>
                     <span class="font-mono text-[11px] ${accent.category} font-bold uppercase tracking-wider block mb-2">${escapeHtml(program.category || 'Mission Program')}</span>
-                    <h3 class="text-xl font-bold text-white mb-3 ${accent.titleHover} transition-colors">${escapeHtml(program.title || '프로그램 안내')}</h3>
-                    <p class="text-slate-400 text-xs sm:text-sm leading-relaxed font-light mb-8 line-clamp-3 min-h-[4.5rem]">
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3 ${accent.titleHover} transition-colors">${escapeHtml(program.title || '프로그램 안내')}</h3>
+                    <p class="text-slate-700 sm:text-slate-700 text-sm leading-relaxed font-normal sm:font-light mb-6 sm:mb-8 line-clamp-3 min-h-[4.5rem]">
                         ${escapeHtml(descriptionPreview)}
                     </p>
                 </div>
-                <button type="button" ${modalAction} class="group/program-action w-full py-3.5 rounded-2xl bg-transparent hover:bg-transparent border border-slate-700 text-slate-300 text-xs font-semibold hover:text-white ${accent.buttonHover} transition-all flex items-center justify-center gap-2${disabledClasses}">
+                <button type="button" ${modalAction} class="group/program-action w-full min-h-[44px] py-3 sm:py-3.5 rounded-2xl bg-transparent text-slate-900 border border-slate-800/20 text-xs font-semibold flex items-center justify-center gap-2 cursor-pointer${disabledClasses}">
                     <span>자세히 보기 및 신청</span>
                     <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
                 </button>
@@ -131,6 +131,10 @@
 
             container.innerHTML = programs.map(renderProgramCard).join('');
             setSliderControlsEnabled(programs.length > 1);
+
+            if (typeof window.observeLazyImages === 'function') {
+                window.observeLazyImages(container);
+            }
 
             if (window.lucide) {
                 window.lucide.createIcons();

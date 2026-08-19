@@ -6,7 +6,9 @@
         legal: 'legal-modal',
         md: 'md-modal',
         contact: 'contact-modal',
-        'contact-us': 'md-modal'
+        'contact-us': 'md-modal',
+        terms: 'md-modal',
+        privacy: 'md-modal'
     };
 
     function getHashKey() {
@@ -14,9 +16,10 @@
     }
 
     function getModalIdFromHash(hashKey) {
-        const normalizedKey = (hashKey || '').trim();
+        const normalizedKey = (hashKey || '').trim().toLowerCase();
         if (!normalizedKey) return '';
-        return MODAL_HASH_MAP[normalizedKey] || (document.getElementById(normalizedKey) ? normalizedKey : '');
+        // Only return explicitly mapped modal IDs - never generic section IDs
+        return MODAL_HASH_MAP[normalizedKey] || '';
     }
 
     function getActiveModalId() {
@@ -71,7 +74,7 @@
 
     function activateModalWithHistory(modal) {
         const result = originalActivateModal ? originalActivateModal(modal) : undefined;
-        if (modal && modal.id) {
+        if (modal && modal.id && Object.values(MODAL_HASH_MAP).includes(modal.id)) {
             updateModalUrl(modal.id, true);
         }
         return result;
@@ -79,7 +82,7 @@
 
     function deactivateModalWithHistory(modal, onClosed) {
         const wrappedOnClosed = function () {
-            if (modal && modal.id) {
+            if (modal && modal.id && Object.values(MODAL_HASH_MAP).includes(modal.id)) {
                 updateModalUrl(modal.id, false);
             }
             if (typeof onClosed === 'function') onClosed();
@@ -116,6 +119,11 @@
         const modalId = getModalIdFromHash(hashKey);
         if (!modalId || !document.getElementById(modalId)) return;
 
+        if (hashKey === 'terms' || hashKey === 'privacy' || hashKey === 'contact-us' || hashKey === 'contact') {
+            openMdModal(hashKey);
+            return;
+        }
+
         const modal = document.getElementById(modalId);
         if (modal && modal.classList.contains('hidden')) {
             if (typeof window.activateModal === 'function') {
@@ -127,7 +135,37 @@
     function handleInitialHash() {
         const hashKey = getHashKey();
         const modalId = getModalIdFromHash(hashKey);
-        if (!modalId || !document.getElementById(modalId)) return;
+        if (!modalId) {
+            // If the hash is not a modal, ensure body overflow is never blocked
+            if (!getActiveModalId()) {
+                document.body.style.overflow = '';
+                document.documentElement.style.overflow = '';
+                if (typeof window.unlockPageScroll === 'function') {
+                    window.unlockPageScroll(null);
+                }
+            }
+            if (hashKey) {
+                setTimeout(function () {
+                    const targetSection = document.getElementById(hashKey);
+                    if (targetSection) {
+                        const nav = document.querySelector('.glass-nav') || document.querySelector('nav');
+                        const navHeight = nav ? nav.offsetHeight : 80;
+                        const elementPosition = targetSection.getBoundingClientRect().top + window.scrollY;
+                        const offsetPosition = Math.max(0, elementPosition - navHeight);
+                        window.scrollTo({
+                            top: offsetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 120);
+            }
+            return;
+        }
+
+        if (hashKey === 'terms' || hashKey === 'privacy' || hashKey === 'contact-us' || hashKey === 'contact') {
+            openMdModal(hashKey);
+            return;
+        }
 
         const modal = document.getElementById(modalId);
         if (modal && typeof window.activateModal === 'function') {

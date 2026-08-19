@@ -84,7 +84,14 @@
     const idInput = document.getElementById('postId');
     if (idInput) idInput.value = '';
     const preview = document.getElementById('preview-img');
-    if (preview) preview.style.display = 'none';
+    if (preview) {
+      preview.src = '';
+      preview.style.display = 'none';
+      preview.classList.add('hidden');
+    }
+    const fileInput = document.getElementById('postImage');
+    if (fileInput) fileInput.value = '';
+
     if (window.PostManager && window.PostManager.setTiptapContent) {
       window.PostManager.setTiptapContent('');
     }
@@ -177,6 +184,9 @@
         hideLoginOverlay();
         showToast('로그인되었습니다.', 'success');
         if (window.loadPostList) window.loadPostList();
+        if (window.DashboardManager && window.DashboardManager.refresh) {
+          window.DashboardManager.refresh();
+        }
       } catch (error) {
         clearAuthTokens();
         showToast(error.message || '로그인에 실패했습니다.', 'error');
@@ -218,17 +228,34 @@
       previewBtn.addEventListener('click', () => {
         const type = document.getElementById('postType').value;
         const title = document.getElementById('postTitle').value || '(제목 없음)';
-        const content = window.PostManager?.getTiptapContent ? window.PostManager.getTiptapContent() : (document.getElementById('postContent').value || '(본문 없음)');
+        let content = window.PostManager?.getTiptapContent ? window.PostManager.getTiptapContent() : (document.getElementById('postContent').value || '(본문 없음)');
+
+        if (window.marked && typeof window.marked.parse === 'function' && !content.trim().startsWith('<')) {
+          content = window.marked.parse(content);
+        }
 
         const modalTypeChip = document.getElementById('modalTypeChip');
         const modalTitle = document.getElementById('modalTitle');
         const modalDate = document.getElementById('modalDate');
         const modalContent = document.getElementById('modalContent');
+        const modalImg = document.getElementById('modalImg');
 
         if (modalTypeChip) modalTypeChip.textContent = type === 'news' ? '뉴스' : '공지사항';
         if (modalTitle) modalTitle.textContent = title;
         if (modalDate) modalDate.textContent = '방금 전 (미리보기)';
         if (modalContent) modalContent.innerHTML = content;
+
+        const previewImg = document.getElementById('preview-img');
+        if (modalImg) {
+          if (previewImg && previewImg.src && previewImg.style.display !== 'none' && !previewImg.classList.contains('hidden')) {
+            modalImg.src = previewImg.src;
+            modalImg.style.display = 'block';
+          } else {
+            modalImg.src = '';
+            modalImg.style.display = 'none';
+          }
+        }
+
         if (modal) {
           modal.style.display = 'flex';
           document.body.style.overflow = 'hidden';
@@ -260,8 +287,42 @@
     initLoginFlow();
     initModalPreview();
 
-    if (getAccessToken() && window.loadPostList) {
-      window.loadPostList();
+    if (getAccessToken()) {
+      if (window.loadPostList) window.loadPostList();
+      if (window.DashboardManager && window.DashboardManager.refresh) {
+        window.DashboardManager.refresh();
+      }
+    }
+
+    if (typeof window.initBackToTop === 'function') {
+      window.initBackToTop();
+    } else {
+      let btn = document.getElementById('back-to-top-btn');
+      if (!btn) {
+        btn = document.createElement('button');
+        btn.id = 'back-to-top-btn';
+        btn.type = 'button';
+        btn.setAttribute('aria-label', '맨 위로 이동');
+        btn.className = 'fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-slate-900/90 text-slate-200 border border-slate-700/60 shadow-xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 hover:bg-slate-800 hover:text-white hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer';
+        btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>';
+        document.body.appendChild(btn);
+      }
+
+      const toggleVisibility = () => {
+        if (window.scrollY > 300) {
+          btn.classList.remove('opacity-0', 'pointer-events-none');
+          btn.classList.add('opacity-100', 'pointer-events-auto');
+        } else {
+          btn.classList.remove('opacity-100', 'pointer-events-auto');
+          btn.classList.add('opacity-0', 'pointer-events-none');
+        }
+      };
+
+      window.addEventListener('scroll', toggleVisibility, { passive: true });
+      btn.addEventListener('click', () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+      toggleVisibility();
     }
   }
 

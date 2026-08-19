@@ -160,7 +160,7 @@
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img src="' + randomImg + '" alt="인도네시아의 비식별 풍경 이미지" loading="lazy" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
+                    '<img data-lazy-src="' + randomImg + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="인도네시아의 비식별 풍경 이미지" class="transition-opacity duration-300 opacity-0" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
@@ -184,7 +184,7 @@
                 '<span>K-Wave Mission은 현지 협력 기관과의 안전하고 지속 가능한 교류를 위해 국제 표준 개인정보 보호 및 보안 가이드라인(Security Protocol)을 엄격히 준수합니다. 이에 따라 일부 현장 사진 및 인물 정보는 비식별 처리되어 공개됩니다.</span>' +
             '</p>' +
             '<section class="field-voices" aria-labelledby="field-voices-title">' +
-                '<div class="field-voices-heading">' +
+                '<div class="field-voices-heading text-center sm:text-left">' +
                     '<span class="font-mono text-[11px] text-slate-500 tracking-widest">ANONYMISED TESTIMONIES</span>' +
                     '<h3 id="field-voices-title">VOICES FROM THE FIELD</h3>' +
                 '</div>' +
@@ -215,6 +215,7 @@
             });
         });
 
+        if (typeof window.observeLazyImages === 'function') window.observeLazyImages(container);
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
         window.dispatchEvent(new Event('news:rendered'));
@@ -233,24 +234,24 @@
         }
 
 modalContent.innerHTML =
-    '<div class="relative shrink-0 px-8 sm:px-12 pt-8 sm:pt-10 pb-6 border-b border-slate-800">' +
-        '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-6 right-6 sm:top-8 sm:right-8 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-1 cursor-pointer z-10">' +
+    '<div class="relative shrink-0 px-6 sm:px-12 pt-6 sm:pt-10 pb-5 sm:pb-6 border-b border-slate-800">' +
+        '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-8 sm:right-8 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer z-10 rounded-xl">' +
             '<i data-lucide="x" class="w-5 h-5"></i>' +
         '</button>' +
-        '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-4 pr-8 font-mono tracking-wide">' +
-            '<span class="px-2.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
+        '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 sm:mb-4 pr-10 font-mono tracking-wide">' +
+            '<span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
             '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
         '</div>' +
-        '<h2 class="font-serif text-xl sm:text-2xl leading-snug font-bold text-slate-100 pr-8">' + _escapeHtml(title) + '</h2>' +
+        '<h2 class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-100 pr-10">' + _escapeHtml(title) + '</h2>' +
     '</div>' +
-    '<div id="modal-body" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-8 sm:px-12 py-6 text-base text-slate-200 leading-relaxed space-y-4">' +
+    '<div id="modal-body" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-12 py-5 sm:py-6 text-base text-slate-200 leading-relaxed space-y-4">' +
         '<p class="text-slate-400">내용을 불러오는 중...</p>' +
     '</div>' +
-    '<div class="shrink-0 flex items-center justify-between border-t border-slate-800/80 px-8 sm:px-12 py-4 font-sans">' +
-        '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center gap-1.5 px-4 py-2 bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
+    '<div class="shrink-0 flex items-center justify-between border-t border-slate-800/80 px-6 sm:px-12 py-4 font-sans gap-3">' +
+        '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
             '<i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유' +
         '</button>' +
-        '<button onclick="closeNewsModal()" class="btn-close-footer px-5 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
+        '<button onclick="closeNewsModal()" class="btn-close-footer flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
     '</div>';
 
         var modal = document.getElementById('news-modal');
@@ -306,7 +307,7 @@ modalContent.innerHTML =
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
                     
                     return '<div class="my-6 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-950 p-2">' +
-                               '<img src="' + src + '" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-md" loading="lazy" />' +
+                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-md transition-opacity duration-300 opacity-0" />' +
                                (caption ? '<span class="text-xs text-slate-400 mt-2 text-center font-sans">' + caption + '</span>' : '') +
                            '</div>';
                 };
@@ -319,6 +320,7 @@ modalContent.innerHTML =
             } else {
             bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
             }
+            if (typeof window.observeLazyImages === 'function') window.observeLazyImages(bodyEl);
         }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
@@ -362,26 +364,43 @@ modalContent.innerHTML =
     }
 
     window.navigateToSection = function (event, sectionId) {
-        if (event) event.preventDefault();
+        if (event && typeof event.preventDefault === 'function') {
+            event.preventDefault();
+        }
 
         var section = document.getElementById(sectionId);
         if (!section) return;
 
         var completeNavigation = function () {
-            var url = new URL(window.location.href);
-            url.searchParams.delete('id');
-            url.hash = sectionId;
-            history.replaceState(null, '', url.pathname + url.search + url.hash);
+            var nav = document.querySelector('.glass-nav') || document.querySelector('nav');
+            var navHeight = nav ? nav.offsetHeight : 80;
+            var elementPosition = section.getBoundingClientRect().top + window.scrollY;
+            var offsetPosition = Math.max(0, elementPosition - navHeight);
 
-            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
 
             var mobileMenu = document.getElementById('mobile-menu');
             if (mobileMenu) mobileMenu.classList.add('hidden');
         };
 
-        var modal = document.getElementById('news-modal');
-        if (modal && !modal.classList.contains('hidden') && typeof window.deactivateModal === 'function') {
-            window.deactivateModal(modal, completeNavigation);
+        var newsModal = document.getElementById('news-modal');
+        if (newsModal && !newsModal.classList.contains('hidden') && typeof window.deactivateModal === 'function') {
+            window.deactivateModal(newsModal, completeNavigation);
+            return;
+        }
+
+        var mdModal = document.getElementById('md-modal');
+        if (mdModal && !mdModal.classList.contains('hidden') && typeof window.deactivateModal === 'function') {
+            window.deactivateModal(mdModal, completeNavigation);
+            return;
+        }
+
+        var legalModal = document.getElementById('legal-modal');
+        if (legalModal && !legalModal.classList.contains('hidden') && typeof window.deactivateModal === 'function') {
+            window.deactivateModal(legalModal, completeNavigation);
             return;
         }
 

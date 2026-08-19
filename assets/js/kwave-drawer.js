@@ -4,8 +4,9 @@
 (function () {
     'use strict';
 
-    const DRAWER_TRANSITION_MS = 300;
-    const SWIPE_TRANSITION_MS = 220;
+    window._kwaveLoaded = true;
+    const DRAWER_TRANSITION_MS = 750; // 속도를 절반으로 감속하여 프리미엄 슬라이딩 연출
+    const SWIPE_TRANSITION_MS = 450;
     let closeTimer;
     let touchStartX = 0;
     let touchStartY = 0;
@@ -13,7 +14,20 @@
     let isHorizontalSwipe = false;
 
     // ==========================================
-    // 1. Drawer 열기 함수 (진자 애니메이션 포함)
+    // 0. Toggle Drawer (북마크 탭 클릭 시 열기/닫기)
+    // ==========================================
+    window.toggleKWaveDrawer = function () {
+        const drawer = document.getElementById('kwave-drawer');
+        if (!drawer) return;
+        if (drawer.classList.contains('-translate-x-full')) {
+            window.openKWaveDrawer();
+        } else {
+            window.closeKWaveDrawer();
+        }
+    };
+
+    // ==========================================
+    // 1. Drawer 열기 함수 (부드러운 프리미엄 시차 애니메이션)
     // ==========================================
     window.openKWaveDrawer = function () {
         const drawer = document.getElementById('kwave-drawer');
@@ -29,8 +43,7 @@
         drawer.style.removeProperty('transform');
         drawer.style.removeProperty('transition');
 
-        // Drawer 표시 및 슬라이드 인
-        drawer.classList.remove('hidden');
+        // Backdrop 표시
         if (backdrop) {
             backdrop.classList.remove('hidden');
         }
@@ -40,18 +53,18 @@
             if (backdrop) {
                 backdrop.classList.remove('opacity-0');
             }
-        }, 10);
+        }, 16);
 
-        // 카드 진자 낙하 순차 애니메이션 (Stagger)
+        // 카드 순차 페이드 인 (Stagger)
         const cards = drawer.querySelectorAll('.drawer-card');
         cards.forEach(function (card, index) {
             card.classList.remove('animate-card-drop');
             card.style.animationDelay = '0ms';
 
             setTimeout(function () {
-                card.style.animationDelay = (index * 120) + 'ms';
+                card.style.animationDelay = (index * 100) + 'ms';
                 card.classList.add('animate-card-drop');
-            }, 150);
+            }, 220);
         });
     };
 
@@ -71,14 +84,13 @@
         }
 
         if (closesToRight) {
-            drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms ease-out';
+            drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1)';
             drawer.style.transform = 'translate(100%, -50%)';
         } else {
             drawer.classList.add('-translate-x-full');
         }
 
         closeTimer = setTimeout(function () {
-            drawer.classList.add('hidden');
             drawer.classList.add('-translate-x-full');
             drawer.style.removeProperty('transform');
             drawer.style.removeProperty('transition');
@@ -94,11 +106,11 @@
     };
 
     function resetSwipe(drawer) {
-        drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms ease-out';
+        drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1)';
         drawer.style.transform = 'translate(0, -50%)';
 
         setTimeout(function () {
-            if (!drawer.classList.contains('hidden')) {
+            if (!drawer.classList.contains('-translate-x-full')) {
                 drawer.style.removeProperty('transform');
                 drawer.style.removeProperty('transition');
             }
@@ -117,7 +129,7 @@
         }
 
         document.addEventListener('keydown', function (event) {
-            if (event.key === 'Escape' && !drawer.classList.contains('hidden')) {
+            if (event.key === 'Escape' && !drawer.classList.contains('-translate-x-full')) {
                 window.closeKWaveDrawer();
             }
         });
@@ -183,7 +195,7 @@
     // ==========================================
     window.handlePartnerConnect = function () {
         const drawer = document.getElementById('kwave-drawer');
-        const drawerIsOpen = drawer && !drawer.classList.contains('hidden');
+        const drawerIsOpen = drawer && !drawer.classList.contains('-translate-x-full');
 
         if (drawerIsOpen && typeof window.closeKWaveDrawer === 'function') {
             window.closeKWaveDrawer();

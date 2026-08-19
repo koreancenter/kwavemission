@@ -8,7 +8,7 @@ async function generateWithGemini(env, payload) {
   const apiKey = env.GEMINI_API_KEY || payload.apiKey;
   if (!apiKey) throw new Error('Gemini API Key가 설정되지 않았습니다.');
 
-  const model = env.GEMINI_MODEL || 'gemini-2.5-flash';
+  const model = env.GEMINI_MODEL || 'gemini-2.0-flash';
   const response = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`,
     {

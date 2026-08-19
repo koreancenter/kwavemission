@@ -5,12 +5,100 @@
     posts: [],
     programs: [],
     postVisibleCount: 12,
-    programVisibleCount: 12
+    programVisibleCount: 12,
+    currentPostType: 'all',
+    currentProgCategory: 'all'
   });
 
   function unwrapItems(payload) {
     if (Array.isArray(payload)) return payload;
     return payload && Array.isArray(payload.data) ? payload.data : [];
+  }
+
+  function stripHtmlTags(html) {
+    if (!html) return '';
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  }
+
+  function getStatusLabel(status) {
+    switch (status) {
+      case 'recruiting': return '<span class="type-chip type-news">모집중</span>';
+      case 'ongoing': return '<span class="type-chip type-notice">진행중</span>';
+      case 'preparing': return '<span class="type-chip" style="border-color:#cbd5e1; background:#f8fafc; color:#64748b;">준비중</span>';
+      default: return `<span class="type-chip">${window.AdminUI.escapeHtml(status || '')}</span>`;
+    }
+  }
+
+  function previewProgram(id) {
+    const program = state.programs.find(p => Number(p.id) === Number(id));
+    if (!program) return;
+
+    const modal = document.getElementById('previewModal');
+    const modalTypeChip = document.getElementById('modalTypeChip');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalContent = document.getElementById('modalContent');
+    const modalImg = document.getElementById('modalImg');
+
+    if (modalTypeChip) {
+      modalTypeChip.textContent = program.category || '프로그램';
+      modalTypeChip.className = 'type-chip type-news px-2.5 py-0.5 text-xs font-semibold rounded-full';
+    }
+    if (modalTitle) modalTitle.textContent = `${program.icon || '🎓'} ${program.title || '(제목 없음)'}`;
+    if (modalDate) modalDate.textContent = `슬러그: /programs/${program.slug || 'program'}`;
+
+    let htmlContent = program.description || '(설명 내용 없음)';
+    if (window.marked && typeof window.marked.parse === 'function' && !htmlContent.trim().startsWith('<')) {
+      htmlContent = window.marked.parse(htmlContent);
+    }
+    if (modalContent) modalContent.innerHTML = htmlContent;
+
+    if (modalImg) {
+      modalImg.src = '';
+      modalImg.style.display = 'none';
+      modalImg.classList.add('hidden');
+    }
+
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function getSelectedProgramIds() {
+    const checkboxes = document.querySelectorAll('.program-select-chk:checked');
+    return Array.from(checkboxes).map(chk => Number(chk.dataset.id));
+  }
+
+  function updateProgramBatchBar() {
+    const selectedIds = getSelectedProgramIds();
+    const batchBar = document.getElementById('programBatchBar');
+    const countText = document.getElementById('selectedProgramCountText');
+    const selectAllChk = document.getElementById('selectAllPrograms');
+
+    if (batchBar) {
+      if (selectedIds.length > 0) {
+        batchBar.classList.remove('hidden');
+        if (countText) countText.textContent = `${selectedIds.length}개 항목 선택됨`;
+      } else {
+        batchBar.classList.add('hidden');
+      }
+    }
+
+    if (selectAllChk) {
+      const allCheckboxes = document.querySelectorAll('.program-select-chk');
+      if (allCheckboxes.length > 0 && selectedIds.length === allCheckboxes.length) {
+        selectAllChk.checked = true;
+        selectAllChk.indeterminate = false;
+      } else if (selectedIds.length > 0) {
+        selectAllChk.checked = false;
+        selectAllChk.indeterminate = true;
+      } else {
+        selectAllChk.checked = false;
+        selectAllChk.indeterminate = false;
+      }
+    }
   }
 
   function renderProgramList() {
@@ -19,34 +107,65 @@
     const visiblePrograms = filteredPrograms.slice(0, state.programVisibleCount);
     const meta = document.getElementById('programListMeta');
 
-    meta.textContent = `${filteredPrograms.length}개 항목`;
+    if (meta) meta.textContent = `${filteredPrograms.length}개 항목`;
     const loadMoreBtn = document.getElementById('programLoadMoreBtn');
-    loadMoreBtn.disabled = visiblePrograms.length >= filteredPrograms.length;
+    if (loadMoreBtn) loadMoreBtn.disabled = visiblePrograms.length >= filteredPrograms.length;
 
     if (!filteredPrograms.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">검색 결과가 없습니다.</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400">검색 결과가 없습니다.</td></tr>';
+      updateProgramBatchBar();
       return;
     }
 
-    tbody.innerHTML = visiblePrograms.map((program) => `
-      <tr>
-        <td>${program.id}</td>
-        <td style="font-size:18px;">${program.icon || '🎓'}</td>
-        <td><code>${window.AdminUI.escapeHtml(program.slug)}</code></td>
-        <td>${window.AdminUI.escapeHtml(program.category)}</td>
-        <td><strong>${window.AdminUI.escapeHtml(program.title)}</strong></td>
-        <td>${program.status}</td>
-        <td>
-          <button class="sm secondary" onclick="editProgram(${program.id})">수정</button>
-          <button class="sm danger" onclick="deleteProgram(${program.id})">삭제</button>
-        </td>
-      </tr>
-    `).join('');
+    tbody.innerHTML = visiblePrograms.map((program) => {
+      const plainExcerpt = stripHtmlTags(program.description || '').substring(0, 80);
+      return `
+        <tr class="hover:bg-slate-50/80 transition-colors">
+          <td class="p-3 text-center">
+            <input type="checkbox" class="program-select-chk w-4 h-4 rounded text-slate-900 focus:ring-slate-800 cursor-pointer" data-id="${program.id}">
+          </td>
+          <td class="p-3 text-slate-500 font-mono text-xs">${program.id}</td>
+          <td class="p-3 text-lg">${program.icon || '🎓'}</td>
+          <td class="p-3 font-mono text-xs text-slate-600"><code>${window.AdminUI.escapeHtml(program.slug)}</code></td>
+          <td class="p-3"><span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200">${window.AdminUI.escapeHtml(program.category || 'DEGREE')}</span></td>
+          <td class="p-3">
+            <div class="flex flex-col">
+              <a href="javascript:void(0)" onclick="previewProgram(${program.id})" class="font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm">${window.AdminUI.escapeHtml(program.title)}</a>
+              <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '설명 없음')}</span>
+            </div>
+          </td>
+          <td class="p-3">${getStatusLabel(program.status)}</td>
+          <td class="p-3 text-right">
+            <div class="flex items-center justify-end">
+              <button type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editProgram(${program.id})" title="프로그램 수정">✏️ 수정</button>
+            </div>
+          </td>
+        </tr>
+      `;
+    }).join('');
+
+    // Attach row checkbox listeners
+    document.querySelectorAll('.program-select-chk').forEach(chk => {
+      chk.addEventListener('change', updateProgramBatchBar);
+    });
+
+    updateProgramBatchBar();
   }
 
   function getFilteredPrograms() {
-    const searchText = document.getElementById('programSearchInput').value;
-    return state.programs.filter((program) => window.AdminUI.matchSearch(program, searchText));
+    const searchInput = document.getElementById('programSearchInput');
+    const searchText = searchInput ? searchInput.value : '';
+    const categoryFilter = state.currentProgCategory || 'all';
+
+    return state.programs.filter((program) => {
+      let matchesCategory = true;
+      if (categoryFilter === 'degree') {
+        matchesCategory = String(program.category || '').toLowerCase().includes('degree') || String(program.category || '').includes('학위');
+      } else if (categoryFilter === 'non-degree') {
+        matchesCategory = !String(program.category || '').toLowerCase().includes('degree') || String(program.category || '').includes('특화') || String(program.category || '').includes('CAMP');
+      }
+      return matchesCategory && window.AdminUI.matchSearch(program, searchText);
+    });
   }
 
   async function loadProgramList() {
@@ -61,6 +180,32 @@
     }
   }
 
+  let programTiptapInstance = null;
+
+  function initProgramTiptapEditor() {
+    const container = document.getElementById('programTiptapEditor');
+    if (!container || programTiptapInstance) return;
+
+    if (!window.setupBloggerEditor || !window.TiptapEditor) {
+      document.addEventListener('tiptap:ready', initProgramTiptapEditor, { once: true });
+      return;
+    }
+
+    programTiptapInstance = window.setupBloggerEditor('programTiptapEditor', 'programTiptapToolbar', 'programDescription');
+  }
+
+  function getProgramTiptapContent() {
+    return programTiptapInstance ? programTiptapInstance.getHTML() : (document.getElementById('programDescription')?.value || '');
+  }
+
+  function setProgramTiptapContent(html) {
+    const hiddenInput = document.getElementById('programDescription');
+    if (hiddenInput) hiddenInput.value = html || '';
+    if (programTiptapInstance) {
+      programTiptapInstance.commands.setContent(html || '');
+    }
+  }
+
   function showProgramEditor() {
     document.getElementById('programListView').classList.remove('active');
     document.getElementById('programEditorView').classList.add('active');
@@ -69,6 +214,7 @@
   function hideProgramEditor() {
     document.getElementById('programForm').reset();
     document.getElementById('programId').value = '';
+    setProgramTiptapContent('');
     document.getElementById('programFormTitle').textContent = '새 프로그램 등록';
     document.getElementById('programEditorView').classList.remove('active');
     document.getElementById('programListView').classList.add('active');
@@ -86,7 +232,7 @@
       document.getElementById('programIcon').value = program.icon || '🎓';
       document.getElementById('programStatus').value = program.status || 'recruiting';
       document.getElementById('programOrder').value = program.display_order || 0;
-      document.getElementById('programDescription').value = program.description || '';
+      setProgramTiptapContent(program.description || '');
       document.getElementById('programFormTitle').textContent = `프로그램 수정 (ID: #${program.id})`;
       showProgramEditor();
     } catch (err) {
@@ -104,6 +250,9 @@
       if (result && result.success) {
         window.AdminUI.showToast('프로그램이 삭제되었습니다.', 'success');
         loadProgramList();
+        if (window.DashboardManager && window.DashboardManager.refresh) {
+          window.DashboardManager.refresh();
+        }
       } else {
         window.AdminUI.showToast(result?.message || result?.error || '삭제에 실패했습니다.', 'error');
       }
@@ -116,36 +265,156 @@
     const searchInput = document.getElementById('programSearchInput');
     const resetBtn = document.getElementById('programResetBtn');
     const loadMoreBtn = document.getElementById('programLoadMoreBtn');
+    const selectAllChk = document.getElementById('selectAllPrograms');
+    const btnBatchDelete = document.getElementById('btnBatchDeletePrograms');
+    const btnBatchDegree = document.getElementById('btnBatchChangeProgCategoryDegree');
+    const btnBatchNonDegree = document.getElementById('btnBatchChangeProgCategoryNonDegree');
+    const btnDeselectAll = document.getElementById('btnDeselectAllPrograms');
 
-    searchInput.addEventListener('input', () => {
-      state.programVisibleCount = 12;
-      renderProgramList();
-    });
+    if (selectAllChk) {
+      selectAllChk.addEventListener('change', (e) => {
+        const isChecked = e.target.checked;
+        document.querySelectorAll('.program-select-chk').forEach(chk => {
+          chk.checked = isChecked;
+        });
+        updateProgramBatchBar();
+      });
+    }
 
-    resetBtn.addEventListener('click', () => {
-      searchInput.value = '';
-      state.programVisibleCount = 12;
-      renderProgramList();
-    });
+    if (btnDeselectAll) {
+      btnDeselectAll.addEventListener('click', () => {
+        document.querySelectorAll('.program-select-chk').forEach(chk => chk.checked = false);
+        if (selectAllChk) selectAllChk.checked = false;
+        updateProgramBatchBar();
+      });
+    }
 
-    loadMoreBtn.addEventListener('click', () => {
-      const filteredPrograms = getFilteredPrograms();
-      state.programVisibleCount = Math.min(state.programVisibleCount + 12, filteredPrograms.length);
-      renderProgramList();
+    if (btnBatchDelete) {
+      btnBatchDelete.addEventListener('click', async () => {
+        const selectedIds = getSelectedProgramIds();
+        if (!selectedIds.length) return;
+
+        if (!confirm(`선택한 ${selectedIds.length}개 프로그램을 삭제하시겠습니까?`)) return;
+
+        let successCount = 0;
+        for (const id of selectedIds) {
+          const formData = new FormData();
+          formData.append('id', id);
+          try {
+            const res = await window.AdminApi.api.post('/api/delete-program', formData, { isFormData: true });
+            if (res && res.success) successCount++;
+          } catch (e) {
+            console.error('Batch delete program error:', e);
+          }
+        }
+
+        window.AdminUI.showToast(`${successCount}개 프로그램이 삭제되었습니다.`, 'success');
+        loadProgramList();
+        if (window.DashboardManager && window.DashboardManager.refresh) {
+          window.DashboardManager.refresh();
+        }
+      });
+    }
+
+    const batchChangeProgCategory = async (newCategory) => {
+      const selectedIds = getSelectedProgramIds();
+      if (!selectedIds.length) return;
+
+      if (!confirm(`선택한 ${selectedIds.length}개 프로그램의 카테고리를 '${newCategory}'(으)로 변경하시겠습니까?`)) return;
+
+      let successCount = 0;
+      for (const id of selectedIds) {
+        const program = state.programs.find(p => Number(p.id) === Number(id));
+        if (!program) continue;
+
+        const formData = new FormData();
+        formData.append('id', id);
+        formData.append('slug', program.slug);
+        formData.append('category', newCategory);
+        formData.append('title', program.title);
+        formData.append('status', program.status || 'recruiting');
+        formData.append('icon', program.icon || '🎓');
+        formData.append('description', program.description || '');
+        formData.append('display_order', program.display_order || 0);
+
+        try {
+          const res = await window.AdminApi.api.post('/api/write-program', formData, { isFormData: true });
+          if (res && res.success) successCount++;
+        } catch (e) {
+          console.error('Batch category change error:', e);
+        }
+      }
+
+      window.AdminUI.showToast(`${successCount}개 프로그램이 '${newCategory}'(으)로 변경되었습니다.`, 'success');
+      loadProgramList();
+    };
+
+    if (btnBatchDegree) {
+      btnBatchDegree.addEventListener('click', () => batchChangeProgCategory('DEGREE'));
+    }
+
+    if (btnBatchNonDegree) {
+      btnBatchNonDegree.addEventListener('click', () => batchChangeProgCategory('CAMP/SPECIAL'));
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        state.programVisibleCount = 12;
+        renderProgramList();
+      });
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        state.programVisibleCount = 12;
+        renderProgramList();
+      });
+    }
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        const filteredPrograms = getFilteredPrograms();
+        state.programVisibleCount = Math.min(state.programVisibleCount + 12, filteredPrograms.length);
+        renderProgramList();
+      });
+    }
+
+    document.querySelectorAll('.prog-filter-btn').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.prog-filter-btn').forEach((btn) => {
+          const isActive = btn === button;
+          btn.classList.toggle('active', isActive);
+          if (isActive) {
+            btn.className = 'prog-filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer';
+          } else {
+            btn.className = 'prog-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer';
+          }
+        });
+        state.currentProgCategory = button.dataset.category || 'all';
+        state.programVisibleCount = 12;
+        renderProgramList();
+      });
     });
 
     document.getElementById('programForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const isEdit = Boolean(document.getElementById('programId').value);
-      const formData = new FormData();
 
+      const description = getProgramTiptapContent();
+      if (!description || description === '<p></p>') {
+        window.AdminUI.showToast('설명 / 요약 내용을 입력하세요.', 'warning');
+        return;
+      }
+
+      const formData = new FormData();
       if (isEdit) formData.append('id', document.getElementById('programId').value);
       formData.append('slug', document.getElementById('programSlug').value);
       formData.append('category', document.getElementById('programCategory').value);
       formData.append('title', document.getElementById('programTitle').value);
       formData.append('status', document.getElementById('programStatus').value);
       formData.append('icon', document.getElementById('programIcon').value);
-      formData.append('description', document.getElementById('programDescription').value);
+      formData.append('description', description);
       formData.append('display_order', document.getElementById('programOrder').value);
 
       try {
@@ -154,6 +423,9 @@
           window.AdminUI.showToast(isEdit ? '프로그램이 수정되었습니다.' : '프로그램이 등록되었습니다.', 'success');
           hideProgramEditor();
           loadProgramList();
+          if (window.DashboardManager && window.DashboardManager.refresh) {
+            window.DashboardManager.refresh();
+          }
         } else {
           window.AdminUI.showToast(result?.message || result?.error || '프로그램 저장에 실패했습니다.', 'error');
         }
@@ -164,6 +436,7 @@
   }
 
   function initProgramManager() {
+    initProgramTiptapEditor();
     bindProgramEvents();
     if (document.getElementById('programTableBody')) {
       loadProgramList();
@@ -178,6 +451,7 @@
     hideProgramEditor,
     editProgram,
     deleteProgram,
+    previewProgram,
     init: initProgramManager
   };
 
@@ -186,4 +460,5 @@
   window.editProgram = editProgram;
   window.deleteProgram = deleteProgram;
   window.loadProgramList = loadProgramList;
+  window.previewProgram = previewProgram;
 })();

@@ -7,8 +7,20 @@
     const scrollLockOwners = new Set();
     let bodyOverflowBeforeLock = '';
 
+    function isModalElement(el) {
+        if (!el || !(el instanceof HTMLElement)) return false;
+        if (['SECTION', 'HEADER', 'FOOTER', 'MAIN', 'ARTICLE', 'NAV', 'BODY', 'HTML'].includes(el.tagName)) {
+            return false;
+        }
+        return el.classList.contains('modal-root') ||
+               el.classList.contains('modal') ||
+               el.id.endsWith('-modal') ||
+               el.id.endsWith('Modal') ||
+               el.id === 'kwave-drawer';
+    }
+
     function lockPageScroll(owner) {
-        if (!owner || scrollLockOwners.has(owner)) return;
+        if (!owner || !isModalElement(owner) || scrollLockOwners.has(owner)) return;
         if (scrollLockOwners.size === 0) {
             bodyOverflowBeforeLock = document.body.style.overflow;
             document.body.style.overflow = 'hidden';
@@ -17,16 +29,23 @@
     }
 
     function unlockPageScroll(owner) {
-        if (!owner) return;
+        if (!owner) {
+            scrollLockOwners.clear();
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            bodyOverflowBeforeLock = '';
+            return;
+        }
         scrollLockOwners.delete(owner);
         if (scrollLockOwners.size === 0) {
-            document.body.style.overflow = bodyOverflowBeforeLock;
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
             bodyOverflowBeforeLock = '';
         }
     }
 
     function activateModal(modal) {
-        if (!modal) return;
+        if (!modal || !isModalElement(modal)) return;
         lockPageScroll(modal);
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -132,6 +151,81 @@
         }
     }
 
+    function initBackToTop() {
+        let btn = document.getElementById('back-to-top-btn');
+        if (!btn) {
+            btn = document.createElement('button');
+            btn.id = 'back-to-top-btn';
+            btn.type = 'button';
+            btn.setAttribute('aria-label', '맨 위로 이동');
+            btn.className = 'fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-slate-900/90 text-slate-200 border border-slate-700/60 shadow-xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 hover:bg-slate-800 hover:text-white hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer';
+            btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>';
+            document.body.appendChild(btn);
+        }
+
+        function toggleVisibility() {
+            if (window.scrollY > 300) {
+                btn.classList.remove('opacity-0', 'pointer-events-none');
+                btn.classList.add('opacity-100', 'pointer-events-auto');
+            } else {
+                btn.classList.remove('opacity-100', 'pointer-events-auto');
+                btn.classList.add('opacity-0', 'pointer-events-none');
+            }
+        }
+
+        window.addEventListener('scroll', toggleVisibility, { passive: true });
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        toggleVisibility();
+    }
+
+    let lazyImageObserver = null;
+
+    function observeLazyImages(targetContainer) {
+        const root = targetContainer || document;
+        const lazyImages = root.querySelectorAll('img[data-lazy-src], img[data-src]');
+        if (lazyImages.length === 0) return;
+
+        if ('IntersectionObserver' in window) {
+            if (!lazyImageObserver) {
+                lazyImageObserver = new IntersectionObserver(function (entries, observer) {
+                    entries.forEach(function (entry) {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            const src = img.getAttribute('data-lazy-src') || img.getAttribute('data-src');
+                            if (src) {
+                                img.src = src;
+                                img.removeAttribute('data-lazy-src');
+                                img.removeAttribute('data-src');
+                                img.classList.add('is-loaded');
+                                img.style.opacity = '1';
+                            }
+                            observer.unobserve(img);
+                        }
+                    });
+                }, { rootMargin: '120px 0px', threshold: 0.01 });
+            }
+
+            lazyImages.forEach(function (img) {
+                lazyImageObserver.observe(img);
+            });
+        } else {
+            // Fallback for non-supporting environments
+            lazyImages.forEach(function (img) {
+                const src = img.getAttribute('data-lazy-src') || img.getAttribute('data-src');
+                if (src) {
+                    img.src = src;
+                    img.removeAttribute('data-lazy-src');
+                    img.removeAttribute('data-src');
+                    img.classList.add('is-loaded');
+                    img.style.opacity = '1';
+                }
+            });
+        }
+    }
+
+    window.observeLazyImages = observeLazyImages;
     window.activateModal = activateModal;
     window.deactivateModal = deactivateModal;
     window.lockPageScroll = lockPageScroll;
@@ -141,4 +235,5 @@
     window.setupMobileMenuToggle = setupMobileMenuToggle;
     window.bindScrollProgress = bindScrollProgress;
     window.initProgramSlider = initProgramSlider;
+    window.initBackToTop = initBackToTop;
 })();

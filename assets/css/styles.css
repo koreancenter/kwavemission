@@ -66,11 +66,35 @@ h6,
 
 /* 5. Interactive Metrics Section (Border Free Clean Stat Layout) */
 .metrics-section {
-  padding: 90px 20px;
+  padding: 44px 20px;
   background-color: transparent;
   display: flex;
   justify-content: center;
   position: relative;
+}
+
+#programs {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+#news {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+}
+
+@media (max-width: 640px) {
+  .metrics-section {
+    padding: 28px 16px;
+  }
+  #programs {
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+  }
+  #news {
+    padding-top: 2.25rem;
+    padding-bottom: 2.25rem;
+  }
 }
 
 /* 상단/하단 은은한 그라데이션 구분선 */
@@ -608,7 +632,8 @@ h6,
   }
 
   .field-voices-heading {
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
     flex-direction: column;
     gap: 0.35rem;
   }
@@ -623,22 +648,177 @@ h6,
   }
 }
 
-/* 📌 위에서 진자처럼 자연스럽게 바운스하며 내려오는 키프레임 */
-@keyframes pendulumDrop {
-    0% {
-        opacity: 0;
-        transform: translateY(-40px) rotate(-2deg);
-    }
-    70% {
-        transform: translateY(6px) rotate(1deg);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0) rotate(0deg);
+/* ==========================================================================
+   Lighthouse Performance & Mobile View Optimizations
+   ========================================================================== */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  touch-action: manipulation;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+  content-visibility: auto;
+}
+
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
+}
+
+@media (max-width: 768px) {
+  button, a, input, select, textarea {
+    touch-action: manipulation;
+  }
+  
+  .mobile-lazy-section {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 350px;
+  }
+}
+
+/* 📌 Drawer Smooth Stagger Animation & Styling */
+#kwave-drawer {
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(217, 119, 6, 0.15);
+    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+}
+
+@media (max-width: 639px) {
+    #kwave-drawer {
+        padding: 1.1rem 1.25rem;
+        max-height: 88vh;
+        overflow: visible;
     }
 }
 
-.animate-card-drop {
-    opacity: 0; /* 초기 상태 숨김 */
-    animation: pendulumDrop 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+@media (min-width: 640px) {
+    #kwave-drawer {
+        min-height: 560px;
+    }
 }
+
+#kwave-tab-btn {
+    background-color: rgba(246, 244, 239, 0.5) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 3px 4px 14px -2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(217, 119, 6, 0.15);
+}
+
+#kwave-tab-btn:hover {
+    background-color: rgba(246, 244, 239, 0.75) !important;
+}
+
+@media (min-width: 640px) {
+    #kwave-tab-btn {
+        box-shadow: 4px 6px 20px -2px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(217, 119, 6, 0.15);
+    }
+}
+
+@keyframes smoothDrawerCardDrop {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.drawer-card.animate-card-drop {
+    opacity: 0;
+    animation: smoothDrawerCardDrop 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Modal Markdown Typography & Readability */
+#md-modal-content {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  color: #1e293b;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+#md-modal-content h1,
+#md-modal-content h2,
+#md-modal-content h3 {
+  font-family: 'Noto Serif KR', serif;
+  font-weight: 700;
+  color: #0f172a;
+  letter-spacing: -0.02em;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+#md-modal-content h1 { font-size: 1.35rem; }
+#md-modal-content h2 { font-size: 1.15rem; }
+#md-modal-content h3 { font-size: 1rem; }
+
+#md-modal-content p {
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+#md-modal-content ul,
+#md-modal-content ol {
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  color: #334155;
+}
+
+#md-modal-content code,
+#md-modal-content .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* 📌 Mobile Menu Dropdown & Slide Down Animation */
+#mobile-menu:not(.hidden) {
+    animation: mobileMenuSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    transform-origin: top center;
+}
+
+@keyframes mobileMenuSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#mobile-menu:not(.hidden) .mobile-menu-item {
+    opacity: 0;
+    animation: mobileMenuItemSlideDown 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(1) { animation-delay: 0.03s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(2) { animation-delay: 0.06s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(3) { animation-delay: 0.09s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(4) { animation-delay: 0.12s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(5) { animation-delay: 0.15s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(6) { animation-delay: 0.18s; }
+
+@keyframes mobileMenuItemSlideDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-12px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

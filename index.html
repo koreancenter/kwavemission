@@ -52,24 +52,31 @@
         }
     </script>
     
-   <!-- Google Fonts (Noto Serif KR & JetBrains Mono) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
-  <noscript>
+    <!-- Performance Resource Hints -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
-  </noscript>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+    </noscript>
 
-  <!-- Stylesheet -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260816-fixed-publisher-label">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
 
-    <!-- Pretendard Web Font -->
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+    <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+    </noscript>
     
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest" defer></script>
-
-    <!-- Markdown Parser -->
+    <!-- Lucide Icons & Markdown Parser (Minified & Deferred) -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     
     <style>
@@ -245,6 +252,23 @@
             transform: none;
             translate: 2px -2px;
             opacity: 1;
+        }
+
+        /* 📌 Seamless & Luxurious Drawer Bookmark Tab */
+        #kwave-drawer {
+            box-shadow: 20px 0 50px -10px rgba(0, 0, 0, 0.12), 4px 0 16px -4px rgba(0, 0, 0, 0.06);
+        }
+
+        #kwave-tab-btn {
+            position: absolute;
+            left: calc(100% - 1px);
+            top: 2rem;
+            box-shadow: 6px 4px 18px -2px rgba(0, 0, 0, 0.08), 2px 2px 6px -1px rgba(0, 0, 0, 0.04);
+            transform-origin: left center;
+        }
+
+        #kwave-tab-btn:hover {
+            transform: translateX(2px);
         }
 
         .prog-filter-btn {
@@ -510,7 +534,7 @@
     <!-- Header / Navigation -->
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="#" class="flex items-center gap-3 group">
+            <a href="#hero" onclick="navigateToSection(event, 'hero')" class="flex items-center gap-3 group">
                 <img src="./assets/images/logo.webp" alt="로고" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
                 <div>
                     <span class="text-white font-bold text-lg tracking-wider">K-WAVE MISSION</span>
@@ -522,179 +546,179 @@
             <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
                 <a href="#hero" onclick="navigateToSection(event, 'hero')" class="brand-link">소개</a>
                 <a href="#about" onclick="navigateToSection(event, 'about')" class="brand-link">사역</a>
-                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="brand-link">동역</a>
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="brand-link">프로그램</a>
                 <a href="#news" onclick="navigateToSection(event, 'news')" class="brand-link">리포트</a>
-                <a href="#partners" onclick="navigateToSection(event, 'partners')" class="brand-link">협력</a>
-                <button type="button" onclick="openKWaveDrawer()" class="brand-link text-left">K-Wave</button>
+                <button type="button" onclick="openKWaveDrawer()" class="brand-link text-left cursor-pointer">K-Wave</button>
+                <a href="./k-alliance.html" class="brand-link">K-Alliance</a>
             </nav>
 
-            <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤) -->
-            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden p-2 text-slate-400 hover:text-white">
+            <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤 - 44px+ 터치 타겟) -->
+            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
             <!-- Mobile Nav Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea] backdrop-blur-md border-b border-slate-800/80 px-6 py-5 space-y-4 text-right font-medium text-slate-300 shadow-2xl z-50">
-                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">소개</a>
-                <a href="#about" onclick="navigateToSection(event, 'about')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">사역</a>
-                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">동역</a>
-                <a href="#news" onclick="navigateToSection(event, 'news')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">리포트</a>
-                <a href="#partners" onclick="navigateToSection(event, 'partners')" class="block brand-link py-1 text-slate-200 hover:text-white transition-colors">협력</a>
-                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="block w-full brand-link text-right py-1 text-slate-200 hover:text-white transition-colors">K-Wave</button>
+            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea]/95 backdrop-blur-xl border-b border-slate-800/20 px-6 py-5 space-y-1.5 text-right font-medium text-slate-800 shadow-2xl z-50 rounded-b-2xl">
+                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">소개</a>
+                <a href="#about" onclick="navigateToSection(event, 'about')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">사역</a>
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">프로그램</a>
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">리포트</a>
+                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="mobile-menu-item block w-full brand-link text-right min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors">K-Wave</button>
+                <a href="./k-alliance.html" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">K-Alliance</a>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="hero-section pt-36 pb-20 md:pt-48 md:pb-32 text-slate-900 relative overflow-hidden">
+    <section id="hero" class="hero-section pt-32 pb-16 md:pt-48 md:pb-32 text-slate-900 relative overflow-hidden">
         
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div class="section-badge brand-badge inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-8 backdrop-blur-md">
+            <div class="section-badge brand-badge inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 backdrop-blur-md">
                 <span class="w-2 h-2 rounded-full bg-brand-300"></span>
                 대한민국이 선교합니다.
             </div>
             
-            <h1 class="hero-title text-3xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-snug sm:leading-[1.3] lg:leading-[1.3] mb-8 text-black break-keep">
+            <h1 class="hero-title text-2xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-snug sm:leading-[1.3] lg:leading-[1.3] mb-6 sm:mb-8 text-black break-keep">
                 선교 현장과 한국교회를<br>
                 <span>
                     잇는 풀스택 선교 플랫폼
                 </span>
             </h1>
             
-            <p class="text-base sm:text-xl text-slate-300 font-light max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p class="text-base sm:text-xl text-slate-700 sm:text-slate-300 font-normal sm:font-light max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed">
                 "대한민국의 경제발전과 교회부흥의 경험이<br class="hidden sm:inline">
                 교육을 통해 세계선교 자원으로 쓰임 받도록 한국 교회와 함께합니다."
             </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full px-4">
-    <!-- 1. 선교 동역하기 버튼 (max-w-xs로 변경) -->
-    <a href="#programs" class="btn-primary no-shadow group/hero-cta w-full max-w-xs mx-auto sm:w-auto sm:max-w-none sm:mx-0 px-6 sm:px-8 py-4 text-base">
-        선교 동역하기 <i data-lucide="arrow-up-right" class="w-5 h-5 transition-transform duration-200 group-hover/hero-cta:translate-x-0.5 group-hover/hero-cta:-translate-y-0.5"></i>
-    </a>
-    
-    <!-- 2. 주간 미션 리포트 버튼 (max-w-xs로 변경) -->
-    <a href="#news" class="btn-secondary w-full max-w-xs mx-auto sm:w-auto sm:max-w-none sm:mx-0 px-6 sm:px-8 py-4 text-base" style="background: transparent;">
-        <i data-lucide="newspaper" class="w-5 h-5"></i> 주간 미션 리포트
-    </a>
-</div>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full px-2 sm:px-4">
+                <!-- 1. 선교 동역하기 버튼 (모바일 min 48px 터치 타겟) -->
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="btn-primary no-shadow group/hero-cta w-full max-w-xs mx-auto sm:w-auto sm:max-w-none sm:mx-0 min-h-[48px] px-6 sm:px-8 py-3.5 text-base font-semibold">
+                    선교 동역하기 <i data-lucide="arrow-up-right" class="w-5 h-5 transition-transform duration-200 group-hover/hero-cta:translate-x-0.5 group-hover/hero-cta:-translate-y-0.5"></i>
+                </a>
+                
+                <!-- 2. 주간 미션 리포트 버튼 (모바일 min 48px 터치 타겟) -->
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="btn-secondary w-full max-w-xs mx-auto sm:w-auto sm:max-w-none sm:mx-0 min-h-[48px] px-6 sm:px-8 py-3.5 text-base font-semibold" style="background: transparent;">
+                    <i data-lucide="newspaper" class="w-5 h-5"></i> 주간 미션 리포트
+                </a>
+            </div>
             
-            <div class="mt-16 text-[15px] text-black flex justify-center items-center gap-2">
-                <i data-lucide="quote" class="w-4 h-4 text-black"></i>
+            <div class="mt-12 sm:mt-16 text-sm sm:text-[15px] text-slate-900 sm:text-black flex justify-center items-center gap-2">
+                <i data-lucide="quote" class="w-4 h-4 text-slate-900 sm:text-black shrink-0"></i>
                 <span>"주의 도를 땅 위에, 주의 구원을 모든 나라에 알리소서." (시편 67:2)</span>
             </div>
         </div>
     </section>
 
     <!-- Integrated Ministry Showcase -->
-    <section id="about" class="py-32 text-slate-900 relative overflow-hidden">
+    <section id="about" class="py-12 sm:py-20 text-slate-900 relative overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             
             <!-- Section Header -->
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-14">
                 <div>
-                    <span class="tech-tag text-xs text-black font-medium uppercase tracking-widest block mb-3">[ CORE VALUE &amp; STRATEGY ]</span>
-                    <h2 class="about-title-shadow text-2xl sm:text-5xl font-bold text-black tracking-tight font-serif leading-[1.56] sm:leading-[1.3]">
+                    <span class="tech-tag text-xs text-black font-medium uppercase tracking-widest block mb-2 sm:mb-3">[ CORE VALUE &amp; STRATEGY ]</span>
+                    <h2 class="about-title-shadow text-2xl sm:text-5xl font-bold text-black tracking-tight font-serif leading-[1.35] sm:leading-[1.3]">
                         고등교육선교 전문가 그룹<br>
                         <span>
                             케이웨이브 미션
                         </span>
                     </h2>
                 </div>
-                <p class="text-black text-sm max-w-md mt-6 md:mt-0 font-light leading-relaxed">
+                <p class="text-slate-800 sm:text-black text-base sm:text-sm max-w-md mt-4 sm:mt-6 md:mt-0 font-normal sm:font-light leading-relaxed">
                     K-WAVE MISSION은 한국의 대학교, 크리스천 대학교수, 지역교회, 문화사역단체 등 다양한 선교 자원과 함께 고등교육선교 영역을 개척하고 있습니다.
                 </p>
             </div>
 
-            <!-- Markmonitor Style Asymmetric Bento Grid (4-Column Based) -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Markmonitor Style Asymmetric Bento Grid (Mobile Card Feed Layout) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
 
-                <!-- [01] Highlight Feature (Main Visual Card - Spans 2 Columns) -->
-                <div class="brand-card lg:col-span-2 group relative rounded-3xl overflow-hidden min-h-[340px] sm:min-h-[380px] flex flex-col justify-between p-6 sm:p-8 bg-transparent border-[1.331px] border-black/[0.1331] transition-colors duration-200">
+                <!-- [01] Highlight Feature (Main Visual Card) -->
+                <div class="brand-card lg:col-span-2 group relative rounded-2xl sm:rounded-3xl overflow-hidden min-h-[300px] sm:min-h-[380px] flex flex-col justify-between p-5 sm:p-8 bg-white/70 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-colors duration-200">
                     <div class="relative z-20 flex justify-between items-start">
-                        <span class="tech-tag px-3 py-1 rounded-full bg-brand-500/20 border border-brand-300/40 text-brand-100 text-[11px] font-medium uppercase tracking-wider">
+                        <span class="tech-tag px-3 py-1 rounded-full bg-transparent border border-slate-900/20 sm:border-brand-300/40 text-slate-900 sm:text-brand-100 text-[11px] font-bold sm:font-medium uppercase tracking-wider">
                             HOLY MINISTRY
                         </span>
-                        <span class="tech-tag text-3xl font-semibold text-brand-300/35 group-hover:text-brand-300/70 transition-colors">/ 01</span>
+                        <span class="tech-tag text-2xl sm:text-3xl font-semibold text-slate-700 sm:text-brand-300/35 group-hover:text-black sm:group-hover:text-brand-300/70 transition-colors">/ 01</span>
                     </div>
 
-                    <div class="relative z-20 mt-12">
-                        <h3 class="text-2xl sm:text-3xl font-semibold text-white mb-3 font-serif">영혼을 살리는 일</h3>
-                        <p class="text-slate-300 text-sm leading-relaxed max-w-lg font-light mb-6">
+                    <div class="relative z-20 mt-8 sm:mt-12">
+                        <h3 class="text-xl sm:text-3xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3 font-serif">영혼을 살리는 일</h3>
+                        <p class="text-slate-700 sm:text-slate-700 text-base sm:text-sm leading-relaxed max-w-lg font-normal sm:font-light mb-5 sm:mb-6">
                             한국의 교회/기관과 연계하여 다양한 교육프로그램을 통해 관계를 형성하여 은혜의 강물이 현지 영혼들에게 흘러가도록 합니다.
                         </p>
-                        <ul class="group/details flex flex-wrap items-center gap-4 w-fit tech-tag text-xs text-brand-100/90 pt-2 cursor-pointer">
-                            <span class="group-hover/details:font-bold transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
+                        <ul class="group/details min-h-[44px] flex items-center gap-2 w-fit tech-tag text-sm sm:text-xs text-slate-900 sm:text-brand-100/90 font-bold cursor-pointer">
+                            <span class="group-hover/details:underline transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
                         </ul>
                     </div>
                 </div>
 
                 <!-- [02] Next-Gen Disciple -->
-                <div class="brand-card lg:col-span-1 group relative rounded-3xl p-6 sm:p-8 flex flex-col justify-between bg-transparent border-[1.331px] border-black/[0.1331] transition-colors duration-200">
+                <div class="brand-card lg:col-span-1 group relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col justify-between bg-white/70 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-colors duration-200 space-y-4">
                     <div>
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-300/25 flex items-center justify-center text-brand-200">
+                        <div class="flex justify-between items-start mb-4 sm:mb-6">
+                            <div class="w-10 h-10 rounded-xl bg-transparent border border-slate-900/20 sm:border-brand-300/25 flex items-center justify-center text-slate-800 sm:text-brand-200">
                                 <i data-lucide="users" class="w-5 h-5"></i>
                             </div>
-                            <span class="tech-tag text-2xl font-semibold text-slate-700 group-hover:text-brand-300/60 transition-colors">/ 02</span>
+                            <span class="tech-tag text-2xl font-semibold text-slate-700 sm:text-slate-700 group-hover:text-black transition-colors">/ 02</span>
                         </div>
-                        <span class="tech-tag text-[10px] text-brand-200 font-bold uppercase tracking-wider block mb-2">NEXT-GEN DISCIPLE</span>
-                        <h3 class="text-xl font-semibold text-white mb-3">교회를 세우는 일</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed font-light">
+                        <span class="tech-tag text-[10px] text-slate-700 sm:text-brand-200 font-bold uppercase tracking-wider block mb-2">NEXT-GEN DISCIPLE</span>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3">교회를 세우는 일</h3>
+                        <p class="text-slate-700 sm:text-slate-700 text-[15px] sm:text-xs leading-relaxed font-normal sm:font-light">
                             현지의 오지 교회, 핍박받는 교회를 발굴하여 현지 교회가 지역 사회의 허브가 되도록 한국 교회와 함께 지원합니다.
                         </p>
                     </div>
-                    <div class="group/details mt-8 w-fit tech-tag text-[11px] text-brand-100/80 flex items-center gap-1 cursor-pointer">
-                        <span class="group-hover/details:font-bold transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
+                    <div class="group/details min-h-[44px] w-fit tech-tag text-sm sm:text-[11px] text-slate-900 sm:text-brand-100/80 font-bold flex items-center gap-1.5 cursor-pointer">
+                        <span class="group-hover/details:underline transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
                     </div>
                 </div>
 
                 <!-- [03] Church Network -->
-                <div class="brand-card lg:col-span-1 group relative rounded-3xl p-6 sm:p-8 flex flex-col justify-between bg-transparent border-[1.331px] border-black/[0.1331] transition-colors duration-200">
+                <div class="brand-card lg:col-span-1 group relative rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col justify-between bg-white/70 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-colors duration-200 space-y-4">
                     <div>
-                        <div class="flex justify-between items-start mb-6">
-                            <div class="w-10 h-10 rounded-xl bg-brand-500/10 border border-brand-300/25 flex items-center justify-center text-brand-200">
+                        <div class="flex justify-between items-start mb-4 sm:mb-6">
+                            <div class="w-10 h-10 rounded-xl bg-transparent border border-slate-900/20 sm:border-brand-300/25 flex items-center justify-center text-slate-800 sm:text-brand-200">
                                 <i data-lucide="globe-2" class="w-5 h-5"></i>
                             </div>
-                            <span class="tech-tag text-2xl font-semibold text-slate-700 group-hover:text-brand-300/60 transition-colors">/ 03</span>
+                            <span class="tech-tag text-2xl font-semibold text-slate-700 sm:text-slate-700 group-hover:text-black transition-colors">/ 03</span>
                         </div>
-                        <span class="tech-tag text-[10px] text-brand-200 font-bold uppercase tracking-wider block mb-2">GLOBAL BRIDGE</span>
-                        <h3 class="text-xl font-semibold text-white mb-3">세상을 바꾸는 일</h3>
-                        <p class="text-slate-400 text-xs leading-relaxed font-light">
+                        <span class="tech-tag text-[10px] text-slate-700 sm:text-brand-200 font-bold uppercase tracking-wider block mb-2">GLOBAL BRIDGE</span>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3">세상을 바꾸는 일</h3>
+                        <p class="text-slate-700 sm:text-slate-700 text-[15px] sm:text-xs leading-relaxed font-normal sm:font-light">
                             한국교회의 다양한 자원들이 현지 청년들의 미래와 삶의 질 향상에 쓰임받을 수 있도록 자원과 수요를 전략적으로 매칭합니다.
                         </p>
                     </div>
-                    <div class="group/details mt-8 w-fit tech-tag text-[11px] text-brand-100/80 flex items-center gap-1 cursor-pointer">
-                        <span class="group-hover/details:font-bold transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
+                    <div class="group/details min-h-[44px] w-fit tech-tag text-sm sm:text-[11px] text-slate-900 sm:text-brand-100/80 font-bold flex items-center gap-1.5 cursor-pointer">
+                        <span class="group-hover/details:underline transition-all duration-200">자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/details:translate-x-0.5 group-hover/details:-translate-y-0.5"></i>
                     </div>
                 </div>
 
-                <!-- [04] Action Banner 1: Church Cooperation (Spans 2 Columns) -->
-                <div class="brand-card lg:col-span-2 group rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-transparent border-[1.331px] border-black/[0.1331] transition-colors duration-200">
-                    <div class="space-y-2">
+                <!-- [04] Action Banner 1: Church Cooperation -->
+                <div class="brand-card lg:col-span-2 group rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 bg-white/70 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-colors duration-200">
+                    <div class="space-y-1.5 sm:space-y-2">
                         <div class="flex items-center gap-2">
-                            <span class="tech-tag px-2.5 py-0.5 rounded bg-amber-400/10 text-amber-300 text-[10px] font-bold">FOR CHURCHES</span>
-                            <span class="tech-tag text-slate-500 text-xs">/ 04</span>
+                            <span class="tech-tag px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-800 sm:text-amber-300 text-[10px] font-bold">FOR CHURCHES</span>
+                            <span class="tech-tag text-slate-600 sm:text-slate-500 text-xs">/ 04</span>
                         </div>
-                        <h4 class="text-lg font-semibold text-white">우리 교회/단체 세계화 프로젝트</h4>
-                        <p class="text-xs text-slate-400 font-light">교회 자원을 세계선교를 통해 공유하며 세계형제의식을 실천합니다.</p>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">우리 교회/단체 세계화 프로젝트</h4>
+                        <p class="text-sm sm:text-xs text-slate-700 sm:text-slate-700 font-normal sm:font-light">교회 자원을 세계선교를 통해 공유하며 세계형제의식을 실천합니다.</p>
                     </div>
-                    <a href="https://pf.kakao.com" target="_blank" class="btn-consult tech-tag shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-xs">
-                        <span class="font-bold">프로젝트 문의</span> <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <a href="https://pf.kakao.com" target="_blank" class="btn-consult tech-tag shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-xs font-bold w-full sm:w-auto min-h-[44px]">
+                        <span>프로젝트 문의</span> <i data-lucide="message-circle" class="w-4 h-4"></i>
                     </a>
                 </div>
 
-                <!-- [05] Action Banner 2: Individual Partner (Spans 2 Columns) -->
-                <div class="brand-card lg:col-span-2 group rounded-3xl p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-transparent border-[1.331px] border-black/[0.1331] transition-colors duration-200">
-                    <div class="space-y-2">
+                <!-- [05] Action Banner 2: Individual Partner -->
+                <div class="brand-card lg:col-span-2 group rounded-2xl sm:rounded-3xl p-5 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 bg-white/70 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-colors duration-200">
+                    <div class="space-y-1.5 sm:space-y-2">
                         <div class="flex items-center gap-2">
-                            <span class="tech-tag px-2.5 py-0.5 rounded bg-brand-500/10 text-brand-200 text-[10px] font-bold">FOR INDIVIDUALS</span>
-                            <span class="tech-tag text-slate-500 text-xs">/ 05</span>
+                            <span class="tech-tag px-2.5 py-0.5 rounded bg-transparent border border-slate-900/20 border-slate-800 sm:border-brand-300/30 text-slate-800 sm:text-brand-200 text-[10px] font-bold">FOR INDIVIDUALS</span>
+                            <span class="tech-tag text-slate-600 sm:text-slate-500 text-xs">/ 05</span>
                         </div>
-                        <h4 class="text-lg font-semibold text-white">여러분의 지식이 선교 자원입니다.</h4>
-                        <p class="text-xs text-slate-400 font-light">케이웨이브 미션은 여러분의 자원과 선교 현장의 필요를 잇는 다리입니다.</p>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">여러분의 지식이 선교 자원입니다.</h4>
+                        <p class="text-sm sm:text-xs text-slate-700 sm:text-slate-700 font-normal sm:font-light">케이웨이브 미션은 여러분의 자원과 선교 현장의 필요를 잇는 다리입니다.</p>
                     </div>
-                    <a href="https://pf.kakao.com" target="_blank" class="btn-primary no-shadow shrink-0 inline-flex items-center gap-2 px-5 py-3 rounded-2xl text-xs">
+                    <a href="https://pf.kakao.com" target="_blank" class="btn-primary no-shadow shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-xs font-bold w-full sm:w-auto min-h-[44px]">
                         <span>내 자원 등록하기</span> <i data-lucide="heart" class="w-4 h-4"></i>
                     </a>
                 </div>
@@ -703,10 +727,10 @@
         </div>
     </section>
 
-<!-- Interactive Metrics Section -->
+<!-- Interactive Metrics Section (Mobile Card Feed Grid) -->
 <section class="metrics-section">
   <div class="metrics-container">
-    <div class="metric-card">
+    <div class="metric-card bg-transparent border border-slate-300/80 sm:border-none p-5 sm:p-5 rounded-2xl sm:rounded-none shadow-xs sm:shadow-none">
       <div class="metric-header">
         <span class="metric-label">[ACADEMIC NETWORK]</span>
       </div>
@@ -716,7 +740,7 @@
       <p class="metric-desc">고등교육선교 사역에 헌신된 학술 전문 네트워크</p>
     </div>
 
-    <div class="metric-card">
+    <div class="metric-card bg-transparent border border-slate-300/80 sm:border-none p-5 sm:p-5 rounded-2xl sm:rounded-none shadow-xs sm:shadow-none">
       <div class="metric-header">
         <span class="metric-label">[PARTNERSHIP]</span>
       </div>
@@ -726,7 +750,7 @@
       <p class="metric-desc">하나님 나라의 전략적 과제를 함께 수행하는 기관</p>
     </div>
 
-    <div class="metric-card">
+    <div class="metric-card bg-transparent border border-slate-300/80 sm:border-none p-5 sm:p-5 rounded-2xl sm:rounded-none shadow-xs sm:shadow-none">
       <div class="metric-header">
         <span class="metric-label">[HIGHER EDUCATION]</span>
       </div>
@@ -738,56 +762,55 @@
   </div>
 </section>
   
-<!-- Key Participation Programs (Advanced Version) -->
-<section id="programs" class="py-24 bg-[#ece9e1] text-slate-900 relative">
+<!-- Key Participation Programs -->
+<section id="programs" class="py-12 sm:py-16 bg-[#ece9e1] text-slate-900 relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         <!-- Section Header -->
-        <div class="text-center max-w-3xl mx-auto mb-10">
-            <span class="font-mono text-xs text-rose-400 font-bold uppercase tracking-widest block mb-3">[ JOIN THE MISSION ]</span>
-            <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4 font-serif">
+        <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+            <span class="font-mono text-xs text-rose-500 sm:text-rose-600 font-bold uppercase tracking-widest block mb-2">[ JOIN THE MISSION ]</span>
+            <h2 class="text-2xl sm:text-5xl font-extrabold text-slate-900 sm:text-slate-900 tracking-tight mb-3 font-serif">
                 우리는 한 팀입니다
             </h2>
-            <p class="text-slate-400 text-sm sm:text-base leading-relaxed font-light">
+            <p class="text-slate-700 sm:text-slate-700 text-base sm:text-base leading-relaxed font-normal sm:font-light">
                 K-WAVE MISSION은 한국 교회와 성도가 선교의 주체로서 동역할 수 있도록 다양한 실행 프로그램을 운영하고 있습니다.
             </p>
         </div>
 
-<!-- 📌 상단 고정 공지사항 배너 (동적 연동 영역) -->
+<!-- 📌 상단 고정 공지사항 배너 (모바일 터치 카드) -->
 <div id="main-notice-banner" 
      onclick="openNoticeBannerModal()" 
-     class="cursor-pointer max-w-4xl mx-auto mb-12 p-3.5 sm:p-5 rounded-2xl bg-transparent border-[1.331px] border-black/[0.1331] transition-all group flex items-center justify-between gap-3 overflow-hidden">
+     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-2xl bg-white/80 sm:bg-transparent border border-black/15 sm:border-[1.331px] sm:border-black/[0.1331] shadow-xs sm:shadow-none transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px]">
     
     <!-- Left: 배지 + 공지 제목 영역 -->
     <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
-        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 font-mono text-xs font-bold flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-700 sm:text-cyan-300 font-mono text-xs font-bold flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-cyan-600 sm:bg-cyan-400 animate-pulse"></span>
             NOTICE
         </span>
         
-        <!-- JS가 최신 공지 제목을 넣는 자리 (모바일 한 줄 말줄임 truncate 적용) -->
-        <span id="main-notice-title" class="truncate text-slate-200 text-xs sm:text-sm font-medium group-hover:text-cyan-300 transition-colors">
+        <!-- JS가 최신 공지 제목을 넣는 자리 -->
+        <span id="main-notice-title" class="truncate text-slate-800 sm:text-slate-200 text-sm sm:text-sm font-semibold sm:font-medium group-hover:text-cyan-600 sm:group-hover:text-cyan-300 transition-colors">
             📢 최신 공지사항을 불러오는 중입니다...
         </span>
     </div>
 
-    <!-- Right: 자세히 보기 영역 (크기 축소 방지 shrink-0 적용) -->
-    <span class="shrink-0 group/notice-details text-xs text-slate-400 group-hover:text-cyan-300 transition-colors flex items-center gap-1">
-        <span class="whitespace-nowrap group-hover/notice-details:font-bold transition-all duration-200">자세히 보기</span>
+    <!-- Right: 자세히 보기 영역 -->
+    <span class="shrink-0 group/notice-details text-xs text-slate-600 sm:text-slate-400 group-hover:text-black sm:group-hover:text-cyan-300 transition-colors flex items-center gap-1 font-semibold">
+        <span class="whitespace-nowrap group-hover/notice-details:underline transition-all duration-200">자세히 보기</span>
         <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
     </span>
 </div>
 
-        <!-- 📌 2번 & 4번 요구사항: 상태 필터 탭 -->
-        <!-- HTML 탭 버튼 부분 -->
-        <div class="flex items-center justify-center gap-2 mb-10 flex-wrap">
-            <button type="button" onclick="filterPrograms('all', this)" class="prog-filter-btn active px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-transparent border-[1.331px] border-black/[0.1331] transition-all">ALL</button>
-            <button type="button" onclick="filterPrograms('recruiting', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-transparent border-[1.331px] border-black/[0.1331] transition-all">모집 중</button>
-            <button type="button" onclick="filterPrograms('ongoing', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-transparent border-[1.331px] border-black/[0.1331] transition-all">진행 중</button>
-            <button type="button" onclick="filterPrograms('preparing', this)" class="prog-filter-btn px-4 py-2 rounded-xl text-xs font-semibold font-mono bg-transparent border-[1.331px] border-black/[0.1331] transition-all">준비 중</button>
+        <!-- 📌 상태 필터 탭 (모바일 44px+ 터치 버튼) -->
+        <div class="flex items-center justify-center gap-2 mb-6 flex-wrap">
+            <button type="button" onclick="filterPrograms('all', this)" class="prog-filter-btn active min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold font-mono border border-black/15 transition-all">ALL</button>
+            <button type="button" onclick="filterPrograms('recruiting', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold font-mono border border-black/15 transition-all">모집 중</button>
+            <button type="button" onclick="filterPrograms('ongoing', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold font-mono border border-black/15 transition-all">진행 중</button>
+            <button type="button" onclick="filterPrograms('preparing', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold font-mono border border-black/15 transition-all">준비 중</button>
         </div>
 
-        <!-- 📌 1번 & 4번 요구사항: 프로그램 카드 슬라이더 -->
+        <!-- 📌 프로그램 카드 슬라이더 -->
         <div class="relative">
 
         <!-- Left arrow (desktop only) -->
@@ -795,7 +818,7 @@
             <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:-translate-x-0.5"></i>
         </button>
 
-        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pt-6 pb-4 scrollbar-hide">
+        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 scrollbar-hide">
             <div class="w-full min-h-[180px] flex items-center justify-center text-center text-slate-500 text-sm">
                 프로그램을 불러오는 중입니다...
             </div>
@@ -811,17 +834,17 @@
 </section>
 
     <!-- DB-less Weekly Mission News Section -->
-    <section id="news" class="py-20 bg-[#ece9e1] text-slate-900 relative overflow-hidden">
+    <section id="news" class="py-12 sm:py-16 bg-[#ece9e1] text-slate-900 relative overflow-hidden">
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="flex flex-col md:flex-row md:items-end justify-between mb-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10">
                 <div>
-                    <span class="tech-tag text-xs text-brand-200 font-medium uppercase tracking-widest block mb-3">[ STRATEGIC BRIEFING ]</span>
-                    <h2 class="text-3xl sm:text-5xl font-bold text-slate-900 tracking-tight font-serif">
+                    <span class="tech-tag text-xs text-slate-700 sm:text-brand-200 font-bold sm:font-medium uppercase tracking-widest block mb-2 sm:mb-3">[ STRATEGIC BRIEFING ]</span>
+                    <h2 class="text-2xl sm:text-5xl font-bold text-slate-900 tracking-tight font-serif">
                         주간 미션 리포트
                     </h2>
                 </div>
-                <p class="text-slate-600 text-sm max-w-md mt-4 md:mt-0 font-light leading-relaxed">
+                <p class="text-slate-700 sm:text-slate-600 text-base sm:text-sm max-w-md mt-2 sm:mt-4 md:mt-0 font-normal sm:font-light leading-relaxed">
                     매주 발행되는 미션 리포트를 통해 함께 소통하며 동역의 기회를 공유합니다.
                 </p>
             </div>
@@ -834,31 +857,31 @@
     </section>
 
 <!-- Partners Section (Unified Background) -->
-<section id="partners" class="py-28 bg-[#ece9e1] relative">
+<section id="partners" class="py-16 sm:py-28 bg-[#ece9e1] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <!-- 타이틀 -->
-        <p class="tech-tag text-sm sm:text-base font-medium uppercase tracking-[0.25em] text-brand-200 mb-10">
+        <p class="tech-tag text-xs sm:text-base font-bold sm:font-medium uppercase tracking-[0.2em] text-slate-700 sm:text-brand-200 mb-6 sm:mb-10">
             [ K-WAVE GLOBAL ALLIANCE ]
         </p>
         
         <!-- 감싸는 컨테이너: 모바일은 2열 Grid / 데스크톱(sm:)은 가로 한 줄 Flex -->
-        <div class="grid grid-cols-2 gap-2.5 px-4 max-w-md mx-auto sm:flex sm:flex-wrap sm:justify-center sm:max-w-4xl sm:gap-3">
-            <a href="#" class="flex items-center justify-center px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 bg-transparent border border-slate-300/80 rounded-xl text-center shadow-xs">
+        <div class="grid grid-cols-2 gap-2.5 px-2 max-w-md mx-auto sm:flex sm:flex-wrap sm:justify-center sm:max-w-4xl sm:gap-3">
+            <a href="#" class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent border border-slate-300/80 rounded-2xl text-center shadow-xs">
                 글로벌미래고등교육원
             </a>
-            <a href="https://www.ishema.kr/" class="group/partner-link flex items-center justify-center gap-1 px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 bg-transparent border border-slate-300/80 rounded-xl text-center shadow-xs">
+            <a href="https://www.ishema.kr/" class="group/partner-link flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent border border-slate-300/80 rounded-2xl text-center shadow-xs">
                 <span>쉐마글로벌학교</span>
                 <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 bg-transparent border border-slate-300/80 rounded-xl text-center shadow-xs">
+            <a href="#" class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent border border-slate-300/80 rounded-2xl text-center shadow-xs">
                 21세기SMF선교회
             </a>
-            <a href="#" class="flex items-center justify-center px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 bg-transparent border border-slate-300/80 rounded-xl text-center shadow-xs">
+            <a href="#" class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent border border-slate-300/80 rounded-2xl text-center shadow-xs">
                 인도네시아센터
             </a>
 
-        <!-- 5번째 아이템: 모바일(col-span-2) / 데스크톱(sm:col-auto) -->
-            <a href="https://www.koreancenter.net/" class="group/partner-link col-span-2 sm:col-auto flex items-center justify-center gap-1 px-4 py-3 text-xs sm:text-sm font-medium text-slate-700 bg-transparent border border-slate-300/80 rounded-xl text-center shadow-xs">
+            <!-- 5번째 아이템: 모바일(col-span-2) / 데스크톱(sm:col-auto) -->
+            <a href="https://www.koreancenter.net/" class="group/partner-link col-span-2 sm:col-auto flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent border border-slate-300/80 rounded-2xl text-center shadow-xs">
                 <span>한국센터글로벌네트워크</span>
                 <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
             </a>
@@ -866,122 +889,118 @@
     </div>
 
         <!-- Donation & Support CTA Banner -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16 sm:mt-24 mb-16 sm:mb-20">
-            <div class="bg-[#EDF0F2FF] border border-slate-400/50 p-8 sm:p-10 rounded-3xl shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 text-left">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-24 mb-12 sm:mb-20">
+            <div class="bg-white/90 border border-slate-300/80 p-6 sm:p-10 rounded-2xl sm:rounded-3xl shadow-sm relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-5 text-left">
                 <div class="space-y-2">
                     <span class="font-mono text-xs text-slate-600 font-bold uppercase tracking-widest">[ INVEST IN MISSION ]</span>
-                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">하나님 나라의 확장,<br class="sm:hidden"> 동역으로 완성됩니다.</h3>
-                    <p class="text-xs sm:text-sm text-slate-700 font-light">국민은행 <span class="font-mono text-slate-900 font-bold">233001-04-416923</span><br class="sm:hidden"> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
+                    <h3 class="font-serif text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">하나님 나라의 확장,<br class="sm:hidden"> 동역으로 완성됩니다.</h3>
+                    <p class="text-sm sm:text-sm text-slate-700 font-normal leading-relaxed">국민은행 <span class="font-mono text-slate-900 font-bold">233001-04-416923</span><br class="sm:hidden"> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
                 </div>
-                <button type="button" onclick="handlePartnerConnect()"
-                        class="btn-primary partner-action no-shadow px-6 py-3.5 text-xs sm:text-sm font-mono font-bold shrink-0">
-                    후원/동역 안내 <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
-                </button>
+                <a href="./k-alliance.html"
+                   class="btn-primary partner-action no-shadow min-h-[48px] px-6 py-3.5 text-xs sm:text-sm font-mono font-bold shrink-0 w-full md:w-auto text-center justify-center inline-flex items-center gap-1.5 cursor-pointer">
+                    <span>K-Alliance</span> <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
+                </a>
             </div>
         </section>
         
         <!-- Minimalist Unified Footer -->
-        <footer class="bg-[#ece9e1] py-16 sm:py-20 relative overflow-hidden">
-</think>
-            <div class="w-full max-w-7xl mx-auto h-[1px] bg-gradient-to-r from-transparent via-slate-800/80 to-transparent mb-12 sm:mb-16"></div>
-
+        <footer class="bg-[#ece9e1] py-12 sm:py-16 relative overflow-hidden border-t border-black/10">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-                <!-- [중앙 섹션 1] 사명 재확인 (Monospace, Uppercase, Wide Tracking) -->
-                <p class="font-mono text-xs sm:text-sm text-slate-400 font-medium uppercase tracking-[0.25em] mb-6">
+                <!-- [중앙 섹션 1] 사명 재확인 -->
+                <p class="font-mono text-xs sm:text-sm text-slate-600 font-semibold uppercase tracking-[0.16em] sm:tracking-[0.2em] mb-4 sm:mb-5 max-w-xl mx-auto leading-relaxed">
                     Since 2011, Connecting South Korea and Indonesia
                 </p>
 
                 <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
-                <div class="flex items-center gap-4 text-xs text-slate-500 mb-6">
-                    <button type="button" onclick="openMdModal('terms')" class="hover:text-slate-300 transition-colors">Terms of Use</button>
-                    <span class="text-slate-800 select-none">|</span>
-                    <button type="button" onclick="openMdModal('privacy')" class="hover:text-slate-300 transition-colors">Privacy Policy</button>
-                    <span class="text-slate-800 select-none">|</span>
-                    <!-- Footer Contact Us Button -->
-                    <button type="button" onclick="openMdModal('contact-us')" class="hover:text-slate-300 transition-colors">Contact Us</button>
+                <div class="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-1.5 gap-y-1 text-xs text-slate-600 mb-5 sm:mb-6 max-w-full">
+                    <button type="button" onclick="openMdModal('terms')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Terms of Use</button>
+                    <span class="text-slate-400/60 select-none" aria-hidden="true">|</span>
+                    <button type="button" onclick="openMdModal('privacy')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Privacy Policy</button>
+                    <span class="text-slate-400/60 select-none" aria-hidden="true">|</span>
+                    <button type="button" onclick="openMdModal('contact-us')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Contact Us</button>
                 </div>
 
                 <!-- [하단] Copyright -->
-                <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-widest">
+                <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-wider sm:tracking-widest">
                     © 2026 K-WAVE MISSION. All rights reserved.
                 </p>
             </div>
         </footer>
 
-    <!-- 1. Floating K Brand Tab (반투명 유리가공 버전) -->
-        <button id="kwave-tab-btn" type="button" onclick="openKWaveDrawer()" class="fixed left-0 top-1/4 -translate-y-1/2 z-40 bg-slate-950/30 hover:bg-slate-900/80 text-amber-400 border-r border-y border-amber-500/20 hover:border-amber-400/60 py-3 px-2 rounded-r-2xl shadow-lg backdrop-blur-md transition-all duration-300 group flex flex-col items-center gap-2 cursor-pointer opacity-60 hover:opacity-100">
-        <span class="font-mono text-[9px] text-rose-400/80 group-hover:text-rose-400 font-bold uppercase [writing-mode:vertical-lr] tracking-widest">BRAND DNA</span>
-    <div class="w-6.5 h-6.5 rounded-lg bg-amber-500/10 border border-amber-500/20 group-hover:border-amber-500/40 flex items-center justify-center group-hover:scale-110 transition-transform">
-        <span class="font-serif font-bold text-amber-400 text-xs">K</span>
-    </div>
-    <!-- 주의를 끄는 은은한 핑 애니메이션 핀 -->
-    <span class="absolute -right-1 top-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-amber-400 animate-ping [animation-duration:8s] opacity-50"></span>
-        </button>
+    <div id="kwave-drawer-backdrop"
+        class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-700"
+        aria-hidden="true"></div>
 
-<div id="kwave-drawer-backdrop"
-    class="fixed inset-0 z-40 hidden bg-black/35 backdrop-blur-[1px] opacity-0 transition-opacity duration-300"
-    aria-hidden="true"></div>
-
-<!-- 📌 컴팩트 자승형 Floating Drawer (화면 높이에 맞춰 자동 크기 조절) -->
-<div id="kwave-drawer" 
-    class="fixed left-0 top-1/2 -translate-y-1/2 w-96 h-fit max-h-screen bg-[#F6F4EF] border-r border-y border-amber-500/20 rounded-r-3xl py-[1.68rem] px-5 shadow-2xl z-50 transition-all duration-300 ease-out -translate-x-full overflow-y-auto no-scrollbar overscroll-contain hidden">
-    
-    <!-- 1. 헤더 -->
-    <div class="flex items-center justify-between mb-3">
-        <div>
-            <span class="text-xs text-rose-400 font-mono tracking-widest uppercase mb-1 block">[ BRAND DNA ]</span>
-            <h2 class="text-2xl font-serif font-bold text-slate-900">우리의 K-Wave</h2>
-        </div>
-        <button onclick="closeKWaveDrawer()" class="p-2 rounded-xl bg-transparent hover:bg-transparent text-slate-400 hover:text-white transition-colors">
-            <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-    </div>
-
-    <!-- 2. Editorial identity timeline -->
-    <div class="my-4 ml-1 border-l border-black/10 pl-6">
-        <!-- 01 / SPIRITUAL IDENTITY -->
-        <div class="drawer-card relative pb-2.5 border-b border-black/10">
-            <span class="absolute -left-[1.72rem] top-1.5 w-2 h-2 rounded-full bg-[#374151] ring-4 ring-[#F6F4EF]"></span>
-            <span class="text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-1.5 block">01 / SPIRITUAL IDENTITY</span>
-            <h3 class="text-xl font-serif font-bold text-slate-900 mb-1.5"><span class="text-[#374151]">K</span>ing's <span class="text-slate-500">Wave</span></h3>
-            <p class="text-base font-bold text-slate-800 mb-1.5">예수 그리스도의 왕 되심을 선포하며</p>
-            <p></p>
-        </div>
-
-        <!-- 02 / KINGDOM EXPANSION -->
-        <div class="drawer-card relative py-2.5 border-b border-black/10">
-            <span class="absolute -left-[1.72rem] top-4 w-2 h-2 rounded-full bg-[#374151] ring-4 ring-[#F6F4EF]"></span>
-            <span class="text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-1.5 block">02 / KINGDOM EXPANSION</span>
-            <h3 class="text-xl font-serif font-bold text-slate-900 mb-1.5"><span class="text-[#374151]">K</span>ingdom's <span class="text-slate-500">Wave</span></h3>
-            <p class="text-base font-bold text-slate-800 mb-1.5">하나님의 나라 확장에 헌신합니다.</p>
-        </div>
-
-        <!-- 03 / MISSIONAL BRIDGE -->
-        <div class="drawer-card relative pt-2.5">
-            <span class="absolute -left-[1.72rem] top-4 w-2 h-2 rounded-full bg-[#374151] ring-4 ring-[#F6F4EF]"></span>
-            <span class="text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-1.5 block">03 / MISSIONAL BRIDGE</span>
-            <h3 class="text-xl font-serif font-bold text-slate-900 mb-1.5"><span class="text-[#374151]">K</span>orean <span class="text-slate-500">Wave</span></h3>
-            <p class="text-base font-bold text-slate-800 mb-1.5">이 일을 위해 대한민국을 부르십니다.</p>
-        </div>
-    </div>
-
-    <!-- 3. Editorial scripture and footer -->
-    <div class="drawer-card">
-        <div class="border-t border-black/10 pt-3 mt-4 text-center">
-            <div class="flex items-center justify-between text-[10px] font-mono mb-2">
-                <span class="text-slate-700 font-bold">KEY SCRIPTURE</span>
-                <span class="text-slate-500">HABAKKUK 2:14</span>
+    <!-- 📌 컴팩트 자승형 Floating Drawer (우측에 북마크 탭이 일체형으로 부착된 구조) -->
+    <div id="kwave-drawer" 
+        class="fixed left-0 top-1/2 -translate-y-1/2 w-[288px] sm:w-[310px] max-w-[calc(100vw-3.25rem)] h-fit max-h-[88vh] sm:max-h-[92vh] sm:min-h-[550px] flex flex-col justify-between bg-[#F6F4EF] border-r border-y border-black/10 rounded-r-3xl p-4 sm:p-7 shadow-2xl z-50 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-x-full overflow-visible">
+        
+        <!-- 📌 Drawer 우측에 일체형으로 부착된 북마크 탭 버튼 (Seamless & Luxurious Bookmark Tab) -->
+        <button id="kwave-tab-btn" type="button" onclick="toggleKWaveDrawer()" aria-label="Brand DNA 북마크 열기/닫기"
+            class="z-50 bg-[#F6F4EF] text-slate-800 border-r border-y border-l-0 border-black/10 py-2.5 px-1.5 sm:py-3.5 sm:px-2 rounded-r-2xl shadow-xl transition-all duration-300 group flex flex-col items-center gap-1.5 cursor-pointer pointer-events-auto select-none">
+            <span class="font-mono text-[7px] sm:text-[7.5px] text-slate-500 group-hover:text-slate-900 font-bold uppercase [writing-mode:vertical-lr] tracking-widest transition-colors py-0.5">BRAND DNA</span>
+            <div class="w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-lg bg-black/[0.04] border border-black/10 group-hover:border-black/25 flex items-center justify-center group-hover:scale-105 transition-all shadow-2xs">
+                <span class="font-serif font-bold text-slate-800 text-[10px] sm:text-[11px]">K</span>
             </div>
-            <p class="text-sm font-serif italic text-slate-800 leading-relaxed mb-0">
-                "이는 물이 바다를 덮음 같이<br>여호와의 영광을 인정하는 것이<br>세상에 가득함이니라"
-            </p>
+            <!-- 일체형 북마크 악센트 인디케이터 -->
+            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 group-hover:bg-slate-800 transition-colors"></span>
+        </button>
 
-            <button onclick="handlePartnerConnect()" class="btn-primary partner-action no-shadow w-[70%] mx-auto mt-3 py-2.5 px-4 text-xs font-semibold cursor-pointer">
-                CONNECT <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
+        <!-- 1. 헤더 -->
+        <div class="flex items-center justify-between mb-2 sm:mb-4">
+            <div>
+                <span class="text-[10px] sm:text-xs text-rose-500 font-mono tracking-widest uppercase mb-0.5 sm:mb-1 block font-semibold">[ BRAND DNA ]</span>
+                <h2 class="text-lg sm:text-2xl font-serif font-bold text-slate-900 tracking-tight">우리의 K-Wave</h2>
+            </div>
+            <button type="button" aria-label="닫기" onclick="closeKWaveDrawer()" class="p-1 sm:p-2 rounded-lg bg-transparent hover:bg-slate-200/70 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer">
+                <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
         </div>
+
+        <!-- 2. Editorial identity timeline -->
+        <div class="my-2 sm:my-5 ml-1 border-l border-slate-300 pl-3.5 sm:pl-5 space-y-2 sm:space-y-4">
+            <!-- 01 / SPIRITUAL IDENTITY -->
+            <div class="drawer-card relative pb-1 sm:pb-3 border-b border-slate-200/90">
+                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-1.5 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
+                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">01 / SPIRITUAL IDENTITY</span>
+                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>ing's <span class="text-slate-500">Wave</span></h3>
+                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">예수 그리스도의 왕 되심을 선포하며</p>
+            </div>
+
+            <!-- 02 / KINGDOM EXPANSION -->
+            <div class="drawer-card relative py-1 sm:py-3 border-b border-slate-200/90">
+                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-3 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
+                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">02 / KINGDOM EXPANSION</span>
+                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>ingdom's <span class="text-slate-500">Wave</span></h3>
+                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">하나님의 나라 확장에 헌신합니다.</p>
+            </div>
+
+            <!-- 03 / MISSIONAL BRIDGE -->
+            <div class="drawer-card relative pt-1 sm:pt-3">
+                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-3 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
+                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">03 / MISSIONAL BRIDGE</span>
+                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>orean <span class="text-slate-500">Wave</span></h3>
+                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">이 일을 위해 대한민국을 부르십니다.</p>
+            </div>
+        </div>
+
+        <!-- 3. Editorial scripture and footer -->
+        <div class="drawer-card">
+            <div class="border-t border-slate-300/80 pt-2 sm:pt-4 mt-2 sm:mt-4 text-center">
+                <div class="flex items-center justify-between text-[8.5px] sm:text-[10px] font-mono mb-1 sm:mb-2.5">
+                    <span class="text-slate-700 font-bold">KEY SCRIPTURE</span>
+                    <span class="text-slate-500">HABAKKUK 2:14</span>
+                </div>
+                <p class="text-[11px] sm:text-sm font-serif italic text-slate-800 leading-relaxed mb-2 sm:mb-4">
+                    “이는 물이 바다를 덮음 같이<br>여호와의 영광을 인정하는 것이<br>세상에 가득함이니라”
+                </p>
+
+                <button type="button" onclick="handlePartnerConnect()" class="btn-primary partner-action no-shadow w-full py-1.5 sm:py-2.5 px-3 sm:px-4 text-xs sm:text-sm font-semibold cursor-pointer rounded-xl flex items-center justify-center gap-1.5 shadow-xs">
+                    <span>CONNECT</span> <i data-lucide="arrow-up-right" class="partner-action-arrow w-3.5 h-3.5 sm:w-4 sm:h-4"></i>
+                </button>
+            </div>
+        </div>
     </div>
-</div>
 
 <!-- Legal Terms Modal -->
 <div id="legal-modal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md items-center justify-center p-4">
@@ -1004,32 +1023,58 @@
     </div>
 </div>
 
-    <!-- JavaScript modules -->
-    <script src="./assets/js/api-service.js?v=20260815-markdown-text-fix"></script>
-    <script src="./assets/js/ui-components.js?v=20260815-modal-scroll-lock"></script>
-    <script src="./assets/js/animations.js"></script>
-    <script src="./assets/js/modal-handler.js?v=20260816-rich-program-content"></script>
-    <script src="./assets/js/news-loader.js?v=20260816-d1-only"></script>
-    <script src="./assets/js/metrics-counter.js"></script>
-    <script src="./assets/js/kwave-drawer.js?v=20260815-modal-scroll-lock"></script>
-    <script src="./assets/js/program-loader.js?v=20260816-plain-card-preview"></script>
-    <script src="./assets/js/app-init.js"></script>
+    <!-- JavaScript modules (Deferred for Lighthouse mobile optimization) -->
+    <script>
+        // 즉시 전역 핸들러 등록 (defer 스크립트 로드 이전 클릭 대비)
+        window.toggleKWaveDrawer = function() {
+            if (window._kwaveLoaded && typeof window.toggleKWaveDrawer === 'function') {
+                return window.toggleKWaveDrawer();
+            }
+            var drawer = document.getElementById('kwave-drawer');
+            var backdrop = document.getElementById('kwave-drawer-backdrop');
+            if (!drawer) return;
+            if (drawer.classList.contains('-translate-x-full')) {
+                drawer.classList.remove('-translate-x-full');
+                if (backdrop) { backdrop.classList.remove('hidden'); backdrop.classList.remove('opacity-0'); }
+            } else {
+                drawer.classList.add('-translate-x-full');
+                if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
+            }
+        };
+        window.openKWaveDrawer = window.openKWaveDrawer || function() { window.toggleKWaveDrawer(); };
+        window.closeKWaveDrawer = window.closeKWaveDrawer || function() {
+            var drawer = document.getElementById('kwave-drawer');
+            var backdrop = document.getElementById('kwave-drawer-backdrop');
+            if (drawer) drawer.classList.add('-translate-x-full');
+            if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
+        };
+    </script>
+    <script src="./assets/js/api-service.js?v=20260815-markdown-text-fix" defer></script>
+    <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
+    <script src="./assets/js/animations.js" defer></script>
+    <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>
+    <script src="./assets/js/news-loader.js?v=20260816-d1-only" defer></script>
+    <script src="./assets/js/metrics-counter.js" defer></script>
+    <script src="./assets/js/kwave-drawer.js?v=20260818-bookmark-toggle-v2" defer></script>
+    <script src="./assets/js/program-loader.js?v=20260818-button-arrow-hover" defer></script>
+    <script src="./assets/js/app-init.js?v=20260818-scroll-fix" defer></script>
     <!-- End of JavaScript modules -->
      
     <!-- 마크다운 공통 모달 -->
-<div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-    <div class="bg-slate-900 border border-slate-800 text-slate-200 rounded-2xl w-full max-w-lg max-h-[85vh] flex flex-col shadow-2xl">        <!-- 모달 헤더 -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-            <h3 id="md-modal-title" class="text-lg font-semibold text-slate-100">안내</h3>
-            <button type="button" onclick="closeMdModal()" class="bg-transparent hover:bg-transparent text-slate-400 hover:text-white text-2xl font-bold px-2">&times;</button>
+<div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 sm:p-4">
+    <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+        <!-- 모달 헤더 -->
+        <div class="flex items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 border-b border-slate-100 bg-slate-50/80">
+            <h3 id="md-modal-title" class="font-serif text-base sm:text-lg font-bold text-slate-900 tracking-tight">안내</h3>
+            <button type="button" onclick="closeMdModal()" class="bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-700 text-2xl font-bold px-2 cursor-pointer transition-colors">&times;</button>
         </div>
         <!-- 모달 본문 (마크다운 파싱 결과) -->
-        <div id="md-modal-content" class="p-6 overflow-y-auto no-scrollbar overscroll-contain max-w-none text-sm leading-relaxed space-y-4 bg-transparent font-sans">
+        <div id="md-modal-content" class="px-4 py-3.5 sm:px-6 sm:py-4 overflow-y-auto no-scrollbar overscroll-contain max-w-none text-sm leading-relaxed bg-transparent font-sans text-slate-800">
             <!-- JavaScript가 이곳에 마크다운 HTML을 삽입합니다 -->
         </div>
         <!-- 모달 푸터 -->
-        <div class="px-6 py-3 border-t border-slate-800 flex justify-end">
-            <button type="button" onclick="closeMdModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-sm font-medium transition-colors">닫기</button>
+        <div class="px-5 py-2.5 sm:px-6 sm:py-3 border-t border-slate-100 bg-slate-50/80 flex justify-end">
+            <button type="button" onclick="closeMdModal()" class="px-4 py-1.5 sm:px-5 sm:py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer">닫기</button>
         </div>
     </div>
 </div>
