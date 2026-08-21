@@ -27,3 +27,12 @@
   * [https://jb.riia.or.kr/board/employmentAnnouncement/view/0607dbe5-ea47-11ee-8d14-317051ee2448]
   
 * 공고문은 공신력이 중요하므로 모든 포스팅마다 동일한 양식을 사용할 것.
+
+## Executive Summary Box
+
+* Footer Notice Box
+  * Include contact info and copyright notice at the bottom using `<div style="font-size: 0.9em; line-height: 1.6;">`.
+* Mandatory Copyright Disclaimer
+  * 선교는 교육입니다.<br>
+  * 우리는한 팀입니다.<br>
+  * [admin@kwavemission.org]

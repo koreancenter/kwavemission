@@ -437,7 +437,7 @@
           <td class="p-3"><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
           <td class="p-3">
             <div class="flex flex-col">
-              <a href="javascript:void(0)" onclick="previewPost(${post.id})" class="font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm">${window.AdminUI.escapeHtml(post.title)}</a>
+              <button type="button" onclick="previewPost(${post.id})" class="text-left font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm cursor-pointer p-0 bg-transparent border-0">${window.AdminUI.escapeHtml(post.title)}</button>
               <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '내용 없음')}</span>
             </div>
           </td>

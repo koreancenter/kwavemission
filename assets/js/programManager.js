@@ -134,7 +134,7 @@
           <td class="p-3"><span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200">${window.AdminUI.escapeHtml(program.category || 'DEGREE')}</span></td>
           <td class="p-3">
             <div class="flex flex-col">
-              <a href="javascript:void(0)" onclick="previewProgram(${program.id})" class="font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm">${window.AdminUI.escapeHtml(program.title)}</a>
+              <button type="button" onclick="previewProgram(${program.id})" class="text-left font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm cursor-pointer p-0 bg-transparent border-0">${window.AdminUI.escapeHtml(program.title)}</button>
               <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '설명 없음')}</span>
             </div>
           </td>
