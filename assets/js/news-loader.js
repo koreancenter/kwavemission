@@ -313,12 +313,16 @@ modalContent.innerHTML =
                 };
 
             var trimmed = (md || '').trim();
+            var hasHtml = trimmed.startsWith('<') || /<(?:div|span|table|tbody|thead|tr|th|td|p|h[1-6]|ul|ol|li|section|article|header|footer|style|iframe|svg|!--|img|b|strong|i|em|a)\b/i.test(trimmed);
 
-            // HTML 태그('<')로 시작하는 경우 marked를 거치지 않고 바로 innerHTML로 출력
+            // HTML 태그가 포함된 경우 마크다운의 4스페이스 코드블록 변환 방지 및 적절한 렌더링
             if (trimmed.startsWith('<')) {
-            bodyEl.innerHTML = md;
+                bodyEl.innerHTML = md;
+            } else if (hasHtml) {
+                var cleanHtml = (md || '').replace(/^[ \t]+(?=<|<!--)/gm, '');
+                bodyEl.innerHTML = marked.parse(cleanHtml, { renderer: renderer });
             } else {
-            bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
+                bodyEl.innerHTML = marked.parse(md, { renderer: renderer });
             }
             if (typeof window.observeLazyImages === 'function') window.observeLazyImages(bodyEl);
         }

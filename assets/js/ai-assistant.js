@@ -301,10 +301,33 @@ const AIAssistant = {
     }
   },
 
+  formatOllamaUrl(rawUrl, defaultPort = 11434) {
+    if (!rawUrl || typeof rawUrl !== 'string') return '';
+    let str = rawUrl.trim();
+    if (!str) return '';
+    if (!/^https?:\/\//i.test(str)) {
+      str = (str.includes('localhost') || str.includes('127.0.0.1'))
+        ? `http://${str}`
+        : `https://${str}`;
+    }
+    try {
+      const parsed = new URL(str);
+      let cleanPath = parsed.pathname.replace(/\/+$/, '');
+      cleanPath = cleanPath.replace(/\/api\/(?:generate|tags|chat|show|version)\/?$/i, '').replace(/\/api\/?$/i, '');
+      return `${parsed.origin}${cleanPath}`.replace(/\/+$/, '');
+    } catch {
+      return str.replace(/\/+$/, '').replace(/\/api\/(?:generate|tags|chat)\/?$/i, '').replace(/\/api\/?$/i, '');
+    }
+  },
+
   // 💡 Mixed Content 및 Ollama 연결 에러 방어 처리된 메서드
   async fetchOllamaModels(quiet = false, urlOverride = null) {
     const activeUrl = urlOverride || (this.config.localMode === 'pc' ? this.config.ollamaPcUrl : this.config.ollamaServerUrl);
-    const baseUrl = (activeUrl || 'http://localhost:11434').replace(/\/$/, '');
+    const baseUrl = this.formatOllamaUrl(activeUrl || (this.config.localMode === 'pc' ? 'http://localhost:11434' : ''));
+    if (!baseUrl) {
+      if (!quiet) alert('Ollama 서버 주소를 입력해 주세요.');
+      return;
+    }
 
     // HTTPS 페이지에서 HTTP Ollama URL 호출 시 브라우저 경고 안내
     if (window.location.protocol === 'https:' && baseUrl.startsWith('http:')) {

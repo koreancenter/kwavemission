@@ -49,8 +49,12 @@
     if (modalDate) modalDate.textContent = `슬러그: /programs/${program.slug || 'program'}`;
 
     let htmlContent = program.description || '(설명 내용 없음)';
-    if (window.marked && typeof window.marked.parse === 'function' && !htmlContent.trim().startsWith('<')) {
+    const hasHtml = htmlContent.trim().startsWith('<') || /<(?:div|span|table|tbody|thead|tr|th|td|p|h[1-6]|ul|ol|li|section|article|header|footer|style|iframe|svg|!--|img|b|strong|i|em|a)\b/i.test(htmlContent);
+    if (!htmlContent.trim().startsWith('<') && !hasHtml && window.marked && typeof window.marked.parse === 'function') {
       htmlContent = window.marked.parse(htmlContent);
+    } else if (hasHtml && !htmlContent.trim().startsWith('<') && window.marked && typeof window.marked.parse === 'function') {
+      const cleanHtml = htmlContent.replace(/^[ \t]+(?=<|<!--)/gm, '');
+      htmlContent = window.marked.parse(cleanHtml);
     }
     if (modalContent) modalContent.innerHTML = htmlContent;
 

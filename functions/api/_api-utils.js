@@ -14,7 +14,7 @@ export function jsonSuccess(payload = {}, status = 200) {
 }
 
 export function jsonError(message, status = 500, details) {
-  const payload = { success: false, message };
+  const payload = { success: false, error: message, message };
   if (details) payload.details = details;
   return jsonResponse(payload, status);
 }

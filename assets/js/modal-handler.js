@@ -220,13 +220,28 @@
         return response.text();
     }
 
+    function hasHtmlMarkup(str) {
+        if (!str || typeof str !== 'string') return false;
+        const trimmed = str.trim();
+        if (trimmed.startsWith('<')) return true;
+        return /<(?:div|span|table|tbody|thead|tr|th|td|p|h[1-6]|ul|ol|li|section|article|header|footer|style|iframe|svg|!--|img|b|strong|i|em|a)\b/i.test(trimmed);
+    }
+
     function renderModalContent(container, content) {
         if (!container) return;
         const strContent = String(content || '').trim();
 
         if (strContent.startsWith('<')) {
             container.innerHTML = strContent;
-        } else if (window.marked) {
+        } else if (hasHtmlMarkup(strContent)) {
+            // Strip leading spaces/tabs that would cause markdown to treat HTML lines as code blocks (<pre><code>)
+            const cleanHtmlMarkdown = strContent.replace(/^[ \t]+(?=<|<!--)/gm, '');
+            if (window.marked && typeof window.marked.parse === 'function') {
+                container.innerHTML = window.marked.parse(cleanHtmlMarkdown);
+            } else {
+                container.innerHTML = cleanHtmlMarkdown;
+            }
+        } else if (window.marked && typeof window.marked.parse === 'function') {
             container.innerHTML = window.marked.parse(strContent);
         } else {
             container.innerHTML = strContent;
@@ -247,7 +262,7 @@
 
         const targetSlug = slug || 'contact-us';
 
-        if (title) title.innerText = titles[targetSlug] ? titles[targetSlug] : '안내';
+        if (title) title.innerText = titles[targetSlug] ? titles[targetSlug] : '프로그램 안내';
         if (container) container.innerHTML = '<div class="text-center py-10 text-slate-400">문서를 불러오는 중입니다...</div>';
         if (modal) {
             if (typeof window.activateModal === 'function') {
