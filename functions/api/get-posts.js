@@ -25,11 +25,11 @@ export async function onRequestGet(context) {
     let stmt;
     if (type && type !== 'all') {
       stmt = env.DB.prepare(
-        "SELECT id, type, title, thumbnail_url, created_at FROM posts WHERE type = ? ORDER BY created_at DESC"
+        "SELECT id, type, title, content, thumbnail_url, created_at FROM posts WHERE type = ? ORDER BY created_at DESC"
       ).bind(type);
     } else {
       stmt = env.DB.prepare(
-        "SELECT id, type, title, thumbnail_url, created_at FROM posts ORDER BY created_at DESC"
+        "SELECT id, type, title, content, thumbnail_url, created_at FROM posts ORDER BY created_at DESC"
       );
     }
 

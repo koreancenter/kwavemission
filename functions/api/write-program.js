@@ -11,10 +11,9 @@ export async function onRequestPost(context) {
     const slug = formData.get("slug");
     const category = formData.get("category");
     const title = formData.get("title");
-    const description = formData.get("description");
-    const status = formData.get("status") || "recruiting";
+    const description = formData.get("description") || "";
+    const status = formData.get("status") || "active";
     const icon = formData.get("icon") || "🎓";
-    const is_recommended = formData.get("is_recommended") === "1" ? 1 : 0;
     const display_order = parseInt(formData.get("display_order") || "0", 10);
 
     const authContext = await requireAdminAuth(context, formData);
@@ -25,27 +24,27 @@ export async function onRequestPost(context) {
       return missingBinding('DB', 'D1');
     }
 
-    // 필수 입력값 검증
-    if (!slug || !category || !title || !description) {
-      return jsonError("슬러그, 카테고리, 제목, 설명은 필수 항목입니다.", 400);
+    // 필수 입력값 검증 (D1 스키마 기준: slug, category, title NOT NULL)
+    if (!slug || !category || !title) {
+      return jsonError("슬러그, 카테고리, 제목은 필수 항목입니다.", 400);
     }
 
     // 수정 (UPDATE)
     if (id) {
       await env.DB.prepare(
         `UPDATE programs 
-         SET slug = ?, category = ?, title = ?, description = ?, status = ?, icon = ?, is_recommended = ?, display_order = ?
+         SET slug = ?, category = ?, title = ?, description = ?, status = ?, icon = ?, display_order = ?
          WHERE id = ?`
-      ).bind(slug, category, title, description, status, icon, is_recommended, display_order, id).run();
+      ).bind(slug, category, title, description, status, icon, display_order, id).run();
 
       return jsonSuccess({ message: "프로그램이 수정되었습니다." });
     }
 
     // 신규 등록 (INSERT)
     const info = await env.DB.prepare(
-      `INSERT INTO programs (slug, category, title, description, status, icon, is_recommended, display_order)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
-    ).bind(slug, category, title, description, status, icon, is_recommended, display_order).run();
+      `INSERT INTO programs (slug, category, title, description, status, icon, display_order)
+       VALUES (?, ?, ?, ?, ?, ?, ?)`
+    ).bind(slug, category, title, description, status, icon, display_order).run();
 
     return jsonSuccess({ info });
 
@@ -53,3 +52,4 @@ export async function onRequestPost(context) {
     return jsonError(errorMessage(err, '프로그램 저장 중 오류가 발생했습니다.'), 500);
   }
 }
+

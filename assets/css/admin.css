@@ -389,15 +389,18 @@ textarea {
   margin-top: 1.25rem;
 }
 
-table {
+table.admin-data-table,
+.table-responsive > table {
   width: 100%;
   min-width: 760px;
   border-collapse: collapse;
   color: var(--admin-ink);
 }
 
-th,
-td {
+.table-responsive > table th,
+.table-responsive > table td,
+table.admin-data-table th,
+table.admin-data-table td {
   padding: 0.85rem 0.7rem;
   border-bottom: 1px solid var(--admin-line);
   text-align: left;
@@ -405,7 +408,8 @@ td {
   font-size: 0.86rem;
 }
 
-th {
+.table-responsive > table th,
+table.admin-data-table th {
   background: rgba(231, 229, 228, 0.58);
   color: var(--admin-slate);
   font-size: 0.75rem;
@@ -413,7 +417,8 @@ th {
   text-transform: uppercase;
 }
 
-tbody tr:hover {
+.table-responsive > table tbody tr:hover,
+table.admin-data-table tbody tr:hover {
   background: rgba(255, 251, 235, 0.72);
 }
 
@@ -634,6 +639,58 @@ code {
   border-radius: var(--admin-radius);
 }
 
+/* Light-theme dedicated Preview Modal Styles */
+#previewModal .modal-content {
+  background: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  border-top: 4px solid #1e293b;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.25);
+}
+
+#previewModal .modal-title {
+  color: #0f172a;
+}
+
+#previewModal .modal-date {
+  color: #64748b;
+}
+
+#previewModal .modal-close {
+  color: #64748b;
+  border-color: transparent;
+}
+
+#previewModal .modal-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+#previewModal .preview-body {
+  color: #334155;
+  line-height: 1.7;
+}
+
+#previewModal .preview-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.925rem;
+}
+
+#previewModal .preview-body th,
+#previewModal .preview-body td {
+  border: 1px solid #cbd5e1;
+  padding: 0.65rem 0.85rem;
+}
+
+#previewModal .preview-body th {
+  background-color: #f1f5f9;
+  font-weight: 700;
+  color: #1e293b;
+}
+
 .ai-assistant-box {
   margin: 1rem 0 1.25rem;
   border: 1px solid var(--admin-line);
@@ -720,14 +777,15 @@ code {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  min-height: 28px !important;
-  height: 28px !important;
-  padding: 0 8px !important;
+  min-height: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  padding: 0 6px !important;
   border: 1px solid #cbd5e1 !important;
   border-radius: 6px !important;
   background-color: #ffffff !important;
   color: #334155 !important;
-  font-size: 0.75rem !important;
+  font-size: 0.8rem !important;
   font-weight: 600 !important;
   line-height: 1 !important;
   cursor: pointer !important;
@@ -750,9 +808,9 @@ code {
 }
 
 .ProseMirror {
-  min-height: 220px;
+  min-height: 160px;
   outline: none !important;
-  padding: 1rem;
+  padding: 0.85rem 1rem;
 }
 
 .ProseMirror blockquote {
@@ -787,6 +845,56 @@ code {
 .ProseMirror a {
   color: #2563eb;
   text-decoration: underline;
+}
+
+/* Rich Content Table Formatting (Prevents spilling out & supports responsive scrolling) */
+.ProseMirror table,
+.preview-body table {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  table-layout: auto !important;
+  border-collapse: collapse !important;
+  margin: 1.25rem 0 !important;
+  overflow-x: auto !important;
+  display: table !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 8px !important;
+}
+
+.ProseMirror th,
+.ProseMirror td,
+.preview-body th,
+.preview-body td {
+  padding: 0.625rem 0.875rem !important;
+  border: 1px solid #cbd5e1 !important;
+  text-align: left !important;
+  vertical-align: top !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  word-break: break-word !important;
+  overflow-wrap: break-word !important;
+  background-clip: padding-box !important;
+}
+
+.ProseMirror th,
+.preview-body th {
+  background-color: #f1f5f9 !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+}
+
+.ProseMirror tr:nth-child(even),
+.preview-body tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+.blogger-editor-container,
+.ProseMirror,
+#programTiptapEditor,
+#postTiptapEditor {
+  overflow-x: auto !important;
+  max-width: 100% !important;
 }
 
 /* Horizontal Form Row Enhancements */

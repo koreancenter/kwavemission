@@ -36,7 +36,6 @@ if (fs.existsSync(schemaPath)) {
       description TEXT,
       status TEXT DEFAULT 'active',
       icon TEXT DEFAULT '🎓',
-      is_recommended INTEGER DEFAULT 0,
       display_order INTEGER DEFAULT 0,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -52,19 +51,12 @@ if (fs.existsSync(schemaPath)) {
   `);
 }
 
-// Migration check for missing columns in existing database
-try {
-  db.exec("ALTER TABLE programs ADD COLUMN is_recommended INTEGER DEFAULT 0;");
-} catch (e) {
-  // Column already exists
-}
-
 // Seed initial data if database is empty
 const programCount = db.prepare("SELECT COUNT(*) as c FROM programs WHERE status != 'deleted'").get().c;
 if (programCount === 0) {
   const insertProg = db.prepare(`
-    INSERT INTO programs (slug, category, title, description, status, icon, is_recommended, display_order)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    INSERT INTO programs (slug, category, title, description, status, icon, display_order)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
   insertProg.run(
     "indonesia-10-days",
@@ -73,7 +65,6 @@ if (programCount === 0) {
     "인도네시아 현지 대학 및 단체와 연계하여 진행되는 10일간의 한국 문화/언어 교류 프로그램입니다.",
     "recruiting",
     "🌏",
-    1,
     1
   );
   insertProg.run(
@@ -83,7 +74,6 @@ if (programCount === 0) {
     "현지 대학생 및 청소년을 위한 온라인/오프라인 한국어 교육 프로그램 봉사자 모집.",
     "recruiting",
     "🎓",
-    0,
     2
   );
   insertProg.run(
@@ -93,10 +83,10 @@ if (programCount === 0) {
     "K-POP, K-뷰티, 한국 전통문화를 매개로 현지 청소년들과 소통하는 문화 사역 캠프.",
     "ongoing",
     "🎵",
-    0,
     3
   );
 }
+
 
 const postCount = db.prepare("SELECT COUNT(*) as c FROM posts WHERE status != 'deleted'").get().c;
 if (postCount === 0) {

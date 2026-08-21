@@ -1,17 +1,20 @@
 /**
  * K-WAVE Brand DNA Drawer & Partner Connect Controller
+ * Refined with Framer Motion-inspired spring physics and high-performance RAF gestures
  */
 (function () {
     'use strict';
 
     window._kwaveLoaded = true;
-    const DRAWER_TRANSITION_MS = 750; // 속도를 절반으로 감속하여 프리미엄 슬라이딩 연출
-    const SWIPE_TRANSITION_MS = 450;
+    const DRAWER_TRANSITION_MS = 650; // Smooth luxury sliding door pacing (approx 50% slower, soft-close curve)
+    const SWIPE_TRANSITION_MS = 420;
+    const EASING_LUXURY = 'cubic-bezier(0.16, 1, 0.3, 1)'; // Silky smooth high-end deceleration curve
     let closeTimer;
     let touchStartX = 0;
     let touchStartY = 0;
     let touchDeltaX = 0;
     let isHorizontalSwipe = false;
+    let rafSwipeId = null;
 
     // ==========================================
     // 0. Toggle Drawer (북마크 탭 클릭 시 열기/닫기)
@@ -27,7 +30,7 @@
     };
 
     // ==========================================
-    // 1. Drawer 열기 함수 (부드러운 프리미엄 시차 애니메이션)
+    // 1. Drawer 열기 함수 (부드러운 프리미엄 슬라이딩 도어 시차 애니메이션)
     // ==========================================
     window.openKWaveDrawer = function () {
         const drawer = document.getElementById('kwave-drawer');
@@ -48,23 +51,24 @@
             backdrop.classList.remove('hidden');
         }
 
-        setTimeout(function () {
+        // Use requestAnimationFrame for instant 60/120fps hardware trigger
+        requestAnimationFrame(function () {
             drawer.classList.remove('-translate-x-full');
             if (backdrop) {
                 backdrop.classList.remove('opacity-0');
             }
-        }, 16);
+        });
 
-        // 카드 순차 페이드 인 (Stagger)
+        // 카드 순차 페이드 인 (Staggered Luxury Drop)
         const cards = drawer.querySelectorAll('.drawer-card');
         cards.forEach(function (card, index) {
             card.classList.remove('animate-card-drop');
             card.style.animationDelay = '0ms';
 
             setTimeout(function () {
-                card.style.animationDelay = (index * 100) + 'ms';
+                card.style.animationDelay = (index * 80) + 'ms';
                 card.classList.add('animate-card-drop');
-            }, 220);
+            }, 180);
         });
     };
 
@@ -84,8 +88,8 @@
         }
 
         if (closesToRight) {
-            drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1)';
-            drawer.style.transform = 'translate(100%, -50%)';
+            drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms ' + EASING_LUXURY;
+            drawer.style.transform = 'translate3d(100%, -50%, 0)';
         } else {
             drawer.classList.add('-translate-x-full');
         }
@@ -106,8 +110,8 @@
     };
 
     function resetSwipe(drawer) {
-        drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms cubic-bezier(0.16, 1, 0.3, 1)';
-        drawer.style.transform = 'translate(0, -50%)';
+        drawer.style.transition = 'transform ' + SWIPE_TRANSITION_MS + 'ms ' + EASING_LUXURY;
+        drawer.style.transform = 'translate3d(0, -50%, 0)';
 
         setTimeout(function () {
             if (!drawer.classList.contains('-translate-x-full')) {
@@ -141,6 +145,7 @@
             touchStartY = event.touches[0].clientY;
             touchDeltaX = 0;
             isHorizontalSwipe = false;
+            if (rafSwipeId) cancelAnimationFrame(rafSwipeId);
             drawer.style.removeProperty('transition');
         }, { passive: true });
 
@@ -158,13 +163,18 @@
 
             event.preventDefault();
             touchDeltaX = Math.max(0, deltaX);
-            drawer.style.transform = 'translate(' + touchDeltaX + 'px, -50%)';
+
+            if (rafSwipeId) cancelAnimationFrame(rafSwipeId);
+            rafSwipeId = requestAnimationFrame(function () {
+                drawer.style.transform = 'translate3d(' + touchDeltaX + 'px, -50%, 0)';
+            });
         }, { passive: false });
 
         drawer.addEventListener('touchend', function () {
+            if (rafSwipeId) cancelAnimationFrame(rafSwipeId);
             if (!isHorizontalSwipe) return;
 
-            const closeThreshold = Math.min(96, drawer.offsetWidth * 0.25);
+            const closeThreshold = Math.min(80, drawer.offsetWidth * 0.22);
             if (touchDeltaX >= closeThreshold) {
                 window.closeKWaveDrawer({ direction: 'right' });
             } else {
@@ -176,6 +186,7 @@
         });
 
         drawer.addEventListener('touchcancel', function () {
+            if (rafSwipeId) cancelAnimationFrame(rafSwipeId);
             if (isHorizontalSwipe) {
                 resetSwipe(drawer);
             }

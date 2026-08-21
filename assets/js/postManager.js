@@ -11,6 +11,11 @@
 
   let tiptapInstance = null;
 
+  function hasComplexHtml(html) {
+    if (!html || typeof html !== 'string') return false;
+    return /<(?:table|thead|tbody|tr|th|td|div|style|section|article|header|footer|iframe|svg|span\s+style|p\s+style|h[1-6]\s+style|!--)/i.test(html);
+  }
+
   function setupBloggerEditor(containerId, toolbarId, hiddenInputId) {
     const container = document.getElementById(containerId);
     const hiddenInput = document.getElementById(hiddenInputId);
@@ -21,13 +26,21 @@
     let sourceTextarea = container.parentNode.querySelector('.blogger-html-source');
     if (!sourceTextarea) {
       sourceTextarea = document.createElement('textarea');
-      sourceTextarea.className = 'blogger-html-source hidden w-full min-h-[320px] p-4 font-mono text-xs text-slate-900 bg-slate-50 border border-slate-300 rounded-b-xl focus:outline-none focus:ring-2 focus:ring-slate-800 resize-y';
-      sourceTextarea.placeholder = '여기에 HTML 코드를 직접 입력하거나 수정하세요 (예: <h2>제목</h2><p>내용</p>)...';
+      sourceTextarea.className = 'blogger-html-source hidden w-full min-h-[360px] p-4 font-mono text-xs text-slate-900 bg-slate-50 border border-slate-300 rounded-b-xl focus:outline-none focus:ring-2 focus:ring-slate-800 resize-y leading-relaxed';
+      sourceTextarea.placeholder = '여기에 HTML 코드를 직접 입력하거나 수정하세요 (예: <h2>제목</h2><div style="...">...</div>)...';
       container.parentNode.insertBefore(sourceTextarea, container.nextSibling);
 
       sourceTextarea.addEventListener('input', () => {
         if (hiddenInput) hiddenInput.value = sourceTextarea.value;
       });
+      sourceTextarea.addEventListener('change', () => {
+        if (hiddenInput) hiddenInput.value = sourceTextarea.value;
+      });
+    }
+
+    const initialContent = hiddenInput ? (hiddenInput.value || '') : '';
+    if (sourceTextarea) {
+      sourceTextarea.value = initialContent;
     }
 
     const extensions = [window.TiptapStarterKit];
@@ -35,35 +48,61 @@
     if (window.TiptapImage) extensions.push(window.TiptapImage);
     if (window.TiptapUnderline) extensions.push(window.TiptapUnderline);
 
-    const editor = new window.TiptapEditor({
-      element: container,
-      extensions,
-      content: hiddenInput ? hiddenInput.value || '' : '',
-      editorProps: {
-        handlePaste(view, event) {
-          const text = event.clipboardData?.getData('text/plain');
-          if (text && /<[a-z][\s\S]*>/i.test(text.trim())) {
-            // Automatically parse pasted HTML strings into rendered rich text elements
-            event.preventDefault();
-            editor.commands.insertContent(text.trim());
-            return true;
+    let editor = null;
+    let isHandlingHtmlSync = false;
+
+    try {
+      editor = new window.TiptapEditor({
+        element: container,
+        extensions,
+        content: initialContent,
+        editorProps: {
+          handlePaste(view, event) {
+            const text = event.clipboardData?.getData('text/plain') || '';
+            if (text && /<[a-z][\s\S]*>/i.test(text.trim())) {
+              // Pasted HTML code
+              if (hasComplexHtml(text)) {
+                // For rich/complex HTML, update source and hidden input
+                if (hiddenInput) hiddenInput.value = text.trim();
+                if (sourceTextarea) sourceTextarea.value = text.trim();
+                if (editor) {
+                  try {
+                    editor.commands.setContent(text.trim());
+                  } catch (e) {
+                    console.warn('Tiptap setContent fallback for complex HTML:', e);
+                  }
+                }
+                return true;
+              } else {
+                event.preventDefault();
+                editor.commands.insertContent(text.trim());
+                return true;
+              }
+            }
+            return false;
           }
-          return false;
+        },
+        onUpdate: ({ editor: ed }) => {
+          if (isHandlingHtmlSync) return;
+          const currentHtml = ed.getHTML();
+          const sourceActive = sourceTextarea && !sourceTextarea.classList.contains('hidden');
+
+          if (!sourceActive) {
+            // In visual mode, update hidden input and source textarea if not complex HTML preserved
+            if (!hasComplexHtml(sourceTextarea.value) || currentHtml.length >= sourceTextarea.value.length * 0.7) {
+              if (hiddenInput) hiddenInput.value = currentHtml;
+              if (sourceTextarea) sourceTextarea.value = currentHtml;
+            }
+          }
+          updateActiveButtons(ed, toolbar);
+        },
+        onSelectionUpdate: ({ editor: ed }) => {
+          updateActiveButtons(ed, toolbar);
         }
-      },
-      onUpdate: ({ editor }) => {
-        if (hiddenInput) {
-          hiddenInput.value = editor.getHTML();
-        }
-        if (sourceTextarea && container.classList.contains('hidden') === false) {
-          sourceTextarea.value = editor.getHTML();
-        }
-        updateActiveButtons(editor, toolbar);
-      },
-      onSelectionUpdate: ({ editor }) => {
-        updateActiveButtons(editor, toolbar);
-      }
-    });
+      });
+    } catch (err) {
+      console.warn('Error initializing Tiptap editor:', err);
+    }
 
     if (toolbar) {
       toolbar.addEventListener('click', (e) => {
@@ -72,12 +111,12 @@
         e.preventDefault();
 
         const cmd = btn.getAttribute('data-cmd');
-        executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput);
-        updateActiveButtons(editor, toolbar);
+        executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput, toolbar);
+        if (editor) updateActiveButtons(editor, toolbar);
       });
 
       const headingSelect = toolbar.querySelector('select[data-cmd="headingSelect"]');
-      if (headingSelect) {
+      if (headingSelect && editor) {
         headingSelect.addEventListener('change', (e) => {
           const val = e.target.value;
           if (val === 'p') editor.chain().focus().setParagraph().run();
@@ -91,43 +130,61 @@
     return editor;
   }
 
-  function executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput) {
-    if (!editor) return;
+  function executeEditorCommand(editor, cmd, container, sourceTextarea, hiddenInput, toolbar) {
     switch (cmd) {
       case 'toggleHtmlView': {
         if (!container || !sourceTextarea) return;
         const isSourceActive = !sourceTextarea.classList.contains('hidden');
-        const toggleBtn = document.querySelectorAll(`[data-cmd="toggleHtmlView"]`);
+        const toggleBtn = toolbar ? toolbar.querySelectorAll('[data-cmd="toggleHtmlView"]') : document.querySelectorAll('[data-cmd="toggleHtmlView"]');
 
         if (isSourceActive) {
-          // Switch from HTML Source -> Visual WYSIWYG (HTML Code rendered as formatted text)
-          const htmlCode = sourceTextarea.value;
-          editor.commands.setContent(htmlCode || '');
-          if (hiddenInput) hiddenInput.value = htmlCode || '';
+          // Switch from HTML Source -> Visual WYSIWYG
+          const htmlCode = sourceTextarea.value || '';
+          if (hiddenInput) hiddenInput.value = htmlCode;
+
+          if (editor) {
+            try {
+              editor.commands.setContent(htmlCode);
+            } catch (err) {
+              console.warn('Failed to parse complex HTML into Tiptap visual model:', err);
+            }
+          }
+
           sourceTextarea.classList.add('hidden');
           container.classList.remove('hidden');
 
           toggleBtn.forEach(btn => {
-            btn.innerHTML = '&lt;&gt; HTML 소스';
+            btn.innerHTML = '&lt;/&gt;';
+            btn.title = 'HTML 소스 코드 보기';
             btn.classList.remove('bg-slate-800', 'text-white');
             btn.classList.add('bg-slate-100', 'text-slate-800');
           });
         } else {
           // Switch from Visual WYSIWYG -> HTML Source
-          const htmlCode = editor.getHTML();
-          sourceTextarea.value = htmlCode;
-          if (hiddenInput) hiddenInput.value = htmlCode;
+          let currentContent = hiddenInput ? (hiddenInput.value || '') : '';
+          if (editor && !hasComplexHtml(currentContent)) {
+            currentContent = editor.getHTML();
+          }
+          if (sourceTextarea) sourceTextarea.value = currentContent;
+          if (hiddenInput) hiddenInput.value = currentContent;
+
           container.classList.add('hidden');
           sourceTextarea.classList.remove('hidden');
+          sourceTextarea.focus();
 
           toggleBtn.forEach(btn => {
-            btn.innerHTML = '✏️ 시각적 편집 (렌더링)';
+            btn.innerHTML = '👁️';
+            btn.title = '시각적 편집 모드로 전환';
             btn.classList.remove('bg-slate-100', 'text-slate-800');
             btn.classList.add('bg-slate-800', 'text-white');
           });
         }
-        break;
+        return;
       }
+    }
+
+    if (!editor) return;
+    switch (cmd) {
       case 'undo': editor.chain().focus().undo().run(); break;
       case 'redo': editor.chain().focus().redo().run(); break;
       case 'bold': editor.chain().focus().toggleBold().run(); break;
@@ -156,6 +213,7 @@
       case 'clear': editor.chain().focus().unsetAllMarks().clearNodes().run(); break;
     }
   }
+
 
   function updateActiveButtons(editor, toolbar) {
     if (!editor || !toolbar) return;
@@ -207,16 +265,43 @@
   }
 
   function getTiptapContent() {
-    return tiptapInstance ? tiptapInstance.getHTML() : (document.getElementById('postContent')?.value || '');
+    const hiddenInput = document.getElementById('postContent');
+    const container = document.getElementById('postTiptapEditor');
+    const sourceTextarea = container && container.parentNode ? container.parentNode.querySelector('.blogger-html-source') : null;
+
+    if (sourceTextarea && !sourceTextarea.classList.contains('hidden')) {
+      return sourceTextarea.value || '';
+    }
+    if (hiddenInput && hasComplexHtml(hiddenInput.value)) {
+      return hiddenInput.value;
+    }
+    if (sourceTextarea && hasComplexHtml(sourceTextarea.value)) {
+      return sourceTextarea.value;
+    }
+    if (tiptapInstance) {
+      const html = tiptapInstance.getHTML();
+      if (html && html !== '<p></p>') return html;
+    }
+    return hiddenInput ? hiddenInput.value || '' : '';
   }
 
   function setTiptapContent(html) {
     const hiddenInput = document.getElementById('postContent');
-    if (hiddenInput) hiddenInput.value = html || '';
+    const container = document.getElementById('postTiptapEditor');
+    const sourceTextarea = container && container.parentNode ? container.parentNode.querySelector('.blogger-html-source') : null;
+    const safeHtml = html || '';
+
+    if (hiddenInput) hiddenInput.value = safeHtml;
+    if (sourceTextarea) sourceTextarea.value = safeHtml;
     if (tiptapInstance) {
-      tiptapInstance.commands.setContent(html || '');
+      try {
+        tiptapInstance.commands.setContent(safeHtml);
+      } catch (err) {
+        console.warn('Tiptap setContent fallback:', err);
+      }
     }
   }
+
 
   function clearTiptapContent() {
     setTiptapContent('');
@@ -228,8 +313,23 @@
     return doc.body.textContent || "";
   }
 
-  function previewPost(id) {
-    const post = state.posts.find(p => Number(p.id) === Number(id));
+  async function previewPost(id) {
+    let post = state.posts.find(p => Number(p.id) === Number(id));
+    if (!post || !post.content) {
+      try {
+        const fetched = await window.AdminApi.api.get(`/api/get-posts?id=${id}`);
+        if (fetched && fetched.id) {
+          post = fetched;
+          // Update in local state as well
+          const idx = state.posts.findIndex(p => Number(p.id) === Number(id));
+          if (idx !== -1) {
+            state.posts[idx] = { ...state.posts[idx], ...fetched };
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to fetch full post for preview:', err);
+      }
+    }
     if (!post) return;
 
     const modal = document.getElementById('previewModal');

@@ -928,22 +928,19 @@
         </footer>
 
     <div id="kwave-drawer-backdrop"
-        class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-700"
+        class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-500"
         aria-hidden="true"></div>
 
     <!-- 📌 컴팩트 자승형 Floating Drawer (우측에 북마크 탭이 일체형으로 부착된 구조) -->
     <div id="kwave-drawer" 
-        class="fixed left-0 top-1/2 -translate-y-1/2 w-[288px] sm:w-[310px] max-w-[calc(100vw-3.25rem)] h-fit max-h-[88vh] sm:max-h-[92vh] sm:min-h-[550px] flex flex-col justify-between bg-[#F6F4EF] border-r border-y border-black/10 rounded-r-3xl p-4 sm:p-7 shadow-2xl z-50 transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-x-full overflow-visible">
+        class="fixed left-0 top-1/2 -translate-y-1/2 w-[288px] sm:w-[310px] max-w-[calc(100vw-3.25rem)] h-fit max-h-[88vh] sm:max-h-[92vh] sm:min-h-[550px] flex flex-col justify-between bg-[#F6F4EF] border-r border-y border-black/10 rounded-r-3xl p-4 sm:p-7 shadow-2xl z-50 transition-transform duration-650 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-x-full overflow-visible">
         
-        <!-- 📌 Drawer 우측에 일체형으로 부착된 북마크 탭 버튼 (Seamless & Luxurious Bookmark Tab) -->
+        <!-- 📌 Drawer 우측에 일체형으로 부착된 북마크 탭 버튼 (Seamless & Compact Bookmark Tab) -->
         <button id="kwave-tab-btn" type="button" onclick="toggleKWaveDrawer()" aria-label="Brand DNA 북마크 열기/닫기"
-            class="z-50 bg-[#F6F4EF] text-slate-800 border-r border-y border-l-0 border-black/10 py-2.5 px-1.5 sm:py-3.5 sm:px-2 rounded-r-2xl shadow-xl transition-all duration-300 group flex flex-col items-center gap-1.5 cursor-pointer pointer-events-auto select-none">
-            <span class="font-mono text-[7px] sm:text-[7.5px] text-slate-500 group-hover:text-slate-900 font-bold uppercase [writing-mode:vertical-lr] tracking-widest transition-colors py-0.5">BRAND DNA</span>
+            class="z-50 bg-[#F6F4EF] text-slate-800 border-r border-y border-l-0 border-black/10 p-1.5 sm:p-2 rounded-r-xl shadow-md transition-all duration-300 group flex items-center justify-center cursor-pointer pointer-events-auto select-none">
             <div class="w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-lg bg-black/[0.04] border border-black/10 group-hover:border-black/25 flex items-center justify-center group-hover:scale-105 transition-all shadow-2xs">
                 <span class="font-serif font-bold text-slate-800 text-[10px] sm:text-[11px]">K</span>
             </div>
-            <!-- 일체형 북마크 악센트 인디케이터 -->
-            <span class="w-1.5 h-1.5 rounded-full bg-slate-400 group-hover:bg-slate-800 transition-colors"></span>
         </button>
 
         <!-- 1. 헤더 -->

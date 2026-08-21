@@ -687,10 +687,20 @@ img, video, iframe {
   }
 }
 
-/* 📌 Drawer Smooth Stagger Animation & Styling */
+/* 📌 Drawer Smooth Stagger Animation & Styling (Luxury Sliding Door) */
 #kwave-drawer {
     box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(217, 119, 6, 0.15);
-    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+}
+
+#kwave-drawer-backdrop {
+    will-change: opacity;
+    transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (max-width: 639px) {
@@ -708,14 +718,16 @@ img, video, iframe {
 }
 
 #kwave-tab-btn {
-    background-color: rgba(246, 244, 239, 0.5) !important;
+    background-color: rgba(246, 244, 239, 0.65) !important;
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     box-shadow: 3px 4px 14px -2px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(217, 119, 6, 0.15);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease;
+    will-change: transform;
 }
 
 #kwave-tab-btn:hover {
-    background-color: rgba(246, 244, 239, 0.75) !important;
+    background-color: rgba(246, 244, 239, 0.85) !important;
 }
 
 @media (min-width: 640px) {
@@ -727,17 +739,21 @@ img, video, iframe {
 @keyframes smoothDrawerCardDrop {
     0% {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px) scale(0.98);
     }
     100% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
     }
+}
+
+.drawer-card {
+    will-change: transform, opacity;
 }
 
 .drawer-card.animate-card-drop {
     opacity: 0;
-    animation: smoothDrawerCardDrop 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: smoothDrawerCardDrop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Modal Markdown Typography & Readability */
@@ -746,6 +762,19 @@ img, video, iframe {
   color: #1e293b;
   line-height: 1.7;
   word-break: keep-all;
+}
+
+/* Program Card Title 2-line clamp & height alignment */
+.prog-card h3,
+#prog-slider .prog-card h3 {
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  -webkit-line-clamp: 2 !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: keep-all !important;
+  line-height: 1.4 !important;
+  max-height: 2.8em !important;
 }
 
 #md-modal-content h1,

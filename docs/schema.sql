@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS programs (
   description TEXT,
   status TEXT DEFAULT 'active',
   icon TEXT DEFAULT '🎓',
-  is_recommended INTEGER DEFAULT 0,
   display_order INTEGER DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );

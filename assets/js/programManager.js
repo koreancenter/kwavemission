@@ -194,17 +194,49 @@
     programTiptapInstance = window.setupBloggerEditor('programTiptapEditor', 'programTiptapToolbar', 'programDescription');
   }
 
+  function hasComplexHtml(html) {
+    if (!html || typeof html !== 'string') return false;
+    return /<(?:table|thead|tbody|tr|th|td|div|style|section|article|header|footer|iframe|svg|span\s+style|p\s+style|h[1-6]\s+style|!--)/i.test(html);
+  }
+
   function getProgramTiptapContent() {
-    return programTiptapInstance ? programTiptapInstance.getHTML() : (document.getElementById('programDescription')?.value || '');
+    const hiddenInput = document.getElementById('programDescription');
+    const container = document.getElementById('programTiptapEditor');
+    const sourceTextarea = container && container.parentNode ? container.parentNode.querySelector('.blogger-html-source') : null;
+
+    if (sourceTextarea && !sourceTextarea.classList.contains('hidden')) {
+      return sourceTextarea.value || '';
+    }
+    if (hiddenInput && hasComplexHtml(hiddenInput.value)) {
+      return hiddenInput.value;
+    }
+    if (sourceTextarea && hasComplexHtml(sourceTextarea.value)) {
+      return sourceTextarea.value;
+    }
+    if (programTiptapInstance) {
+      const html = programTiptapInstance.getHTML();
+      if (html && html !== '<p></p>') return html;
+    }
+    return hiddenInput ? hiddenInput.value || '' : '';
   }
 
   function setProgramTiptapContent(html) {
     const hiddenInput = document.getElementById('programDescription');
-    if (hiddenInput) hiddenInput.value = html || '';
+    const container = document.getElementById('programTiptapEditor');
+    const sourceTextarea = container && container.parentNode ? container.parentNode.querySelector('.blogger-html-source') : null;
+    const safeHtml = html || '';
+
+    if (hiddenInput) hiddenInput.value = safeHtml;
+    if (sourceTextarea) sourceTextarea.value = safeHtml;
     if (programTiptapInstance) {
-      programTiptapInstance.commands.setContent(html || '');
+      try {
+        programTiptapInstance.commands.setContent(safeHtml);
+      } catch (err) {
+        console.warn('Tiptap program editor setContent fallback:', err);
+      }
     }
   }
+
 
   function showProgramEditor() {
     document.getElementById('programListView').classList.remove('active');
@@ -401,21 +433,37 @@
       e.preventDefault();
       const isEdit = Boolean(document.getElementById('programId').value);
 
-      const description = getProgramTiptapContent();
-      if (!description || description === '<p></p>') {
-        window.AdminUI.showToast('설명 / 요약 내용을 입력하세요.', 'warning');
+      const slug = (document.getElementById('programSlug').value || '').trim();
+      const category = (document.getElementById('programCategory').value || '').trim();
+      const title = (document.getElementById('programTitle').value || '').trim();
+      const status = document.getElementById('programStatus').value || 'active';
+      const icon = (document.getElementById('programIcon').value || '🎓').trim();
+      const display_order = document.getElementById('programOrder').value || '0';
+      const rawDescription = getProgramTiptapContent();
+      const description = (rawDescription === '<p></p>' || !rawDescription) ? '' : rawDescription;
+
+      if (!slug) {
+        window.AdminUI.showToast('슬러그(영문)를 입력하세요.', 'warning');
+        return;
+      }
+      if (!category) {
+        window.AdminUI.showToast('카테고리를 입력하세요.', 'warning');
+        return;
+      }
+      if (!title) {
+        window.AdminUI.showToast('프로그램명을 입력하세요.', 'warning');
         return;
       }
 
       const formData = new FormData();
       if (isEdit) formData.append('id', document.getElementById('programId').value);
-      formData.append('slug', document.getElementById('programSlug').value);
-      formData.append('category', document.getElementById('programCategory').value);
-      formData.append('title', document.getElementById('programTitle').value);
-      formData.append('status', document.getElementById('programStatus').value);
-      formData.append('icon', document.getElementById('programIcon').value);
+      formData.append('slug', slug);
+      formData.append('category', category);
+      formData.append('title', title);
+      formData.append('status', status);
+      formData.append('icon', icon || '🎓');
       formData.append('description', description);
-      formData.append('display_order', document.getElementById('programOrder').value);
+      formData.append('display_order', display_order);
 
       try {
         const result = await window.AdminApi.api.post('/api/write-program', formData, { isFormData: true });
@@ -433,6 +481,7 @@
         window.AdminUI.showToast(err.message || '프로그램 저장 중 오류가 발생했습니다.', 'error');
       }
     });
+
   }
 
   function initProgramManager() {
@@ -452,6 +501,8 @@
     editProgram,
     deleteProgram,
     previewProgram,
+    getProgramTiptapContent,
+    setProgramTiptapContent,
     init: initProgramManager
   };
 
@@ -461,4 +512,6 @@
   window.deleteProgram = deleteProgram;
   window.loadProgramList = loadProgramList;
   window.previewProgram = previewProgram;
+  window.getProgramTiptapContent = getProgramTiptapContent;
+  window.setProgramTiptapContent = setProgramTiptapContent;
 })();

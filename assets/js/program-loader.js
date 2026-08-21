@@ -87,7 +87,7 @@
                         </span>
                     </div>
                     <span class="font-mono text-[11px] ${accent.category} font-bold uppercase tracking-wider block mb-2">${escapeHtml(program.category || 'Mission Program')}</span>
-                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3 ${accent.titleHover} transition-colors">${escapeHtml(program.title || '프로그램 안내')}</h3>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3 ${accent.titleHover} transition-colors line-clamp-2 min-h-[3.5rem] sm:min-h-[3.5rem] flex items-start break-keep">${escapeHtml(program.title || '프로그램 안내')}</h3>
                     <p class="text-slate-700 sm:text-slate-700 text-sm leading-relaxed font-normal sm:font-light mb-6 sm:mb-8 line-clamp-3 min-h-[4.5rem]">
                         ${escapeHtml(descriptionPreview)}
                     </p>
