@@ -59,24 +59,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) -->
+    <!-- Preload Critical CSS to break network chaining -->
+    <link rel="preload" href="./assets/css/styles.css?v=20260818-mobile-perf" as="style">
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
+
+    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
     </noscript>
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
 
     <!-- Pretendard Dynamic Subset Web Font -->
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
     <noscript>
       <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     </noscript>
-    
-    <!-- Lucide Icons & Marked Libraries -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     
     <style>
         :root {
@@ -95,6 +92,17 @@
             --motion-reveal-duration: 0.46s;
             --motion-modal-duration: 0.2s;
             --motion-modal-panel-duration: 0.22s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
         }
 
         body {
@@ -838,6 +846,8 @@
     </script>
 
     <!-- JS dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <script>
         window.toggleKWaveDrawer = function() {
             var drawer = document.getElementById('kwave-drawer');

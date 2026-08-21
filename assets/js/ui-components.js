@@ -78,6 +78,86 @@
         window.addEventListener('resize', updateScrollProgress);
     }
 
+    function smoothScrollToElement(targetIdOrElement) {
+        if (!targetIdOrElement) return;
+        const target = typeof targetIdOrElement === 'string'
+            ? document.getElementById(targetIdOrElement.replace(/^#/, ''))
+            : targetIdOrElement;
+
+        if (!target) return;
+
+        const header = document.querySelector('header') || document.querySelector('.glass-nav') || document.querySelector('nav');
+        const headerHeight = header ? header.offsetHeight : 80;
+        const targetTop = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+        const offsetPosition = Math.max(0, targetTop);
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+
+        const mobileMenu = document.getElementById('mobile-menu');
+        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+        }
+    }
+
+    function setupSmoothNavigation() {
+        document.addEventListener('click', function (e) {
+            const link = e.target.closest('a[href*="#"]');
+            if (!link) return;
+
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+            // Check if link points to a hash on the current page
+            const hashIndex = href.indexOf('#');
+            if (hashIndex === -1) return;
+
+            const path = href.substring(0, hashIndex);
+            const hash = href.substring(hashIndex + 1);
+
+            const isCurrentPage = !path ||
+                path === '.' ||
+                path === './' ||
+                path === window.location.pathname ||
+                path === window.location.pathname.split('/').pop() ||
+                (window.location.pathname.endsWith('index.html') && (path === '' || path === './index.html' || path === 'index.html'));
+
+            if (!isCurrentPage || !hash) return;
+
+            const targetSection = document.getElementById(hash);
+            if (!targetSection) return;
+
+            e.preventDefault();
+
+            const completeScroll = function () {
+                smoothScrollToElement(targetSection);
+                if (window.history.pushState) {
+                    window.history.pushState(null, '', '#' + hash);
+                }
+            };
+
+            const openModal = document.querySelector('.modal-root:not(.hidden), #news-modal:not(.hidden), #md-modal:not(.hidden), #legal-modal:not(.hidden)');
+            if (openModal && typeof window.deactivateModal === 'function') {
+                window.deactivateModal(openModal, completeScroll);
+            } else {
+                completeScroll();
+            }
+        });
+
+        // Handle initial hash on page load smoothly
+        if (window.location.hash) {
+            const initialHash = window.location.hash.substring(1);
+            const initialTarget = document.getElementById(initialHash);
+            if (initialTarget) {
+                setTimeout(function () {
+                    smoothScrollToElement(initialTarget);
+                }, 100);
+            }
+        }
+    }
+
     function setupMobileMenuToggle() {
         const menuToggle = document.getElementById('menu-toggle');
         const mobileMenu = document.getElementById('mobile-menu');
@@ -236,4 +316,6 @@
     window.bindScrollProgress = bindScrollProgress;
     window.initProgramSlider = initProgramSlider;
     window.initBackToTop = initBackToTop;
+    window.smoothScrollToElement = smoothScrollToElement;
+    window.setupSmoothNavigation = setupSmoothNavigation;
 })();

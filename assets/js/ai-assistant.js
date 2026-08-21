@@ -409,7 +409,7 @@ const AIAssistant = {
     this.setStatus(container, '🤖 AI가 작성하는 중입니다...');
 
     try {
-      const resultText = await this.requestGeneration(sourceText, SYSTEM_PERSONA);
+      const resultText = await this.requestGeneration(sourceText, SYSTEM_PERSONA, container);
 
       // Convert generated markdown to HTML if marked is available, or use paragraphs
       let formattedHtml = resultText;
@@ -472,33 +472,97 @@ const AIAssistant = {
     }
   },
 
-  async requestGeneration(text, systemPrompt) {
-    if (!window.AdminApi?.api) throw new Error('관리자 API를 사용할 수 없습니다.');
-
+  async requestGeneration(text, systemPrompt, container = null) {
     const isCloud = this.config.activeTab === 'cloud';
-    const provider = isCloud ? 'gemini' : 'ollama';
 
-    if (isCloud && !this.config.geminiKey) {
-      throw new Error('Gemini API Key를 먼저 검증해 주세요.');
+    // 1. Cloud AI (Gemini) 모드: 기존처럼 웹 서버 백엔드 API (/api/generate-ai) 호출
+    if (isCloud) {
+      if (!window.AdminApi?.api) throw new Error('관리자 API를 사용할 수 없습니다.');
+
+      const apiKey = container?.querySelector('.geminiApiKey')?.value?.trim() || this.config.geminiKey;
+      if (!apiKey) {
+        throw new Error('Gemini API Key를 먼저 입력하고 검증해 주세요.');
+      }
+
+      const result = await window.AdminApi.api.post('/api/generate-ai', {
+        provider: 'gemini',
+        text,
+        systemPrompt,
+        apiKey
+      });
+
+      const generatedText = typeof result === 'string' ? result : result?.text;
+      if (!generatedText) throw new Error('AI가 생성된 텍스트를 반환하지 않았습니다.');
+      return generatedText;
     }
 
-    const activeOllamaUrl = this.config.localMode === 'pc' ? this.config.ollamaPcUrl : this.config.ollamaServerUrl;
+    // 2. Local AI (Ollama) 모드:
+    // Tailscale 망(*.ts.net)이나 로컬 PC의 Ollama는 백엔드 프록시를 거치지 않고
+    // 클라이언트 브라우저에서 직접 ${ollamaHost}/api/generate 로 POST 요청을 보냅니다.
+    const isPc = this.config.localMode === 'pc';
+    const rawOllamaUrl = isPc
+      ? (container?.querySelector('.ollamaPcUrl')?.value?.trim() || this.config.ollamaPcUrl || 'http://localhost:11434')
+      : (container?.querySelector('.ollamaServerUrl')?.value?.trim() || this.config.ollamaServerUrl);
 
-    if (!isCloud && !this.config.selectedModel) {
+    const model = container?.querySelector('.ollamaModelSelect')?.value || this.config.selectedModel;
+
+    if (!model) {
       throw new Error('Local AI 모델을 먼저 선택해 주세요.');
     }
 
-    const result = await window.AdminApi.api.post('/api/generate-ai', {
-      provider,
-      text,
-      systemPrompt,
-      apiKey: isCloud ? this.config.geminiKey : undefined,
-      ollamaUrl: !isCloud ? activeOllamaUrl : undefined,
-      model: !isCloud ? this.config.selectedModel : undefined
-    });
+    const baseUrl = this.formatOllamaUrl(rawOllamaUrl);
+    if (!baseUrl) {
+      throw new Error('Ollama 원격/로컬 주소를 입력하고 [모델 불러오기]를 실행해 주세요.');
+    }
 
-    const generatedText = typeof result === 'string' ? result : result?.text;
-    if (!generatedText) throw new Error('AI가 생성된 텍스트를 반환하지 않았습니다.');
+    const targetUrl = `${baseUrl}/api/generate`;
+
+    // Ollama API 규격: POST /api/generate
+    const requestBody = {
+      model,
+      prompt: systemPrompt
+        ? `[지침 / 역할 정의]\n${systemPrompt}\n\n[변환할 본문 내용]\n${text}`
+        : text,
+      stream: false
+    };
+
+    if (systemPrompt) {
+      requestBody.system = systemPrompt;
+    }
+
+    let response;
+    try {
+      response = await fetch(targetUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+    } catch (fetchErr) {
+      const detail = fetchErr instanceof Error ? fetchErr.message : String(fetchErr);
+      throw new Error(`Ollama 서버 직접 연결 실패 (${targetUrl}): ${detail}\n(Tailscale 접속 상태 및 브라우저 혼합 콘텐츠 설정을 확인해 주세요.)`);
+    }
+
+    if (!response.ok) {
+      let errorDetail = '';
+      try {
+        const errJson = await response.json();
+        errorDetail = errJson.error || errJson.message || JSON.stringify(errJson);
+      } catch {
+        try {
+          errorDetail = (await response.text()).slice(0, 300);
+        } catch {}
+      }
+      throw new Error(`Ollama API 오류 (${response.status}): ${errorDetail || response.statusText}`);
+    }
+
+    const result = await response.json().catch(() => ({}));
+    const generatedText = String(result.response || '').trim();
+    if (!generatedText) {
+      throw new Error('Ollama 서버에서 생성된 텍스트 응답이 비어 있습니다.');
+    }
     return generatedText;
   }
 };

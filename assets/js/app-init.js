@@ -33,6 +33,10 @@
             window.setupMobileMenuToggle();
         }
 
+        if (typeof window.setupSmoothNavigation === 'function') {
+            window.setupSmoothNavigation();
+        }
+
         if (typeof window.bindScrollProgress === 'function') {
             window.bindScrollProgress();
         }

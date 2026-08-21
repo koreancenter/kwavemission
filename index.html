@@ -60,24 +60,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) -->
+    <!-- Preload Critical CSS to break network chaining -->
+    <link rel="preload" href="./assets/css/styles.css?v=20260818-mobile-perf" as="style">
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
+
+    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
     </noscript>
-
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
 
     <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
     <noscript>
       <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     </noscript>
-    
-    <!-- Lucide Icons & Markdown Parser (Minified & Deferred) -->
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     
     <style>
         :root {
@@ -96,6 +93,11 @@
             --motion-reveal-duration: 0.46s;
             --motion-modal-duration: 0.2s;
             --motion-modal-panel-duration: 0.22s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
         }
 
         body {
@@ -510,6 +512,10 @@
         #modal-body code { background: #f1f5f9; padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.85em; font-family: monospace; }
 
         @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+
             .reveal-item,
             .modal-root,
             .modal-root .modal-panel,
@@ -1021,6 +1027,8 @@
 </div>
 
     <!-- JavaScript modules (Deferred for Lighthouse mobile optimization) -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <script>
         // 즉시 전역 핸들러 등록 (defer 스크립트 로드 이전 클릭 대비)
         window.toggleKWaveDrawer = function() {
@@ -1041,6 +1049,43 @@
             var backdrop = document.getElementById('kwave-drawer-backdrop');
             if (drawer) drawer.classList.add('-translate-x-full');
             if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
+        };
+
+        window.navigateToSection = function(event, sectionId) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            var section = document.getElementById(sectionId);
+            if (!section) return;
+
+            var completeNavigation = function() {
+                var header = document.querySelector('header') || document.querySelector('.glass-nav') || document.querySelector('nav');
+                var headerHeight = header ? header.offsetHeight : 80;
+                var targetPosition = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                targetPosition = Math.max(0, targetPosition);
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                if (window.history.pushState) {
+                    window.history.pushState(null, '', '#' + sectionId);
+                }
+
+                var mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            };
+
+            var openModal = document.querySelector('.modal-root:not(.hidden), #news-modal:not(.hidden), #md-modal:not(.hidden), #legal-modal:not(.hidden)');
+            if (openModal && typeof window.deactivateModal === 'function') {
+                window.deactivateModal(openModal, completeNavigation);
+            } else {
+                completeNavigation();
+            }
         };
     </script>
     <script src="./assets/js/api-service.js?v=20260815-markdown-text-fix" defer></script>

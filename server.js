@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import fs from 'fs';
 import path from 'path';
 import Database from 'better-sqlite3';
@@ -230,6 +231,9 @@ apiModules['image'] = await import('./functions/api/image/[[path]].js');
 
 // 5. Express Application
 const app = express();
+
+// Enable Gzip/Deflate compression for fast network payload transfer
+app.use(compression());
 
 // Parse raw body for Web Fetch Request conversion
 app.use(express.raw({ type: '*/*', limit: '50mb' }));
