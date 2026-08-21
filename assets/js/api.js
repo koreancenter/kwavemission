@@ -185,7 +185,14 @@
       }
 
       if (isFailure) {
-        throw ApiClient.normalizeError(response, payload, '요청 처리 중 문제가 발생했습니다.');
+        const error = ApiClient.normalizeError(response, payload, '요청 처리 중 문제가 발생했습니다.');
+        console.error(`[API Error] ${method} ${path} (${response.status}):`, {
+          status: response.status,
+          statusText: response.statusText,
+          payload,
+          error: error.message
+        });
+        throw error;
       }
 
       return payload && Object.prototype.hasOwnProperty.call(payload, 'data') ? payload.data : payload;
