@@ -1024,9 +1024,6 @@
     <script>
         // 즉시 전역 핸들러 등록 (defer 스크립트 로드 이전 클릭 대비)
         window.toggleKWaveDrawer = function() {
-            if (window._kwaveLoaded && typeof window.toggleKWaveDrawer === 'function') {
-                return window.toggleKWaveDrawer();
-            }
             var drawer = document.getElementById('kwave-drawer');
             var backdrop = document.getElementById('kwave-drawer-backdrop');
             if (!drawer) return;
@@ -1038,8 +1035,8 @@
                 if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
             }
         };
-        window.openKWaveDrawer = window.openKWaveDrawer || function() { window.toggleKWaveDrawer(); };
-        window.closeKWaveDrawer = window.closeKWaveDrawer || function() {
+        window.openKWaveDrawer = function() { window.toggleKWaveDrawer(); };
+        window.closeKWaveDrawer = function() {
             var drawer = document.getElementById('kwave-drawer');
             var backdrop = document.getElementById('kwave-drawer-backdrop');
             if (drawer) drawer.classList.add('-translate-x-full');

@@ -840,9 +840,6 @@
     <!-- JS dependencies -->
     <script>
         window.toggleKWaveDrawer = function() {
-            if (window._kwaveLoaded && typeof window.toggleKWaveDrawer === 'function') {
-                return window.toggleKWaveDrawer();
-            }
             var drawer = document.getElementById('kwave-drawer');
             var backdrop = document.getElementById('kwave-drawer-backdrop');
             if (!drawer) return;
@@ -854,8 +851,8 @@
                 if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
             }
         };
-        window.openKWaveDrawer = window.openKWaveDrawer || function() { window.toggleKWaveDrawer(); };
-        window.closeKWaveDrawer = window.closeKWaveDrawer || function() {
+        window.openKWaveDrawer = function() { window.toggleKWaveDrawer(); };
+        window.closeKWaveDrawer = function() {
             var drawer = document.getElementById('kwave-drawer');
             var backdrop = document.getElementById('kwave-drawer-backdrop');
             if (drawer) drawer.classList.add('-translate-x-full');
