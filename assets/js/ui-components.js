@@ -164,12 +164,28 @@
     }
 
     function toggleMobileMenu(event) {
-        if (event && typeof event.stopPropagation === 'function') {
-            event.stopPropagation();
+        if (event) {
+            if (typeof event.preventDefault === 'function') event.preventDefault();
+            if (typeof event.stopPropagation === 'function') event.stopPropagation();
         }
         const mobileMenu = document.getElementById('mobile-menu');
+        const menuToggle = document.getElementById('menu-toggle');
         if (!mobileMenu) return;
-        mobileMenu.classList.toggle('hidden');
+
+        const isOpening = mobileMenu.classList.contains('hidden');
+        if (isOpening) {
+            mobileMenu.classList.remove('hidden');
+            if (menuToggle) {
+                menuToggle.setAttribute('aria-expanded', 'true');
+                menuToggle.setAttribute('aria-label', '메뉴 닫기');
+            }
+        } else {
+            mobileMenu.classList.add('hidden');
+            if (menuToggle) {
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', '메뉴 열기');
+            }
+        }
     }
 
     function setupMobileMenuToggle() {
@@ -180,16 +196,13 @@
         if (menuToggle.dataset.menuBound === 'true') return;
         menuToggle.dataset.menuBound = 'true';
 
-        menuToggle.addEventListener('click', function (e) {
-            e.stopPropagation();
-            toggleMobileMenu(e);
-        });
-
         // Close mobile menu when clicking outside
         document.addEventListener('click', function (e) {
             if (!mobileMenu.classList.contains('hidden')) {
-                if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+                if (!e.target.closest('#mobile-menu') && !e.target.closest('#menu-toggle')) {
                     mobileMenu.classList.add('hidden');
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.setAttribute('aria-label', '메뉴 열기');
                 }
             }
         });
@@ -199,6 +212,8 @@
         menuLinks.forEach(function (item) {
             item.addEventListener('click', function () {
                 mobileMenu.classList.add('hidden');
+                menuToggle.setAttribute('aria-expanded', 'false');
+                menuToggle.setAttribute('aria-label', '메뉴 열기');
             });
         });
     }

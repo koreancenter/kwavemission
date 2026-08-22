@@ -296,7 +296,7 @@
         }
 
 modalContent.innerHTML =
-    '<div class="relative shrink-0 px-6 sm:px-12 pt-6 sm:pt-10 pb-5 sm:pb-6 border-b border-slate-800">' +
+    '<div class="relative shrink-0 px-6 sm:px-12 pt-6 sm:pt-10 pb-5 sm:pb-6">' +
         '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-8 sm:right-8 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer z-10 rounded-xl">' +
             '<i data-lucide="x" class="w-5 h-5"></i>' +
         '</button>' +
@@ -309,7 +309,7 @@ modalContent.innerHTML =
     '<div id="modal-body" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-12 py-5 sm:py-6 text-base text-slate-200 leading-relaxed space-y-4">' +
         '<p class="text-slate-400">내용을 불러오는 중...</p>' +
     '</div>' +
-    '<div class="shrink-0 flex items-center justify-between border-t border-slate-800/80 px-6 sm:px-12 py-4 font-sans gap-3">' +
+    '<div class="shrink-0 flex items-center justify-between px-6 sm:px-12 py-4 font-sans gap-3">' +
         '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
             '<i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유' +
         '</button>' +

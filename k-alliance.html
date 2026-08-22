@@ -6,15 +6,7 @@
     <title>후원·동역 안내 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
     <meta name="description" content="K-Wave Mission 후원 및 동역 안내. 정기후원, 일시후원, 기도 동역, 재능 기부를 통해 열방과 고등교육선교 현장을 섬깁니다.">
     
-    <!-- Performance Resource Hints -->
-    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Tailwind CSS Config -->
+    <!-- Tailwind CSS Config & Core Engine (Loaded synchronously at top of <head> to eliminate FOUC) -->
     <script>
         window.tailwind = {
             config: {
@@ -59,24 +51,21 @@
             }
         };
     </script>
-    <!-- Tailwind CSS CDN (Deferred to eliminate initial render blocking) -->
-    <script src="https://cdn.tailwindcss.com" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Preload Critical CSS to break network chaining -->
-    <link rel="preload" href="./assets/css/styles.css?v=20260818-mobile-perf" as="style">
+    <!-- Main Stylesheet (Loaded synchronously for immediate styling) -->
     <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-    </noscript>
+    <!-- Performance Resource Hints -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Pretendard Dynamic Subset Web Font -->
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-    </noscript>
+    <!-- Web Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     
     <style>
         :root {
@@ -289,19 +278,21 @@
             </nav>
 
             <!-- Mobile Menu Toggle Button (44px+ touch target) -->
-            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl cursor-pointer">
-                <i data-lucide="menu" class="w-6 h-6"></i>
+            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-expanded="false" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl cursor-pointer transition-colors">
+                <svg class="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
             </button>
+        </div>
 
-            <!-- Mobile Nav Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea]/95 backdrop-blur-xl border-b border-slate-800/20 px-6 py-5 space-y-1.5 text-right font-medium text-slate-800 shadow-2xl z-50 rounded-b-2xl">
-                <a href="./index.html#hero" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">소개</a>
-                <a href="./index.html#about" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">사역</a>
-                <a href="./index.html#programs" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">프로그램</a>
-                <a href="./index.html#news" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">리포트</a>
-                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="mobile-menu-item block w-full brand-link text-right min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors">K-Wave</button>
-                <a href="./k-alliance.html" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">K-Alliance</a>
-            </div>
+        <!-- Mobile Nav Dropdown (Direct child of header for bulletproof positioning) -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea]/95 backdrop-blur-xl border-b border-slate-800/20 px-6 py-5 space-y-1.5 text-right font-medium text-slate-800 shadow-2xl z-50 rounded-b-2xl">
+            <a href="./index.html#hero" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">소개</a>
+            <a href="./index.html#about" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">사역</a>
+            <a href="./index.html#programs" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">프로그램</a>
+            <a href="./index.html#news" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">리포트</a>
+            <button type="button" onclick="openKWaveDrawer(); toggleMobileMenu();" class="mobile-menu-item block w-full brand-link text-right min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors cursor-pointer">K-Wave</button>
+            <a href="./k-alliance.html" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">K-Alliance</a>
         </div>
     </header>
 
@@ -769,16 +760,25 @@
         </div>
     </div>
 
-    <!-- Markdown Modal -->
-    <div id="md-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/70 backdrop-blur-sm p-3 sm:p-4">
-        <div class="bg-white border border-slate-200 text-slate-800 rounded-2xl w-full max-w-lg max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
-            <div class="flex items-center justify-between px-5 py-3 sm:px-6 sm:py-3.5 border-b border-slate-100 bg-slate-50/80">
-                <h3 id="md-modal-title" class="font-serif text-base sm:text-lg font-bold text-slate-900 tracking-tight">안내</h3>
-                <button type="button" onclick="closeMdModal()" class="bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-700 text-2xl font-bold px-2 cursor-pointer transition-colors">&times;</button>
+    <!-- Markdown Modal (표준 규격 통합) -->
+    <div id="md-modal" class="modal-root fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div class="modal-panel relative w-full max-w-xl h-[85vh] max-h-[85vh] overflow-hidden bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl shadow-2xl flex flex-col">
+            <!-- 모달 헤더 (고정, border 없음) -->
+            <div class="relative shrink-0 px-6 sm:px-10 pt-6 sm:pt-8 pb-3 sm:pb-4 flex flex-col justify-center">
+                <button type="button" onclick="closeMdModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer z-10 rounded-xl">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+                <span class="inline-block text-[11px] font-bold tracking-widest text-amber-400 uppercase mb-1.5 font-mono">INFORMATION</span>
+                <h3 id="md-modal-title" class="font-serif text-lg sm:text-xl font-bold text-slate-100 pr-10 leading-snug">안내</h3>
             </div>
-            <div id="md-modal-content" class="px-4 py-3.5 sm:px-6 sm:py-4 overflow-y-auto no-scrollbar overscroll-contain max-w-none text-sm leading-relaxed bg-transparent font-sans text-slate-800"></div>
-            <div class="px-5 py-2.5 sm:px-6 sm:py-3 border-t border-slate-100 bg-slate-50/80 flex justify-end">
-                <button type="button" onclick="closeMdModal()" class="px-4 py-1.5 sm:px-5 sm:py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer">닫기</button>
+            <!-- 모달 본문 (flex-1 스크롤, border 없음) -->
+            <div id="md-modal-content" class="modal-standard-body flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-10 py-3 sm:py-4 text-base text-slate-200 leading-relaxed space-y-4"></div>
+            <!-- 모달 푸터 (고정, border 없음) -->
+            <div class="shrink-0 flex items-center justify-between px-6 sm:px-10 py-4 font-sans gap-3">
+                <button type="button" onclick="shareCurrentModal('md')" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">
+                    <i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유
+                </button>
+                <button type="button" onclick="closeMdModal()" class="btn-close-footer flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>
             </div>
         </div>
     </div>
@@ -786,12 +786,26 @@
     <!-- JavaScript logic -->
     <script>
         window.toggleMobileMenu = function(event) {
-            if (event && typeof event.stopPropagation === 'function') {
-                event.stopPropagation();
+            if (event) {
+                if (typeof event.preventDefault === 'function') event.preventDefault();
+                if (typeof event.stopPropagation === 'function') event.stopPropagation();
             }
             var mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenu) {
-                mobileMenu.classList.toggle('hidden');
+            var menuToggle = document.getElementById('menu-toggle');
+            if (!mobileMenu) return;
+            var isOpening = mobileMenu.classList.contains('hidden');
+            if (isOpening) {
+                mobileMenu.classList.remove('hidden');
+                if (menuToggle) {
+                    menuToggle.setAttribute('aria-expanded', 'true');
+                    menuToggle.setAttribute('aria-label', '메뉴 닫기');
+                }
+            } else {
+                mobileMenu.classList.add('hidden');
+                if (menuToggle) {
+                    menuToggle.setAttribute('aria-expanded', 'false');
+                    menuToggle.setAttribute('aria-label', '메뉴 열기');
+                }
             }
         };
 

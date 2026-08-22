@@ -515,80 +515,128 @@ h6,
   text-transform: uppercase;
 }
 
-/* Modal markdown content */
+/* Modal markdown content & standard dark theme typography */
+#modal-body,
+#md-modal-content,
+.modal-standard-body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  color: #cbd5e1;
+  line-height: 1.75;
+  word-break: keep-all;
+}
+
 #modal-body h1,
 #modal-body h2,
 #modal-body h3,
-#modal-body h4 {
+#modal-body h4,
+#md-modal-content h1,
+#md-modal-content h2,
+#md-modal-content h3,
+#md-modal-content h4,
+.modal-standard-body h1,
+.modal-standard-body h2,
+.modal-standard-body h3,
+.modal-standard-body h4 {
+  font-family: 'Noto Serif KR', serif;
   font-weight: 700;
-  color: #0f172a;
-  margin-top: 1.25rem;
-  margin-bottom: 0.375rem;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
-#modal-body h2 {
-  font-size: 1.2rem;
-}
+#modal-body h1, #md-modal-content h1, .modal-standard-body h1 { font-size: 1.35rem; }
+#modal-body h2, #md-modal-content h2, .modal-standard-body h2 { font-size: 1.15rem; }
+#modal-body h3, #md-modal-content h3, .modal-standard-body h3 { font-size: 1.02rem; }
 
-#modal-body h3 {
-  font-size: 1rem;
-}
-
-#modal-body p {
+#modal-body p, #md-modal-content p, .modal-standard-body p {
   margin-bottom: 0.875rem;
+  font-size: 0.95rem;
+  color: #cbd5e1;
+  line-height: 1.75;
 }
 
-#modal-body ul,
-#modal-body ol {
+#modal-body ul, #modal-body ol, #md-modal-content ul, #md-modal-content ol, .modal-standard-body ul, .modal-standard-body ol {
   padding-left: 1.4rem;
   margin-bottom: 0.875rem;
+  font-size: 0.95rem;
+  color: #cbd5e1;
 }
 
-#modal-body ul {
+#modal-body ul, #md-modal-content ul, .modal-standard-body ul {
   list-style-type: disc;
 }
 
-#modal-body ol {
+#modal-body ol, #md-modal-content ol, .modal-standard-body ol {
   list-style-type: decimal;
 }
 
-#modal-body li {
-  margin-bottom: 0.2rem;
+#modal-body li, #md-modal-content li, .modal-standard-body li {
+  margin-bottom: 0.35rem;
 }
 
-#modal-body blockquote {
-  border-left: 3px solid #b94a61;
-  padding-left: 1rem;
-  color: #64748b;
+#modal-body blockquote, #md-modal-content blockquote, .modal-standard-body blockquote {
+  border-left: 3px solid #f59e0b;
+  padding: 0.5rem 1rem;
+  color: #94a3b8;
+  background: rgba(245, 158, 11, 0.05);
+  border-radius: 0 0.5rem 0.5rem 0;
   margin: 1rem 0;
 }
 
-#modal-body a {
-  color: #93394e;
+#modal-body a, #md-modal-content a, .modal-standard-body a {
+  color: #38bdf8;
   text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+#modal-body a:hover, #md-modal-content a:hover, .modal-standard-body a:hover {
+  color: #7dd3fc;
 }
 
-#modal-body img {
+#modal-body img, #md-modal-content img, .modal-standard-body img {
   max-width: 100%;
-  border-radius: 0.5rem;
-  margin: 1rem 0;
-}
-
-#modal-body hr {
-  border-color: #f1f5f9;
+  border-radius: 0.75rem;
   margin: 1.25rem 0;
 }
 
-#modal-body strong {
-  font-weight: 700;
+#modal-body hr, #md-modal-content hr, .modal-standard-body hr {
+  border-color: rgba(51, 65, 85, 0.6);
+  margin: 1.5rem 0;
 }
 
-#modal-body code {
-  background: #f1f5f9;
-  padding: 0.1em 0.3em;
-  border-radius: 3px;
+#modal-body strong, #md-modal-content strong, .modal-standard-body strong {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+#modal-body code, #md-modal-content code, .modal-standard-body code {
+  background: rgba(30, 41, 59, 0.8);
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
   font-size: 0.85em;
-  font-family: monospace;
+  font-family: 'JetBrains Mono', monospace;
+  color: #fbbf24;
+}
+
+#modal-body table, #md-modal-content table, .modal-standard-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.875rem;
+}
+
+#modal-body th, #modal-body td, #md-modal-content th, #md-modal-content td, .modal-standard-body th, .modal-standard-body td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+  text-align: left;
+}
+
+#modal-body th, #md-modal-content th, .modal-standard-body th {
+  color: #f8fafc;
+  font-weight: 600;
+  background: rgba(30, 41, 59, 0.5);
 }
 
 @media (max-width: 640px) {
@@ -826,14 +874,15 @@ img, video, iframe {
 
 /* 📌 Mobile Menu Dropdown & Slide Down Animation */
 #mobile-menu:not(.hidden) {
-    animation: mobileMenuSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    display: block !important;
+    animation: mobileMenuSlideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     transform-origin: top center;
 }
 
 @keyframes mobileMenuSlideDown {
     0% {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px);
     }
     100% {
         opacity: 1;
@@ -842,21 +891,21 @@ img, video, iframe {
 }
 
 #mobile-menu:not(.hidden) .mobile-menu-item {
-    opacity: 0;
-    animation: mobileMenuItemSlideDown 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 1;
+    animation: mobileMenuItemSlideDown 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(1) { animation-delay: 0.03s; }
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(2) { animation-delay: 0.06s; }
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(3) { animation-delay: 0.09s; }
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(4) { animation-delay: 0.12s; }
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(5) { animation-delay: 0.15s; }
-#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(6) { animation-delay: 0.18s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(1) { animation-delay: 0.02s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(2) { animation-delay: 0.04s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(3) { animation-delay: 0.06s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(4) { animation-delay: 0.08s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(5) { animation-delay: 0.10s; }
+#mobile-menu:not(.hidden) .mobile-menu-item:nth-child(6) { animation-delay: 0.12s; }
 
 @keyframes mobileMenuItemSlideDown {
     0% {
         opacity: 0;
-        transform: translateY(-12px);
+        transform: translateY(-8px);
     }
     100% {
         opacity: 1;
