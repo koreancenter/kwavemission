@@ -13,14 +13,14 @@
 
     function ensureNativeScrollState() {
         if (!isModalActuallyOpen()) {
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-            if (document.body.style.position === 'fixed') {
-                document.body.style.position = '';
-            }
-            if (typeof window.unlockPageScroll === 'function') {
-                window.unlockPageScroll(null);
-            }
+            window.requestAnimationFrame(function () {
+                if (document.body.style.overflow) document.body.style.overflow = '';
+                if (document.documentElement.style.overflow) document.documentElement.style.overflow = '';
+                if (document.body.style.position === 'fixed') document.body.style.position = '';
+                if (typeof window.unlockPageScroll === 'function') {
+                    window.unlockPageScroll(null);
+                }
+            });
         }
     }
 

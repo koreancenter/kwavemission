@@ -235,11 +235,12 @@
         const slider = document.getElementById('prog-slider');
         const cards = document.querySelectorAll('.prog-card');
 
-        cards.forEach(function (card) {
-            card.style.display = (type === 'all' || card.classList.contains(type)) ? 'flex' : 'none';
+        window.requestAnimationFrame(function () {
+            cards.forEach(function (card) {
+                card.style.display = (type === 'all' || card.classList.contains(type)) ? 'flex' : 'none';
+            });
+            if (slider) slider.scrollTo({ left: 0, behavior: 'smooth' });
         });
-
-        if (slider) slider.scrollTo({ left: 0, behavior: 'smooth' });
     }
 
     function initProgramSlider() {
@@ -247,8 +248,8 @@
         if (!slider) return;
 
         const getCardWidth = function () {
-            const card = slider.querySelector('.prog-card[style*="display: none"]') ? slider.querySelector('.prog-card:not([style*="display: none"])') : slider.querySelector('.prog-card');
-            return (card ? card.offsetWidth : 356) + 24;
+            const card = slider.querySelector('.prog-card:not([style*="display: none"])') || slider.querySelector('.prog-card');
+            return (card ? card.clientWidth : 356) + 24;
         };
 
         const prevBtn = document.getElementById('prog-prev');
@@ -256,13 +257,17 @@
 
         if (prevBtn) {
             prevBtn.addEventListener('click', function () {
-                slider.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+                window.requestAnimationFrame(function () {
+                    slider.scrollBy({ left: -getCardWidth(), behavior: 'smooth' });
+                });
             });
         }
 
         if (nextBtn) {
             nextBtn.addEventListener('click', function () {
-                slider.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+                window.requestAnimationFrame(function () {
+                    slider.scrollBy({ left: getCardWidth(), behavior: 'smooth' });
+                });
             });
         }
     }
@@ -279,21 +284,36 @@
             document.body.appendChild(btn);
         }
 
-        function toggleVisibility() {
-            if (window.scrollY > 300) {
-                btn.classList.remove('opacity-0', 'pointer-events-none');
-                btn.classList.add('opacity-100', 'pointer-events-auto');
-            } else {
-                btn.classList.remove('opacity-100', 'pointer-events-auto');
-                btn.classList.add('opacity-0', 'pointer-events-none');
+        let isVisible = false;
+        let ticking = false;
+
+        function updateVisibility() {
+            const shouldBeVisible = window.scrollY > 300;
+            if (shouldBeVisible !== isVisible) {
+                isVisible = shouldBeVisible;
+                if (isVisible) {
+                    btn.classList.remove('opacity-0', 'pointer-events-none');
+                    btn.classList.add('opacity-100', 'pointer-events-auto');
+                } else {
+                    btn.classList.remove('opacity-100', 'pointer-events-auto');
+                    btn.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }
+            ticking = false;
+        }
+
+        function onScroll() {
+            if (!ticking) {
+                ticking = true;
+                window.requestAnimationFrame(updateVisibility);
             }
         }
 
-        window.addEventListener('scroll', toggleVisibility, { passive: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
         btn.addEventListener('click', function () {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-        toggleVisibility();
+        updateVisibility();
     }
 
     let lazyImageObserver = null;
@@ -314,13 +334,15 @@
                                 img.src = src;
                                 img.removeAttribute('data-lazy-src');
                                 img.removeAttribute('data-src');
-                                img.classList.add('is-loaded');
-                                img.style.opacity = '1';
+                                window.requestAnimationFrame(function () {
+                                    img.classList.remove('opacity-0');
+                                    img.classList.add('is-loaded', 'opacity-100');
+                                });
                             }
                             observer.unobserve(img);
                         }
                     });
-                }, { rootMargin: '120px 0px', threshold: 0.01 });
+                }, { rootMargin: '160px 0px', threshold: 0.01 });
             }
 
             lazyImages.forEach(function (img) {
@@ -334,8 +356,8 @@
                     img.src = src;
                     img.removeAttribute('data-lazy-src');
                     img.removeAttribute('data-src');
-                    img.classList.add('is-loaded');
-                    img.style.opacity = '1';
+                    img.classList.remove('opacity-0');
+                    img.classList.add('is-loaded', 'opacity-100');
                 }
             });
         }

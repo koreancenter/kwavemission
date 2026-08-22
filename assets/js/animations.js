@@ -16,14 +16,18 @@
 
     function applyStaggerReveal(containerSelector, stepMs) {
         const containers = document.querySelectorAll(containerSelector);
-        containers.forEach(function (container) {
-            const children = Array.from(container.children);
-            children.forEach(function (child, index) {
-                if (child.dataset.revealBound === 'true') return;
-                child.dataset.revealBound = 'true';
-                child.classList.add('reveal-item');
-                child.style.setProperty('--reveal-delay', Math.min(index * stepMs, 420) + 'ms');
-                revealObserver.observe(child);
+        if (!containers.length) return;
+
+        window.requestAnimationFrame(function () {
+            containers.forEach(function (container) {
+                const children = Array.from(container.children);
+                children.forEach(function (child, index) {
+                    if (child.dataset.revealBound === 'true') return;
+                    child.dataset.revealBound = 'true';
+                    child.classList.add('reveal-item');
+                    child.style.setProperty('--reveal-delay', Math.min(index * stepMs, 420) + 'ms');
+                    revealObserver.observe(child);
+                });
             });
         });
     }

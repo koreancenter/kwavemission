@@ -222,7 +222,7 @@
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img data-lazy-src="' + _escapeHtml(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + _escapeHtml(featuredPost.title) + '" class="transition-opacity duration-300 opacity-0" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
+                    '<img data-lazy-src="' + _escapeHtml(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + _escapeHtml(featuredPost.title) + '" width="800" height="450" loading="lazy" decoding="async" class="w-full h-full object-cover transition-opacity duration-300 opacity-0" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
@@ -372,7 +372,7 @@ modalContent.innerHTML =
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
                     
                     return '<div class="my-6 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-950 p-2">' +
-                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-md transition-opacity duration-300 opacity-0" />' +
+                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' width="800" height="450" loading="lazy" decoding="async" class="w-full max-w-full h-auto object-contain rounded-lg shadow-md transition-opacity duration-300 opacity-0" />' +
                                (caption ? '<span class="text-xs text-slate-400 mt-2 text-center font-sans">' + caption + '</span>' : '') +
                            '</div>';
                 };
