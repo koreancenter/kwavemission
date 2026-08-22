@@ -275,6 +275,9 @@
         }
 
         try {
+            if (typeof window.ensureMarked === 'function') {
+                await window.ensureMarked();
+            }
             const markdownText = await fetchModalMarkdown(targetSlug);
             renderModalContent(container, markdownText);
 

@@ -1,42 +1,49 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const metricValues = document.querySelectorAll('.metric-value');
+(function () {
+  'use strict';
 
-  const animateCount = (element) => {
-    const target = +element.getAttribute('data-target');
-    const duration = 2000; // 애니메이션 지속 시간 (2초)
-    const frameDuration = 1000 / 60; // 60fps
-    const totalFrames = Math.round(duration / frameDuration);
-    let frame = 0;
+  function initMetricsCounter() {
+    const metricValues = document.querySelectorAll('.metric-value');
+    if (!metricValues.length) return;
 
-    const counter = setInterval(() => {
-      frame++;
-      // Ease-out 수식 적용 (마지막에 숫자가 천천히 채워지도록)
-      const progress = frame / totalFrames;
-      const easeOutProgress = 1 - Math.pow(1 - progress, 3);
-      const currentCount = Math.floor(easeOutProgress * target);
+    const animateCount = (element) => {
+      const target = +element.getAttribute('data-target') || 0;
+      const duration = 1800; // ms
+      let startTime = null;
 
-      element.innerText = currentCount.toLocaleString();
+      const step = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const progress = Math.min((timestamp - startTime) / duration, 1);
+        // Cubic ease-out
+        const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+        const currentCount = Math.floor(easeOutProgress * target);
 
-      if (frame === totalFrames) {
-        element.innerText = target.toLocaleString();
-        clearInterval(counter);
-      }
-    }, frameDuration);
-  };
+        element.textContent = currentCount.toLocaleString();
 
-  // 사용자가 해당 섹션 스크롤에 도달했을 때 동작 (Intersection Observer)
-  const observerOptions = {
-    threshold: 0.3 // 카드 영역이 화면에 30% 보일 때 작동
-  };
+        if (progress < 1) {
+          window.requestAnimationFrame(step);
+        } else {
+          element.textContent = target.toLocaleString();
+        }
+      };
 
-  const observer = new IntersectionObserver((entries, observer) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCount(entry.target);
-        observer.unobserve(entry.target); // 한 번 실행 후 관찰 중단
-      }
-    });
-  }, observerOptions);
+      window.requestAnimationFrame(step);
+    };
 
-  metricValues.forEach(value => observer.observe(value));
-});
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+
+    metricValues.forEach(value => observer.observe(value));
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMetricsCounter);
+  } else {
+    initMetricsCounter();
+  }
+})();

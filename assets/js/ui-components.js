@@ -65,17 +65,22 @@
         }, MODAL_EXIT_MS);
     }
 
+    let scrollTicking = false;
     function updateScrollProgress() {
-        if (!scrollProgressBar) return;
-        const maxScrollable = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = maxScrollable > 0 ? window.scrollY / maxScrollable : 0;
-        scrollProgressBar.style.transform = 'scaleX(' + Math.min(Math.max(progress, 0), 1) + ')';
+        if (!scrollProgressBar || scrollTicking) return;
+        scrollTicking = true;
+        window.requestAnimationFrame(function () {
+            const maxScrollable = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = maxScrollable > 0 ? window.scrollY / maxScrollable : 0;
+            scrollProgressBar.style.transform = 'scaleX(' + Math.min(Math.max(progress, 0), 1) + ')';
+            scrollTicking = false;
+        });
     }
 
     function bindScrollProgress() {
         updateScrollProgress();
         window.addEventListener('scroll', updateScrollProgress, { passive: true });
-        window.addEventListener('resize', updateScrollProgress);
+        window.addEventListener('resize', updateScrollProgress, { passive: true });
     }
 
     function smoothScrollToElement(targetIdOrElement) {

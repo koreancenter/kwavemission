@@ -46,6 +46,48 @@
         return post.author + '의 현장 기록을 통해 이번 주 사역의 흐름과 기도 제목을 전합니다.';
     }
 
+    /**
+     * Extracts the first image src from the content HTML/Markdown.
+     * @param {string} content 
+     * @returns {string} Image URL or empty string
+     */
+    function _extractFirstImageSrc(content) {
+        if (!content || typeof content !== 'string') return '';
+
+        // 1. HTML <img src="..."> extraction via DOMParser
+        try {
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(content, 'text/html');
+            var img = doc.querySelector('img');
+            if (img) {
+                var src = (img.getAttribute('src') || '').trim();
+                if (src && !/^(javascript|vbscript):/i.test(src)) {
+                    return src;
+                }
+            }
+        } catch (e) {}
+
+        // 2. HTML <img ... src="..."> fallback via Regex
+        var htmlMatch = content.match(/<img[^>]+src=["']([^"']+)["']/i);
+        if (htmlMatch && htmlMatch[1]) {
+            var htmlSrc = htmlMatch[1].trim();
+            if (htmlSrc && !/^(javascript|vbscript):/i.test(htmlSrc)) {
+                return htmlSrc;
+            }
+        }
+
+        // 3. Markdown ![alt](url) fallback via Regex
+        var mdMatch = content.match(/!\[.*?\]\((https?:\/\/[^\s\)]+|\/?[^\s\)]+\.(?:png|jpg|jpeg|webp|gif|svg)[^\s\)]*)\)/i);
+        if (mdMatch && mdMatch[1]) {
+            var mdSrc = mdMatch[1].trim();
+            if (mdSrc && !/^(javascript|vbscript):/i.test(mdSrc)) {
+                return mdSrc;
+            }
+        }
+
+        return '';
+    }
+
     function _normalizeDbPost(post) {
         const type = String(post.type || '').toLowerCase();
         const created = String(post.created_at || post.date || '');
@@ -60,6 +102,7 @@
             author: post.author || 'K-WAVE MISSION',
             summary: post.summary || post.excerpt || '',
             thumbnail: post.thumbnail_url || post.thumbnail || '',
+            content: post.content || '',
             source: 'db',
             type: type
         };
@@ -148,19 +191,38 @@
             return;
         }
 
+        // 본문이 아직 로드되지 않은 경우 상세 조회로 본문 확보
+        if (!featuredPost.content && featuredPost.id && window.KWaveApi && typeof window.KWaveApi.fetchPostById === 'function') {
+            try {
+                var fullPostData = await window.KWaveApi.fetchPostById(featuredPost.id);
+                var fullPost = fullPostData && fullPostData.data ? fullPostData.data : fullPostData;
+                if (fullPost && fullPost.content) {
+                    featuredPost.content = fullPost.content;
+                }
+            } catch (e) {
+                console.warn('Failed to load full post content for thumbnail:', e);
+            }
+        }
+
         var landscapeImages = [
             './assets/images/indonesia-landscape.jpg',
             './assets/images/indonesia-landscape2.jpg',
             './assets/images/indonesia-landscape3.jpg',
             './assets/images/indonesia-landscape4.jpg'
         ];
-        var randomImg = landscapeImages[Math.floor(Math.random() * landscapeImages.length)];
+        var fallbackImg = landscapeImages[Math.floor(Math.random() * landscapeImages.length)];
+
+        // 1. 본문 HTML 파싱하여 첫 번째 <img src="..."> 추출
+        var extractedImg = _extractFirstImageSrc(featuredPost.content);
+
+        // 2 & 3. 본문 내 이미지 URL이 존재하면 썸네일로 사용, 없거나 비어 있으면 ./assets/images 폴더의 기본/랜덤 배열 이미지로 Fallback
+        var displayImg = extractedImg || fallbackImg;
 
         var summary = _escapeHtml(_postSummary(featuredPost));
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img data-lazy-src="' + randomImg + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="인도네시아의 비식별 풍경 이미지" class="transition-opacity duration-300 opacity-0" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
+                    '<img data-lazy-src="' + _escapeHtml(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + _escapeHtml(featuredPost.title) + '" class="transition-opacity duration-300 opacity-0" onerror="this.parentElement.classList.add(\'is-empty\');this.remove()">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
@@ -266,6 +328,9 @@ modalContent.innerHTML =
         if (typeof lucide !== 'undefined') lucide.createIcons();
 
         try {
+            if (typeof window.ensureMarked === 'function') {
+                await window.ensureMarked();
+            }
             var md = '';
             if (postSource === 'db' && postId && window.KWaveApi && typeof window.KWaveApi.fetchPostById === 'function') {
                 var dbPost = await window.KWaveApi.fetchPostById(postId);
@@ -411,8 +476,43 @@ modalContent.innerHTML =
         completeNavigation();
     };
 
-    document.addEventListener('DOMContentLoaded', function () {
-        loadNews();
-        loadMainNoticeBanner();
-    });
+    function initLazyNews() {
+        var triggered = false;
+        function execute() {
+            if (triggered) return;
+            triggered = true;
+            loadNews();
+            loadMainNoticeBanner();
+        }
+
+        var newsContainer = document.getElementById('news-container');
+        var noticeBanner = document.getElementById('main-notice-banner');
+
+        if ('IntersectionObserver' in window && (newsContainer || noticeBanner)) {
+            var observer = new IntersectionObserver(function (entries) {
+                for (var i = 0; i < entries.length; i++) {
+                    if (entries[i].isIntersecting) {
+                        execute();
+                        observer.disconnect();
+                        return;
+                    }
+                }
+            }, { rootMargin: '400px 0px' });
+
+            if (newsContainer) observer.observe(newsContainer);
+            if (noticeBanner) observer.observe(noticeBanner);
+        }
+
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(execute, { timeout: 3000 });
+        } else {
+            setTimeout(execute, 1500);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLazyNews);
+    } else {
+        initLazyNews();
+    }
 })();

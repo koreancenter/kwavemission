@@ -15,9 +15,9 @@
   <link rel="preconnect" href="https://esm.sh" crossorigin>
 
   <!-- Tailwind CSS & Typography Plugin CDN -->
-  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography" defer></script>
 
-  <link rel="stylesheet" href="./assets/css/admin.css?v=20260815-modal-scroll-lock">
+  <link rel="stylesheet" href="./assets/css/admin.css?v=20260822-font-bold-fix">
 
   <!-- Tiptap Editor CDN ESM Loader -->
   <script type="module">
@@ -64,26 +64,34 @@
   <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
 
     <!-- Dashboard Summary Cards -->
-    <div class="dashboard-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboardStats" style="display: none;">
-      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">전체 게시글</span>
-        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-posts">-</span>
-        <span class="card-desc text-xs text-slate-400">뉴스 및 공지사항 총 개수</span>
+    <div class="dashboard-grid grid grid-cols-4 gap-2.5" id="dashboardStats" style="display: none;">
+      <div class="dashboard-card bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs">
+        <div class="flex items-center justify-between gap-1.5">
+          <span class="card-title text-xs font-semibold text-slate-600 truncate">전체 게시글</span>
+          <span class="card-value text-base font-extrabold text-slate-800 shrink-0" id="stat-total-posts">-</span>
+        </div>
+        <span class="card-desc text-[11px] text-slate-400 truncate block mt-0.5">뉴스 및 공지사항 총수</span>
       </div>
-      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">등록 프로그램</span>
-        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-programs">-</span>
-        <span class="card-desc text-xs text-slate-400">고등교육선교 총 과정 수</span>
+      <div class="dashboard-card bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs">
+        <div class="flex items-center justify-between gap-1.5">
+          <span class="card-title text-xs font-semibold text-slate-600 truncate">등록 프로그램</span>
+          <span class="card-value text-base font-extrabold text-slate-800 shrink-0" id="stat-total-programs">-</span>
+        </div>
+        <span class="card-desc text-[11px] text-slate-400 truncate block mt-0.5">고등교육선교 총 과정</span>
       </div>
-      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">모집중 프로그램</span>
-        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recruiting-programs">-</span>
-        <span class="card-desc text-xs text-slate-400">현재 활발히 동역자 모집 중</span>
+      <div class="dashboard-card bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs">
+        <div class="flex items-center justify-between gap-1.5">
+          <span class="card-title text-xs font-semibold text-slate-600 truncate">모집중 프로그램</span>
+          <span class="card-value text-base font-extrabold text-emerald-600 shrink-0" id="stat-recruiting-programs">-</span>
+        </div>
+        <span class="card-desc text-[11px] text-slate-400 truncate block mt-0.5">현재 모집 진행 중</span>
       </div>
-      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">최근 7일 새글</span>
-        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recent-posts">-</span>
-        <span class="card-desc text-xs text-slate-400">새로 추가된 사역 업데이트 수</span>
+      <div class="dashboard-card bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs">
+        <div class="flex items-center justify-between gap-1.5">
+          <span class="card-title text-xs font-semibold text-slate-600 truncate">최근 7일 새글</span>
+          <span class="card-value text-base font-extrabold text-indigo-600 shrink-0" id="stat-recent-posts">-</span>
+        </div>
+        <span class="card-desc text-[11px] text-slate-400 truncate block mt-0.5">신규 사역 업데이트</span>
       </div>
     </div>
 
@@ -94,16 +102,13 @@
     </div>
 
     <!-- ================= 탭 1: 게시글 관리 ================= -->
-    <div id="tab-posts" class="tab-content">
+    <div id="tab-posts" class="tab-content active">
       
       <!-- A. 게시글 목록 뷰 -->
       <div id="postListView" class="view-section active">
         <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
           <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-4">
             <h2 class="text-lg font-bold text-slate-800">게시글 목록</h2>
-            <button type="button" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5" data-action="show-post-editor">
-              <span class="action-icon">+</span> 새 글 작성
-            </button>
           </div>
 
           <div class="filter-tabs flex items-center justify-between gap-2 flex-wrap">
@@ -115,12 +120,17 @@
             <div class="text-xs text-slate-400 font-medium">💡 제목이나 👁️ 버튼을 클릭하면 실시간 미리보기가 열립니다.</div>
           </div>
 
-          <div class="list-toolbar flex gap-2">
-            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
+          <div class="list-toolbar flex items-center gap-2">
+            <div class="search-box flex-1 flex items-center bg-slate-50 rounded-lg px-3 py-2 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
               <span class="text-slate-400">🔎</span>
-              <input id="postSearchInput" type="search" placeholder="제목, 키워드, 작성일자 검색" class="w-full bg-transparent text-sm text-slate-800 focus:outline-none">
+              <input id="postSearchInput" type="search" placeholder="제목, 키워드, 작성일자 검색" class="w-full bg-transparent text-sm text-slate-800 border-none focus:outline-none pl-2">
             </div>
-            <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer" id="postResetBtn">초기화</button>
+            <div class="flex items-center gap-1">
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 text-xs font-semibold rounded-lg shadow-2xs transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap" data-action="show-post-editor">
+                <span class="action-icon text-slate-500 font-bold">+</span> 새 글 작성
+              </button>
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer whitespace-nowrap" id="postResetBtn">초기화</button>
+            </div>
           </div>
 
           <!-- 다중 선택 일괄 작업 바 (Google Blogger 스타일) -->
@@ -300,26 +310,23 @@
         <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
           <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-4">
             <h2 class="text-lg font-bold text-slate-800">등록된 프로그램 목록</h2>
-            <button type="button" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5" data-action="show-program-editor">
-              <span class="action-icon">+</span> 새 프로그램 등록
-            </button>
           </div>
 
-          <div class="filter-tabs flex items-center justify-between gap-2 flex-wrap">
-            <div class="flex items-center gap-1.5">
-              <button class="prog-filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer" data-category="all">전체보기</button>
-              <button class="prog-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer" data-category="degree">학위과정만</button>
-              <button class="prog-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer" data-category="non-degree">비학위/특화만</button>
-            </div>
+          <div class="flex items-center justify-end">
             <div class="text-xs text-slate-400 font-medium">💡 프로그램명이나 👁️ 버튼을 클릭하면 실시간 미리보기가 열립니다.</div>
           </div>
 
-          <div class="list-toolbar flex gap-2">
-            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-2 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
+          <div class="list-toolbar flex items-center gap-2">
+            <div class="search-box flex-1 flex items-center bg-slate-50 rounded-lg px-3 py-2 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
               <span class="text-slate-400">🔎</span>
-              <input id="programSearchInput" type="search" placeholder="프로그램명, 슬러그, 카테고리 검색" class="w-full bg-transparent text-sm text-slate-800 focus:outline-none">
+              <input id="programSearchInput" type="search" placeholder="프로그램명, 슬러그, 카테고리 검색" class="w-full bg-transparent text-sm text-slate-800 border-none focus:outline-none pl-2">
             </div>
-            <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer" id="programResetBtn">초기화</button>
+            <div class="flex items-center gap-1">
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 text-xs font-semibold rounded-lg shadow-2xs transition-all flex items-center gap-1 cursor-pointer whitespace-nowrap" data-action="show-program-editor">
+                <span class="action-icon text-slate-500 font-bold">+</span> 새 프로그램 등록
+              </button>
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer whitespace-nowrap" id="programResetBtn">초기화</button>
+            </div>
           </div>
 
           <!-- 프로그램 다중 선택 일괄 작업 바 -->
@@ -329,12 +336,6 @@
               <span id="selectedProgramCountText" class="text-slate-100 font-bold">0개 선택됨</span>
             </div>
             <div class="flex items-center gap-2 flex-wrap">
-              <button type="button" id="btnBatchChangeProgCategoryDegree" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer">
-                🎓 'DEGREE(학위)'로 변경
-              </button>
-              <button type="button" id="btnBatchChangeProgCategoryNonDegree" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer">
-                📜 'CAMP/NON-DEGREE'로 변경
-              </button>
               <button type="button" id="btnBatchDeletePrograms" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
                 🗑️ 선택 항목 삭제
               </button>
@@ -527,9 +528,9 @@
   <script src="./assets/js/api.js" defer></script>
   <script src="./assets/js/uiHelper.js?v=20260817" defer></script>
   <script src="./assets/js/dashboardManager.js" defer></script>
-  <script src="./assets/js/postManager.js?v=20260816-response-envelope" defer></script>
-  <script src="./assets/js/programManager.js?v=20260816-response-envelope" defer></script>
-  <script src="./assets/js/main.js?v=20260815-modal-scroll-lock" defer></script>
+  <script src="./assets/js/postManager.js?v=20260822-font-bold-fix" defer></script>
+  <script src="./assets/js/programManager.js?v=20260822-font-bold-fix" defer></script>
+  <script src="./assets/js/main.js?v=20260822-font-bold-fix" defer></script>
   <script src="./assets/js/ai-assistant.js?v=20260816-backend-generation" defer></script>
 </body>
 </html>

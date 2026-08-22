@@ -437,14 +437,14 @@
           <td class="p-3"><span class="type-chip ${post.type === 'news' ? 'type-news' : 'type-notice'}">${post.type === 'news' ? '뉴스' : '공지'}</span></td>
           <td class="p-3">
             <div class="flex flex-col">
-              <button type="button" onclick="previewPost(${post.id})" class="text-left font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm cursor-pointer p-0 bg-transparent border-0">${window.AdminUI.escapeHtml(post.title)}</button>
+              <span role="button" tabindex="0" onclick="previewPost(${post.id})" onkeydown="if(event.key==='Enter'||event.key===' ')previewPost(${post.id})" class="admin-title-btn text-left font-medium text-slate-800 hover:font-bold hover:text-slate-900 transition-[font-weight] leading-snug text-sm cursor-pointer">${window.AdminUI.escapeHtml(post.title)}</span>
               <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '내용 없음')}</span>
             </div>
           </td>
           <td class="p-3 text-xs text-slate-500 font-medium">${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
           <td class="p-3 text-right">
             <div class="flex items-center justify-end">
-              <button type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editPost(${post.id})" title="글 수정">✏️ 수정</button>
+              <button type="button" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editPost(${post.id})" title="글 수정">✏️ 수정</button>
             </div>
           </td>
         </tr>

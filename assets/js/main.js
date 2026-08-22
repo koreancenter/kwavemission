@@ -61,12 +61,20 @@
     document.querySelectorAll('.tab-content').forEach((tab) => tab.classList.remove('active'));
 
     if (tabName === 'posts') {
-      document.querySelectorAll('.nav-tab-btn')[0].classList.add('active');
-      document.getElementById('tab-posts').classList.add('active');
+      const postBtn = document.querySelector('.nav-tab-btn[data-tab="posts"]') || document.querySelectorAll('.nav-tab-btn')[0];
+      if (postBtn) postBtn.classList.add('active');
+      const tabPosts = document.getElementById('tab-posts');
+      if (tabPosts) tabPosts.classList.add('active');
+      const listView = document.getElementById('postListView');
+      if (listView) listView.classList.add('active');
       if (window.loadPostList) window.loadPostList();
     } else {
-      document.querySelectorAll('.nav-tab-btn')[1].classList.add('active');
-      document.getElementById('tab-programs').classList.add('active');
+      const progBtn = document.querySelector('.nav-tab-btn[data-tab="programs"]') || document.querySelectorAll('.nav-tab-btn')[1];
+      if (progBtn) progBtn.classList.add('active');
+      const tabProg = document.getElementById('tab-programs');
+      if (tabProg) tabProg.classList.add('active');
+      const progListView = document.getElementById('programListView');
+      if (progListView) progListView.classList.add('active');
       if (window.loadProgramList) window.loadProgramList();
     }
   }
@@ -183,7 +191,7 @@
         setAuthTokens(payload);
         hideLoginOverlay();
         showToast('로그인되었습니다.', 'success');
-        if (window.loadPostList) window.loadPostList();
+        switchTab('posts');
         if (window.DashboardManager && window.DashboardManager.refresh) {
           window.DashboardManager.refresh();
         }
@@ -288,7 +296,7 @@
     initModalPreview();
 
     if (getAccessToken()) {
-      if (window.loadPostList) window.loadPostList();
+      switchTab('posts');
       if (window.DashboardManager && window.DashboardManager.refresh) {
         window.DashboardManager.refresh();
       }

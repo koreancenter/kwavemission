@@ -6,58 +6,63 @@
     <title>후원·동역 안내 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
     <meta name="description" content="K-Wave Mission 후원 및 동역 안내. 정기후원, 일시후원, 기도 동역, 재능 기부를 통해 열방과 고등교육선교 현장을 섬깁니다.">
     
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f8f8f7',
-                            100: '#efefec',
-                            200: '#dcdcd7',
-                            300: '#c3c3bc',
-                            400: '#9b9b94',
-                            500: '#6b6b66',
-                            600: '#54544f',
-                            700: '#40403c',
-                            800: '#2e2e2b',
-                            900: '#1f1f1d'
-                        },
-                        surface: {
-                            900: '#ece9e1',
-                            800: '#e4e0d8',
-                            700: '#d7d2c9'
-                        },
-                        mist: {
-                            100: '#ececec',
-                            200: '#d1d5db',
-                            400: '#6b7280'
-                        },
-                        consult: {
-                            300: '#d4d4d8',
-                            400: '#a1a1aa',
-                            500: '#71717a'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
-                        serif: ['Noto Serif KR', 'serif'],
-                        mono: ['JetBrains Mono', 'monospace']
-                    }
-                }
-            }
-        }
-    </script>
-    
     <!-- Performance Resource Hints -->
+    <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" crossorigin>
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Tailwind CSS Config -->
+    <script>
+        window.tailwind = {
+            config: {
+                theme: {
+                    extend: {
+                        colors: {
+                            brand: {
+                                50: '#f8f8f7',
+                                100: '#efefec',
+                                200: '#dcdcd7',
+                                300: '#c3c3bc',
+                                400: '#9b9b94',
+                                500: '#6b6b66',
+                                600: '#54544f',
+                                700: '#40403c',
+                                800: '#2e2e2b',
+                                900: '#1f1f1d'
+                            },
+                            surface: {
+                                900: '#ece9e1',
+                                800: '#e4e0d8',
+                                700: '#d7d2c9'
+                            },
+                            mist: {
+                                100: '#ececec',
+                                200: '#d1d5db',
+                                400: '#6b7280'
+                            },
+                            consult: {
+                                300: '#d4d4d8',
+                                400: '#a1a1aa',
+                                500: '#71717a'
+                            }
+                        },
+                        fontFamily: {
+                            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                            serif: ['Noto Serif KR', 'serif'],
+                            mono: ['JetBrains Mono', 'monospace']
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+    <!-- Tailwind CSS CDN (Deferred to eliminate initial render blocking) -->
+    <script src="https://cdn.tailwindcss.com" defer></script>
 
     <!-- Preload Critical CSS to break network chaining -->
     <link rel="preload" href="./assets/css/styles.css?v=20260818-mobile-perf" as="style">
@@ -858,11 +863,29 @@
                 }, 3000);
             }
         }
+        // Marked.js Lazy Loader
+        window.ensureMarked = function() {
+            if (window.marked) return Promise.resolve(window.marked);
+            if (window._markedPromise) return window._markedPromise;
+            window._markedPromise = new Promise(function(resolve, reject) {
+                var script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+                script.onload = function() { resolve(window.marked); };
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+            return window._markedPromise;
+        };
+
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(function() { window.ensureMarked(); }, { timeout: 3500 });
+        } else {
+            setTimeout(function() { window.ensureMarked(); }, 2500);
+        }
     </script>
 
     <!-- JS dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <script src="./assets/js/api-service.js" defer></script>
     <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
     <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>

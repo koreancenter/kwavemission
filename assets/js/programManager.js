@@ -134,14 +134,14 @@
           <td class="p-3"><span class="px-2 py-0.5 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 border border-slate-200">${window.AdminUI.escapeHtml(program.category || 'DEGREE')}</span></td>
           <td class="p-3">
             <div class="flex flex-col">
-              <button type="button" onclick="previewProgram(${program.id})" class="text-left font-bold text-slate-900 hover:text-indigo-600 transition-colors leading-snug text-sm cursor-pointer p-0 bg-transparent border-0">${window.AdminUI.escapeHtml(program.title)}</button>
+              <span role="button" tabindex="0" onclick="previewProgram(${program.id})" onkeydown="if(event.key==='Enter'||event.key===' ')previewProgram(${program.id})" class="admin-title-btn text-left font-medium text-slate-800 hover:font-bold hover:text-slate-900 transition-[font-weight] leading-snug text-sm cursor-pointer">${window.AdminUI.escapeHtml(program.title)}</span>
               <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '설명 없음')}</span>
             </div>
           </td>
           <td class="p-3">${getStatusLabel(program.status)}</td>
           <td class="p-3 text-right">
             <div class="flex items-center justify-end">
-              <button type="button" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editProgram(${program.id})" title="프로그램 수정">✏️ 수정</button>
+              <button type="button" class="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-300 text-xs font-semibold rounded-lg transition-all cursor-pointer shadow-2xs" onclick="editProgram(${program.id})" title="프로그램 수정">✏️ 수정</button>
             </div>
           </td>
         </tr>
@@ -159,16 +159,9 @@
   function getFilteredPrograms() {
     const searchInput = document.getElementById('programSearchInput');
     const searchText = searchInput ? searchInput.value : '';
-    const categoryFilter = state.currentProgCategory || 'all';
 
     return state.programs.filter((program) => {
-      let matchesCategory = true;
-      if (categoryFilter === 'degree') {
-        matchesCategory = String(program.category || '').toLowerCase().includes('degree') || String(program.category || '').includes('학위');
-      } else if (categoryFilter === 'non-degree') {
-        matchesCategory = !String(program.category || '').toLowerCase().includes('degree') || String(program.category || '').includes('특화') || String(program.category || '').includes('CAMP');
-      }
-      return matchesCategory && window.AdminUI.matchSearch(program, searchText);
+      return window.AdminUI.matchSearch(program, searchText);
     });
   }
 
@@ -303,8 +296,6 @@
     const loadMoreBtn = document.getElementById('programLoadMoreBtn');
     const selectAllChk = document.getElementById('selectAllPrograms');
     const btnBatchDelete = document.getElementById('btnBatchDeletePrograms');
-    const btnBatchDegree = document.getElementById('btnBatchChangeProgCategoryDegree');
-    const btnBatchNonDegree = document.getElementById('btnBatchChangeProgCategoryNonDegree');
     const btnDeselectAll = document.getElementById('btnDeselectAllPrograms');
 
     if (selectAllChk) {
@@ -352,47 +343,6 @@
       });
     }
 
-    const batchChangeProgCategory = async (newCategory) => {
-      const selectedIds = getSelectedProgramIds();
-      if (!selectedIds.length) return;
-
-      if (!confirm(`선택한 ${selectedIds.length}개 프로그램의 카테고리를 '${newCategory}'(으)로 변경하시겠습니까?`)) return;
-
-      let successCount = 0;
-      for (const id of selectedIds) {
-        const program = state.programs.find(p => Number(p.id) === Number(id));
-        if (!program) continue;
-
-        const formData = new FormData();
-        formData.append('id', id);
-        formData.append('slug', program.slug);
-        formData.append('category', newCategory);
-        formData.append('title', program.title);
-        formData.append('status', program.status || 'recruiting');
-        formData.append('icon', program.icon || '🎓');
-        formData.append('description', program.description || '');
-        formData.append('display_order', program.display_order || 0);
-
-        try {
-          const res = await window.AdminApi.api.post('/api/write-program', formData, { isFormData: true });
-          if (res && res.success) successCount++;
-        } catch (e) {
-          console.error('Batch category change error:', e);
-        }
-      }
-
-      window.AdminUI.showToast(`${successCount}개 프로그램이 '${newCategory}'(으)로 변경되었습니다.`, 'success');
-      loadProgramList();
-    };
-
-    if (btnBatchDegree) {
-      btnBatchDegree.addEventListener('click', () => batchChangeProgCategory('DEGREE'));
-    }
-
-    if (btnBatchNonDegree) {
-      btnBatchNonDegree.addEventListener('click', () => batchChangeProgCategory('CAMP/SPECIAL'));
-    }
-
     if (searchInput) {
       searchInput.addEventListener('input', () => {
         state.programVisibleCount = 12;
@@ -415,23 +365,6 @@
         renderProgramList();
       });
     }
-
-    document.querySelectorAll('.prog-filter-btn').forEach((button) => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.prog-filter-btn').forEach((btn) => {
-          const isActive = btn === button;
-          btn.classList.toggle('active', isActive);
-          if (isActive) {
-            btn.className = 'prog-filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer';
-          } else {
-            btn.className = 'prog-filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer';
-          }
-        });
-        state.currentProgCategory = button.dataset.category || 'all';
-        state.programVisibleCount = 12;
-        renderProgramList();
-      });
-    });
 
     document.getElementById('programForm').addEventListener('submit', async (e) => {
       e.preventDefault();

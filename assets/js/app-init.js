@@ -27,22 +27,12 @@
     function initApp() {
         ensureNativeScrollState();
 
-        if (typeof lucide !== 'undefined') lucide.createIcons();
-
         if (typeof window.setupMobileMenuToggle === 'function') {
             window.setupMobileMenuToggle();
         }
 
         if (typeof window.setupSmoothNavigation === 'function') {
             window.setupSmoothNavigation();
-        }
-
-        if (typeof window.bindScrollProgress === 'function') {
-            window.bindScrollProgress();
-        }
-
-        if (typeof window.initializeRevealAnimations === 'function') {
-            window.initializeRevealAnimations();
         }
 
         if (typeof window.initProgramSlider === 'function') {
@@ -54,8 +44,28 @@
             window.filterPrograms('all', defaultBtn);
         }
 
-        if (typeof window.initBackToTop === 'function') {
-            window.initBackToTop();
+        const runDeferredInit = function () {
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+
+            if (typeof window.bindScrollProgress === 'function') {
+                window.bindScrollProgress();
+            }
+
+            if (typeof window.initializeRevealAnimations === 'function') {
+                window.initializeRevealAnimations();
+            }
+
+            if (typeof window.initBackToTop === 'function') {
+                window.initBackToTop();
+            }
+        };
+
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(runDeferredInit, { timeout: 1500 });
+        } else {
+            window.requestAnimationFrame(function () {
+                setTimeout(runDeferredInit, 20);
+            });
         }
     }
 

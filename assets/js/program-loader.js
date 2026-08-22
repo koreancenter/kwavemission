@@ -151,6 +151,38 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', loadPrograms);
+    function initLazyPrograms() {
+        var triggered = false;
+        function execute() {
+            if (triggered) return;
+            triggered = true;
+            loadPrograms();
+        }
+
+        var container = document.getElementById('prog-slider') || document.getElementById('programs');
+
+        if ('IntersectionObserver' in window && container) {
+            var observer = new IntersectionObserver(function (entries) {
+                if (entries[0].isIntersecting) {
+                    execute();
+                    observer.disconnect();
+                }
+            }, { rootMargin: '400px 0px' });
+
+            observer.observe(container);
+        }
+
+        if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(execute, { timeout: 2500 });
+        } else {
+            setTimeout(execute, 1200);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initLazyPrograms);
+    } else {
+        initLazyPrograms();
+    }
     window.ProgramLoader = { load: loadPrograms };
 })();
