@@ -220,12 +220,10 @@ h6,
 
 .news-feature-media {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  min-height: 14rem;
+  height: 100%;              /* 👈 23.75rem -> 100% 로 변경 */
   overflow: hidden;
   background: #d8d6d1;
-  align-self: start;
+  align-self: stretch;        /* 👈 start -> stretch 로 변경 */
 }
 
 .news-feature-media img {
@@ -913,3 +911,33 @@ img, video, iframe {
     }
 }
 
+/* ==========================================================================
+   기존 다크모드/인라인 스타일 하얀 글자(볼드체) 강제 어둡게 보정
+   ========================================================================== */
+.ProseMirror strong,
+.ProseMirror b,
+#modal-body strong,
+#modal-body b,
+#md-modal-content strong,
+#md-modal-content b,
+#previewModal strong,
+#previewModal b,
+.preview-body strong,
+.preview-body b {
+  color: #0f172a !important; /* 강제 어두운 검은색 */
+  background-color: transparent !important;
+}
+
+/* 태그 안에 <span style="color: white"> 형태가 엮여있는 경우 방지 */
+.ProseMirror strong *,
+.ProseMirror b *,
+#modal-body strong *,
+#modal-body b *,
+#md-modal-content strong *,
+#md-modal-content b *,
+#previewModal strong *,
+#previewModal b *,
+.preview-body strong *,
+.preview-body b * {
+  color: inherit !important;
+}
