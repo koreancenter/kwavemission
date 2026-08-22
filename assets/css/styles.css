@@ -941,3 +941,28 @@ img, video, iframe {
 .preview-body b * {
   color: inherit !important;
 }
+
+/* ==========================================================================
+   모달 창 본문 전체 글자색 강제 보정 (라이트 모드 고정)
+   ========================================================================== */
+#md-modal-content,
+#modal-body,
+#md-modal-content *,
+#modal-body * {
+  color: #334155 !important; /* 본문 기본 어두운 글자색 */
+}
+
+/* 제목(h1~h4) 및 강조 영역 */
+#md-modal-content h1, #md-modal-content h2, #md-modal-content h3, #md-modal-content h4,
+#modal-body h1, #modal-body h2, #modal-body h3, #modal-body h4,
+#md-modal-content strong, #modal-body strong {
+  color: #0f172a !important; /* 진한 검은색 */
+}
+
+/* 상단 날짜 및 서브 타이틀(SPECIAL REPORT 등) */
+#md-modal-content .modal-date,
+#modal-body .modal-date,
+#md-modal-content .modal-meta,
+#modal-body .modal-meta {
+  color: #64748b !important;
+}
