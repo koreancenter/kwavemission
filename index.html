@@ -559,7 +559,7 @@
             </nav>
 
             <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤 - 44px+ 터치 타겟) -->
-            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl">
+            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl cursor-pointer">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
@@ -1031,6 +1031,16 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <script>
         // 즉시 전역 핸들러 등록 (defer 스크립트 로드 이전 클릭 대비)
+        window.toggleMobileMenu = function(event) {
+            if (event && typeof event.stopPropagation === 'function') {
+                event.stopPropagation();
+            }
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.classList.toggle('hidden');
+            }
+        };
+
         window.toggleKWaveDrawer = function() {
             var drawer = document.getElementById('kwave-drawer');
             var backdrop = document.getElementById('kwave-drawer-backdrop');

@@ -286,7 +286,7 @@
             </nav>
 
             <!-- Mobile Menu Toggle Button (44px+ touch target) -->
-            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl">
+            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl cursor-pointer">
                 <i data-lucide="menu" class="w-6 h-6"></i>
             </button>
 
@@ -782,20 +782,35 @@
 
     <!-- JavaScript logic -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            if (window.lucide) {
-                window.lucide.createIcons();
+        window.toggleMobileMenu = function(event) {
+            if (event && typeof event.stopPropagation === 'function') {
+                event.stopPropagation();
             }
+            var mobileMenu = document.getElementById('mobile-menu');
+            if (mobileMenu) {
+                mobileMenu.classList.toggle('hidden');
+            }
+        };
 
-            // Mobile menu toggle
-            const menuToggle = document.getElementById('menu-toggle');
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (menuToggle && mobileMenu) {
-                menuToggle.addEventListener('click', function () {
-                    mobileMenu.classList.toggle('hidden');
-                });
+        window.toggleKWaveDrawer = function() {
+            var drawer = document.getElementById('kwave-drawer');
+            var backdrop = document.getElementById('kwave-drawer-backdrop');
+            if (!drawer) return;
+            if (drawer.classList.contains('-translate-x-full')) {
+                drawer.classList.remove('-translate-x-full');
+                if (backdrop) { backdrop.classList.remove('hidden'); backdrop.classList.remove('opacity-0'); }
+            } else {
+                drawer.classList.add('-translate-x-full');
+                if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
             }
-        });
+        };
+        window.openKWaveDrawer = function() { window.toggleKWaveDrawer(); };
+        window.closeKWaveDrawer = function() {
+            var drawer = document.getElementById('kwave-drawer');
+            var backdrop = document.getElementById('kwave-drawer-backdrop');
+            if (drawer) drawer.classList.add('-translate-x-full');
+            if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
+        };
 
         // Tab Switching function
         function switchTab(tabId) {
@@ -848,27 +863,6 @@
     <!-- JS dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <script>
-        window.toggleKWaveDrawer = function() {
-            var drawer = document.getElementById('kwave-drawer');
-            var backdrop = document.getElementById('kwave-drawer-backdrop');
-            if (!drawer) return;
-            if (drawer.classList.contains('-translate-x-full')) {
-                drawer.classList.remove('-translate-x-full');
-                if (backdrop) { backdrop.classList.remove('hidden'); backdrop.classList.remove('opacity-0'); }
-            } else {
-                drawer.classList.add('-translate-x-full');
-                if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
-            }
-        };
-        window.openKWaveDrawer = function() { window.toggleKWaveDrawer(); };
-        window.closeKWaveDrawer = function() {
-            var drawer = document.getElementById('kwave-drawer');
-            var backdrop = document.getElementById('kwave-drawer-backdrop');
-            if (drawer) drawer.classList.add('-translate-x-full');
-            if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
-        };
-    </script>
     <script src="./assets/js/api-service.js" defer></script>
     <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
     <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>
