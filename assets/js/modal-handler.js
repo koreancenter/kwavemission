@@ -8,7 +8,10 @@
         contact: 'contact-modal',
         'contact-us': 'md-modal',
         terms: 'md-modal',
-        privacy: 'md-modal'
+        privacy: 'md-modal',
+        '01-for-spirit': 'md-modal',
+        '02-for-church': 'md-modal',
+        '03-for-world': 'md-modal'
     };
 
     function getHashKey() {
@@ -119,7 +122,7 @@
         const modalId = getModalIdFromHash(hashKey);
         if (!modalId || !document.getElementById(modalId)) return;
 
-        if (hashKey === 'terms' || hashKey === 'privacy' || hashKey === 'contact-us' || hashKey === 'contact') {
+        if (STATIC_DOCUMENT_SLUGS.has(hashKey)) {
             openMdModal(hashKey);
             return;
         }
@@ -162,7 +165,7 @@
             return;
         }
 
-        if (hashKey === 'terms' || hashKey === 'privacy' || hashKey === 'contact-us' || hashKey === 'contact') {
+        if (STATIC_DOCUMENT_SLUGS.has(hashKey)) {
             openMdModal(hashKey);
             return;
         }
@@ -202,8 +205,8 @@
         }
     }
 
-    // contact와 contact-us 슬러그를 모두 정적 문서로 등록
-    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact', 'contact-us']);
+    // contact, contact-us, 01-for-spirit, 02-for-church, 03-for-world 등을 정적 문서로 등록
+    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact', 'contact-us', '01-for-spirit', '02-for-church', '03-for-world']);
 
     async function fetchModalMarkdown(slug) {
         // 'contact'로 요청이 와도 'contact-us.md' 파일을 불러오도록 맵핑
@@ -257,7 +260,10 @@
             terms: '이용약관',
             privacy: '개인정보처리방침',
             contact: 'Contact Us',
-            'contact-us': 'Contact Us'
+            'contact-us': 'Contact Us',
+            '01-for-spirit': '영혼을 살리는 일',
+            '02-for-church': '교회를 세우는 일',
+            '03-for-world': '세상을 바꾸는 일'
         };
 
         const targetSlug = slug || 'contact-us';
