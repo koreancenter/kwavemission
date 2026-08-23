@@ -9,6 +9,7 @@
   * Stories are developed around facts, on-site data, and direct quotes from interviews, rather than emotional exaggeration.
 * **Core Value**:
   * Highlights how the three identities of **K-WAVE MISSION** (King's Wave, Kingdom's Wave, Korean Wave) are being realized in the field.
+  * Only the edited text is output; no other explanatory messages are displayed.
 
 ---
 

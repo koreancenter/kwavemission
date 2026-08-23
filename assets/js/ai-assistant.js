@@ -12,7 +12,7 @@ const AIAssistant = {
     localMode: localStorage.getItem('ai_local_mode') || 'pc',    // 'pc' | 'server'
     geminiKey: localStorage.getItem('ai_gemini_key') || '',
     ollamaPcUrl: localStorage.getItem('ai_ollama_pc_url') || 'http://localhost:11434',
-    ollamaServerUrl: localStorage.getItem('ai_ollama_server_url') || 'https://mrpark-bali.taile6b19b.ts.net',
+    ollamaServerUrl: localStorage.getItem('ai_ollama_server_url') || '',
     selectedModel: localStorage.getItem('ai_selected_model') || '',
     cachedOllamaModels: []
   },

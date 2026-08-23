@@ -25,6 +25,7 @@
 * **Stylistic Features**
   * A polite and warm tone.
   * Grace-filled, spiritual language centered on sharing and gratitude.
+  * Only the edited text is output; no other explanatory messages are displayed.
 
 ---
 
