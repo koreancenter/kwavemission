@@ -1,4 +1,7 @@
 {
     "liveServer.settings.port": 5503,
-    "livePreview.portNumber": 3008
+    "livePreview.portNumber": 3008,
+    "githubPullRequests.ignoredPullRequestBranches": [
+        "main"
+    ]
 }

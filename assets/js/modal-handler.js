@@ -11,7 +11,8 @@
         privacy: 'md-modal',
         '01-for-spirit': 'md-modal',
         '02-for-church': 'md-modal',
-        '03-for-world': 'md-modal'
+        '03-for-world': 'md-modal',
+        '04-global-church': 'md-modal'
     };
 
     function getHashKey() {
@@ -205,8 +206,8 @@
         }
     }
 
-    // contact, contact-us, 01-for-spirit, 02-for-church, 03-for-world 등을 정적 문서로 등록
-    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact', 'contact-us', '01-for-spirit', '02-for-church', '03-for-world']);
+    // contact, contact-us, 01-for-spirit, 02-for-church, 03-for-world, 04-global-church 등을 정적 문서로 등록
+    const STATIC_DOCUMENT_SLUGS = new Set(['terms', 'privacy', 'contact', 'contact-us', '01-for-spirit', '02-for-church', '03-for-world', '04-global-church']);
 
     async function fetchModalMarkdown(slug) {
         // 'contact'로 요청이 와도 'contact-us.md' 파일을 불러오도록 맵핑
@@ -263,7 +264,8 @@
             'contact-us': 'Contact Us',
             '01-for-spirit': '영혼을 살리는 일',
             '02-for-church': '교회를 세우는 일',
-            '03-for-world': '세상을 바꾸는 일'
+            '03-for-world': '세상을 바꾸는 일',
+            '04-global-church': '한국 교회 국제화 프로젝트',
         };
 
         const targetSlug = slug || 'contact-us';

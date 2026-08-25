@@ -1,11 +1,42 @@
 <!DOCTYPE html>
 <html lang="ko" class="scroll-smooth">
 <head>
-    <!-- <head> 태그 상단 추가 -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>케이웨이브 미션 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
     <meta name="description" content="한국학 기반 교육선교 전문가 그룹. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <meta name="keywords" content="케이웨이브미션, K-Wave Mission, 한류선교, 교육선교, 고등교육선교, 쉐마글로벌학교, 글로벌미래고등교육원">
+    <meta name="author" content="K-WAVE MISSION">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://kwavemission.org/">
+    <meta property="og:title" content="케이웨이브 미션 | K-WAVE MISSION">
+    <meta property="og:description" content="한국학 기반 교육선교 전문가 그룹. 한류를 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <meta property="og:locale" content="ko_KR">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="케이웨이브 미션 | K-WAVE MISSION">
+    <meta name="twitter:description" content="한국학 기반 교육선교 전문가 그룹. 한류를 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+
+    <!-- Structured Data (JSON-LD) for Search Engine Crawlers -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "케이웨이브 미션 (K-WAVE MISSION)",
+      "url": "https://kwavemission.org/",
+      "logo": "https://kwavemission.org/assets/images/logo.webp",
+      "description": "한국학 기반 교육선교 전문가 그룹. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.",
+      "foundingDate": "2011",
+      "sameAs": [
+        "https://www.ishema.kr/",
+        "https://www.koreancenter.net/"
+      ]
+    }
+    </script>
     
     <!-- Tailwind CSS Config & Core Engine (Loaded synchronously at top of <head> to eliminate FOUC) -->
     <script>
@@ -551,8 +582,8 @@
             </nav>
 
             <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤 - 44px+ 터치 타겟) -->
-            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-expanded="false" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-100 hover:text-white rounded-xl cursor-pointer transition-colors">
-                <svg class="w-6 h-6 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <button id="menu-toggle" type="button" onclick="toggleMobileMenu(event)" aria-expanded="false" aria-label="메뉴 열기" class="md:hidden relative z-50 min-w-[44px] min-h-[44px] flex items-center justify-center p-2 !text-slate-800 hover:!text-black rounded-xl cursor-pointer transition-colors">
+                <svg class="w-6 h-6 pointer-events-none stroke-[#1f2937]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
                 </svg>
             </button>
@@ -700,12 +731,12 @@
                             <span class="tech-tag px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-800 sm:text-amber-300 text-[10px] font-bold">FOR CHURCHES</span>
                             <span class="tech-tag text-slate-600 sm:text-slate-500 text-xs">/ 04</span>
                         </div>
-                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">우리 교회/단체 세계화 프로젝트</h4>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">한국 교회 국제화 프로젝트</h4>
                         <p class="text-sm sm:text-xs text-slate-700 sm:text-slate-700 font-normal sm:font-light">교회 자원을 세계선교를 통해 공유하며 세계형제의식을 실천합니다.</p>
                     </div>
-                    <a href="https://pf.kakao.com" target="_blank" class="btn-consult tech-tag shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-xs font-bold w-full sm:w-auto min-h-[44px]">
-                        <span>프로젝트 안내</span> <i data-lucide="message-circle" class="w-4 h-4"></i>
-                    </a>
+                    <button type="button" onclick="openMdModal('04-global-church')" class="btn-consult tech-tag shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-xs font-bold w-full sm:w-auto min-h-[44px] cursor-pointer">
+                        <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    </button>
                 </div>
 
                 <!-- [05] Action Banner 2: Individual Partner -->
@@ -715,7 +746,7 @@
                             <span class="tech-tag px-2.5 py-0.5 rounded bg-transparent border border-slate-900/20 border-slate-800 sm:border-brand-300/30 text-slate-800 sm:text-brand-200 text-[10px] font-bold">FOR INDIVIDUALS</span>
                             <span class="tech-tag text-slate-600 sm:text-slate-500 text-xs">/ 05</span>
                         </div>
-                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">여러분의 지식이 선교 자원입니다.</h4>
+                        <h4 class="text-base sm:text-lg font-bold text-slate-900 sm:text-slate-900">여러분의 선교 자원입니다.</h4>
                         <p class="text-sm sm:text-xs text-slate-700 sm:text-slate-700 font-normal sm:font-light">케이웨이브 미션은 여러분의 자원과 선교 현장의 필요를 잇는 다리입니다.</p>
                     </div>
                     <a href="https://pf.kakao.com" target="_blank" class="btn-primary no-shadow shrink-0 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs sm:text-xs font-bold w-full sm:w-auto min-h-[44px]">
@@ -736,8 +767,8 @@
       </div>
       <div class="metric-value" data-target="300">0</div>
       <div class="metric-unit">+</div>
-      <div class="metric-title">동역 대학교수선교사</div>
-      <p class="metric-desc">고등교육선교 사역에 헌신된 학술 전문 네트워크</p>
+      <div class="metric-title">우리와 동역하는 한국의 크리스천 교수</div>
+      <p class="metric-desc">고등교육선교 사역에 헌신된 고등교육 전문가 그룹</p>
     </div>
 
     <div class="metric-card bg-transparent border border-slate-300/80 sm:border-none p-5 sm:p-5 rounded-2xl sm:rounded-none shadow-xs sm:shadow-none">
@@ -746,7 +777,7 @@
       </div>
       <div class="metric-value" data-target="20">0</div>
       <div class="metric-unit">+</div>
-      <div class="metric-title">동역 교회 및 전문 기관</div>
+      <div class="metric-title">우리와 함께 하는 한국 교회와 교육기관</div>
       <p class="metric-desc">하나님 나라의 전략적 과제를 함께 수행하는 기관</p>
     </div>
 
@@ -756,7 +787,7 @@
       </div>
       <div class="metric-value" data-target="65">0</div>
       <div class="metric-unit">+</div>
-      <div class="metric-title">현지 고등교육기관</div>
+      <div class="metric-title">우리가 개척한 현지 고등교육기관</div>
       <p class="metric-desc">학술 교류 및 복음의 길을 확장하는 대학 허브</p>
     </div>
   </div>

@@ -199,7 +199,7 @@
         // Close mobile menu when clicking outside
         document.addEventListener('click', function (e) {
             if (!mobileMenu.classList.contains('hidden')) {
-                if (!e.target.closest('#mobile-menu') && !e.target.closest('#menu-toggle')) {
+                if (!mobileMenu.contains(e.target) && !menuToggle.contains(e.target)) {
                     mobileMenu.classList.add('hidden');
                     menuToggle.setAttribute('aria-expanded', 'false');
                     menuToggle.setAttribute('aria-label', '메뉴 열기');
