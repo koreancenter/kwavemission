@@ -38,7 +38,7 @@
     }
     </script>
     
-    <!-- Tailwind CSS Config & Core Engine (Loaded synchronously at top of <head> to eliminate FOUC) -->
+    <!-- Tailwind CSS Config & Core Engine (Deferred to prevent main-thread execution blocking) -->
     <script>
         window.tailwind = {
             config: {
@@ -83,21 +83,29 @@
             }
         };
     </script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.tailwindcss.com" defer></script>
 
-    <!-- Main Stylesheet (Loaded synchronously for immediate styling) -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
+    <!-- Main Stylesheet (Loaded non-blocking for Above-The-Fold CSS optimization) -->
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
+    </noscript>
 
     <!-- Performance Resource Hints -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Web Fonts -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+    <!-- Web Fonts (Optimized for non-blocking critical chain) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+        <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+    </noscript>
     
     <style>
         :root {
