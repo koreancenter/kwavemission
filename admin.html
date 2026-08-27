@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>K-Wave Mission - 통합 관리자 Center</title>
+  <meta name="description" content="K-Wave Mission 통합 관리자 센터 - 게시글, 고등교육선교 프로그램 및 사역 콘텐츠 관리 시스템">
+  <meta name="robots" content="noindex, nofollow">
+
+  <!-- Performance Resource Hints -->
+  <link rel="dns-prefetch" href="https://cdn.tailwindcss.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="dns-prefetch" href="https://esm.sh">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://esm.sh" crossorigin>
+
+  <!-- Tailwind CSS & Typography Plugin CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+
+  <link rel="stylesheet" href="./assets/css/admin.css?v=20260827-fix-hover-delete-v3">
+
+  <!-- Tiptap Editor CDN ESM Loader -->
+  <script type="module">
+    import { Editor } from 'https://esm.sh/@tiptap/core@2.2.4?v=20260817';
+    import StarterKit from 'https://esm.sh/@tiptap/starter-kit@2.2.4?v=20260817';
+    import Link from 'https://esm.sh/@tiptap/extension-link@2.2.4?v=20260817';
+    import Image from 'https://esm.sh/@tiptap/extension-image@2.2.4?v=20260817';
+    import Underline from 'https://esm.sh/@tiptap/extension-underline@2.2.4?v=20260817';
+
+    window.TiptapEditor = Editor;
+    window.TiptapStarterKit = StarterKit;
+    window.TiptapLink = Link;
+    window.TiptapImage = Image;
+    window.TiptapUnderline = Underline;
+    document.dispatchEvent(new CustomEvent('tiptap:ready'));
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen font-sans">
+
+  <!-- 1. 로그인 전용 레이어 -->
+  <div id="loginOverlay">
+    <div class="login-box">
+      <div class="login-title">🔒 K-Wave Mission 관리자</div>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="loginEmail">아이디</label>
+          <input type="email" id="loginEmail" value="admin@kwavemission.org" required readonly class="readonly-field">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">비밀번호</label>
+          <input type="password" id="loginPassword" placeholder="비밀번호를 입력하세요" required autofocus>
+        </div>
+        <button type="submit" class="full-width-action">로그인</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. 메인 관리자 상단 헤더 -->
+  <div class="admin-header flex justify-between items-center px-8 py-4 bg-white border-b border-slate-200 shadow-sm">
+    <h1 class="text-xl font-extrabold text-slate-800 tracking-tight">K-Wave Mission 관리자 센터</h1>
+    <button type="button" class="px-3.5 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors border border-slate-300" id="logoutBtn">🔒 로그아웃</button>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Dashboard Summary Cards -->
+    <div class="dashboard-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="dashboardStats" style="display: none;">
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">전체 게시글</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-posts">-</span>
+        <span class="card-desc text-xs text-slate-400">뉴스 및 공지사항 총 개수</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">등록 프로그램</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-total-programs">-</span>
+        <span class="card-desc text-xs text-slate-400">고등교육선교 총 과정 수</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">모집중 프로그램</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recruiting-programs">-</span>
+        <span class="card-desc text-xs text-slate-400">현재 활발히 동역자 모집 중</span>
+      </div>
+      <div class="dashboard-card bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <span class="card-title text-xs font-semibold text-slate-500 block mb-1">최근 7일 새글</span>
+        <span class="card-value text-2xl font-black text-slate-800 block mb-1" id="stat-recent-posts">-</span>
+        <span class="card-desc text-xs text-slate-400">새로 추가된 사역 업데이트 수</span>
+      </div>
+    </div>
+
+    <!-- 메인 탭 선택 -->
+    <div class="nav-tabs flex gap-2 border-b border-slate-200 pb-2">
+      <button class="nav-tab-btn active px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="posts">📰 게시글 관리</button>
+      <button class="nav-tab-btn px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="programs">🎓 프로그램 관리</button>
+    </div>
+
+    <!-- ================= 탭 1: 게시글 관리 ================= -->
+    <div id="tab-posts" class="tab-content active">
+      
+      <!-- A. 게시글 목록 뷰 -->
+      <div id="postListView" class="view-section active">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-4">
+            <h2 class="text-lg font-bold text-slate-800">게시글 목록</h2>
+          </div>
+
+          <div class="filter-tabs flex items-center justify-between gap-2 flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <button class="filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer" data-type="all">전체보기</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer" data-type="news">뉴스만</button>
+              <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer" data-type="notice">공지사항만</button>
+            </div>
+            <div class="text-xs text-slate-400 font-medium">💡 제목이나 👁️ 버튼을 클릭하면 실시간 미리보기가 열립니다.</div>
+          </div>
+
+          <div class="list-toolbar flex gap-3 items-center justify-between">
+            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
+              <span class="text-slate-400 pl-1">🔎</span>
+              <input id="postSearchInput" type="search" placeholder="제목, 키워드, 작성일자 검색" class="w-full bg-transparent text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 pl-1.5 py-1">
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer shrink-0" id="postResetBtn">초기화</button>
+              <button type="button" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer shrink-0" data-action="show-post-editor">
+                <span class="action-icon">+</span> 새 글 작성
+              </button>
+            </div>
+          </div>
+
+          <!-- 다중 선택 일괄 작업 바 (Google Blogger 스타일) -->
+          <div id="postBatchBar" class="batch-action-bar hidden bg-slate-900 text-white rounded-xl p-3 px-4 flex flex-wrap items-center justify-between gap-3 shadow-md text-xs font-semibold transition-all">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="selectedPostCountText" class="text-slate-100 font-bold">0개 선택됨</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" id="btnBatchChangeTypeNews" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer">
+                📰 '뉴스'로 분류 변경
+              </button>
+              <button type="button" id="btnBatchChangeTypeNotice" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-100 rounded-lg border border-slate-700 transition-colors flex items-center gap-1 cursor-pointer">
+                📢 '공지'로 분류 변경
+              </button>
+              <button type="button" id="btnBatchDeletePosts" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
+                🗑️ 선택 항목 삭제
+              </button>
+              <button type="button" id="btnDeselectAllPosts" class="px-2.5 py-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                선택 해제
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 bg-slate-50/80">
+                  <th class="p-3 w-10 text-center">
+                    <input type="checkbox" id="selectAllPosts" class="w-4 h-4 rounded text-slate-900 focus:ring-slate-800 cursor-pointer" title="전체 선택/해제">
+                  </th>
+                  <th class="p-3 col-post-id w-16">ID</th>
+                  <th class="p-3 col-post-image w-16">사진</th>
+                  <th class="p-3 col-post-type w-20">분류</th>
+                  <th class="p-3">제목 및 본문 요약</th>
+                  <th class="p-3 col-post-date w-28">작성일</th>
+                  <th class="p-3 col-post-actions text-right w-36">관리</th>
+                </tr>
+              </thead>
+              <tbody id="postTableBody" class="divide-y divide-slate-100 text-sm">
+                <tr><td colspan="7" class="table-message p-4 text-center text-slate-400">게시글을 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="list-footer flex justify-between items-center pt-3 border-t border-slate-100">
+            <div class="list-meta text-xs font-medium text-slate-500" id="postListMeta">0개 항목</div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="postLoadMoreBtn">더 보기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. 게시글 작성/수정 에디터 뷰 -->
+      <div id="postEditorView" class="view-section">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
+          <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
+            <h2 id="postFormTitle" class="text-xl font-bold text-slate-800">새 글 작성</h2>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors" data-action="hide-post-editor">← 목록으로 돌아가기</button>
+          </div>
+
+          <form id="postForm" class="space-y-3.5">
+            <input type="hidden" id="postId" value="">
+
+            <!-- Compact Metadata Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 p-3.5 sm:p-4 bg-slate-50/80 rounded-xl border border-slate-200">
+              <!-- Field 1: 게시글 분류 (sm:col-span-3) -->
+              <div class="sm:col-span-3 space-y-1">
+                <label for="postType" class="block text-xs font-bold text-slate-700">게시글 분류 <span class="text-red-500">*</span></label>
+                <select id="postType" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+                  <option value="news">뉴스 (news)</option>
+                  <option value="notice">공지사항 (notice)</option>
+                </select>
+              </div>
+
+              <!-- Field 2: 제목 (sm:col-span-9) -->
+              <div class="sm:col-span-9 space-y-1">
+                <label for="postTitle" class="block text-xs font-bold text-slate-700">게시글 제목 <span class="text-red-500">*</span></label>
+                <input type="text" id="postTitle" required placeholder="제목을 입력하세요" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- Field 3: 대표 썸네일 이미지 (sm:col-span-12) -->
+              <div class="sm:col-span-12 space-y-1">
+                <label for="postImage" class="block text-xs font-bold text-slate-700">대표 썸네일</label>
+                <div class="flex items-center gap-3">
+                  <input type="file" id="postImage" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 transition-all cursor-pointer">
+                  <img id="preview-img" alt="대표 이미지 미리보기" class="h-9 w-16 object-cover rounded border border-slate-200 hidden shadow-xs shrink-0">
+                </div>
+              </div>
+            </div>
+
+            <!-- AI 도우미 타겟 -->
+            <div class="ai-assistant-box" data-target="postContent"></div>
+
+            <!-- Field 4: 본문 내용 (Blogger Editor) -->
+            <div class="space-y-1.5 pt-1">
+              <div class="flex justify-between items-center">
+                <label class="block text-xs font-bold text-slate-700">본문 내용 (Google Blogger 스타일 에디터) <span class="text-red-500">*</span></label>
+                <span class="text-[11px] text-slate-400 font-medium">서식 툴바 및 HTML 소스 작성 지원</span>
+              </div>
+              <div class="w-full space-y-1">
+                <input type="hidden" id="postContent">
+
+                <!-- Blogger Editor Container -->
+                <div class="blogger-editor-container w-full">
+                  <!-- Blogger Toolbar -->
+                  <div id="postTiptapToolbar" class="blogger-toolbar flex flex-wrap items-center gap-1 p-1.5 border-b border-slate-200 text-xs text-slate-700 select-none">
+                    <!-- HTML Mode & Undo / Redo -->
+                    <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="toggleHtmlView" title="HTML 소스 코드 / 시각적 작성 전환" class="editor-btn font-mono font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors">&lt;/&gt;</button>
+                      <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)" class="editor-btn">↩️</button>
+                      <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)" class="editor-btn">↪️</button>
+                    </div>
+
+                    <!-- Paragraph/Heading Dropdown -->
+                    <div class="px-1 border-r border-slate-200">
+                      <select data-cmd="headingSelect" class="bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer">
+                        <option value="p">일반 본문</option>
+                        <option value="h1">대제목 (H1)</option>
+                        <option value="h2">중제목 (H2)</option>
+                        <option value="h3">소제목 (H3)</option>
+                      </select>
+                    </div>
+
+                    <!-- Text Formatting -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)" class="editor-btn font-bold">B</button>
+                      <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)" class="editor-btn italic">I</button>
+                      <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)" class="editor-btn underline">U</button>
+                      <button type="button" data-cmd="strike" title="취소선" class="editor-btn line-through">S</button>
+                      <button type="button" data-cmd="code" title="인라인 코드" class="editor-btn font-mono">`c`</button>
+                    </div>
+
+                    <!-- Media & Links -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="link" title="링크 삽입" class="editor-btn">🔗</button>
+                      <button type="button" data-cmd="image" title="이미지 URL 삽입" class="editor-btn">🖼️</button>
+                      <button type="button" data-cmd="hr" title="구분선 삽입" class="editor-btn">➖</button>
+                    </div>
+
+                    <!-- Lists & Blocks -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bulletList" title="글머리 기호 목록" class="editor-btn">•≡</button>
+                      <button type="button" data-cmd="orderedList" title="번호 목록" class="editor-btn">1≡</button>
+                      <button type="button" data-cmd="blockquote" title="인용구" class="editor-btn">”</button>
+                      <button type="button" data-cmd="codeBlock" title="코드 블록" class="editor-btn font-mono">{ }</button>
+                    </div>
+
+                    <!-- Clear Format -->
+                    <div class="pl-1">
+                      <button type="button" data-cmd="clear" title="서식 지우기" class="editor-btn hover:bg-red-50 hover:text-red-600">🧹</button>
+                    </div>
+                  </div>
+
+                  <div id="postTiptapEditor" class="prose prose-slate max-w-full overflow-x-auto p-3.5 min-h-[220px] bg-white focus:outline-none"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-3.5 py-1.5 bg-slate-100 text-slate-700 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-200 transition-colors" data-action="hide-post-editor">취소</button>
+              <button type="button" class="px-3.5 py-1.5 bg-slate-200 border border-slate-300 text-slate-800 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-300 transition-colors flex items-center gap-1" id="formPreviewBtn">👁️ 미리보기</button>
+              <button type="submit" id="postSubmitBtn" class="px-4 py-1.5 bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm hover:bg-slate-800 shadow-sm transition-colors">글 저장하기</button>
+            </div>
+          </form>
+
+          <div id="postStatus" class="status-msg text-sm font-medium mt-2"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ================= 탭 2: 프로그램 관리 ================= -->
+    <div id="tab-programs" class="tab-content">
+      
+      <!-- A. 프로그램 목록 뷰 -->
+      <div id="programListView" class="view-section active">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-3">
+            <h2 class="text-lg font-bold text-slate-800">등록된 프로그램 목록</h2>
+            <div class="text-xs text-slate-400 font-medium">💡 프로그램명이나 👁️ 버튼을 클릭하면 실시간 미리보기가 열립니다.</div>
+          </div>
+
+          <div class="list-toolbar flex gap-3 items-center justify-between">
+            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
+              <span class="text-slate-400 pl-1">🔎</span>
+              <input id="programSearchInput" type="search" placeholder="프로그램명, 슬러그, 카테고리 검색" class="w-full bg-transparent text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 pl-1.5 py-1">
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer shrink-0" id="programResetBtn">초기화</button>
+              <button type="button" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer shrink-0" data-action="show-program-editor">
+                <span class="action-icon">+</span> 새 프로그램 등록
+              </button>
+            </div>
+          </div>
+
+          <!-- 프로그램 다중 선택 일괄 작업 바 -->
+          <div id="programBatchBar" class="batch-action-bar hidden bg-slate-900 text-white rounded-xl p-3 px-4 flex flex-wrap items-center justify-between gap-3 shadow-md text-xs font-semibold transition-all">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="selectedProgramCountText" class="text-slate-100 font-bold">0개 선택됨</span>
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" id="btnBatchDeletePrograms" class="px-3 py-1.5 bg-rose-600 hover:bg-rose-500 text-white rounded-lg transition-colors flex items-center gap-1 cursor-pointer">
+                🗑️ 선택 항목 삭제
+              </button>
+              <button type="button" id="btnDeselectAllPrograms" class="px-2.5 py-1.5 text-slate-400 hover:text-white transition-colors cursor-pointer">
+                선택 해제
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 bg-slate-50/80">
+                  <th class="p-3 w-10 text-center">
+                    <input type="checkbox" id="selectAllPrograms" class="w-4 h-4 rounded text-slate-900 focus:ring-slate-800 cursor-pointer" title="전체 선택/해제">
+                  </th>
+                  <th class="p-3 col-program-id w-16">ID</th>
+                  <th class="p-3 col-program-icon w-16">아이콘</th>
+                  <th class="p-3 col-program-slug w-28">슬러그</th>
+                  <th class="p-3 col-program-category w-28">카테고리</th>
+                  <th class="p-3">프로그램명 & 설명 요약</th>
+                  <th class="p-3 col-program-status w-24">상태</th>
+                  <th class="p-3 col-program-actions text-right w-24">관리</th>
+                </tr>
+              </thead>
+              <tbody id="programTableBody" class="divide-y divide-slate-100 text-sm">
+                <tr><td colspan="8" class="table-message p-4 text-center text-slate-400">프로그램을 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="list-footer flex justify-between items-center pt-3 border-t border-slate-100">
+            <div class="list-meta text-xs font-medium text-slate-500" id="programListMeta">0개 항목</div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" id="programLoadMoreBtn">더 보기</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. 프로그램 작성/수정 뷰 -->
+      <div id="programEditorView" class="view-section">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
+          <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
+            <h2 id="programFormTitle" class="text-xl font-bold text-slate-800">새 프로그램 등록</h2>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors" data-action="hide-program-editor">← 목록으로 돌아가기</button>
+          </div>
+
+          <form id="programForm" class="space-y-3.5">
+            <input type="hidden" id="programId" value="">
+
+            <!-- Compact 2-Row Metadata Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 p-3.5 sm:p-4 bg-slate-50/80 rounded-xl border border-slate-200">
+              
+              <!-- 1. 프로그램명 (sm:col-span-7) -->
+              <div class="sm:col-span-7 space-y-1">
+                <label for="programTitle" class="block text-xs font-bold text-slate-700">프로그램명 <span class="text-red-500">*</span></label>
+                <input type="text" id="programTitle" required placeholder="예: 비비드 캠프 2026" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 2. 아이콘 (sm:col-span-2) -->
+              <div class="sm:col-span-2 space-y-1">
+                <label for="programIcon" class="block text-xs font-bold text-slate-700">아이콘</label>
+                <input type="text" id="programIcon" value="🎓" title="아이콘 (이모지)" class="w-full h-9 px-2 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 text-center focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 3. 카테고리 (sm:col-span-3) -->
+              <div class="sm:col-span-3 space-y-1">
+                <label for="programCategory" class="block text-xs font-bold text-slate-700">카테고리 <span class="text-red-500">*</span></label>
+                <input type="text" id="programCategory" required placeholder="예: YOUTH / CAMP" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 4. 슬러그 (영문 ID) (sm:col-span-5) -->
+              <div class="sm:col-span-5 space-y-1">
+                <label for="programSlug" class="block text-xs font-bold text-slate-700">슬러그 (영문 ID) <span class="text-red-500">*</span></label>
+                <input type="text" id="programSlug" required placeholder="예: vivid-camp" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 5. 모집 상태 (sm:col-span-4) -->
+              <div class="sm:col-span-4 space-y-1">
+                <label for="programStatus" class="block text-xs font-bold text-slate-700">모집 상태</label>
+                <select id="programStatus" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+                  <option value="recruiting">recruiting (모집중)</option>
+                  <option value="ongoing">ongoing (진행중)</option>
+                  <option value="preparing">preparing (준비중)</option>
+                </select>
+              </div>
+
+              <!-- 6. 표시 순서 (sm:col-span-3) -->
+              <div class="sm:col-span-3 space-y-1">
+                <label for="programOrder" class="block text-xs font-bold text-slate-700">표시 순서</label>
+                <input type="number" id="programOrder" value="0" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+            </div>
+
+            <!-- AI 도우미 타겟 -->
+            <div class="ai-assistant-box" data-target="programDescription"></div>
+
+            <!-- Field 5: 상세 설명 (Blogger Editor) -->
+            <div class="space-y-1.5 pt-1">
+              <div class="flex justify-between items-center">
+                <label for="programDescription" class="block text-xs font-bold text-slate-700">상세 설명 (Google Blogger 스타일 에디터)</label>
+                <span class="text-[11px] text-slate-400 font-medium">서식 툴바 및 HTML 소스 작성 지원</span>
+              </div>
+              <div class="w-full space-y-1">
+                <input type="hidden" id="programDescription">
+
+                <div class="blogger-editor-container w-full">
+                  <!-- Toolbar -->
+                  <div id="programTiptapToolbar" class="blogger-toolbar flex flex-wrap items-center gap-1 p-1.5 border-b border-slate-200 text-xs text-slate-700 select-none">
+                    <!-- HTML Mode & Undo / Redo -->
+                    <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="toggleHtmlView" title="HTML 소스 코드 / 시각적 작성 전환" class="editor-btn font-mono font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors">&lt;/&gt;</button>
+                      <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)" class="editor-btn">↩️</button>
+                      <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)" class="editor-btn">↪️</button>
+                    </div>
+
+                    <!-- Paragraph/Heading Dropdown -->
+                    <div class="px-1 border-r border-slate-200">
+                      <select data-cmd="headingSelect" class="bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer">
+                        <option value="p">일반 본문</option>
+                        <option value="h1">대제목 (H1)</option>
+                        <option value="h2">중제목 (H2)</option>
+                        <option value="h3">소제목 (H3)</option>
+                      </select>
+                    </div>
+
+                    <!-- Text Formatting -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)" class="editor-btn font-bold">B</button>
+                      <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)" class="editor-btn italic">I</button>
+                      <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)" class="editor-btn underline">U</button>
+                      <button type="button" data-cmd="strike" title="취소선" class="editor-btn line-through">S</button>
+                      <button type="button" data-cmd="code" title="인라인 코드" class="editor-btn font-mono">`c`</button>
+                    </div>
+
+                    <!-- Media & Links -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="link" title="링크 삽입" class="editor-btn">🔗</button>
+                      <button type="button" data-cmd="image" title="이미지 URL 삽입" class="editor-btn">🖼️</button>
+                      <button type="button" data-cmd="hr" title="구분선 삽입" class="editor-btn">➖</button>
+                    </div>
+
+                    <!-- Lists & Blocks -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bulletList" title="글머리 기호 목록" class="editor-btn">•≡</button>
+                      <button type="button" data-cmd="orderedList" title="번호 목록" class="editor-btn">1≡</button>
+                      <button type="button" data-cmd="blockquote" title="인용구" class="editor-btn">”</button>
+                      <button type="button" data-cmd="codeBlock" title="코드 블록" class="editor-btn font-mono">{ }</button>
+                    </div>
+
+                    <!-- Clear Format -->
+                    <div class="pl-1">
+                      <button type="button" data-cmd="clear" title="서식 지우기" class="editor-btn hover:bg-red-50 hover:text-red-600">🧹</button>
+                    </div>
+                  </div>
+
+                  <div id="programTiptapEditor" class="prose prose-slate max-w-full overflow-x-auto p-3.5 min-h-[180px] bg-white focus:outline-none"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group flex justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-3.5 py-1.5 bg-slate-100 text-slate-700 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-200 transition-colors" data-action="hide-program-editor">취소</button>
+              <button type="submit" id="programSubmitBtn" class="px-4 py-1.5 bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm hover:bg-slate-800 shadow-sm transition-colors">프로그램 저장하기</button>
+            </div>
+          </form>
+
+          <div id="programStatusMsg" class="status-msg text-sm font-medium mt-2"></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 3. 실시간 HTML 미리보기 모달 -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content no-scrollbar overscroll-contain bg-white rounded-2xl shadow-xl max-w-2xl mx-auto p-6 space-y-4">
+      <button class="modal-close text-slate-400 hover:text-slate-600 text-2xl font-bold" id="modalCloseBtn">&times;</button>
+      <div class="modal-meta flex items-center gap-2">
+        <span id="modalTypeChip" class="type-chip px-2.5 py-0.5 bg-slate-100 text-slate-700 text-xs font-semibold rounded-full">뉴스</span>
+        <span id="modalDate" class="modal-date text-xs text-slate-400"></span>
+      </div>
+      <h2 id="modalTitle" class="modal-title text-xl font-extrabold text-slate-900"></h2>
+      <img id="modalImg" class="modal-image w-full rounded-xl object-cover max-h-64 hidden">
+      <div id="modalContent" class="preview-body prose prose-slate max-w-none pt-2 border-t border-slate-100"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <script src="./assets/js/api.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/uiHelper.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/dashboardManager.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/postManager.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/programManager.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/main.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/ai-assistant.js?v=20260827-v3" defer></script>
+</body>
+</html>

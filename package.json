@@ -1,0 +1,16 @@
+{
+  "name": "kwavemission",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "build": "echo 'No build required'",
+    "lint": "node --check server.js",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.0.0",
+    "compression": "^1.8.1",
+    "express": "^4.19.2"
+  }
+}
