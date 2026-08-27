@@ -266,7 +266,7 @@
         
         // Keep the panel fixed while only the article body scrolls.
         if (modalContent) {
-            modalContent.className = 'modal-panel relative w-full max-w-xl h-[85vh] max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200';
+            modalContent.className = 'modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200';
         }
 
 modalContent.innerHTML =
