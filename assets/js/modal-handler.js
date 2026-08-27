@@ -265,7 +265,7 @@
         const normalizedSlug = (cleanSlug === 'contact') ? 'contact-us' : cleanSlug;
 
         if (STATIC_DOCUMENT_SLUGS.has(normalizedSlug) || /^\d{2}-/.test(normalizedSlug) || rawSlug.endsWith('.md')) {
-            const response = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md');
+            const response = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md?v=' + Date.now());
             if (response.ok) {
                 return await response.text();
             }
@@ -275,7 +275,7 @@
             try {
                 return await window.KWaveApi.fetchMarkdownBySlug(normalizedSlug);
             } catch (e) {
-                const fallbackRes = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md');
+                const fallbackRes = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md?v=' + Date.now());
                 if (fallbackRes.ok) {
                     return await fallbackRes.text();
                 }
@@ -283,7 +283,7 @@
             }
         }
 
-        const res = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md');
+        const res = await fetch('./docs/' + encodeURIComponent(normalizedSlug) + '.md?v=' + Date.now());
         if (!res.ok) {
             throw new Error('문서를 불러오지 못했습니다.');
         }
