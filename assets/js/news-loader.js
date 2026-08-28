@@ -266,28 +266,29 @@
         
         // Keep the panel fixed while only the article body scrolls.
         if (modalContent) {
-            modalContent.className = 'modal-panel relative w-full max-w-xl h-[85vh] max-h-[85vh] overflow-hidden bg-slate-900 border border-slate-800 text-slate-100 rounded-2xl shadow-2xl flex flex-col';
+            modalContent.className = 'modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200';
         }
 
 modalContent.innerHTML =
-    '<div class="relative shrink-0 px-6 sm:px-12 pt-6 sm:pt-10 pb-5 sm:pb-6 border-b border-slate-800">' +
-        '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-8 sm:right-8 bg-transparent hover:bg-transparent text-slate-400 hover:text-slate-200 transition-colors p-2 min-w-[44px] min-h-[44px] flex items-center justify-center cursor-pointer z-10 rounded-xl">' +
+    '<div class="relative shrink-0 px-6 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-slate-100 bg-white">' +
+        '<button type="button" onclick="closeNewsModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-transparent hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors p-2 min-w-[40px] min-h-[40px] flex items-center justify-center cursor-pointer z-10 rounded-xl">' +
             '<i data-lucide="x" class="w-5 h-5"></i>' +
         '</button>' +
-        '<div class="flex items-center gap-2 text-xs text-slate-400 font-medium mb-3 sm:mb-4 pr-10 font-mono tracking-wide">' +
-            '<span class="px-2.5 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">' + _escapeHtml(category) + '</span>' +
-            '<span>&nbsp;•&nbsp;</span><span>' + _escapeHtml(date) + '</span>' +
+        '<div class="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1 pr-10 font-mono tracking-wide">' +
+            '<span class="px-2.5 py-1 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200/80 font-bold font-mono text-[11px] sm:text-xs tracking-tight">' + _escapeHtml(category || '주간 선교 소식') + '</span>' +
+            '<span class="text-slate-300 font-mono">•</span>' +
+            '<span class="text-slate-500 font-mono text-xs">' + _escapeHtml(date) + '</span>' +
         '</div>' +
-        '<h2 class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-100 pr-10">' + _escapeHtml(title) + '</h2>' +
+        '<h2 class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-900 pr-8 mt-2.5 sm:mt-3">' + _escapeHtml(title) + '</h2>' +
     '</div>' +
-    '<div id="modal-body" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-12 py-5 sm:py-6 text-base text-slate-200 leading-relaxed space-y-4">' +
+    '<div id="modal-body" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base text-slate-800 leading-relaxed space-y-4 bg-white font-sans">' +
         '<p class="text-slate-400">내용을 불러오는 중...</p>' +
     '</div>' +
-    '<div class="shrink-0 flex items-center justify-between border-t border-slate-800/80 px-6 sm:px-12 py-4 font-sans gap-3">' +
-        '<button onclick="shareCurrentPost()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2.5 min-h-[44px] bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 text-slate-300 text-xs font-medium rounded-xl transition-colors cursor-pointer">' +
-            '<i data-lucide="link-2" class="w-4 h-4 text-amber-400"></i> 링크 공유' +
+    '<div class="shrink-0 flex items-center justify-between border-t border-slate-100 px-6 sm:px-8 py-3.5 sm:py-4 bg-white font-sans gap-3">' +
+        '<button type="button" onclick="shareCurrentPost()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2 min-h-[40px] bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 text-xs font-semibold rounded-xl transition-all shadow-2xs cursor-pointer">' +
+            '<i data-lucide="link-2" class="w-4 h-4 text-slate-600"></i> <span>링크 공유</span>' +
         '</button>' +
-        '<button onclick="closeNewsModal()" class="btn-close-footer flex items-center justify-center px-5 py-2.5 min-h-[44px] bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-xl transition-colors cursor-pointer">닫기</button>' +
+        '<button type="button" onclick="closeNewsModal()" class="btn-close-footer flex items-center justify-center px-5 py-2 min-h-[40px] bg-slate-100 hover:bg-slate-200 border border-slate-200/70 text-slate-800 text-xs font-semibold rounded-xl transition-all cursor-pointer">닫기</button>' +
     '</div>';
 
         var modal = document.getElementById('news-modal');
@@ -342,9 +343,9 @@ modalContent.innerHTML =
                     }
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
                     
-                    return '<div class="my-6 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-950 p-2">' +
-                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-md transition-opacity duration-300 opacity-0" />' +
-                               (caption ? '<span class="text-xs text-slate-400 mt-2 text-center font-sans">' + caption + '</span>' : '') +
+                    return '<div class="my-5 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-100/70 border border-slate-200/60 p-2 sm:p-2.5">' +
+                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-2xs transition-opacity duration-300 opacity-0" />' +
+                               (caption ? '<span class="text-xs text-slate-500 mt-2 text-center font-sans leading-snug px-2">' + caption + '</span>' : '') +
                            '</div>';
                 };
 
