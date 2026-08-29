@@ -1,3 +1,5 @@
+-- K-Wave Mission Database Schema
+
 -- 1. 프로그램 관리 테이블
 CREATE TABLE IF NOT EXISTS programs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -22,7 +24,7 @@ CREATE TABLE IF NOT EXISTS posts (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. 비공개 보안 공문(Official Letters) 관리 테이블
+-- 3. 비공개 보안 공문(Official Letters) 전용 DB 테이블
 CREATE TABLE IF NOT EXISTS official_letters (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   doc_no TEXT UNIQUE NOT NULL,       -- 문서번호 (예: KWM-2026-0801호)

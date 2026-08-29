@@ -13,12 +13,26 @@
   <link rel="dns-prefetch" href="https://esm.sh">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://esm.sh" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+  </noscript>
+  
+  <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
+  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+  </noscript>
 
   <!-- Tailwind CSS & Typography Plugin CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   <script src="tailwind.config.js"></script>
 
-  <link rel="stylesheet" href="./assets/css/admin.css?v=20260827-fix-hover-delete-v3">
+  <link rel="stylesheet" href="./assets/css/admin.css?v=20260828-v2">
 
   <!-- Tiptap Editor CDN ESM Loader -->
   <script type="module">
@@ -90,8 +104,9 @@
 
     <!-- 메인 탭 선택 -->
     <div class="nav-tabs flex gap-2 border-b border-slate-200 pb-2">
-      <button class="nav-tab-btn active px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="posts">📰 게시글 관리</button>
-      <button class="nav-tab-btn px-4 py-2 font-bold text-sm rounded-lg transition-all" data-tab="programs">🎓 프로그램 관리</button>
+      <button type="button" class="nav-tab-btn active px-4 py-2 font-bold text-sm rounded-lg transition-all cursor-pointer" data-tab="posts" onclick="window.switchTab ? window.switchTab('posts') : null">📰 게시글 관리</button>
+      <button type="button" class="nav-tab-btn px-4 py-2 font-bold text-sm rounded-lg transition-all cursor-pointer" data-tab="programs" onclick="window.switchTab ? window.switchTab('programs') : null">🎓 프로그램 관리</button>
+      <button type="button" class="nav-tab-btn px-4 py-2 font-bold text-sm rounded-lg transition-all cursor-pointer" data-tab="official" onclick="window.switchTab ? window.switchTab('official') : null">📄 공문 관리</button>
     </div>
 
     <!-- ================= 탭 1: 게시글 관리 ================= -->
@@ -498,6 +513,205 @@
 
     </div>
 
+    <!-- ================= 탭 3: 공문 관리 ================= -->
+    <div id="tab-official" class="tab-content">
+      
+      <!-- A. 공문 목록 뷰 -->
+      <div id="officialListView" class="view-section active">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+          <div class="list-header-action flex justify-between items-center border-b border-slate-100 pb-3">
+            <div>
+              <h2 class="text-lg font-bold text-slate-800">📄 발송 공문 관리 (비공개 보안 링크 시스템)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">웹사이트에 공개 노출되지 않으며, 고유 난수 토큰 링크를 통해 수신자만 열람/출력할 수 있는 비공개 보안 공문입니다.</p>
+            </div>
+          </div>
+
+          <div class="list-toolbar flex gap-3 items-center justify-between">
+            <div class="search-box flex-1 flex items-center bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 gap-2 focus-within:ring-2 focus-within:ring-slate-800 focus-within:bg-white transition-all">
+              <span class="text-slate-400 pl-1">🔎</span>
+              <input id="officialSearchInput" type="search" placeholder="문서번호, 수신처, 공문 제목 검색" class="w-full bg-transparent text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 pl-1.5 py-1">
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button type="button" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-all cursor-pointer shrink-0" id="officialResetBtn">초기화</button>
+              <button type="button" class="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors flex items-center gap-1.5 cursor-pointer shrink-0" data-action="show-official-editor">
+                <span class="action-icon">+</span> 새 공문 작성
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 text-xs font-bold text-slate-500 bg-slate-50/80">
+                  <th class="p-3 col-official-id w-12 text-center">ID</th>
+                  <th class="p-3 col-official-docno w-36">문서번호</th>
+                  <th class="p-3 col-official-receiver w-40">수신</th>
+                  <th class="p-3">제목 및 상태</th>
+                  <th class="p-3 col-official-date w-24">작성일</th>
+                  <th class="p-3 col-official-actions text-right w-36">관리</th>
+                </tr>
+              </thead>
+              <tbody id="officialTableBody" class="divide-y divide-slate-100 text-sm">
+                <tr><td colspan="6" class="table-message p-6 text-center text-slate-400">발송 공문을 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="list-footer flex justify-between items-center pt-3 border-t border-slate-100">
+            <div class="list-meta text-xs font-medium text-slate-500" id="officialListMeta">0개 항목</div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300" onclick="window.loadOfficialList()">새로고침</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- B. 공문 작성 뷰 -->
+      <div id="officialEditorView" class="view-section">
+        <div class="card bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-6 max-w-4xl mx-auto">
+          <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
+            <div>
+              <h2 id="officialFormTitle" class="text-xl font-bold text-slate-800">새 공문 작성 (비공개 보안 발송)</h2>
+              <p class="text-xs text-slate-500 mt-0.5">작성 완료 시 난수 보안 토큰이 포함된 전용 열람 URL이 즉시 발급됩니다.</p>
+            </div>
+            <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors cursor-pointer" data-action="hide-official-editor">← 목록으로 돌아가기</button>
+          </div>
+
+          <form id="officialForm" class="space-y-3.5">
+            <input type="hidden" id="officialEditId">
+            <!-- Metadata Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 p-3.5 sm:p-4 bg-slate-50/80 rounded-xl border border-slate-200">
+              
+              <!-- 1. 문서번호 (sm:col-span-4) -->
+              <div class="sm:col-span-4 space-y-1">
+                <label for="officialDocNo" class="block text-xs font-bold text-slate-700">문서번호 <span class="text-red-500">*</span></label>
+                <input type="text" id="officialDocNo" required placeholder="예: KWM-2026-0801호" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 2. 수신 (sm:col-span-8) -->
+              <div class="sm:col-span-8 space-y-1">
+                <label for="officialReceiver" class="block text-xs font-bold text-slate-700">수신 (Receiver) <span class="text-red-500">*</span></label>
+                <input type="text" id="officialReceiver" required placeholder="예: 00교회 담임목사 및 선교담당자 귀하" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 3. 발신 (sm:col-span-4) -->
+              <div class="sm:col-span-4 space-y-1">
+                <label for="officialSender" class="block text-xs font-bold text-slate-700">발신 (Sender)</label>
+                <input type="text" id="officialSender" value="케이웨이브 미션 대표선교사" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+
+              <!-- 4. 공문 제목 (sm:col-span-8) -->
+              <div class="sm:col-span-8 space-y-1">
+                <label for="officialTitle" class="block text-xs font-bold text-slate-700">공문 제목 <span class="text-red-500">*</span></label>
+                <input type="text" id="officialTitle" required placeholder="예: 2026년 하반기 K-WAVE 고등교육선교 협력 및 단원 파견의 건" class="w-full h-9 px-3 bg-white border border-slate-300 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-800 transition-all">
+              </div>
+            </div>
+
+            <!-- Quick Template Action Bar -->
+            <div class="flex items-center justify-between p-2.5 bg-indigo-50/60 border border-indigo-100 rounded-xl">
+              <div class="text-xs text-indigo-900 font-medium flex items-center gap-1.5">
+                <span>📋</span>
+                <span>정통 공문 양식이 필요하신가요? 기본 협력 공문 템플릿을 한 번에 불러올 수 있습니다.</span>
+              </div>
+              <button type="button" id="btnApplyOfficialTemplate" class="px-3 py-1 bg-white hover:bg-indigo-50 text-indigo-700 text-xs font-bold rounded-lg border border-indigo-200 transition-all shadow-2xs cursor-pointer shrink-0">
+                표준 템플릿 적용
+              </button>
+            </div>
+
+            <!-- AI 도우미 타겟 -->
+            <div class="ai-assistant-box" data-target="officialContent"></div>
+
+            <!-- Field 5: 본문 내용 (Blogger Editor) -->
+            <div class="space-y-1.5 pt-1">
+              <div class="flex justify-between items-center">
+                <label class="block text-xs font-bold text-slate-700">공문 본문 내용 (HTML 서식 및 위지윅 지원) <span class="text-red-500">*</span></label>
+                <span class="text-[11px] text-slate-400 font-medium">&lt;/&gt; 버튼으로 HTML 직접 편집 가능</span>
+              </div>
+              <div class="w-full space-y-1">
+                <input type="hidden" id="officialContent">
+
+                <div class="blogger-editor-container w-full">
+                  <!-- Toolbar -->
+                  <div id="officialTiptapToolbar" class="blogger-toolbar flex flex-wrap items-center gap-1 p-1.5 border-b border-slate-200 text-xs text-slate-700 select-none">
+                    <!-- HTML Mode & Undo / Redo -->
+                    <div class="flex items-center gap-1 pr-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="toggleHtmlView" title="HTML 소스 코드 / 시각적 작성 전환" class="editor-btn font-mono font-bold text-slate-800 bg-slate-100 hover:bg-slate-200 rounded border border-slate-300 transition-colors">&lt;/&gt;</button>
+                      <button type="button" data-cmd="undo" title="실행 취소 (Ctrl+Z)" class="editor-btn">↩️</button>
+                      <button type="button" data-cmd="redo" title="다시 실행 (Ctrl+Y)" class="editor-btn">↪️</button>
+                    </div>
+
+                    <!-- Heading Dropdown -->
+                    <div class="px-1 border-r border-slate-200">
+                      <select data-cmd="headingSelect" class="bg-white border border-slate-300 rounded px-1.5 py-0.5 text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer">
+                        <option value="p">일반 본문</option>
+                        <option value="h1">대제목 (H1)</option>
+                        <option value="h2">중제목 (H2)</option>
+                        <option value="h3">소제목 (H3)</option>
+                      </select>
+                    </div>
+
+                    <!-- Text Formatting -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bold" title="굵게 (Ctrl+B)" class="editor-btn font-bold">B</button>
+                      <button type="button" data-cmd="italic" title="기울임 (Ctrl+I)" class="editor-btn italic">I</button>
+                      <button type="button" data-cmd="underline" title="밑줄 (Ctrl+U)" class="editor-btn underline">U</button>
+                      <button type="button" data-cmd="strike" title="취소선" class="editor-btn line-through">S</button>
+                      <button type="button" data-cmd="code" title="인라인 코드" class="editor-btn font-mono">`c`</button>
+                    </div>
+
+                    <!-- Media & Links -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="link" title="링크 삽입" class="editor-btn">🔗</button>
+                      <button type="button" data-cmd="image" title="이미지 URL 삽입" class="editor-btn">🖼️</button>
+                      <button type="button" data-cmd="hr" title="구분선 삽입" class="editor-btn">➖</button>
+                    </div>
+
+                    <!-- Lists & Blocks -->
+                    <div class="flex items-center gap-1 px-1.5 border-r border-slate-200">
+                      <button type="button" data-cmd="bulletList" title="글머리 기호 목록" class="editor-btn">•≡</button>
+                      <button type="button" data-cmd="orderedList" title="번호 목록" class="editor-btn">1≡</button>
+                      <button type="button" data-cmd="blockquote" title="인용구" class="editor-btn">”</button>
+                      <button type="button" data-cmd="codeBlock" title="코드 블록" class="editor-btn font-mono">{ }</button>
+                    </div>
+
+                    <!-- Clear Format -->
+                    <div class="pl-1">
+                      <button type="button" data-cmd="clear" title="서식 지우기" class="editor-btn hover:bg-red-50 hover:text-red-600">🧹</button>
+                    </div>
+                  </div>
+
+                  <div id="officialTiptapEditor" class="prose prose-slate max-w-full overflow-x-auto p-4 min-h-[260px] bg-white focus:outline-none"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Field 6: 파일 첨부 (옵션) -->
+            <div class="space-y-1.5 pt-2 border-t border-slate-100">
+              <label class="block text-xs font-bold text-slate-700">첨부파일 (옵션)</label>
+              <div class="flex items-center gap-2">
+                <input type="file" id="officialAttachment" name="attachment" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+              </div>
+              <div id="officialAttachmentDisplay" class="hidden flex items-center gap-2 mt-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-200">
+                <span class="text-[14px]">📎</span>
+                <span class="text-xs text-slate-700 truncate flex-1 font-medium" id="officialAttachmentName">첨부파일 이름</span>
+                <input type="hidden" id="officialKeepAttachment" value="true">
+                <button type="button" id="btnRemoveOfficialAttachment" class="text-red-500 hover:text-red-700 text-xs font-semibold px-2 py-1 rounded bg-red-50 hover:bg-red-100 transition-colors cursor-pointer">삭제</button>
+              </div>
+            </div>
+
+            <div class="btn-group flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-3.5 py-1.5 bg-slate-100 text-slate-700 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-200 transition-colors cursor-pointer" data-action="hide-official-editor">취소</button>
+              <button type="button" class="px-3.5 py-1.5 bg-slate-200 border border-slate-300 text-slate-800 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-300 transition-colors flex items-center gap-1 cursor-pointer" id="officialPreviewBtn">👁️ 미리보기</button>
+              <button type="submit" id="officialSubmitBtn" class="px-4 py-1.5 bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm hover:bg-slate-800 shadow-sm transition-colors cursor-pointer flex items-center gap-1.5">
+                <span>📄</span> 공문 생성 및 보안 링크 발급
+              </button>
+            </div>
+          </form>
+
+          <div id="officialStatusMsg" class="status-msg text-sm font-medium mt-2"></div>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
   <!-- 3. 실시간 HTML 미리보기 모달 -->
@@ -515,12 +729,13 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-  <script src="./assets/js/api.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/uiHelper.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/dashboardManager.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/postManager.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/programManager.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/main.js?v=20260827-v3" defer></script>
-  <script src="./assets/js/ai-assistant.js?v=20260827-v3" defer></script>
+  <script src="./assets/js/api.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/uiHelper.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/dashboardManager.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/postManager.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/programManager.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/officialManager.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/main.js?v=20260828-v2" defer></script>
+  <script src="./assets/js/ai-assistant.js?v=20260828-v2" defer></script>
 </body>
 </html>

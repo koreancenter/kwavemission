@@ -266,7 +266,7 @@
         
         // Keep the panel fixed while only the article body scrolls.
         if (modalContent) {
-            modalContent.className = 'modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200';
+            modalContent.className = 'modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-xl sm:rounded-xl shadow-2xl flex flex-col transition-all duration-200';
         }
 
 modalContent.innerHTML =
@@ -276,7 +276,7 @@ modalContent.innerHTML =
         '</button>' +
         '<div class="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1 pr-10 font-mono tracking-wide">' +
             '<span class="px-2.5 py-1 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200/80 font-bold font-mono text-[11px] sm:text-xs tracking-tight">' + _escapeHtml(category || '주간 선교 소식') + '</span>' +
-            '<span class="text-slate-300 font-mono">•</span>' +
+            '<span class="text-slate-400 font-mono">•</span>' +
             '<span class="text-slate-500 font-mono text-xs">' + _escapeHtml(date) + '</span>' +
         '</div>' +
         '<h2 class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-900 pr-8 mt-2.5 sm:mt-3">' + _escapeHtml(title) + '</h2>' +
@@ -365,7 +365,7 @@ modalContent.innerHTML =
         }
         } catch (err) {
             var bodyEl = document.getElementById('modal-body');
-            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-400 text-sm py-4 font-sans">내용을 불러올 수 없습니다.</p>';
+            if (bodyEl) bodyEl.innerHTML = '<p class="text-rose-600 text-sm py-4 font-sans">내용을 불러올 수 없습니다.</p>';
         }
     };
 

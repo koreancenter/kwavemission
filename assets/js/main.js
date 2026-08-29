@@ -57,17 +57,54 @@
   }
 
   function switchTab(tabName) {
-    document.querySelectorAll('.nav-tab-btn').forEach((btn) => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach((tab) => tab.classList.remove('active'));
+    const validTabs = ['posts', 'programs', 'official'];
+    if (!validTabs.includes(tabName)) {
+      tabName = 'posts';
+    }
 
-    if (tabName === 'posts') {
-      document.querySelectorAll('.nav-tab-btn')[0].classList.add('active');
-      document.getElementById('tab-posts').classList.add('active');
-      if (window.loadPostList) window.loadPostList();
-    } else {
-      document.querySelectorAll('.nav-tab-btn')[1].classList.add('active');
-      document.getElementById('tab-programs').classList.add('active');
-      if (window.loadProgramList) window.loadProgramList();
+    // 1. Update Tab Button Styles & Active state
+    document.querySelectorAll('.nav-tab-btn').forEach((btn) => {
+      const target = btn.dataset.tab || btn.getAttribute('data-tab');
+      if (target === tabName) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+
+    // 2. Explicitly toggle visibility on all tab contents
+    validTabs.forEach((t) => {
+      const tabEl = document.getElementById(`tab-${t}`);
+      if (tabEl) {
+        if (t === tabName) {
+          tabEl.classList.add('active');
+          tabEl.classList.remove('hidden');
+          tabEl.style.display = 'block';
+        } else {
+          tabEl.classList.remove('active');
+          tabEl.classList.add('hidden');
+          tabEl.style.display = 'none';
+        }
+      }
+    });
+
+    // 3. Load corresponding tab data safely
+    try {
+      if (tabName === 'posts') {
+        if (typeof window.loadPostList === 'function') window.loadPostList();
+        else if (window.PostManager?.loadPostList) window.PostManager.loadPostList();
+      } else if (tabName === 'programs') {
+        if (typeof window.loadProgramList === 'function') window.loadProgramList();
+        else if (window.ProgramManager?.loadProgramList) window.ProgramManager.loadProgramList();
+      } else if (tabName === 'official') {
+        if (typeof window.loadOfficialList === 'function') {
+          window.loadOfficialList();
+        } else if (window.OfficialManager?.loadOfficialList) {
+          window.OfficialManager.loadOfficialList();
+        }
+      }
+    } catch (err) {
+      console.error('Error during tab switch to ' + tabName, err);
     }
   }
 
@@ -133,8 +170,25 @@
   }
 
   function bindStaticActions() {
-    document.querySelectorAll('.nav-tab-btn').forEach((button) => {
-      button.addEventListener('click', () => switchTab(button.dataset.tab || 'posts'));
+    // Global delegation for nav tabs
+    document.addEventListener('click', (e) => {
+      const tabBtn = e.target.closest('.nav-tab-btn');
+      if (tabBtn && tabBtn.dataset.tab) {
+        switchTab(tabBtn.dataset.tab);
+        return;
+      }
+
+      const showOfficial = e.target.closest('[data-action="show-official-editor"]');
+      if (showOfficial) {
+        if (window.OfficialManager?.showOfficialEditor) window.OfficialManager.showOfficialEditor();
+        return;
+      }
+
+      const hideOfficial = e.target.closest('[data-action="hide-official-editor"]');
+      if (hideOfficial) {
+        if (window.OfficialManager?.hideOfficialEditor) window.OfficialManager.hideOfficialEditor();
+        return;
+      }
     });
 
     document.querySelectorAll('[data-action="show-post-editor"]').forEach((button) => {
@@ -281,6 +335,9 @@
     }
     if (window.ProgramManager && window.ProgramManager.init) {
       window.ProgramManager.init();
+    }
+    if (window.OfficialManager && window.OfficialManager.init) {
+      window.OfficialManager.init();
     }
 
     bindStaticActions();

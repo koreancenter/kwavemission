@@ -52,8 +52,49 @@ function initDatabase() {
           status TEXT DEFAULT 'active',
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+        CREATE TABLE IF NOT EXISTS official_letters (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          doc_no TEXT UNIQUE NOT NULL,
+          receiver TEXT NOT NULL,
+          sender TEXT DEFAULT 'K-Wave Mission 대표회장',
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          attachment_url TEXT,
+          attachment_name TEXT,
+          secret_token TEXT UNIQUE NOT NULL,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
       `);
+
+      // Add columns if they do not exist
+      try {
+        db.exec("ALTER TABLE official_letters ADD COLUMN attachment_url TEXT");
+        db.exec("ALTER TABLE official_letters ADD COLUMN attachment_name TEXT");
+      } catch (e) {
+        // columns might already exist
+      }
     }
+
+    // Ensure official_letters table exists in all database instances
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS official_letters (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        doc_no TEXT UNIQUE NOT NULL,
+        receiver TEXT NOT NULL,
+        sender TEXT DEFAULT 'K-Wave Mission 대표회장',
+        title TEXT NOT NULL,
+        content TEXT NOT NULL,
+        attachment_url TEXT,
+        attachment_name TEXT,
+        secret_token TEXT UNIQUE NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    
+    try {
+      db.exec("ALTER TABLE official_letters ADD COLUMN attachment_url TEXT");
+      db.exec("ALTER TABLE official_letters ADD COLUMN attachment_name TEXT");
+    } catch (e) {}
 
     // Seed initial data if database is empty
     const programCount = db.prepare("SELECT COUNT(*) as c FROM programs WHERE status != 'deleted'").get().c;
@@ -110,6 +151,37 @@ function initDatabase() {
         "## 2026 상반기 인도네시아 현지 한국학 문화 교류 현장 기록\n\n이번 상반기 진행된 인도네시아 현지 교류 사역을 통해 많은 청년들과 깊은 교제를 나누었습니다.\n\n### 주요 성과\n- 현지 학생 120명 대상 한국어/한국문화 강좌 진행\n- 문화 축제를 통한 복음 전도 및 협력 교개 마련",
         "./assets/images/indonesia-landscape2.jpg",
         "active"
+      );
+    }
+
+    const officialCount = db.prepare("SELECT COUNT(*) as c FROM official_letters").get().c;
+    if (officialCount === 0) {
+      const insertOfficial = db.prepare(`
+        INSERT INTO official_letters (doc_no, receiver, sender, title, content, secret_token)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `);
+      insertOfficial.run(
+        "KWM-2026-0801호",
+        "동역교회 담임목사 및 선교담당 교역자 귀하",
+        "케이웨이브 미션 대표선교사",
+        "2026년 하반기 K-WAVE 고등교육선교 협력 및 단원 파견의 건",
+        `<h3>1. 귀 교회의 부흥과 하나님의 은혜를 기원합니다.</h3>
+<p>주님의 지상명령을 받들어 세계 복음화를 위해 헌신하시는 귀 교회와 성도님들 위에 하나님의 크신 평강과 은혜가 늘 충만하시기를 간절히 기도합니다.</p>
+<p>사단법인 케이웨이브 미션(K-Wave Mission)은 현대 선교의 핵심 통로인 <strong>'K-Culture & 교육'</strong>을 통해 인도네시아 및 동남아시아 권역의 차세대 청년들에게 복음을 전파하고 그리스도의 제자로 양육하는 고등교육선교 플랫폼입니다.</p>
+
+<h3>2. 협력 제안 및 추진 내용</h3>
+<ul>
+  <li><strong>선교 현장:</strong> 인도네시아 현지 대학 및 협력 교육기관 한국어/문화 학과</li>
+  <li><strong>주요 사역:</strong> 한국어 교육 봉사, K-Culture 캠프, 1:1 멘토링 및 청년 복음화</li>
+  <li><strong>단원 파견:</strong> 귀 교회의 헌신된 청년/성도 맞춤형 단기 및 중장기 파견 연계</li>
+  <li><strong>지원 체계:</strong> 현지 안전 인프라, 비자/숙소 완비 및 사역 멘토링 전담</li>
+</ul>
+
+<h3>3. 요청 사항</h3>
+<p>귀 교회 청년 및 성도들이 열방을 품고 선교의 비전을 발견할 수 있도록 본 사역의 안내 및 선교 동역 협약을 정중히 요청드리오니 긍정적인 검토와 기도를 부탁드립니다.</p>
+
+<p><em>※ 첨부: K-Wave Mission 2026 하반기 선교 사역 브로슈어 및 동역 신청서 1부. 끝.</em></p>`,
+        "kwm_demo_token_20260828"
       );
     }
   } catch (err) {
@@ -242,7 +314,9 @@ const apiFiles = [
   'delete-program',
   'get-dashboard-stats',
   'get-md',
-  'generate-ai'
+  'generate-ai',
+  'official',
+  'official-view'
 ];
 
 for (const name of apiFiles) {
@@ -323,9 +397,28 @@ async function handleCloudflareRoute(req, res, handlerModule, params = {}) {
   }
 }
 
-// Wire API Routes
+// Dedicated Official Letters API Routes
+app.all('/api/official-view', (req, res) => {
+  return handleCloudflareRoute(req, res, apiModules['official-view']);
+});
+app.all('/api/official/view/:token', (req, res) => {
+  return handleCloudflareRoute(req, res, apiModules['official-view'], { token: req.params.token });
+});
+app.all('/api/official/view', (req, res) => {
+  return handleCloudflareRoute(req, res, apiModules['official-view']);
+});
+app.all('/api/official/:id', (req, res) => {
+  return handleCloudflareRoute(req, res, apiModules['official'], { id: req.params.id });
+});
+app.all('/api/official', (req, res) => {
+  return handleCloudflareRoute(req, res, apiModules['official']);
+});
+
+// Wire standard API Routes
 for (const name of apiFiles) {
-  app.all(`/api/${name}`, (req, res) => handleCloudflareRoute(req, res, apiModules[name]));
+  if (name !== 'official' && name !== 'official-view') {
+    app.all(`/api/${name}`, (req, res) => handleCloudflareRoute(req, res, apiModules[name]));
+  }
 }
 
 // Special route for image handler: /api/image/*
@@ -377,6 +470,12 @@ app.get('/robots.txt', (req, res) => {
 app.get('/admin', (req, res) => {
   res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
   res.sendFile(path.join(process.cwd(), 'admin.html'));
+});
+
+app.get(['/official', '/official.html'], (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
+  res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+  res.sendFile(path.join(process.cwd(), 'official.html'));
 });
 
 app.get('*', (req, res) => {

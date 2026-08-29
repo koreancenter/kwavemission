@@ -1,1 +1,4 @@
 .wrangler
+
+# Temporary fix scripts
+fix_*.cjs
