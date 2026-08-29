@@ -199,10 +199,11 @@ h6,
 
 /* News cards rendered from JS */
 .news-feature-card {
-  border-radius: 1rem;
+  border-radius: 0.75rem;
   overflow: hidden;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   min-height: 23.75rem;
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
@@ -212,9 +213,10 @@ h6,
 
 .news-feature-card:hover,
 .news-feature-card:focus-visible {
-  border-color: rgba(0, 0, 0, 0.22);
-  background: transparent;
-  transform: translateY(-1px);
+  border-color: rgba(15, 23, 42, 0.15);
+  background: #ffffff;
+  transform: translateY(-0.25rem);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   outline: none;
 }
 
@@ -350,21 +352,23 @@ h6,
 
 .news-card {
   min-height: 16rem;
-  border-radius: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: rgba(255, 255, 255, 0.65);
+  border-radius: 0.75rem;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #ffffff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
   cursor: pointer;
   display: flex;
   flex-direction: column;
   padding: 1.5rem;
-  transition: border-color 0.22s ease, transform 0.22s ease, background-color 0.22s ease;
+  transition: all 0.3s ease-out;
 }
 
 .news-card:hover,
 .news-card:focus-visible {
-  border-color: rgba(0, 0, 0, 0.22);
-  background: rgba(255, 255, 255, 0.78);
-  transform: translateY(-1px);
+  border-color: rgba(15, 23, 42, 0.15);
+  background: #ffffff;
+  transform: translateY(-0.25rem);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
   outline: none;
 }
 
