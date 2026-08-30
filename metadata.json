@@ -1,6 +1,8 @@
 {
-  "name": "K-WAVE MISSION",
-  "description": "케이웨이브 미션 - 하나님 나라를 위한 한류 (한국학 기반 교육선교)",
+  "name": "Remix kwavemission",
+  "description": "Imported from GitHub: koreancenter/kwavemission",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }

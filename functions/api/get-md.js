@@ -31,15 +31,7 @@ export async function onRequestGet(context) {
     const hasHtml = /<(?:div|span|table|tbody|thead|tr|th|td|p|h[1-6]|ul|ol|li|section|article|header|footer|style|iframe|svg|!--)/i.test(desc);
 
     if (hasHtml) {
-      const containsTitle = desc.includes(program.title);
-      const htmlOutput = containsTitle
-        ? desc
-        : `<div class="program-header mb-6 pb-4 border-b border-slate-200">
-             ${program.category ? `<span class="inline-block px-2.5 py-1 text-xs font-semibold rounded-md bg-slate-100 text-slate-700 mb-2">${program.category}</span>` : ''}
-             <h1 class="text-2xl font-bold text-slate-900">${program.title}</h1>
-           </div>\n${desc}`;
-
-      return new Response(htmlOutput, {
+      return new Response(desc, {
         headers: {
           "Content-Type": "text/html; charset=utf-8",
           "Cache-Control": "no-store"
@@ -47,13 +39,7 @@ export async function onRequestGet(context) {
       });
     }
 
-    const markdown = [
-      `# ${program.title}`,
-      program.category ? `**${program.category}**` : "",
-      desc
-    ].filter(Boolean).join("\n\n");
-
-    return new Response(markdown, {
+    return new Response(desc, {
       headers: {
         "Content-Type": "text/markdown; charset=utf-8",
         "Cache-Control": "no-store"

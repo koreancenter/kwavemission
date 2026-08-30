@@ -56,7 +56,9 @@
         const slug = normalizeSlug(program.slug);
         const recommended = Number(program.is_recommended) === 1;
         const preparingClasses = status === 'preparing' ? ' opacity-80 hover:opacity-100' : '';
-        const modalAction = slug ? `onclick="openMdModal('${slug}')"` : 'disabled aria-disabled="true"';
+        const jsSafeTitle = (program.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+        const safeTitle = escapeHtml(jsSafeTitle);
+        const modalAction = slug ? `onclick="openMdModal('${slug}', '${safeTitle}', '프로그램 안내')"` : 'disabled aria-disabled="true"';
         const disabledClasses = slug ? '' : ' opacity-50 cursor-not-allowed';
         const descriptionPreview = toPlainText(program.description);
 

@@ -579,6 +579,88 @@
         updateModalUrl(null);
     }
 
+    const CINEMATIC_DATA = {
+        '01-for-spirit': {
+            img: './assets/images/01-for-spirit.webp',
+            alt: '영혼을 살리는 일',
+            badge: '[ 01 / 영혼을 살리는 일 ]',
+            title: 'K-Culture로 현지 영혼들과<br class="hidden sm:block" /> 인격적 관계를 맺습니다.',
+            desc: '그 중에서 타겟팅된 전도 대상을 위해 동역자 그룹과 함께 기도하며 전략적으로 케어합니다.',
+            layout: 'portrait',
+            gradient: 'bg-gradient-to-t from-black/90 via-black/40 to-transparent bottom-0 h-[70%] sm:h-1/2',
+            textPos: 'bottom-0 left-0 justify-end'
+        },
+        '02-for-church': {
+            img: './assets/images/02-for-church.webp',
+            alt: '교회를 세우는 일',
+            badge: '[ 02 / 교회를 세우는 일 ]',
+            title: '현지 교회가 지역 사회의 중심이 되도록 지원합니다.',
+            desc: '현지 교회에서 성경캠프, 문화 잔치, 도서관 및 공부방 운영, 장학금과 기반 시설을 지원합니다.',
+            layout: 'landscape',
+            gradient: 'bg-gradient-to-b from-black/80 via-black/40 to-transparent top-0 h-[70%] sm:h-1/2',
+            textPos: 'top-0 left-0 justify-start'
+        },
+        '03-for-world': {
+            img: './assets/images/03-for-world.webp',
+            alt: '세상을 변화시키는 일',
+            badge: '[ 03 / 세상을 변화시키는 일 ]',
+            title: '우리의 모든 자원을 총동원해 복음의 길을 개척합니다.',
+            desc: '헌신된 교수와 청년들이 캠퍼스를 방문하여 학술대회, 세미나, 문화교류 행사를 통해 새 길을 개척합니다.',
+            layout: 'landscape',
+            gradient: 'bg-gradient-to-t from-black/90 via-black/40 to-transparent bottom-0 h-[70%] sm:h-1/2',
+            textPos: 'bottom-0 left-0 justify-end'
+        }
+    };
+
+    function closeCinematicModal() {
+        const modal = document.getElementById('cinematic-modal');
+        if (modal && typeof window.deactivateModal === 'function') {
+            window.deactivateModal(modal);
+        }
+    }
+
+    function openCinematicModal(cardId) {
+        const modal = document.getElementById('cinematic-modal');
+        const data = CINEMATIC_DATA[cardId];
+        
+        if (modal && data && typeof window.activateModal === 'function') {
+            // Update content
+            document.getElementById('cinematic-modal-img').src = data.img;
+            document.getElementById('cinematic-modal-img').alt = data.alt;
+            document.getElementById('cinematic-modal-badge').innerHTML = data.badge;
+            document.getElementById('cinematic-modal-title').innerHTML = data.title;
+            document.getElementById('cinematic-modal-desc').innerHTML = data.desc;
+            
+            // Update styling classes
+            const panel = document.getElementById('cinematic-modal-panel');
+            const gradient = document.getElementById('cinematic-modal-gradient');
+            const textContainer = document.getElementById('cinematic-modal-text-container');
+            
+            // Reset classes
+            panel.className = 'relative w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up';
+            gradient.className = 'absolute inset-x-0';
+            textContainer.className = 'absolute w-full p-6 sm:p-8 flex flex-col text-left';
+            
+            if (data.layout === 'landscape') {
+                panel.classList.add('max-w-3xl', 'aspect-[16/9]', 'sm:aspect-[16/10]');
+            } else {
+                panel.classList.add('max-w-sm', 'sm:max-w-md', 'aspect-[3/4]');
+            }
+            
+            gradient.className = 'absolute inset-x-0 ' + data.gradient;
+            textContainer.className = 'absolute w-full p-6 sm:p-8 flex flex-col text-left ' + data.textPos;
+            
+            window.activateModal(modal);
+            
+            // Add animation class if not present or restart it
+            if (panel) {
+                panel.classList.remove('animate-fade-in-up');
+                void panel.offsetWidth; // trigger reflow
+                panel.classList.add('animate-fade-in-up');
+            }
+        }
+    }
+
     // 모달 배경 클릭 및 ESC 키 닫기 이벤트 등록
     const mdModalEl = document.getElementById('md-modal');
     if (mdModalEl) {
@@ -598,6 +680,15 @@
         });
     }
 
+    const cinematicModalEl = document.getElementById('cinematic-modal');
+    if (cinematicModalEl) {
+        cinematicModalEl.addEventListener('click', function (e) {
+            if (e.target === cinematicModalEl) {
+                closeCinematicModal();
+            }
+        });
+    }
+
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') {
             const openModal = document.getElementById('md-modal');
@@ -607,6 +698,10 @@
             const openLegal = document.getElementById('legal-modal');
             if (openLegal && !openLegal.classList.contains('hidden')) {
                 closeLegalModal();
+            }
+            const openCinematic = document.getElementById('cinematic-modal');
+            if (openCinematic && !openCinematic.classList.contains('hidden')) {
+                closeCinematicModal();
             }
         }
     });
@@ -618,6 +713,8 @@
     window.closeContactModal = closeContactModal;
     window.openMdModal = openMdModal;
     window.closeMdModal = closeMdModal;
+    window.openCinematicModal = openCinematicModal;
+    window.closeCinematicModal = closeCinematicModal;
     window.shareCurrentMdModal = shareCurrentMdModal;
     window.closeLegalModal = closeLegalModal;
     window.ModalHistoryManager = {

@@ -1,0 +1,194 @@
+/* Modal markdown content */
+#modal-body h1,
+#modal-body h2,
+#modal-body h3,
+#modal-body h4 {
+  font-weight: 700;
+  color: #0f172a;
+  margin-top: 1.25rem;
+  margin-bottom: 0.375rem;
+}
+
+#modal-body h2 {
+  font-size: 1.2rem;
+}
+
+#modal-body h3 {
+  font-size: 1rem;
+}
+
+#modal-body p {
+  margin-bottom: 0.875rem;
+}
+
+#modal-body ul,
+#modal-body ol {
+  padding-left: 1.4rem;
+  margin-bottom: 0.875rem;
+}
+
+#modal-body ul {
+  list-style-type: disc;
+}
+
+#modal-body ol {
+  list-style-type: decimal;
+}
+
+#modal-body li {
+  margin-bottom: 0.2rem;
+}
+
+#modal-body blockquote {
+  border-left: 3px solid #b94a61;
+  padding-left: 1rem;
+  color: #64748b;
+  margin: 1rem 0;
+}
+
+#modal-body a {
+  color: #93394e;
+  text-decoration: underline;
+}
+
+#modal-body img {
+  max-width: 100%;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+#modal-body hr {
+  border-color: #f1f5f9;
+  margin: 1.25rem 0;
+}
+
+#modal-body strong {
+  font-weight: 700;
+}
+
+#modal-body code {
+  background: #f1f5f9;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Common Markdown Modal Content Styles */
+#md-modal-content {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  color: #1e293b;
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+#md-modal-content h1 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+#md-modal-content h2 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.45;
+}
+
+#md-modal-content h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #334155;
+  margin-top: 0.75rem;
+  margin-bottom: 0.4rem;
+  line-height: 1.5;
+}
+
+#md-modal-content h4 {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #475569;
+  margin-top: 0.5rem;
+  margin-bottom: 0.35rem;
+  line-height: 1.5;
+}
+
+#md-modal-content p {
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+#md-modal-content strong {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+#md-modal-content ul,
+#md-modal-content ol {
+  padding-left: 1.25rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+}
+
+#md-modal-content ul {
+  list-style-type: disc;
+}
+
+#md-modal-content ol {
+  list-style-type: decimal;
+}
+
+#md-modal-content li {
+  margin-bottom: 0.25rem;
+  line-height: 1.6;
+}
+
+#md-modal-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.85rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#md-modal-content th,
+#md-modal-content td {
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 0.85rem;
+  text-align: left;
+}
+
+#md-modal-content th {
+  background-color: #f8fafc;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+#md-modal-content tr:nth-child(even) td {
+  background-color: #fcfcfc;
+}
+
+#md-modal-content blockquote {
+  border-left: 3px solid #cbd5e1;
+  padding-left: 0.85rem;
+  margin: 0.75rem 0;
+  color: #475569;
+  font-style: italic;
+}
+
+#md-modal-content code,
+#md-modal-content .font-mono {
+  background-color: #f1f5f9;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-family: 'JetBrains Mono', monospace;
+}

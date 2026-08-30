@@ -70,9 +70,10 @@ h6,
 }
 
 .glass-nav {
-  background: rgba(8, 12, 20, 0.9);
+  background: rgba(236, 233, 225, 0.9);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  border-bottom: none;
 }
 
 /* 5. Interactive Metrics Section (Border Free Clean Stat Layout) */
@@ -518,6 +519,18 @@ h6,
   text-transform: uppercase;
 }
 
+/* ==========================================================================
+   Core Value & Strategy (About Section) Semi-Transparent Cards
+   ========================================================================== */
+
+.brand-card,
+#about .brand-card {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+}
+
+
 /* Modal markdown content */
 #modal-body h1,
 #modal-body h2,
@@ -603,7 +616,6 @@ h6,
 }
 
 #md-modal-content h1 {
-  font-family: 'Noto Serif KR', serif;
   font-size: 1.25rem;
   font-weight: 800;
   color: #0f172a;
@@ -613,7 +625,6 @@ h6,
 }
 
 #md-modal-content h2 {
-  font-family: 'Noto Serif KR', serif;
   font-size: 1.08rem;
   font-weight: 700;
   color: #1e293b;
@@ -699,11 +710,20 @@ h6,
 }
 
 #md-modal-content blockquote {
-  border-left: 3px solid #0f172a;
+  border-left: 3px solid #cbd5e1;
   padding-left: 0.85rem;
   margin: 0.75rem 0;
   color: #475569;
   font-style: italic;
+}
+
+#md-modal-content code,
+#md-modal-content .font-mono {
+  background-color: #f1f5f9;
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+  font-size: 0.85em;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 @media (max-width: 640px) {
@@ -882,14 +902,6 @@ img, video, iframe {
     animation: smoothDrawerCardDrop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Modal Markdown Typography & Readability */
-#md-modal-content {
-  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-  color: #1e293b;
-  line-height: 1.7;
-  word-break: keep-all;
-}
-
 /* Program Card Title 2-line clamp & height alignment */
 .prog-card h3,
 #prog-slider .prog-card h3 {
@@ -901,40 +913,6 @@ img, video, iframe {
   word-break: keep-all !important;
   line-height: 1.4 !important;
   max-height: 2.8em !important;
-}
-
-#md-modal-content h1,
-#md-modal-content h2,
-#md-modal-content h3 {
-  font-family: 'Noto Serif KR', serif;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.02em;
-  margin-top: 1.25rem;
-  margin-bottom: 0.5rem;
-}
-
-#md-modal-content h1 { font-size: 1.35rem; }
-#md-modal-content h2 { font-size: 1.15rem; }
-#md-modal-content h3 { font-size: 1rem; }
-
-#md-modal-content p {
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-  color: #334155;
-}
-
-#md-modal-content ul,
-#md-modal-content ol {
-  padding-left: 1.25rem;
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-  color: #334155;
-}
-
-#md-modal-content code,
-#md-modal-content .font-mono {
-  font-family: 'JetBrains Mono', monospace;
 }
 
 /* 📌 Mobile Menu Dropdown & Slide Down Animation */
