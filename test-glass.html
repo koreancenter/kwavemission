@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #fff; height: 200vh; padding: 0; margin: 0; }
+  .text-content { padding-top: 150px; font-size: 20px; line-height: 1.5; font-family: sans-serif;}
+  
+  .glass-nav-user {
+    position: fixed; top: 0; left: 0; width: 45%; height: 80px;
+    background: linear-gradient(to top, rgba(236, 233, 225, 1) 0%, rgba(236, 233, 225, 0.95) 20%, rgba(236, 233, 225, 0.7) 70%, rgba(236, 233, 225, 0.85) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .glass-nav-fixed {
+    position: fixed; top: 0; right: 0; width: 45%; height: 80px;
+    /* extended height via padding if we want, or just gradient */
+    background: linear-gradient(to top, rgba(236, 233, 225, 0) 0%, rgba(236, 233, 225, 0.7) 30%, rgba(236, 233, 225, 0.95) 70%, rgba(236, 233, 225, 1) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    
+    /* to dissolve blur smoothly */
+    -webkit-mask-image: linear-gradient(to top, transparent 0%, black 30%);
+    mask-image: linear-gradient(to top, transparent 0%, black 30%);
+  }
+
+</style>
+</head>
+<body>
+  <div class="glass-nav-user">User's code (Left)</div>
+  <div class="glass-nav-fixed">Fixed code (Right)</div>
+  <div class="text-content">
+    <p>Scroll me up!</p>
+    <p>This text should dissolve beautifully.</p>
+    <p>Line 3</p>
+    <p>Line 4</p>
+    <p>Line 5</p>
+  </div>
+</body>
+</html>

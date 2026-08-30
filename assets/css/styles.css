@@ -69,11 +69,23 @@ h6,
   letter-spacing: 0.04em;
 }
 
+.header-fade-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(to bottom, #ece9e1 0%, #ece9e1 50%, rgba(236, 233, 225, 0) 100%) !important;
+  pointer-events: none;
+  z-index: 40;
+}
+
 .glass-nav {
-  background: rgba(236, 233, 225, 0.9);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: transparent !important;
   border-bottom: none;
+  position: fixed;
+  top: 0;
+  z-index: 50;
 }
 
 /* 5. Interactive Metrics Section (Border Free Clean Stat Layout) */
@@ -955,3 +967,36 @@ img, video, iframe {
     }
 }
 
+
+/* Back to Top Button Customization for Mobile & Desktop */
+button#back-to-top-btn {
+    background-color: rgba(236, 233, 225, 0.5) !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(31, 41, 55, 0.16) !important;
+    color: #1f2937 !important; /* Dark color for the arrow */
+    width: 44px !important;
+    height: 44px !important;
+    bottom: 16px !important;
+    right: 16px !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
+}
+
+button#back-to-top-btn:hover {
+    background-color: rgba(236, 233, 225, 0.7) !important;
+}
+
+@media (min-width: 640px) {
+    button#back-to-top-btn {
+        background-color: #ece9e1 !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        width: 52px !important;
+        height: 52px !important;
+        bottom: 24px !important;
+        right: 24px !important;
+    }
+    button#back-to-top-btn:hover {
+        background-color: #e4e0d8 !important;
+    }
+}

@@ -238,7 +238,7 @@
             btn.id = 'back-to-top-btn';
             btn.type = 'button';
             btn.setAttribute('aria-label', '맨 위로 이동');
-            btn.className = 'fixed bottom-6 right-6 z-40 p-3.5 rounded-full bg-slate-900/90 text-slate-200 border border-slate-700/60 shadow-xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 hover:bg-slate-800 hover:text-white hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer';
+            btn.className = 'fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-40 w-11 h-11 sm:w-[52px] sm:h-[52px] rounded-full bg-slate-900/40 text-slate-200 border border-slate-700/50 shadow-xl backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300 hover:bg-slate-800/70 hover:text-white hover:scale-110 active:scale-95 flex items-center justify-center cursor-pointer';
             btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>';
             document.body.appendChild(btn);
         }
