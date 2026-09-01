@@ -585,7 +585,7 @@
             alt: '영혼을 살리는 일',
             badge: '[ 01 / 영혼을 살리는 일 ]',
             title: 'K-Culture로 현지 영혼들과<br class="hidden sm:block" /> 인격적 관계를 맺습니다.',
-            desc: '그 중에서 타겟팅된 전도 대상을 위해 동역자 그룹과 함께 기도하며 전략적으로 케어합니다.',
+            desc: '수가성 여인에게 예수님께서 달라하신 물 한 그릇, K-Culture는 예수님과 현지의 영혼을 이어주는 물 한 그릇입니다.',
             layout: 'portrait',
             gradient: 'bg-gradient-to-t from-black/90 via-black/40 to-transparent bottom-0 h-[70%] sm:h-1/2',
             textPos: 'bottom-0 left-0 justify-end'

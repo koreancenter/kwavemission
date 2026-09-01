@@ -9,7 +9,7 @@
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="tailwind.config.js"></script>
+    <script src="tailwind.config.js?v=20260830-cache-bust-v1"></script>
     
     <!-- Performance Resource Hints -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
@@ -20,8 +20,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
     <!-- Preload Critical CSS to break network chaining -->
-    <link rel="preload" href="./assets/css/styles.css?v=20260830-cache-bust-v15" as="style">
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260830-cache-bust-v15">
+    <link rel="preload" href="./assets/css/styles.css?v=20260830-cache-bust-v21" as="style">
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260830-cache-bust-v21">
 
     <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
@@ -713,7 +713,7 @@
 <!-- 📌 상단 고정 공지사항 배너 (모바일 터치 카드) -->
 <div id="main-notice-banner" 
      onclick="openNoticeBannerModal()" 
-     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-xl bg-white border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px]">
+     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
     
     <!-- Left: 배지 + 공지 제목 영역 -->
     <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
@@ -747,7 +747,7 @@
         <div class="relative">
 
         <!-- Left arrow (desktop only) -->
-        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="group/slider-nav hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white border border-slate-900/10 shadow-sm hover:shadow-md text-slate-500 hover:text-slate-900 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="group/slider-nav hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:-translate-x-0.5"></i>
         </button>
 
@@ -758,7 +758,7 @@
         </div><!-- end prog-slider -->
 
         <!-- Right arrow (desktop only) -->
-        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="group/slider-nav hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full bg-white border border-slate-900/10 shadow-sm hover:shadow-md text-slate-500 hover:text-slate-900 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="group/slider-nav hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-right" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:translate-x-0.5"></i>
         </button>
 
@@ -1025,15 +1025,15 @@
             }
         };
     </script>
-    <script src="./assets/js/api-service.js?v=20260830-cache-bust-v15" defer></script>
-    <script src="./assets/js/ui-components.js?v=20260830-cache-bust-v15" defer></script>
+    <script src="./assets/js/api-service.js?v=20260830-cache-bust-v21" defer></script>
+    <script src="./assets/js/ui-components.js?v=20260830-cache-bust-v21" defer></script>
     <script src="./assets/js/animations.js" defer></script>
-    <script src="./assets/js/modal-handler.js?v=20260830-cache-bust-v15" defer></script>
-    <script src="./assets/js/news-loader.js?v=20260830-cache-bust-v15" defer></script>
+    <script src="./assets/js/modal-handler.js?v=20260830-cache-bust-v21" defer></script>
+    <script src="./assets/js/news-loader.js?v=20260830-cache-bust-v21" defer></script>
     <script src="./assets/js/metrics-counter.js" defer></script>
-    <script src="./assets/js/kwave-drawer.js?v=20260830-cache-bust-v15" defer></script>
-    <script src="./assets/js/program-loader.js?v=20260830-cache-bust-v15" defer></script>
-    <script src="./assets/js/app-init.js?v=20260830-cache-bust-v15" defer></script>
+    <script src="./assets/js/kwave-drawer.js?v=20260830-cache-bust-v21" defer></script>
+    <script src="./assets/js/program-loader.js?v=20260830-cache-bust-v21" defer></script>
+    <script src="./assets/js/app-init.js?v=20260830-cache-bust-v21" defer></script>
     <!-- End of JavaScript modules -->
      
     <!-- 시네마틱 모달 -->

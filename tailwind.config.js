@@ -1,4 +1,18 @@
 tailwind.config = {
+  safelist: [
+    'bg-white/50',
+    'bg-white/60',
+    'bg-white/70',
+    'hover:bg-white/70',
+    'hover:border-slate-900/20',
+    'backdrop-blur-md',
+    'rounded-2xl',
+    'rounded-full',
+    'border-slate-900/10',
+    'text-slate-700',
+    'hover:bg-white'
+  ],
+
   theme: {
     extend: {
       colors: {

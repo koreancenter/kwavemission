@@ -1000,3 +1000,28 @@ button#back-to-top-btn:hover {
         background-color: #e4e0d8 !important;
     }
 }
+
+/* Force Glassmorphism Classes if Tailwind CDN fails */
+.bg-white\/50 {
+    background-color: rgba(255, 255, 255, 0.5) !important;
+}
+.bg-white\/60 {
+    background-color: rgba(255, 255, 255, 0.6) !important;
+}
+.hover\:bg-white\/70:hover {
+    background-color: rgba(255, 255, 255, 0.7) !important;
+}
+.backdrop-blur-md {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+.rounded-2xl {
+    border-radius: 1rem !important;
+}
+
+.hover\:border-slate-900\/20:hover {
+    border-color: rgba(15, 23, 42, 0.2) !important;
+}
+.hover\:bg-white:hover {
+    background-color: #ffffff !important;
+}

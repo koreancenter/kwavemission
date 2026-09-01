@@ -63,7 +63,7 @@
         const descriptionPreview = toPlainText(program.description);
 
         return `
-            <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-xl sm:rounded-xl p-5 sm:p-8 bg-white border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}">
+            <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-2xl p-5 sm:p-8 border border-slate-900/10 shadow-sm hover:bg-white/70 hover:border-slate-900/20 hover:-translate-y-1 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
                 ${recommended ? '<div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-[rgba(55,65,81,0.15)] text-slate-950 font-mono text-[10px] font-bold uppercase tracking-wider">RECOMMENDED</div>' : ''}
                 <div>
                     <div class="flex items-center justify-between mb-4 sm:mb-6">
