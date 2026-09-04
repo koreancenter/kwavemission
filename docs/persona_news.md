@@ -28,7 +28,7 @@
 * Footer Notice Box
   * Include contact info and copyright notice at the bottom using `<div style="font-size: 0.9em; line-height: 1.6;">`.
 * Mandatory Copyright Disclaimer
-  * 선교는 교육입니다.<br>
-  * 우리는한 팀입니다.<br>
+  * 선교는 교육입니다.
+  * 우리는한 팀입니다.
   * [admin@kwavemission.org]
   
