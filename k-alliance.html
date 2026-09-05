@@ -199,23 +199,6 @@
             opacity: 1;
         }
 
-        /* 📌 Seamless & Luxurious Drawer Bookmark Tab */
-        #kwave-drawer {
-            box-shadow: 20px 0 50px -10px rgba(0, 0, 0, 0.12), 4px 0 16px -4px rgba(0, 0, 0, 0.06);
-        }
-
-        #kwave-tab-btn {
-            position: absolute;
-            left: calc(100% - 1px);
-            top: 2rem;
-            box-shadow: 6px 4px 18px -2px rgba(0, 0, 0, 0.08), 2px 2px 6px -1px rgba(0, 0, 0, 0.04);
-            transform-origin: left center;
-        }
-
-        #kwave-tab-btn:hover {
-            transform: translateX(2px);
-        }
-
         /* Custom Tab styling */
         .donate-tab-btn {
             transition: all 0.2s ease;
@@ -692,70 +675,6 @@
         </div>
     </footer>
 
-    <!-- K-Wave Brand Drawer Backdrop & Panel with Bookmark Tab -->
-    <div id="kwave-drawer-backdrop" class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-[2px] opacity-0 transition-opacity duration-500" aria-hidden="true"></div>
-    <div id="kwave-drawer" class="fixed left-0 top-1/2 -translate-y-1/2 w-[288px] sm:w-[310px] max-w-[calc(100vw-3.25rem)] h-fit max-h-[88vh] sm:max-h-[92vh] sm:min-h-[550px] flex flex-col justify-between bg-[#F6F4EF] border-r border-y border-black/10 rounded-r-3xl p-4 sm:p-7 shadow-2xl z-50 transition-transform duration-650 ease-[cubic-bezier(0.16,1,0.3,1)] -translate-x-full overflow-visible">
-        
-        <!-- 📌 Drawer 우측에 일체형으로 부착된 북마크 탭 버튼 (Seamless & Compact Bookmark Tab) -->
-        <button id="kwave-tab-btn" type="button" onclick="toggleKWaveDrawer()" aria-label="Brand DNA 북마크 열기/닫기"
-            class="z-50 bg-[#F6F4EF] text-slate-800 border-r border-y border-l-0 border-black/10 p-1.5 sm:p-2 rounded-r-xl shadow-md transition-all duration-300 group flex items-center justify-center cursor-pointer pointer-events-auto select-none">
-            <div class="w-5 h-5 sm:w-[22px] sm:h-[22px] rounded-lg bg-black/[0.04] border border-black/10 group-hover:border-black/25 flex items-center justify-center group-hover:scale-105 transition-all shadow-2xs">
-                <span class="font-serif font-bold text-slate-800 text-[10px] sm:text-[11px]">K</span>
-            </div>
-        </button>
-
-        <!-- 1. 헤더 -->
-        <div class="flex items-center justify-between mb-2 sm:mb-4">
-            <div>
-                <span class="text-[10px] sm:text-xs text-rose-500 font-mono tracking-widest uppercase mb-0.5 sm:mb-1 block font-semibold">[ BRAND DNA ]</span>
-                <h2 class="text-lg sm:text-2xl font-serif font-bold text-slate-900 tracking-tight">우리의 K-Wave</h2>
-            </div>
-            <button type="button" aria-label="닫기" onclick="closeKWaveDrawer()" class="p-1 sm:p-2 rounded-lg bg-transparent hover:bg-slate-200/70 text-slate-400 hover:text-slate-800 transition-colors cursor-pointer">
-                <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-            </button>
-        </div>
-
-        <!-- 2. Editorial identity timeline -->
-        <div class="my-2 sm:my-5 ml-1 border-l border-slate-300 pl-3.5 sm:pl-5 space-y-2 sm:space-y-4">
-            <!-- 01 / SPIRITUAL IDENTITY -->
-            <div class="drawer-card relative pb-1 sm:pb-3 border-b border-slate-200/90">
-                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-1.5 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
-                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">01 / SPIRITUAL IDENTITY</span>
-                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>ing's <span class="text-slate-500">Wave</span></h3>
-                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">예수 그리스도의 왕 되심을 선포하며</p>
-            </div>
-
-            <!-- 02 / KINGDOM EXPANSION -->
-            <div class="drawer-card relative py-1 sm:py-3 border-b border-slate-200/90">
-                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-3 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
-                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">02 / KINGDOM EXPANSION</span>
-                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>ingdom's <span class="text-slate-500">Wave</span></h3>
-                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">하나님의 나라 확장에 헌신합니다.</p>
-            </div>
-
-            <!-- 03 / MISSIONAL BRIDGE -->
-            <div class="drawer-card relative pt-1 sm:pt-3">
-                <span class="absolute -left-[1.22rem] sm:-left-[1.58rem] top-1 sm:top-3 w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-slate-700 ring-4 ring-[#F6F4EF]"></span>
-                <span class="text-[8.5px] sm:text-[10px] font-mono text-slate-500 font-semibold tracking-wider mb-0.5 sm:mb-1 block">03 / MISSIONAL BRIDGE</span>
-                <h3 class="text-[clamp(0.75rem,2vw,1rem)] font-serif font-bold text-slate-900 mb-0.5 sm:mb-1"><span class="text-slate-900">K</span>orean <span class="text-slate-500">Wave</span></h3>
-                <p class="text-[11px] sm:text-sm font-semibold text-slate-800 leading-snug !m-0">이 일을 위해 대한민국을 부르십니다.</p>
-            </div>
-        </div>
-
-        <!-- 3. Key Scripture -->
-        <div class="drawer-card">
-            <div class="border-t border-slate-300/80 pt-2 sm:pt-4 mt-2 sm:mt-4 text-center">
-                <div class="flex items-center justify-between text-[8.5px] sm:text-[10px] font-mono mb-1 sm:mb-2.5">
-                    <span class="text-slate-700 font-bold">KEY SCRIPTURE</span>
-                    <span class="text-slate-500">HABAKKUK 2:14</span>
-                </div>
-                <p class="text-[11px] sm:text-sm font-serif italic text-slate-800 leading-relaxed mb-0">
-                    “이는 물이 바다를 덮음 같이<br>여호와의 영광을 인정하는 것이<br>세상에 가득함이니라”
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- Markdown Modal -->
     <div id="md-modal" class="modal-root fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4">
         <div class="modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200">
@@ -851,27 +770,6 @@
     <!-- JS dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
-    <script>
-        window.toggleKWaveDrawer = function() {
-            var drawer = document.getElementById('kwave-drawer');
-            var backdrop = document.getElementById('kwave-drawer-backdrop');
-            if (!drawer) return;
-            if (drawer.classList.contains('-translate-x-full')) {
-                drawer.classList.remove('-translate-x-full');
-                if (backdrop) { backdrop.classList.remove('hidden'); backdrop.classList.remove('opacity-0'); }
-            } else {
-                drawer.classList.add('-translate-x-full');
-                if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
-            }
-        };
-        window.openKWaveDrawer = function() { window.toggleKWaveDrawer(); };
-        window.closeKWaveDrawer = function() {
-            var drawer = document.getElementById('kwave-drawer');
-            var backdrop = document.getElementById('kwave-drawer-backdrop');
-            if (drawer) drawer.classList.add('-translate-x-full');
-            if (backdrop) { backdrop.classList.add('opacity-0'); backdrop.classList.add('hidden'); }
-        };
-    </script>
     <script src="./assets/js/api-service.js" defer></script>
     <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
     <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>

@@ -88,6 +88,22 @@ h6,
   z-index: 50;
 }
 
+#kwave-drawer {
+  box-shadow: 20px 0 50px -10px rgba(0, 0, 0, 0.12), 4px 0 16px -4px rgba(0, 0, 0, 0.06);
+}
+
+#kwave-tab-btn {
+  position: absolute;
+  left: calc(100% - 1px);
+  top: 2rem;
+  box-shadow: 6px 4px 18px -2px rgba(0, 0, 0, 0.08), 2px 2px 6px -1px rgba(0, 0, 0, 0.04);
+  transform-origin: left center;
+}
+
+#kwave-tab-btn:hover {
+  transform: translateX(2px);
+}
+
 /* 5. Interactive Metrics Section (Border Free Clean Stat Layout) */
 .metrics-section {
   padding: 44px 20px;

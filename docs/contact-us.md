@@ -52,7 +52,7 @@
             </div>
             <div class="min-w-0 flex-1 text-left">
                 <h3 class="font-sans font-bold text-slate-900 text-xs sm:text-sm mb-0.5 !m-0 tracking-tight">선교 동역 &amp; 파트너십</h3>
-                <p class="font-sans text-[11px] text-slate-600 font-normal leading-tight !m-0">K-Alliance 멤버십 및 협력 기회</p>
+                <p class="font-sans text-[11px] text-slate-600 font-normal leading-tight !m-0">K-Alliance 멤버십 및 협력</p>
             </div>
             <a href="./k-alliance.html" aria-label="K-Alliance 파트너십 페이지로 이동" class="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-sans text-[11px] sm:text-xs font-bold tracking-wide transition-all shrink-0 flex items-center justify-center gap-1 shadow-xs border-0">
                 <span>알아보기</span>
@@ -64,7 +64,7 @@
     <!-- Social & Footnote Icons -->
     <div class="pt-2.5 sm:pt-3 border-t border-slate-200/80 flex items-center justify-center gap-4 text-slate-400">
         <span class="text-[11px] sm:text-xs font-mono text-slate-500 font-medium">Official Channels:</span>
-        <a href="https://pf.kakao.com" target="_blank" rel="noopener noreferrer" title="카카오톡 채널" class="hover:text-slate-700 transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></a>
+        <a href="https://cafe.naver.com/kiimorg" target="_blank" rel="noopener noreferrer" title="네이버 카페" class="hover:text-slate-700 transition-colors p-1"><i data-lucide="message-circle" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></a>
         <a href="mailto:admin@kwavemission.org" title="공식 이메일" class="hover:text-slate-700 transition-colors p-1"><i data-lucide="mail" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></a>
         <a href="https://kwavemission.org" title="글로벌 웹사이트" class="hover:text-slate-700 transition-colors p-1"><i data-lucide="globe" class="w-4 h-4 sm:w-4.5 sm:h-4.5"></i></a>
     </div>
