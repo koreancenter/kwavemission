@@ -3,777 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>후원·동역 안내 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
-    <meta name="description" content="K-Wave Mission 후원 및 동역 안내. 정기후원, 일시후원, 기도 동역, 지식 나누기를 통해 열방과 고등교육선교 현장을 섬깁니다.">
-    
-    <!-- Tailwind CSS CDN -->
+    <title>K-Alliance | K-WAVE MISSION</title>
+    <meta name="description" content="K-Alliance는 K-Culture의 흐름 속에 복음의 씨앗을 심고 현지 리더를 세우는 K-Wave Mission의 동역 멤버십입니다.">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="tailwind.config.js?v=20260830-cache-bust-v1"></script>
-    
-    <!-- Performance Resource Hints -->
-    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <!-- Preload Critical CSS to break network chaining -->
-    <link rel="preload" href="./assets/css/styles.css?v=20260818-mobile-perf" as="style">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     <link rel="stylesheet" href="./assets/css/styles.css?v=20260818-mobile-perf">
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-    </noscript>
-
-    <!-- Pretendard Dynamic Subset Web Font -->
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-    </noscript>
-    
     <style>
         :root {
-            --bg-primary: #ece9e1;
-            --surface-glass: rgba(255, 255, 255, 0.78);
-            --surface-soft: rgba(255, 255, 255, 0.92);
-            --text-primary: #1f2937;
-            --text-secondary: #4b5563;
-            --brand-primary: #4b5563;
-            --brand-primary-soft: rgba(75, 85, 99, 0.12);
-            --brand-border: rgba(31, 41, 55, 0.16);
-            --consult-accent: #52525b;
-            --consult-soft: rgba(82, 82, 91, 0.08);
-            --motion-hover-scale: 1;
-            --motion-icon-shift: 1px;
-            --motion-reveal-duration: 0.46s;
-            --motion-modal-duration: 0.2s;
-            --motion-modal-panel-duration: 0.22s;
-        }
-
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 5rem;
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto !important;
-            }
+            --alliance-bg: #ece9e1;
+            --alliance-ink: #1f2937;
+            --alliance-line: rgba(31, 41, 55, 0.16);
         }
 
         body {
+            background: var(--alliance-bg);
+            color: var(--alliance-ink);
             font-family: 'Pretendard', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.7;
         }
 
-        .hero-section {
-            position: relative;
-            overflow: hidden;
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            /* 기존 격자 및 글로우 배경 유지 */
-            background:
-            repeating-linear-gradient(90deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px),
-            repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 36px);
-            ;
-            /* 🔥 핵심: 아래쪽 배경(#080c14)과 자연스럽게 연결되는 투명 마스크 */
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+        h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; }
+        .break-keep { word-break: keep-all; }
+
+        .alliance-grid {
+            background-image: linear-gradient(rgba(31, 41, 55, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(31, 41, 55, 0.045) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, black 0%, rgba(0, 0, 0, 0.35) 66%, transparent 100%);
         }
 
-        h1, h2, h3, h4, h5, h6,
-        .hero-title,
-        .section-title,
-        .font-serif {
-            font-family: 'Noto Serif KR', serif;
-        }
+        .section-rule { border-top: 1px solid var(--alliance-line); }
+        .resource-item { border-top: 1px solid var(--alliance-line); }
+        .resource-item:last-child { border-bottom: 1px solid var(--alliance-line); }
+        .role-item { border-left: 1px solid var(--alliance-line); transition: border-color 0.2s ease; }
+        .role-item:hover { border-left-color: var(--alliance-ink); }
 
-        .hero-title {
-            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
-        }
-
-        p, li, a, button, input, textarea {
-            font-family: 'Pretendard', sans-serif;
-        }
-
-        .section-badge,
-        .tech-tag,
-        .metric-label,
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.04em;
-        }
-
-.header-fade-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 160px;
-  background: linear-gradient(to bottom, #ece9e1 0%, #ece9e1 50%, rgba(236, 233, 225, 0) 100%) !important;
-  pointer-events: none;
-  z-index: 40;
-}
-
-.glass-nav {
-  background: transparent !important;
-  border-bottom: none;
-  position: fixed;
-  top: 0;
-  z-index: 50;
-}
-
-        .brand-link {
-            color: #4b5563;
-            transition: color 0.2s ease;
-        }
-
-        .brand-link:hover {
-            color: #111827;
-        }
-
-.brand-card {
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: none;
-}
-
-        .brand-badge {
-            background: var(--brand-primary-soft);
-            border: 1px solid rgba(75, 85, 99, 0.3);
-            color: #374151;
-        }
-
-        .btn-primary,
-        .btn-secondary,
-        .btn-consult {
-            border-radius: 9999px;
-            font-weight: 500;
-            transition: background-color 0.22s ease, color 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: #374151;
-            color: #fff;
-            border: 1px solid rgba(31, 41, 55, 0.2);
-            box-shadow: 0 6px 14px rgba(31, 41, 55, 0.24);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            background: #1f2937;
-            box-shadow: 0 8px 18px rgba(31, 41, 55, 0.3);
-        }
-
-        .btn-secondary {
-            background: var(--surface-soft);
-            color: #374151;
-            border: 1px solid var(--brand-border);
-            backdrop-filter: blur(8px);
-        }
-
-        .btn-secondary:hover {
-            border-color: rgba(31, 41, 55, 0.3);
-            color: #111827;
-        }
-
-        /* Toast notification styling */
-        #toast-notification {
-            transform: translateY(100px);
-            opacity: 0;
-            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-        }
-
-        #toast-notification.show {
-            transform: translateY(0);
-            opacity: 1;
-        }
-
-        /* Custom Tab styling */
-        .donate-tab-btn {
-            transition: all 0.2s ease;
-        }
-
-        .donate-tab-btn.active {
-            background-color: #111827;
-            color: #ffffff;
-            border-color: #111827;
-        }
-
-        /* Normalize legacy accent utility classes to grayscale */
-        [class*="text-rose-"],
-        [class*="text-amber-"],
-        [class*="text-cyan-"],
-        [class*="text-brand-"] {
-            color: #374151 !important;
-        }
-
-        [class*="bg-rose-"],
-        [class*="bg-amber-"],
-        [class*="bg-cyan-"],
-        [class*="bg-brand-"] {
-            background-color: rgba(55, 65, 81, 0.1) !important;
-        }
-
-        [class*="border-rose-"],
-        [class*="border-amber-"],
-        [class*="border-cyan-"],
-        [class*="border-brand-"] {
-            border-color: rgba(75, 85, 99, 0.35) !important;
+        @media (prefers-reduced-motion: no-preference) {
+            .reveal { animation: reveal 0.7s ease both; }
+            .reveal-delay { animation-delay: 0.12s; }
+            @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
         }
     </style>
 </head>
-<body class="bg-[#ece9e1] text-slate-800 antialiased selection:bg-zinc-400/35 selection:text-slate-900">
-    <div id="scroll-progress" aria-hidden="true"><div id="scroll-progress-bar"></div></div>
-
+<body class="antialiased selection:bg-slate-500/20 selection:text-slate-900">
     <div class="header-fade-container"></div>
-    <!-- Header / Navigation -->
-    <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <a href="./index.html" class="flex items-center gap-3 group">
-                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
+
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
+        <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <a href="./index.html" class="flex items-center gap-3">
+                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" class="h-10 w-10 rounded-full object-cover">
                 <div>
-                    <span class="text-slate-900 font-bold text-lg tracking-wider">K-WAVE MISSION</span>
-                    <p class="text-slate-600 text-xs">하나님 나라를 위한 한류</p>
+                    <span class="text-lg font-bold tracking-wider text-slate-900">K-WAVE MISSION</span>
+                    <p class="text-xs text-slate-600">하나님 나라를 위한 한류</p>
                 </div>
             </a>
-
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
+            <nav class="hidden items-center gap-8 text-sm font-medium md:flex">
                 <a href="./index.html#hero" class="brand-link">소개</a>
                 <a href="./index.html#about" class="brand-link">사역</a>
                 <a href="./index.html#programs" class="brand-link">프로그램</a>
                 <a href="./index.html#news" class="brand-link">리포트</a>
-                <button type="button" onclick="openKWaveDrawer()" class="brand-link text-left cursor-pointer">K-Wave</button>
-                <a href="./k-alliance.html" class="brand-link">K-Alliance</a>
+                <button type="button" onclick="openKWaveDrawer()" class="brand-link">K-Wave</button>
+                <a href="./k-alliance.html" class="font-semibold text-slate-900">K-Alliance</a>
             </nav>
-
-            <!-- Mobile Menu Toggle Button (44px+ touch target) -->
-            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl">
-                <i data-lucide="menu" class="w-6 h-6"></i>
+            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="flex min-h-11 min-w-11 items-center justify-center rounded-xl text-slate-700 md:hidden">
+                <i data-lucide="menu" class="h-6 w-6"></i>
             </button>
-
-            <!-- Mobile Nav Dropdown -->
-            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea]/95 backdrop-blur-xl border-b border-slate-800/20 px-6 py-5 space-y-1.5 text-right font-medium text-slate-800 shadow-2xl z-50 rounded-b-2xl">
-                <a href="./index.html#hero" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">소개</a>
-                <a href="./index.html#about" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">사역</a>
-                <a href="./index.html#programs" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">프로그램</a>
-                <a href="./index.html#news" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">리포트</a>
-                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="mobile-menu-item block w-full brand-link text-right min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors">K-Wave</button>
-                <a href="./k-alliance.html" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">K-Alliance</a>
+            <div id="mobile-menu" class="absolute left-0 top-full hidden w-full space-y-1 border-b border-slate-800/20 bg-[#f2f0ea]/95 px-6 py-5 text-right font-medium text-slate-800 shadow-xl backdrop-blur-xl md:hidden">
+                <a href="./index.html#hero" class="mobile-menu-item block min-h-11 rounded-xl px-4 py-2.5">소개</a>
+                <a href="./index.html#about" class="mobile-menu-item block min-h-11 rounded-xl px-4 py-2.5">사역</a>
+                <a href="./index.html#programs" class="mobile-menu-item block min-h-11 rounded-xl px-4 py-2.5">프로그램</a>
+                <a href="./index.html#news" class="mobile-menu-item block min-h-11 rounded-xl px-4 py-2.5">리포트</a>
+                <button type="button" onclick="openKWaveDrawer(); document.getElementById('mobile-menu').classList.add('hidden');" class="block min-h-11 w-full rounded-xl px-4 py-2.5 text-right">K-Wave</button>
+                <a href="./k-alliance.html" class="block min-h-11 rounded-xl px-4 py-2.5 font-semibold">K-Alliance</a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main>
-
-        <!-- 1. Hero Section -->
-        <section id="donate-hero" class="hero-section pt-32 pb-16 md:pt-48 md:pb-32 text-slate-900 relative overflow-hidden">
-            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-                <div class="section-badge brand-badge inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs sm:text-sm font-medium mb-6 sm:mb-8 backdrop-blur-md">
-                    <span class="w-2 h-2 rounded-full bg-brand-300"></span>
-                    <span>K-Alliance Membership</span>
+        <section class="relative isolate flex min-h-[82vh] items-center overflow-hidden px-4 pb-24 pt-36 sm:px-6 lg:px-8">
+            <div class="alliance-grid absolute inset-0 -z-10"></div>
+            <div class="mx-auto w-full max-w-6xl">
+                <div class="max-w-4xl reveal">
+                    <p class="mono mb-7 text-xs font-semibold uppercase text-slate-600">K-ALLIANCE MEMBERSHIP</p>
+                    <h1 class="serif text-5xl font-bold leading-[1.18] tracking-tight text-slate-950 sm:text-7xl lg:text-[6.5rem]">Beyond the Wave,<br><span class="text-slate-600">Into the Kingdom</span></h1>
+                    <p class="mt-9 max-w-2xl break-keep text-lg leading-relaxed text-slate-700 sm:text-xl">K-Alliance는 하나님께서 주신 K-Culture의 흐름 속에 복음의 씨앗을 심고,<br class="hidden sm:block"> 현지 리더를 세우는 K-Wave Mission의 특별한 동역 멤버십입니다.</p>
+                    <div class="mt-10 flex flex-wrap gap-x-7 gap-y-3 text-sm font-semibold text-slate-800">
+                        <a href="#spirit" class="border-b border-slate-800 pb-1">선교적 주체되기 <span aria-hidden="true">↘</span></a>
+                        <a href="#community" class="border-b border-slate-800 pb-1">커뮤니티 보기 <span aria-hidden="true">↘</span></a>
+                    </div>
                 </div>
-                
-                <h1 class="hero-title text-2xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-snug sm:leading-[1.3] lg:leading-[1.3] mb-6 sm:mb-8 text-black break-keep">
-                    Beyond the Wave,<br>
-                    <span>Into the Kingdom</span>
-                </h1>
-                
-                <p class="text-base sm:text-xl text-slate-700 sm:text-slate-600 font-normal sm:font-light max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed">
-                    "K-Alliance는 하나님께서 주신 K-Culture의 흐름 속에 복음의 씨앗을 심고, 현지 리더를 세우는 K-Wave Mission의 특별한 동역 멤버십입니다."                    
-                </p>
+                <div class="mt-20 flex items-end justify-between border-t border-slate-900/20 pt-5 text-xs text-slate-600 reveal reveal-delay"><span class="mono">01 / MEMBERSHIP</span><span class="hidden sm:block">삶의 자리에서 시작하는 동역</span></div>
+            </div>
+        </section>
 
-                <!-- Quick Action Buttons -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 sm:gap-4 w-full px-2 sm:px-4 max-w-md mx-auto">
-                    <a href="#bank-details" class="btn-primary no-shadow w-full sm:w-auto px-8 py-3.5 text-base font-semibold min-h-[48px]">
-                        <span>계좌 후원 안내</span>
-                        <i data-lucide="arrow-down" class="w-5 h-5"></i>
-                    </a>
-                    <a href="#partnership-options" class="btn-secondary w-full sm:w-auto px-8 py-3.5 text-base font-semibold min-h-[48px]" style="background: transparent;">
-                        <span>동역 유형 선택</span>
-                        <i data-lucide="layers" class="w-5 h-5"></i>
-                    </a>
+        <section id="spirit" class="section-rule px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+            <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.5fr] lg:gap-24">
+                <div><p class="mono text-xs font-semibold text-slate-600">02 / K-ALLIANCE SPIRIT</p><h2 class="serif mt-5 text-3xl font-bold leading-snug sm:text-4xl">우리의 고백과 헌신</h2></div>
+                <div class="max-w-2xl break-keep text-lg leading-[2] text-slate-700 sm:text-xl"><p>우리는 개혁주의적 기독교 세계관을 가진 하나님 나라의 백성으로서 사도신경을 우리의 신앙으로 고백합니다.</p><p class="mt-8">또한, 세계 공동체의 일원으로서 자유민주주의를 수호하며, 성경적 인류애를 바탕으로 하나님 나라의 확장과 영혼 구원의 일이 우리의 사명임을 깨닫고 이를 위해 헌신합니다.</p></div>
+            </div>
+        </section>
+
+        <section id="resources" class="section-rule px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+            <div class="mx-auto max-w-6xl">
+                <div class="max-w-2xl"><p class="mono text-xs font-semibold text-slate-600">03 / K-ALLIANCE RESOURCES</p><h2 class="serif mt-5 text-3xl font-bold leading-snug sm:text-4xl">우리가 사용하는 자원들</h2><p class="mt-6 break-keep text-base leading-relaxed text-slate-700 sm:text-lg">선교는 도와주어야 하는 일이 아니라 우리가 함께 해야 할 하나님께서 주신 우아하고 역동적인 사역입니다.</p></div>
+                <div class="mt-14">
+                    <article class="resource-item grid gap-6 py-8 sm:grid-cols-[8rem_1fr_1.2fr] sm:items-start sm:gap-10"><strong class="mono text-4xl font-normal text-slate-900">40%</strong><h3 class="serif text-2xl font-bold">거점센터 개척 &amp; 인프라 구축</h3><div class="break-keep text-sm leading-relaxed text-slate-600"><p>거점 센터 개척, 센터 운영/관리, 사역 인프라 구축, 선교사 활동비 등에 배정됩니다.</p><p class="mt-3 font-semibold text-slate-800">자주적이고 능동적인 사역을 위한 시스템 구축</p></div></article>
+                    <article class="resource-item grid gap-6 py-8 sm:grid-cols-[8rem_1fr_1.2fr] sm:items-start sm:gap-10"><strong class="mono text-4xl font-normal text-slate-900">30%</strong><h3 class="serif text-2xl font-bold">공동체 인큐베이팅 &amp; 리더 양성</h3><div class="break-keep text-sm leading-relaxed text-slate-600"><p>현지 크리스천 청년들의 장학금 지원, 기독 동아리 인큐베이팅, 미래 사회의 지도자 훈련에 전액 투입됩니다.</p><p class="mt-3 font-semibold text-slate-800">선교 현지 주요 대학 거점센터 활동 목적</p></div></article>
+                    <article class="resource-item grid gap-6 py-8 sm:grid-cols-[8rem_1fr_1.2fr] sm:items-start sm:gap-10"><strong class="mono text-4xl font-normal text-slate-900">30%</strong><h3 class="serif text-2xl font-bold">선교 플랫폼 &amp; 교육 사역</h3><div class="break-keep text-sm leading-relaxed text-slate-600"><p>한국어·문화 교육 플랫폼 운영, 교재 개발, 핍박받는 교회 지원 사역에 쓰입니다.</p><p class="mt-3 font-semibold text-slate-800">맞춤형 K-Culture 미션 커리큘럼 개발</p></div></article>
                 </div>
             </div>
         </section>
 
-        <!-- 2. Impact Dashboard Section (Visualizing the Cause) -->
-        <section id="impact-dashboard" class="py-12 sm:py-20 border-t border-black/10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <!-- Section Header -->
-                <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
-                    <span class="font-mono text-xs text-slate-600 font-bold uppercase tracking-widest block mb-2">[ TRANSPARENT IMPACT ]</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-                        우리가 함께 하는 일들
-                    </h2>
-                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
-                        선교는 도와줘야 하는 일이 아니라 우리가 함께 해야 할 하나님께서 주신 우아하고 역동적인 일입니다.
-                    </p>
-                </div>
-
-                <!-- Impact Metrics Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-12 sm:mb-16">
-                    <div class="bg-white/80 border border-black/15 p-5 sm:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xs">
-                        <span class="block font-mono text-3xl sm:text-5xl font-extrabold text-slate-900 mb-2">100+</span>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700">현지 청년 장학 지원</span>
-                    </div>
-                    <div class="bg-white/80 border border-black/15 p-5 sm:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xs">
-                        <span class="block font-mono text-3xl sm:text-5xl font-extrabold text-slate-900 mb-2">15+</span>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700">글로벌 선교 센터</span>
-                    </div>
-                    <div class="bg-white/80 border border-black/15 p-5 sm:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xs">
-                        <span class="block font-mono text-3xl sm:text-5xl font-extrabold text-slate-900 mb-2">12년</span>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700">지속 가능한 사역 축적</span>
-                    </div>
-                    <div class="bg-white/80 border border-black/15 p-5 sm:p-8 rounded-2xl sm:rounded-3xl text-center shadow-xs">
-                        <span class="block font-mono text-3xl sm:text-5xl font-extrabold text-slate-900 mb-2">100%</span>
-                        <span class="text-xs sm:text-sm font-semibold text-slate-700">투명한 재정 공시</span>
-                    </div>
-                </div>
-
-                <!-- Impact Allocation Breakdown Cards -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                    <!-- Card 1 -->
-                    <div class="bg-white/70 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="w-10 h-10 rounded-xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center text-slate-800">
-                                    <i data-lucide="graduation-cap" class="w-5 h-5"></i>
-                                </span>
-                                <span class="font-mono text-xs font-bold text-slate-600 bg-slate-200/80 px-2.5 py-1 rounded-full">40% 예산</span>
-                            </div>
-                            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">고등교육 & 리더 양성</h3>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal mb-4">
-                                현지 크리스천 청년들의 대학 장학금 지원, 성경적 세계관 교육, 미래 사회의 지도자 훈련에 전액 투입됩니다.
-                            </p>
-                        </div>
-                        <div class="pt-4 border-t border-black/10 flex items-center gap-2 text-xs font-semibold text-slate-700">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                            <span>인도네시아 주요 대학 연계</span>
-                        </div>
-                    </div>
-
-                    <!-- Card 2 -->
-                    <div class="bg-white/70 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="w-10 h-10 rounded-xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center text-slate-800">
-                                    <i data-lucide="book-open" class="w-5 h-5"></i>
-                                </span>
-                                <span class="font-mono text-xs font-bold text-slate-600 bg-slate-200/80 px-2.5 py-1 rounded-full">35% 예산</span>
-                            </div>
-                            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">선교 플랫폼 & 교육 사역</h3>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal mb-4">
-                                한국어·문화 교육 플랫폼 운영, 교재 개발, 오지 현지교회 네트워크 지원 사역에 쓰입니다.
-                            </p>
-                        </div>
-                        <div class="pt-4 border-t border-black/10 flex items-center gap-2 text-xs font-semibold text-slate-700">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                            <span>맞춤형 K-Culture 미션 커리큘럼</span>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="bg-white/70 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-8 flex flex-col justify-between">
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="w-10 h-10 rounded-xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center text-slate-800">
-                                    <i data-lucide="globe-2" class="w-5 h-5"></i>
-                                </span>
-                                <span class="font-mono text-xs font-bold text-slate-600 bg-slate-200/80 px-2.5 py-1 rounded-full">25% 예산</span>
-                            </div>
-                            <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2">현지 대학 거점센터 & 현장 인프라</h3>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal mb-4">
-                                거점 센터 개척, 센터 운영/관리, 사역 인프라 구축, 선교사 활동비 등에 배정됩니다.
-                            </p>
-                        </div>
-                        <div class="pt-4 border-t border-black/10 flex items-center gap-2 text-xs font-semibold text-slate-700">
-                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
-                            <span>지속 가능한 사역을 위한 시스템 구축</span>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+        <section id="community" class="section-rule px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+            <div class="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[0.8fr_1.5fr] lg:gap-24"><div><p class="mono text-xs font-semibold text-slate-600">04 / COMMUNITY OF FAITH</p><h2 class="serif mt-5 text-3xl font-bold leading-snug sm:text-4xl">우리가 함께 나누는<br>사역의 열매들</h2></div><ul class="divide-y divide-slate-900/15 border-y border-slate-900/15 text-base text-slate-700 sm:text-lg"><li class="py-5">케이웨이브 미션 홈페이지 동역 멤버십 배너 등록</li><li class="py-5">연 1회 K-Alliance Networking Day 초청</li><li class="py-5">동역 교회 청년 대상 타문화권 선교 캠프 2인 숙박비 지원</li><li class="py-5">작은 교회 목회자, 선교담당자 대상 타문화권 선교 워크샵 지원</li><li class="py-5">격년 케이웨이브 미션 선교 현장 동역자대회 초청</li></ul></div>
         </section>
 
-        <!-- 3. Partnership Options (Multi-Tier Action Tabs/Cards) -->
-        <section id="partnership-options" class="py-12 sm:py-20 border-t border-black/10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <!-- Section Header -->
-                <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
-                    <span class="font-mono text-xs text-slate-600 font-bold uppercase tracking-widest block mb-2">[ WAYS TO PARTNER ]</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-                        동역하는 3가지 방법
-                    </h2>
-                    <p class="text-slate-700 text-sm sm:text-base leading-relaxed">
-                        재정, 기도, 그리고 도메인 지식과 전문성을 통하여 다양한 모양으로 선교에 참여하실 수 있습니다.
-                    </p>
+        <section id="roles" class="section-rule px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+            <div class="mx-auto max-w-6xl"><p class="mono text-xs font-semibold text-slate-600">05 / YOUR ROLE FOR THE KINGDOM</p><div class="mt-5 flex flex-col justify-between gap-6 sm:flex-row sm:items-end"><h2 class="serif text-3xl font-bold leading-snug sm:text-4xl">우리가 함께 하는 사역들</h2><p class="max-w-sm break-keep text-sm leading-relaxed text-slate-600">선교적 주체로 살아가는 방식은 하나가 아닙니다. 각자의 자리에서 시작할 수 있습니다.</p></div>
+                <div class="mt-14 grid gap-x-10 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+                    <article class="role-item pl-5"><span class="mono text-xs text-slate-500">01</span><h3 class="serif mt-4 text-xl font-bold">기도로 동역하기</h3><p class="mt-3 break-keep text-sm leading-relaxed text-slate-600">주간 미션 리포트 구독하고 기도 멤버십으로 동역하기</p></article>
+                    <article class="role-item pl-5"><span class="mono text-xs text-slate-500">02</span><h3 class="serif mt-4 text-xl font-bold">재정 멤버십으로 동역하기</h3><p class="mt-3 break-keep text-sm leading-relaxed text-slate-600">1구좌 5만 원 매월 정기 재정 멤버십으로 동역하기<br><br>장학금, 현지 교회 지원금, 거점 센터 개척 등을 위한 비정기 재정 멤버십으로 동역하기</p></article>
+                    <article class="role-item pl-5"><span class="mono text-xs text-slate-500">03</span><h3 class="serif mt-4 text-xl font-bold">공동체로 동역하기</h3><p class="mt-3 break-keep text-sm leading-relaxed text-slate-600">1교회 1캠퍼스 품기 캠페인에 참여하여 고등교육선교에 참여하는 교회되기<br><br>은혜로운 한국 생활 호스트 패밀리로 한국인의 정으로 하나님의 사랑을 전하기</p></article>
+                    <article class="role-item pl-5"><span class="mono text-xs text-slate-500">04</span><h3 class="serif mt-4 text-xl font-bold">전문성과 거버넌스로 동역하기</h3><p class="mt-3 break-keep text-sm leading-relaxed text-slate-600">평생의 한 달 내가 가진 지식으로 선교현장에서 선교적 주체로 살아보기<br><br>현지 대학교 한국어강사/센터장으로 장단기 선교사되기<br><br>케이웨이브 미션 법인/운영 이사회에 참여하여 거버넌스 멤버십으로 동역하기</p></article>
                 </div>
-
-                <!-- Tab Navigation Buttons -->
-                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12">
-                    <button type="button" onclick="switchTab('financial')" id="tab-btn-financial"
-                            class="donate-tab-btn active px-5 py-3 rounded-full text-xs sm:text-sm font-bold border border-slate-300 min-h-[44px]">
-                        재정 후원 (Financial)
-                    </button>
-                    <button type="button" onclick="switchTab('prayer')" id="tab-btn-prayer"
-                            class="donate-tab-btn px-5 py-3 rounded-full text-xs sm:text-sm font-bold border border-slate-300 min-h-[44px]">
-                        기도 동역 (Prayer)
-                    </button>
-                    <button type="button" onclick="switchTab('talent')" id="tab-btn-talent"
-                            class="donate-tab-btn px-5 py-3 rounded-full text-xs sm:text-sm font-bold border border-slate-300 min-h-[44px]">
-                        지식 나누기 (Talent Share)
-                    </button>
-                </div>
-
-                <!-- Tab Content 1: Financial Support -->
-                <div id="tab-content-financial" class="donate-tab-content space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Option 1A -->
-                        <div class="bg-white/80 border border-black/15 rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-                            <div>
-                                <span class="font-mono text-xs text-slate-500 font-bold uppercase tracking-wider block mb-2">REGULAR GIVING</span>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">정기 후원</h3>
-                                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-6 font-normal">
-                                    매월 지속적으로 고등교육선교 및 현지 장학생을 지원하는 가장 안정적인 동역 방법입니다.
-                                </p>
-                            </div>
-                            <button type="button" onclick="openMdModal('contact-us')" class="btn-primary no-shadow w-full py-3 text-xs font-bold min-h-[44px]">
-                                정기후원 신청하기 <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-
-                        <!-- Option 1B -->
-                        <div class="bg-white/80 border border-black/15 rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-                            <div>
-                                <span class="font-mono text-xs text-slate-500 font-bold uppercase tracking-wider block mb-2">ONE-TIME GIFT</span>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">일시 후원</h3>
-                                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-6 font-normal">
-                                    사역 현장의 특별 프로젝트나 긴급 지원이 필요할 때 자유롭게 참여하실 수 있는 후원입니다.
-                                </p>
-                            </div>
-                            <a href="#bank-details" class="btn-secondary w-full py-3 text-xs font-bold min-h-[44px] text-center justify-center">
-                                계좌 정보 확인 <i data-lucide="credit-card" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-
-                        <!-- Option 1C -->
-                        <div class="bg-white/80 border border-black/15 rounded-2xl p-6 sm:p-8 flex flex-col justify-between">
-                            <div>
-                                <span class="font-mono text-xs text-slate-500 font-bold uppercase tracking-wider block mb-2">DESIGNATED PROJECT</span>
-                                <h3 class="text-xl font-bold text-slate-900 mb-3">지정 사역 후원</h3>
-                                <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-6 font-normal">
-                                    특정 현지 교회 지원, 유학생 장학금, 교육 교재 제작 등 원하는 사역을 지정하여 후원합니다.
-                                </p>
-                            </div>
-                            <button type="button" onclick="openMdModal('contact-us')" class="btn-consult w-full py-3 text-xs font-bold min-h-[44px]">
-                                지정 사역 문의 <i data-lucide="message-square" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab Content 2: Prayer Partnership -->
-                <div id="tab-content-prayer" class="donate-tab-content hidden space-y-6">
-                    <div class="bg-white/80 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto text-center space-y-6">
-                        <span class="w-12 h-12 rounded-2xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center mx-auto text-slate-800">
-                            <i data-lucide="heart-handshake" class="w-6 h-6"></i>
-                        </span>
-                        <h3 class="text-2xl font-bold text-slate-900">기도로 함께 세우는 사역</h3>
-                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-lg mx-auto font-normal">
-                            선교 현장의 승리는 기도에서 시작됩니다. 매주 발행되는 K-Wave Mission의 사역 현장 기도제목과 소식을 받아보시고 기도로 함께해주세요.
-                        </p>
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-                            <button type="button" onclick="openMdModal('contact-us')" class="btn-primary no-shadow w-full sm:w-auto px-6 py-3.5 text-xs font-bold min-h-[44px]">
-                                주간 기도제목 구독하기 <i data-lucide="mail" class="w-4 h-4"></i>
-                            </button>
-                            <a href="https://pf.kakao.com" target="_blank" class="btn-consult w-full sm:w-auto px-6 py-3.5 text-xs font-bold min-h-[44px]">
-                                카카오톡 채널 추가 <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tab Content 3: Talent & Expertise Donation -->
-                <div id="tab-content-talent" class="donate-tab-content hidden space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-white/80 border border-black/15 rounded-2xl p-6 sm:p-8 space-y-4">
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                <i data-lucide="code-2" class="w-5 h-5 text-slate-800"></i>
-                                <span>IT & IT 미디어 기부</span>
-                            </h3>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-                                웹 사이트 개발, 디자인, 영상 편집, 미디어 콘텐츠 제작을 통하여 선교 플랫폼을 함께 구축해 나갑니다.
-                            </p>
-                        </div>
-
-                        <div class="bg-white/80 border border-black/15 rounded-2xl p-6 sm:p-8 space-y-4">
-                            <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
-                                <i data-lucide="languages" class="w-5 h-5 text-slate-800"></i>
-                                <span>교육 & 번역 봉사</span>
-                            </h3>
-                            <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-                                온라인 한국어/한국문화 강사, 도메인 지식 등으로 현지 청년들을 위한 전문성 멘토링 봉사로 동역합니다.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="text-center pt-4">
-                        <button type="button" onclick="openMdModal('contact-us')" class="btn-primary no-shadow px-8 py-3.5 text-xs font-bold min-h-[44px]">
-                            지식 나누기 신청 및 문의 <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-                </div>
-
             </div>
         </section>
-
-        <!-- 4. Interactive Payment & Bank Account Section -->
-        <section id="bank-details" class="py-12 sm:py-20 border-t border-black/10">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <div class="bg-white border-2 border-slate-800 p-6 sm:p-12 rounded-3xl shadow-xl relative overflow-hidden text-center space-y-6">
-                    
-                    <span class="font-mono text-xs text-slate-600 font-bold uppercase tracking-widest block">[ BANK TRANSFER DETAILS ]</span>
-                    
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                        후원 계좌 안내
-                    </h2>
-                    
-                    <p class="text-slate-700 text-sm leading-relaxed max-w-lg mx-auto">
-                        아래 공식 계좌로 입금해 주시면, 소중한 후원금이 K-Wave Mission의 하나님 나라 확장 사역에 직접 쓰입니다.
-                    </p>
-
-                    <!-- Main Account Card Display -->
-                    <div class="bg-[#ece9e1] border border-slate-300 p-6 sm:p-8 rounded-2xl max-w-xl mx-auto space-y-4 text-left">
-                        <div class="flex items-center justify-between border-b border-slate-300 pb-3">
-                            <span class="text-xs font-semibold text-slate-600">은행명</span>
-                            <span class="text-base sm:text-lg font-bold text-slate-900">국민은행 (Kookmin Bank)</span>
-                        </div>
-                        
-                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-300 pb-3">
-                            <span class="text-xs font-semibold text-slate-600">계좌번호</span>
-                            <div class="flex items-center gap-3">
-                                <span class="font-mono text-lg sm:text-2xl font-extrabold text-slate-900 tracking-wide" id="account-number-text">233001-04-416923</span>
-                                <button type="button" onclick="copyAccountNumber('23300104416923')"
-                                        class="px-3 py-1.5 rounded-lg bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition-colors flex items-center gap-1.5 min-h-[38px]">
-                                    <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-                                    <span>복사</span>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-between border-b border-slate-300 pb-3">
-                            <span class="text-xs font-semibold text-slate-600">예금주</span>
-                            <span class="text-sm sm:text-base font-bold text-slate-900">케이웨이브 미션 (K-Wave Mission)</span>
-                        </div>
-
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-semibold text-slate-600">고유번호 (사업자번호)</span>
-                            <span class="font-mono text-xs sm:text-sm font-bold text-slate-800">106-82-76139</span>
-                        </div>
-                    </div>
-
-                    <!-- Online CMS Button -->
-                    <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <button type="button" onclick="openMdModal('contact-us')" class="btn-primary no-shadow w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold min-h-[48px]">
-                            <span>온라인 정기후원 신청 (CMS)</span>
-                            <i data-lucide="external-link" class="w-4 h-4"></i>
-                        </button>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
-        <!-- 5. Trust, Transparency & Tax Benefits Section -->
-        <section id="transparency" class="py-12 sm:py-20 border-t border-black/10">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    
-                    <!-- Tax Receipt Info -->
-                    <div class="bg-white/80 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-10 space-y-4">
-                        <span class="w-10 h-10 rounded-xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center text-slate-800 mb-2">
-                            <i data-lucide="receipt" class="w-5 h-5"></i>
-                        </span>
-                        <h3 class="text-xl font-bold text-slate-900">기부금 영수증 발급 안내</h3>
-                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-                            K-Wave Mission은 선교사 공동 모금 기관인 미션 펀드(Mission Fund)를 통해 후원하시면 연말정산 기부금 영수증 발급을 발급 받으실 수 있습니다. 후원해 주신 소중한 금액은 소득세법에 의해 세액공제 혜택을 받으실 수 있습니다.
-                        </p>
-                        <ul class="text-xs text-slate-700 space-y-2 pt-2 font-medium">
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-slate-800 shrink-0"></i>
-                                <span>국세청 연말정산 간소화 서비스 자동 등록 가능</span>
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-slate-800 shrink-0"></i>
-                                <span>개인: 소득금액의 30% 한도 내 세액공제</span>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Financial Transparency & Reports -->
-                    <div class="bg-white/80 border border-black/15 rounded-2xl sm:rounded-3xl p-6 sm:p-10 space-y-4">
-                        <span class="w-10 h-10 rounded-xl bg-slate-900/10 border border-slate-900/20 flex items-center justify-center text-slate-800 mb-2">
-                            <i data-lucide="shield-check" class="w-5 h-5"></i>
-                        </span>
-                        <h3 class="text-xl font-bold text-slate-900">투명성 및 결산 공시</h3>
-                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed font-normal">
-                            모든 모금액과 집행 내역은 매년 정기 결산 보고를 통해 홈페이지에 투명하게 공개되며, 외부 회계 검증 가이드라인을 준수합니다.
-                        </p>
-                        <div class="pt-4">
-                            <button type="button" onclick="openMdModal('contact-us')" class="btn-consult w-full sm:w-auto px-6 py-3 text-xs font-bold min-h-[44px]">
-                                결산 리포트 및 문서 신청 <i data-lucide="file-text" class="w-4 h-4"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </section>
-
     </main>
 
-    <!-- Minimalist Unified Footer -->
-    <footer class="bg-[#ece9e1] py-12 sm:py-16 relative overflow-hidden border-t border-black/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
-            <!-- 사명 재확인 -->
-            <p class="font-mono text-xs sm:text-sm text-slate-600 font-semibold uppercase tracking-[0.16em] sm:tracking-[0.2em] mb-4 sm:mb-5 max-w-xl mx-auto leading-relaxed">
-                Since 2011, Connecting South Korea and Indonesia
-            </p>
-
-            <!-- 정책 및 안내 링크 -->
-            <div class="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-1.5 gap-y-1 text-xs text-slate-600 mb-5 sm:mb-6 max-w-full">
-                <button type="button" onclick="openMdModal('terms')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Terms of Use</button>
-                <span class="text-slate-400/60 select-none" aria-hidden="true">|</span>
-                <button type="button" onclick="openMdModal('privacy')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Privacy Policy</button>
-                <span class="text-slate-400/60 select-none" aria-hidden="true">|</span>
-                <button type="button" onclick="openMdModal('contact-us')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Contact Us</button>
-            </div>
-
-            <!-- Copyright -->
-            <p class="font-mono text-[11px] sm:text-xs text-slate-600 tracking-wider sm:tracking-widest">
-                © 2026 K-WAVE MISSION. All rights reserved.
-            </p>
-        </div>
+    <footer class="border-t border-slate-900/15 px-4 py-12 text-center sm:px-6 sm:py-16">
+        <p class="mono text-xs font-semibold uppercase tracking-[0.16em] text-slate-600 sm:text-sm">Not as a Donor, but as a Partner.</p>
+        <p class="serif mx-auto mt-6 max-w-2xl break-keep text-2xl font-bold leading-relaxed text-slate-900 sm:text-3xl">삶의 자리에서 선교적 주체로,<br>후원이 아닌 동역으로</p>
+        <p class="mono mx-auto mt-8 max-w-xl text-xs font-semibold leading-relaxed tracking-[0.12em] text-slate-600">SINCE 2011, CONNECTING SOUTH KOREA AND INDONESIA</p>
+        <nav aria-label="사이트 안내" class="mt-5 flex flex-wrap items-center justify-center gap-x-1.5 gap-y-1 text-xs text-slate-600">
+            <button type="button" onclick="openMdModal('terms')" class="min-h-9 px-2.5 py-1 font-medium transition-colors hover:text-slate-900">Terms of Use</button>
+            <span class="text-slate-500/60" aria-hidden="true">|</span>
+            <button type="button" onclick="openMdModal('privacy')" class="min-h-9 px-2.5 py-1 font-medium transition-colors hover:text-slate-900">Privacy Policy</button>
+            <span class="text-slate-500/60" aria-hidden="true">|</span>
+            <button type="button" onclick="openMdModal('contact-us')" class="min-h-9 px-2.5 py-1 font-medium transition-colors hover:text-slate-900">Contact Us</button>
+        </nav>
+        <p class="mono mt-6 text-[11px] tracking-wider text-slate-600">© 2026 K-WAVE MISSION. All rights reserved.</p>
     </footer>
 
-    <!-- Markdown Modal -->
-    <div id="md-modal" class="modal-root fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4">
-        <div class="modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl shadow-2xl flex flex-col transition-all duration-200">
-            <!-- 모달 고정 상단 헤더 -->
-            <div class="relative shrink-0 px-6 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-slate-100 bg-white">
-                <button type="button" onclick="closeMdModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-transparent hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors p-2 rounded-xl flex items-center justify-center cursor-pointer z-10 min-w-[40px] min-h-[40px]">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-                <div class="flex items-center gap-2 text-xs text-slate-500 font-medium mb-1 font-mono tracking-wide pr-10">
-                    <span id="md-modal-badge" class="px-2.5 py-1 rounded-md bg-slate-100/90 text-slate-700 border border-slate-200/80 font-bold font-mono text-[11px] sm:text-xs tracking-tight">안내</span>
-                    <span class="text-slate-300 font-mono">•</span>
-                    <span id="md-modal-subtitle" class="text-xs text-slate-500 font-mono">K-ALLIANCE</span>
-                </div>
-                <h2 id="md-modal-title" class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-900 pr-8 mt-2.5 sm:mt-3">안내</h2>
+    <div id="md-modal" class="modal-root fixed inset-0 z-50 hidden items-center justify-center bg-black/75 p-3 backdrop-blur-sm sm:p-4">
+        <div class="modal-panel relative flex max-h-[85vh] w-full max-w-xl flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white text-slate-900 shadow-2xl">
+            <div class="relative shrink-0 border-b border-slate-100 bg-white px-6 pb-4 pt-5 sm:px-8 sm:pb-5 sm:pt-7">
+                <button type="button" onclick="closeMdModal()" aria-label="닫기" class="absolute right-4 top-4 flex min-h-10 min-w-10 items-center justify-center rounded-xl p-2 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 sm:right-6 sm:top-6"><i data-lucide="x" class="h-5 w-5"></i></button>
+                <div class="mb-1 flex items-center gap-2 pr-10 font-mono text-xs tracking-wide text-slate-500"><span id="md-modal-badge" class="rounded-md border border-slate-200/80 bg-slate-100/90 px-2.5 py-1 text-[11px] font-bold tracking-tight text-slate-700">안내</span><span class="text-slate-300">•</span><span id="md-modal-subtitle">K-WAVE MISSION</span></div>
+                <h2 id="md-modal-title" class="serif mt-2.5 pr-8 text-lg font-bold leading-snug text-slate-900 sm:text-2xl">안내</h2>
             </div>
-            <!-- 모달 스크롤 본문 (마크다운 파싱 결과) -->
-            <div id="md-modal-content" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base text-slate-800 leading-relaxed space-y-4 bg-white font-sans"></div>
-            <!-- 모달 고정 하단 푸터 -->
-            <div class="shrink-0 flex items-center justify-between border-t border-slate-100 px-6 sm:px-8 py-3.5 sm:py-4 bg-white gap-3 font-sans">
-                <button type="button" onclick="shareCurrentMdModal()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2 min-h-[40px] bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 text-xs font-semibold rounded-xl transition-all shadow-2xs cursor-pointer">
-                    <i data-lucide="link-2" class="w-4 h-4 text-slate-600"></i> <span>링크 공유</span>
-                </button>
-                <button type="button" onclick="closeMdModal()" class="btn-close-footer flex items-center justify-center px-5 py-2 min-h-[40px] bg-slate-100 hover:bg-slate-200 border border-slate-200/70 text-slate-800 text-xs font-semibold rounded-xl transition-all cursor-pointer">닫기</button>
-            </div>
+            <div id="md-modal-content" class="no-scrollbar min-h-0 flex-1 overflow-y-auto px-6 py-5 text-sm leading-relaxed text-slate-800 sm:px-8 sm:py-6 sm:text-base"></div>
+            <div class="flex shrink-0 items-center justify-end border-t border-slate-100 bg-white px-6 py-3.5 sm:px-8 sm:py-4"><button type="button" onclick="closeMdModal()" class="min-h-10 rounded-xl border border-slate-200/70 bg-slate-100 px-5 py-2 text-xs font-semibold text-slate-800 transition-colors hover:bg-slate-200">닫기</button></div>
         </div>
     </div>
 
-    <!-- JavaScript logic -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-
-            // Mobile menu toggle
+            if (window.lucide) window.lucide.createIcons();
             const menuToggle = document.getElementById('menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
-            if (menuToggle && mobileMenu) {
-                menuToggle.addEventListener('click', function () {
-                    mobileMenu.classList.toggle('hidden');
-                });
-            }
+            if (menuToggle && mobileMenu) menuToggle.addEventListener('click', function () { mobileMenu.classList.toggle('hidden'); });
         });
-
-        // Tab Switching function
-        function switchTab(tabId) {
-            const tabs = ['financial', 'prayer', 'talent'];
-            tabs.forEach(function (t) {
-                const btn = document.getElementById('tab-btn-' + t);
-                const content = document.getElementById('tab-content-' + t);
-                if (t === tabId) {
-                    if (btn) btn.classList.add('active');
-                    if (content) content.classList.remove('hidden');
-                } else {
-                    if (btn) btn.classList.remove('active');
-                    if (content) content.classList.add('hidden');
-                }
-            });
-            if (window.lucide) {
-                window.lucide.createIcons();
-            }
-        }
-
-        // Copy Account Number function with Toast feedback
-        function copyAccountNumber(accountNo) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(accountNo).then(showToast).catch(fallbackCopy);
-            } else {
-                fallbackCopy();
-            }
-
-            function fallbackCopy() {
-                const tempInput = document.createElement('input');
-                tempInput.value = accountNo;
-                document.body.appendChild(tempInput);
-                tempInput.select();
-                document.execCommand('copy');
-                document.body.removeChild(tempInput);
-                showToast();
-            }
-
-            function showToast() {
-                const toast = document.getElementById('toast-notification');
-                if (!toast) return;
-                toast.classList.add('show');
-                setTimeout(function () {
-                    toast.classList.remove('show');
-                }, 3000);
-            }
-        }
     </script>
-
-    <!-- JS dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js" defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
     <script src="./assets/js/api-service.js" defer></script>
     <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
     <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>
     <script src="./assets/js/kwave-drawer.js?v=20260818-bookmark-toggle-v2" defer></script>
-    <script src="./assets/js/app-init.js?v=20260818-scroll-fix" defer></script>
 </body>
 </html>

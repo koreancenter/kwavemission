@@ -39,10 +39,10 @@ K-Wave Mission은 신뢰할 수 있는 학술 연구 기관 및 고등교육선�
 #### 1) 메인 포털 테마 (Public Portal Palette)
 
 * **기본 배경 (Warm Ivory Earth Base)**: `#ece9e1` (빛을 흡수하여 장시간 열람에도 눈이 편안한 미색 배경)
-* **표면 레이어 (Surface Soft & Glass)**: 
+* **표면 레이어 (Surface Soft & Glass)**:
   * 투명 레이어: `rgba(255, 255, 255, 0.92)`
   * 네비게이션 유리 가공: `rgba(242, 240, 234, 0.9)` + `backdrop-filter: blur(8px)`
-* **핵심 그레이스케일**: 
+* **핵심 그레이스케일**:
   * 타이틀 및 강조 텍스트: `#111827` (Slate Dark)
   * 일반 본문 및 정보 텍스트: `#4b5563`
   * 서브 및 안내 텍스트: `#6b7280`
