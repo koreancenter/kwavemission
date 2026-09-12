@@ -25,14 +25,14 @@
 
         document.body.insertAdjacentHTML('beforeend', `
             <div id="kwave-drawer-backdrop" class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-sm opacity-0 will-change-[opacity]" aria-hidden="true"></div>
-            <div id="k-drawer" role="dialog" aria-modal="true" aria-label="Brand DNA 서랍" aria-hidden="true" class="fixed left-0 top-1/2 z-50 -translate-x-full will-change-transform pointer-events-none w-[79vw] min-w-[262px] max-w-[298px] sm:w-[298px] sm:max-w-[308px]">
+            <div id="k-drawer" class="fixed left-0 top-1/2 z-50 -translate-x-full will-change-transform pointer-events-none w-[79vw] min-w-[262px] max-w-[298px] sm:w-[298px] sm:max-w-[308px]">
                 <button id="kwave-tab-btn" type="button" data-kwave-drawer-toggle aria-label="Brand DNA 북마크 열기/닫기" aria-expanded="false" class="absolute left-full top-8 -translate-x-px z-50 bg-[#F6F4EF] text-slate-800 border-none px-2.5 py-2 sm:px-3 sm:py-2.5 rounded-none shadow-md transition-all duration-300 flex items-center justify-center cursor-pointer pointer-events-auto select-none hover:bg-stone-100">
                     <span class="font-serif font-bold text-slate-800 text-xs sm:text-sm leading-none">K</span>
                 </button>
                 
-                <div class="k-drawer-panel pointer-events-auto w-full bg-[#F6F4EF] border-none rounded-none shadow-2xl overflow-y-auto overflow-x-hidden">
+                <div class="k-drawer-panel" role="dialog" aria-modal="true" aria-label="Brand DNA 서랍" aria-hidden="true" class="pointer-events-auto w-full bg-[#F6F4EF] border-none rounded-none shadow-2xl overflow-y-auto overflow-x-hidden">
                     <div class="k-drawer-header">
-                        <span class="text-[10px] font-semibold tracking-widest uppercase text-stone-500 block leading-tight mb-1.5">BRAND DNA</span>
+                        <span class="text-[10px] font-semibold tracking-widest uppercase text-stone-600 block leading-tight mb-1.5">BRAND DNA</span>
                         <p class="text-lg sm:text-xl font-serif font-bold text-slate-900 tracking-tight leading-tight mt-0.5">우리의 K-Wave</p>
                     </div>
 
@@ -42,7 +42,7 @@
                             <span class="k-drawer-num">01</span>
                             <div class="k-drawer-info">
                                 <span class="k-tag-blue font-mono text-[10px] sm:text-[11px] font-bold tracking-wider uppercase block leading-none">SPIRITUAL IDENTITY</span>
-                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">King's <span class="text-stone-500 font-normal">Wave</span></p>
+                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">King's <span class="text-stone-600 font-normal">Wave</span></p>
                                 <p class="text-xs sm:text-sm font-medium text-slate-700 leading-snug">예수 그리스도의 왕 되심을 선포하며</p>
                             </div>
                         </div>
@@ -51,7 +51,7 @@
                             <span class="k-drawer-num">02</span>
                             <div class="k-drawer-info">
                                 <span class="k-tag-green font-mono text-[10px] sm:text-[11px] font-bold tracking-wider uppercase block leading-none">KINGDOM EXPANSION</span>
-                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">Kingdom's <span class="text-stone-500 font-normal">Wave</span></p>
+                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">Kingdom's <span class="text-stone-600 font-normal">Wave</span></p>
                                 <p class="text-xs sm:text-sm font-medium text-slate-700 leading-snug">하나님의 나라 확장에 헌신합니다.</p>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                             <span class="k-drawer-num">03</span>
                             <div class="k-drawer-info">
                                 <span class="k-tag-rose font-mono text-[10px] sm:text-[11px] font-bold tracking-wider uppercase block leading-none">MISSIONAL BRIDGE</span>
-                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">Korean <span class="text-stone-500 font-normal">Wave</span></p>
+                                <p class="k-drawer-item-title text-sm sm:text-base font-serif font-bold text-slate-900 leading-snug">Korean <span class="text-stone-600 font-normal">Wave</span></p>
                                 <p class="text-xs sm:text-sm font-medium text-slate-700 leading-snug">이 일을 위해 대한민국을 부르십니다.</p>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                     <div class="k-drawer-divider" aria-hidden="true"></div>
 
                     <div class="k-drawer-footer text-center">
-                        <div class="text-center text-[11px] sm:text-xs font-semibold tracking-wider text-stone-500 leading-none mb-2">
+                        <div class="text-center text-[11px] sm:text-xs font-semibold tracking-wider text-stone-600 leading-none mb-2">
                             <span>하박국 2:14</span>
                         </div>
                         <p class="text-xs sm:text-[13px] font-serif italic text-slate-800 leading-relaxed break-keep px-0.5">
@@ -198,7 +198,7 @@
             requestAnimationFrame(function () {
                 drawer.classList.remove('-translate-x-full');
                 drawer.classList.add('is-open');
-                drawer.setAttribute('aria-hidden', 'false');
+                drawer.querySelector('.k-drawer-panel').setAttribute('aria-hidden', 'false');
                 if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
                 if (backdrop) {
                     backdrop.classList.remove('opacity-0');
@@ -228,7 +228,7 @@
 
             clearTimeout(closeTimer);
 
-            drawer.setAttribute('aria-hidden', 'true');
+            drawer.querySelector('.k-drawer-panel').setAttribute('aria-hidden', 'true');
             if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
 
             if (backdrop) {

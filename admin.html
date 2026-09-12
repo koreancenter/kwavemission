@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>K-Wave Mission - 통합 관리자 Center</title>
+  <link rel="icon" href="/assets/images/favicon.ico">
+    <title>K-Wave Mission - 통합 관리자 Center</title>
   <meta name="description" content="K-Wave Mission 통합 관리자 센터 - 게시글, 고등교육선교 프로그램 및 사역 콘텐츠 관리 시스템">
   <meta name="robots" content="noindex, nofollow">
 
@@ -25,7 +26,8 @@
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
   </noscript>
 
-  <link rel="stylesheet" href="./assets/css/tailwind.admin.css?v=20260907-admin-layout-v1">
+  <link rel="preload" href="./assets/css/tailwind.admin.css?v=20260907-admin-layout-v1" as="style">
+    <link rel="stylesheet" href="./assets/css/tailwind.admin.css?v=20260907-admin-layout-v1">
 
   <link rel="stylesheet" href="./assets/css/admin.css?v=20260907-field-alignment-v1">
 
@@ -82,20 +84,14 @@
           </div>
 
           <!-- 필터 & 검색 툴바 통합 바 -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl">
-            <div class="flex items-center gap-1.5 shrink-0">
-              <button class="filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs transition-all cursor-pointer" data-type="all">전체보기</button>
-              <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 shadow-2xs transition-all cursor-pointer" data-type="news">뉴스</button>
-              <button class="filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 shadow-2xs transition-all cursor-pointer" data-type="notice">공지사항</button>
-            </div>
-
-            <div class="flex items-center gap-2 flex-1 sm:max-w-xl">
-              <div class="search-box flex-1 flex items-center bg-white rounded-lg px-2.5 py-1 gap-1.5 focus-within:ring-2 focus-within:ring-slate-800 transition-all">
-                <span class="text-slate-400 text-xs">🔍</span>
-                <input id="postSearchInput" type="search" placeholder="제목, 키워드, 작성일자 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl border border-slate-200/60">
+            <div class="flex items-center gap-2 flex-1">
+              <div class="search-box flex-1 h-9 flex items-center bg-white rounded-lg px-3 gap-2 border border-slate-200 focus-within:ring-2 focus-within:ring-slate-800 transition-all shadow-2xs">
+                <span class="text-slate-400 text-xs shrink-0">🔍</span>
+                <input id="postSearchInput" type="search" placeholder="제목, 키워드, 작성일자 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5 placeholder:text-slate-400">
               </div>
-              <button type="button" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg shadow-2xs transition-all cursor-pointer shrink-0" id="postResetBtn" title="검색어 초기화">초기화</button>
-              <button type="button" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center gap-1 cursor-pointer shrink-0" data-action="show-post-editor">
+              <button type="button" class="h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-all cursor-pointer shrink-0 flex items-center justify-center" id="postResetBtn" title="검색어 초기화">초기화</button>
+              <button type="button" class="h-9 px-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0" data-action="show-post-editor">
                 <span class="text-sm leading-none font-bold">+</span> 새 글 작성
               </button>
             </div>
@@ -146,7 +142,7 @@
           </div>
 
           <div class="list-footer flex justify-between items-center pt-2 border-t border-slate-100">
-            <div class="list-meta text-xs font-medium text-slate-500" id="postListMeta">0개 항목</div>
+            <div class="list-meta text-xs font-medium text-slate-600" id="postListMeta">0개 항목</div>
             <button type="button" class="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-colors cursor-pointer" id="postLoadMoreBtn">더 보기</button>
           </div>
         </div>
@@ -184,7 +180,7 @@
               <div class="sm:col-span-12 space-y-1">
                 <label for="postImage" class="block text-xs font-bold text-slate-700">대표 썸네일</label>
                 <div class="flex items-center gap-3">
-                  <input type="file" id="postImage" accept="image/*" class="block w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 transition-all cursor-pointer">
+                  <input type="file" id="postImage" accept="image/*" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 transition-all cursor-pointer">
                   <img id="preview-img" alt="대표 이미지 미리보기" class="h-9 w-16 object-cover rounded border border-slate-200 hidden shadow-xs shrink-0">
                 </div>
               </div>
@@ -288,14 +284,14 @@
           </div>
 
           <!-- 검색 및 필터 툴바 바 -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl border border-slate-200/60">
             <div class="flex items-center gap-2 flex-1">
-              <div class="search-box flex-1 flex items-center bg-white rounded-lg px-2.5 py-1 gap-1.5 focus-within:ring-2 focus-within:ring-slate-800 transition-all">
-                <span class="text-slate-400 text-xs">🔍</span>
-                <input id="programSearchInput" type="search" placeholder="프로그램명, 슬러그, 카테고리 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5">
+              <div class="search-box flex-1 h-9 flex items-center bg-white rounded-lg px-3 gap-2 border border-slate-200 focus-within:ring-2 focus-within:ring-slate-800 transition-all shadow-2xs">
+                <span class="text-slate-400 text-xs shrink-0">🔍</span>
+                <input id="programSearchInput" type="search" placeholder="프로그램명, 슬러그, 카테고리 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5 placeholder:text-slate-400">
               </div>
-              <button type="button" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg shadow-2xs transition-all cursor-pointer shrink-0" id="programResetBtn" title="검색어 초기화">초기화</button>
-              <button type="button" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center gap-1 cursor-pointer shrink-0" data-action="show-program-editor">
+              <button type="button" class="h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-all cursor-pointer shrink-0 flex items-center justify-center" id="programResetBtn" title="검색어 초기화">초기화</button>
+              <button type="button" class="h-9 px-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0" data-action="show-program-editor">
                 <span class="text-sm leading-none font-bold">+</span> 새 프로그램 등록
               </button>
             </div>
@@ -341,7 +337,7 @@
           </div>
 
           <div class="list-footer flex justify-between items-center pt-2 border-t border-slate-100">
-            <div class="list-meta text-xs font-medium text-slate-500" id="programListMeta">0개 항목</div>
+            <div class="list-meta text-xs font-medium text-slate-600" id="programListMeta">0개 항목</div>
             <button type="button" class="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-colors cursor-pointer" id="programLoadMoreBtn">더 보기</button>
           </div>
         </div>
@@ -469,9 +465,10 @@
               </div>
             </div>
 
-            <div class="btn-group flex justify-end gap-2 pt-3 border-t border-slate-100">
-              <button type="button" class="px-3.5 py-1.5 bg-slate-100 text-slate-700 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-200 transition-colors" data-action="hide-program-editor">취소</button>
-              <button type="submit" id="programSubmitBtn" class="px-4 py-1.5 bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm hover:bg-slate-800 shadow-sm transition-colors">프로그램 저장하기</button>
+            <div class="btn-group flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button type="button" class="px-3.5 py-1.5 bg-slate-100 text-slate-700 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-200 transition-colors cursor-pointer" data-action="hide-program-editor">취소</button>
+              <button type="button" class="px-3.5 py-1.5 bg-slate-200 border border-slate-300 text-slate-800 font-medium rounded-lg text-xs sm:text-sm hover:bg-slate-300 transition-colors flex items-center gap-1 cursor-pointer" id="programPreviewBtn">👁️ 미리보기</button>
+              <button type="submit" id="programSubmitBtn" class="px-4 py-1.5 bg-slate-900 text-white font-semibold rounded-lg text-xs sm:text-sm hover:bg-slate-800 shadow-sm transition-colors cursor-pointer">프로그램 저장하기</button>
             </div>
           </form>
 
@@ -489,23 +486,23 @@
         <div class="card bg-white p-5 sm:p-6 rounded-2xl shadow-xs space-y-4">
           
           <!-- 상단 통합 액션 헤더 -->
-          <div class="pb-3 border-b border-slate-100">
+          <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-100">
             <div class="flex items-center gap-2.5">
-              <h2 class="text-lg font-bold text-slate-900 tracking-tight">발송 공문 관리</h2>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">비공개 보안 링크 시스템</span>
+              <h2 class="text-lg font-bold text-slate-900 tracking-tight">발송 공문 목록</h2>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600" id="officialHeaderBadge">0개</span>
             </div>
-            <p class="text-xs text-slate-400 mt-0.5">웹사이트에 공개 노출되지 않으며, 난수 토큰 링크를 통해 수신자만 열람/출력할 수 있는 비공개 보안 공문입니다.</p>
+            <span class="text-xs text-slate-400">💡 행을 클릭하면 상세 미리보기가 열립니다.</span>
           </div>
 
           <!-- 검색 및 필터 툴바 바 -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 bg-slate-50/70 p-2 rounded-xl border border-slate-200/60">
             <div class="flex items-center gap-2 flex-1">
-              <div class="search-box flex-1 flex items-center bg-white rounded-lg px-2.5 py-1 gap-1.5 focus-within:ring-2 focus-within:ring-slate-800 transition-all">
-                <span class="text-slate-400 text-xs">🔍</span>
-                <input id="officialSearchInput" type="search" placeholder="문서번호, 수신처, 공문 제목 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5">
+              <div class="search-box flex-1 h-9 flex items-center bg-white rounded-lg px-3 gap-2 border border-slate-200 focus-within:ring-2 focus-within:ring-slate-800 transition-all shadow-2xs">
+                <span class="text-slate-400 text-xs shrink-0">🔍</span>
+                <input id="officialSearchInput" type="search" placeholder="문서번호, 수신처, 공문 제목 검색" class="w-full bg-transparent text-xs sm:text-sm text-slate-800 border-0 outline-none focus:outline-none focus:ring-0 py-0.5 placeholder:text-slate-400">
               </div>
-              <button type="button" class="px-2.5 py-1.5 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg shadow-2xs transition-all cursor-pointer shrink-0" id="officialResetBtn" title="검색어 초기화">초기화</button>
-              <button type="button" class="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center gap-1 cursor-pointer shrink-0" data-action="show-official-editor">
+              <button type="button" class="h-9 px-3 bg-white hover:bg-slate-100 text-slate-600 hover:text-slate-900 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-all cursor-pointer shrink-0 flex items-center justify-center" id="officialResetBtn" title="검색어 초기화">초기화</button>
+              <button type="button" class="h-9 px-3.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg shadow-2xs transition-colors flex items-center justify-center gap-1 cursor-pointer shrink-0" data-action="show-official-editor">
                 <span class="text-sm leading-none font-bold">+</span> 새 공문 작성
               </button>
             </div>
@@ -531,7 +528,7 @@
           </div>
 
           <div class="list-footer flex justify-between items-center pt-2 border-t border-slate-100">
-            <div class="list-meta text-xs font-medium text-slate-500" id="officialListMeta">0개 항목</div>
+            <div class="list-meta text-xs font-medium text-slate-600" id="officialListMeta">0개 항목</div>
             <button type="button" class="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-lg border border-slate-200 shadow-2xs transition-colors cursor-pointer" onclick="window.loadOfficialList()">새로고침</button>
           </div>
         </div>
@@ -543,7 +540,7 @@
           <div class="editor-heading flex justify-between items-center pb-4 border-b border-slate-100">
             <div>
               <h2 id="officialFormTitle" class="text-xl font-bold text-slate-800">새 공문 작성 (비공개 보안 발송)</h2>
-              <p class="text-xs text-slate-500 mt-0.5">작성 완료 시 난수 보안 토큰이 포함된 전용 열람 URL이 즉시 발급됩니다.</p>
+              <p class="text-xs text-slate-600 mt-0.5">작성 완료 시 난수 보안 토큰이 포함된 전용 열람 URL이 즉시 발급됩니다.</p>
             </div>
             <button type="button" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg border border-slate-300 transition-colors cursor-pointer" data-action="hide-official-editor">← 목록으로 돌아가기</button>
           </div>
@@ -660,7 +657,7 @@
             <div class="space-y-1.5 pt-2 border-t border-slate-100">
               <label class="block text-xs font-bold text-slate-700">첨부파일 (옵션)</label>
               <div class="flex items-center gap-2">
-                <input type="file" id="officialAttachment" name="attachment" class="w-full text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
+                <input type="file" id="officialAttachment" name="attachment" class="w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-700 hover:file:bg-slate-200 cursor-pointer">
               </div>
               <div id="officialAttachmentDisplay" class="hidden flex items-center gap-2 mt-2 px-3 py-2 bg-slate-50 rounded-lg border border-slate-200">
                 <span class="text-[14px]">📎</span>

@@ -10,7 +10,7 @@
     "build:css": "tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.public.css --minify && tailwindcss -i ./assets/css/tailwind.admin.input.css -o ./assets/css/tailwind.admin.css --minify && tailwindcss -i ./assets/css/tailwind.official.input.css -o ./assets/css/tailwind.official.css --minify"
   },
   "dependencies": {
-    "better-sqlite3": "^11.0.0",
+    "better-sqlite3": "^11.10.0",
     "compression": "^1.8.1",
     "express": "^4.19.2"
   },

@@ -194,7 +194,7 @@
         const featuredPost = displayPosts[0];
 
         if (!featuredPost) {
-            container.innerHTML = '<p class="text-slate-500 text-sm text-center py-8">등록된 미션 리포트가 없습니다.</p>';
+            container.innerHTML = '<p class="text-slate-600 text-sm text-center py-8">등록된 미션 리포트가 없습니다.</p>';
             return;
         }
 
@@ -376,7 +376,7 @@ modalContent.innerHTML =
                     
                     return '<div class="my-5 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-100/70 border border-slate-200/60 p-2 sm:p-2.5">' +
                                '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-2xs transition-opacity duration-300 opacity-0" />' +
-                               (caption ? '<span class="text-xs text-slate-500 mt-2 text-center font-sans leading-snug px-2">' + caption + '</span>' : '') +
+                               (caption ? '<span class="text-xs text-slate-600 mt-2 text-center font-sans leading-snug px-2">' + caption + '</span>' : '') +
                            '</div>';
                 };
 

@@ -451,11 +451,12 @@ app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
 }));
 
 app.use(express.static(process.cwd(), {
-  maxAge: 0,
   etag: true,
   setHeaders: (res, filePath) => {
-    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css')) {
+    if (filePath.endsWith('.html') || filePath.endsWith('.js') || filePath.endsWith('.css') || filePath.endsWith('.md')) {
       res.setHeader('Cache-Control', 'no-cache, must-revalidate');
+    } else {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
     }
   }
 }));

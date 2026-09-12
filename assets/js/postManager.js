@@ -460,7 +460,7 @@
               <span class="text-xs text-slate-400 font-normal line-clamp-1 mt-0.5">${window.AdminUI.escapeHtml(plainExcerpt || '내용 없음')}</span>
             </div>
           </td>
-          <td class="p-3 text-center text-xs text-slate-500 font-mono">${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
+          <td class="p-3 text-center text-xs text-slate-600 font-mono">${post.created_at ? post.created_at.substring(0, 10) : '-'}</td>
           <td class="p-3 text-center">
             <button type="button" class="inline-flex items-center gap-1 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-semibold rounded-lg border border-slate-300 shadow-2xs transition-all cursor-pointer" onclick="editPost(${post.id})" title="글 수정">
               <span>✏️</span> 수정
@@ -699,23 +699,6 @@
         renderPostList();
       });
     }
-
-    document.querySelectorAll('.filter-btn').forEach((button) => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.filter-btn').forEach((btn) => {
-          const isActive = btn === button;
-          btn.classList.toggle('active', isActive);
-          if (isActive) {
-            btn.className = 'filter-btn active px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-900 text-white shadow-2xs border border-slate-900 transition-all cursor-pointer';
-          } else {
-            btn.className = 'filter-btn px-3 py-1.5 text-xs font-semibold rounded-lg bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 shadow-2xs transition-all cursor-pointer';
-          }
-        });
-        state.currentPostType = button.dataset.type || 'all';
-        state.postVisibleCount = 12;
-        renderPostList();
-      });
-    });
 
     document.getElementById('postForm').addEventListener('submit', async (e) => {
       e.preventDefault();

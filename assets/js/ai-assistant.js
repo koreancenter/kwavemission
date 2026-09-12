@@ -72,7 +72,7 @@ const AIAssistant = {
             <button type="button" class="btnAILetter px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">✉️ 편지</button>
             <button type="button" class="btnAINotice px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-200 hover:border-slate-300 text-slate-700 text-xs font-semibold rounded-lg transition-all shadow-2xs flex items-center gap-1 cursor-pointer">📢 공고</button>
             <button type="button" class="btnAIUndo hidden px-2 py-1 bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-semibold rounded-lg transition-all cursor-pointer">↩️ 되돌리기</button>
-            <span class="aiStatusText text-[11px] font-medium text-slate-500 pl-1"></span>
+            <span class="aiStatusText text-[11px] font-medium text-slate-600 pl-1"></span>
           </div>
         </div>
 

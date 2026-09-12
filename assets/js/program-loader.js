@@ -4,7 +4,7 @@
     const STATUS_META = {
         recruiting: { label: '모집 중', accent: 'rose', iconTone: 'text-slate-700' },
         ongoing: { label: '진행 중', accent: 'cyan', iconTone: 'text-slate-700' },
-        preparing: { label: '준비 중', accent: 'slate', iconTone: 'text-slate-500' }
+        preparing: { label: '준비 중', accent: 'slate', iconTone: 'text-slate-600' }
     };
 
     function escapeHtml(value) {
@@ -43,7 +43,7 @@
 
     function getAccentClasses(accent) {
         return {
-            category: 'text-slate-500',
+            category: 'text-slate-600',
             titleHover: 'group-hover:text-slate-900',
             buttonHover: 'hover:border-slate-900'
         };
@@ -99,7 +99,7 @@
     }
 
     function renderState(container, message, tone) {
-        const colorClass = tone === 'error' ? 'text-rose-600' : 'text-slate-500';
+        const colorClass = tone === 'error' ? 'text-rose-600' : 'text-slate-600';
         container.innerHTML = `<div class="w-full min-h-[180px] flex items-center justify-center text-center ${colorClass} text-sm">${escapeHtml(message)}</div>`;
         setSliderControlsEnabled(false);
     }

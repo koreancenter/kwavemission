@@ -212,6 +212,8 @@
         </tr>
       `;
       if (meta) meta.textContent = '총 0개 항목';
+      const badge = document.getElementById('officialHeaderBadge');
+      if (badge) badge.textContent = '0개';
       return;
     }
 
@@ -242,7 +244,7 @@
               <span class="font-mono text-emerald-600">🔒 보안 난수 링크 발급됨</span>
             </div>
           </td>
-          <td class="p-3 text-xs text-slate-500 font-mono text-center whitespace-nowrap">${createdAt}</td>
+          <td class="p-3 text-xs text-slate-600 font-mono text-center whitespace-nowrap">${createdAt}</td>
           <td class="p-3 text-center whitespace-nowrap">
             <div class="flex items-center justify-center gap-1.5">
               <button type="button" class="btn-copy-official-link px-2.5 py-1.5 text-xs font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 transition-colors flex items-center gap-1 shadow-2xs cursor-pointer" data-token="${letter.secret_token}" data-url="${shareUrl}" title="비공개 열람 링크 복사">
@@ -262,6 +264,8 @@
 
     tbody.innerHTML = html;
     if (meta) meta.textContent = `총 ${letters.length}개 항목`;
+    const badge = document.getElementById('officialHeaderBadge');
+    if (badge) badge.textContent = `${letters.length}개`;
   }
 
   async function loadOfficialList() {
@@ -308,11 +312,19 @@
 
   async function editOfficialLetter(id) {
     let letter = (state.officialLetters || []).find((item) => Number(item.id) === Number(id));
-    if (!letter) {
+    if (!letter || letter.content === undefined) {
       try {
-        const res = await window.AdminApi.api.get('/api/official');
-        const list = Array.isArray(res) ? res : (res?.data || []);
-        letter = list.find((item) => Number(item.id) === Number(id));
+        const res = await window.AdminApi.api.get(`/api/official?id=${id}`);
+        const fetched = res?.data || res;
+        if (fetched && (fetched.id || fetched.doc_no)) {
+          letter = fetched;
+          if (state.officialLetters) {
+            const idx = state.officialLetters.findIndex((item) => Number(item.id) === Number(id));
+            if (idx !== -1) {
+              state.officialLetters[idx] = { ...state.officialLetters[idx], ...fetched };
+            }
+          }
+        }
       } catch (err) {
         console.warn('Failed to fetch official letter for edit:', err);
       }
@@ -582,10 +594,9 @@
           return;
         }
 
-        const titleBtn = e.target.closest('.btn-view-letter');
-        if (titleBtn) {
-          const row = titleBtn.closest('tr');
-          const token = row?.getAttribute('data-token');
+        const clickedRow = e.target.closest('tr[data-token]');
+        if (clickedRow && !e.target.closest('button') && !e.target.closest('a')) {
+          const token = clickedRow.getAttribute('data-token');
           if (token) {
             window.open(getOfficialShareUrl(token), '_blank');
           }
@@ -743,7 +754,7 @@
                 </div>
                 <div class="text-base sm:text-lg font-black text-slate-900">케이웨이브 미션</div>
                 <div class="text-[10px] tracking-widest text-slate-600 font-semibold uppercase">K-WAVE MISSION (HIGHER EDUCATION MISSION PLATFORM)</div>
-                <div class="text-[9px] text-slate-500">Bali Indonesia &amp; Republic of Korea • TEL 070-7781-2585 • admin@kwavemission.org</div>
+                <div class="text-[9px] text-slate-600">Bali Indonesia &amp; Republic of Korea • TEL 070-7781-2585 • admin@kwavemission.org</div>
               </div>
               <!-- Body -->
               <div class="relative z-10 prose prose-slate max-w-none text-xs sm:text-sm">
@@ -777,9 +788,9 @@
         </div>
 
         <div class="p-3.5 bg-slate-50 rounded-xl space-y-2 text-xs border border-slate-200">
-          <div class="flex justify-between"><span class="text-slate-500 font-medium">문서번호:</span> <strong class="text-slate-800 font-mono">${docNo}</strong></div>
-          <div class="flex justify-between"><span class="text-slate-500 font-medium">수신:</span> <span class="text-slate-800 font-semibold">${receiver}</span></div>
-          <div class="flex justify-between"><span class="text-slate-500 font-medium">제목:</span> <span class="text-slate-800 font-semibold truncate max-w-[280px]">${title}</span></div>
+          <div class="flex justify-between"><span class="text-slate-600 font-medium">문서번호:</span> <strong class="text-slate-800 font-mono">${docNo}</strong></div>
+          <div class="flex justify-between"><span class="text-slate-600 font-medium">수신:</span> <span class="text-slate-800 font-semibold">${receiver}</span></div>
+          <div class="flex justify-between"><span class="text-slate-600 font-medium">제목:</span> <span class="text-slate-800 font-semibold truncate max-w-[280px]">${title}</span></div>
         </div>
 
         <div class="space-y-2">

@@ -278,6 +278,15 @@
       };
     }
 
+    if (modal) {
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.style.display = 'none';
+          document.body.style.overflow = '';
+        }
+      });
+    }
+
     if (previewBtn) {
       previewBtn.addEventListener('click', () => {
         const type = document.getElementById('postType').value;

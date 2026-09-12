@@ -30,10 +30,10 @@ async function parseRequestBody(request) {
   return {};
 }
 
-// 1. GET /api/official : 관리자용 발송 공문 전체 목록 조회
+// 1. GET /api/official or /api/official?id=:id : 관리자용 발송 공문 목록 및 단일 공문 조회
 export async function onRequestGet(context) {
   try {
-    const { env, request } = context;
+    const { env, request, params } = context;
     if (!env.DB) {
       return missingBinding('DB', 'D1');
     }
@@ -43,8 +43,24 @@ export async function onRequestGet(context) {
       return jsonError(authContext.error || '관리자 인증이 필요합니다.', authContext.status || 401);
     }
 
+    const url = new URL(request.url);
+    const targetId = params?.id || url.searchParams.get('id');
+
+    if (targetId) {
+      const letter = await env.DB.prepare(
+        `SELECT id, doc_no, receiver, sender, title, content, attachment_url, attachment_name, secret_token, created_at 
+         FROM official_letters 
+         WHERE id = ?`
+      ).bind(targetId).first();
+
+      if (!letter) {
+        return jsonError('공문을 찾을 수 없습니다.', 404);
+      }
+      return jsonSuccess({ data: letter });
+    }
+
     const stmt = env.DB.prepare(
-      `SELECT id, doc_no, receiver, sender, title, attachment_url, attachment_name, secret_token, created_at 
+      `SELECT id, doc_no, receiver, sender, title, content, attachment_url, attachment_name, secret_token, created_at 
        FROM official_letters 
        ORDER BY id DESC`
     );
@@ -136,7 +152,7 @@ export async function onRequestPost(context) {
     ).bind(docNo, receiver, sender, title, content, attachmentUrl, attachmentName, secretToken).run();
 
     const newLetter = await env.DB.prepare(
-      'SELECT id, doc_no, receiver, sender, title, attachment_url, attachment_name, secret_token, created_at FROM official_letters WHERE secret_token = ?'
+      'SELECT id, doc_no, receiver, sender, title, content, attachment_url, attachment_name, secret_token, created_at FROM official_letters WHERE secret_token = ?'
     ).bind(secretToken).first();
 
     return jsonSuccess({

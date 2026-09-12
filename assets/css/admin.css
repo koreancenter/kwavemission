@@ -281,7 +281,6 @@ button.sm {
   align-items: center;
   gap: 0.65rem;
   flex: 1;
-  max-width: 560px;
 }
 
 .search-box input {

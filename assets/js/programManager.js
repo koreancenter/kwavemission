@@ -70,6 +70,55 @@
     }
   }
 
+  function previewCurrentProgramForm() {
+    const title = (document.getElementById('programTitle')?.value || '').trim() || '(제목 없음)';
+    const category = (document.getElementById('programCategory')?.value || '').trim() || '프로그램';
+    const icon = (document.getElementById('programIcon')?.value || '🎓').trim();
+    const slug = (document.getElementById('programSlug')?.value || '').trim() || 'program';
+    const status = document.getElementById('programStatus')?.value || 'ongoing';
+
+    let statusText = '진행중';
+    if (status === 'recruiting') statusText = '모집중';
+    else if (status === 'preparing') statusText = '준비중';
+
+    const rawContent = getProgramTiptapContent();
+    let htmlContent = (rawContent === '<p></p>' || !rawContent) ? '(설명 내용 없음)' : rawContent;
+
+    const hasHtml = htmlContent.trim().startsWith('<') || /<(?:div|span|table|tbody|thead|tr|th|td|p|h[1-6]|ul|ol|li|section|article|header|footer|style|iframe|svg|!--|img|b|strong|i|em|a)\b/i.test(htmlContent);
+    if (!htmlContent.trim().startsWith('<') && !hasHtml && window.marked && typeof window.marked.parse === 'function') {
+      htmlContent = window.marked.parse(htmlContent);
+    } else if (hasHtml && !htmlContent.trim().startsWith('<') && window.marked && typeof window.marked.parse === 'function') {
+      const cleanHtml = htmlContent.replace(/^[ \t]+(?=<|<!--)/gm, '');
+      htmlContent = window.marked.parse(cleanHtml);
+    }
+
+    const modal = document.getElementById('previewModal');
+    const modalTypeChip = document.getElementById('modalTypeChip');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalContent = document.getElementById('modalContent');
+    const modalImg = document.getElementById('modalImg');
+
+    if (modalTypeChip) {
+      modalTypeChip.textContent = category;
+      modalTypeChip.className = 'type-chip type-news px-2.5 py-0.5 text-xs font-semibold rounded-full';
+    }
+    if (modalTitle) modalTitle.textContent = `${icon} ${title}`;
+    if (modalDate) modalDate.textContent = `슬러그: /programs/${slug} • 상태: ${statusText} (미리보기)`;
+    if (modalContent) modalContent.innerHTML = htmlContent;
+
+    if (modalImg) {
+      modalImg.src = '';
+      modalImg.style.display = 'none';
+      modalImg.classList.add('hidden');
+    }
+
+    if (modal) {
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
   function getSelectedProgramIds() {
     const checkboxes = document.querySelectorAll('.program-select-chk:checked');
     return Array.from(checkboxes).map(chk => Number(chk.dataset.id));
@@ -388,6 +437,11 @@
       });
     }
 
+    const previewBtn = document.getElementById('programPreviewBtn');
+    if (previewBtn) {
+      previewBtn.addEventListener('click', previewCurrentProgramForm);
+    }
+
     document.getElementById('programForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const isEdit = Boolean(document.getElementById('programId').value);
@@ -460,6 +514,7 @@
     editProgram,
     deleteProgram,
     previewProgram,
+    previewCurrentProgramForm,
     getProgramTiptapContent,
     setProgramTiptapContent,
     init: initProgramManager
@@ -471,6 +526,7 @@
   window.deleteProgram = deleteProgram;
   window.loadProgramList = loadProgramList;
   window.previewProgram = previewProgram;
+  window.previewCurrentProgramForm = previewCurrentProgramForm;
   window.getProgramTiptapContent = getProgramTiptapContent;
   window.setProgramTiptapContent = setProgramTiptapContent;
 })();
