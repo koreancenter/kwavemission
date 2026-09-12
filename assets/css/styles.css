@@ -564,6 +564,111 @@ h6,
   box-shadow: none;
 }
 
+.brand-badge {
+  background: transparent;
+  border: none;
+  color: #374151;
+}
+
+.prog-filter-btn {
+  background: transparent;
+  border: 1.331px solid rgba(0, 0, 0, 0.1331);
+  color: #4b5563;
+  transform: translateZ(0);
+}
+
+.prog-filter-btn.active {
+  color: #111827;
+  font-weight: 700;
+}
+
+.prog-filter-btn:hover {
+  transform: translateY(-1px);
+}
+
+.modal-root {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear var(--motion-modal-duration);
+}
+
+.modal-root.modal-active {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-root .modal-panel {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: transform var(--motion-modal-panel-duration) cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.modal-root.modal-active .modal-panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  padding-top: 16px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.btn-share-footer,
+.btn-close-footer {
+  padding: 9px 16px;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-share-footer {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-share-footer:hover {
+  border-color: #9ca3af;
+  color: #1f2937;
+}
+
+.btn-close-footer {
+  background-color: #fff;
+  border: 1px solid #d1d5db;
+  color: #4b5563;
+  padding: 9px 18px;
+}
+
+.btn-close-footer:hover {
+  border-color: #9ca3af;
+  color: #111827;
+}
+
+@media (max-width: 640px) {
+  .modal-footer {
+    gap: 8px;
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  .btn-share-footer,
+  .btn-close-footer {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}
 
 /* Modal markdown content */
 #modal-body h1,
@@ -607,14 +712,14 @@ h6,
 }
 
 #modal-body blockquote {
-  border-left: 3px solid #b94a61;
+  border-left: 3px solid #4b5563;
   padding-left: 1rem;
-  color: #64748b;
+  color: #6b7280;
   margin: 1rem 0;
 }
 
 #modal-body a {
-  color: #93394e;
+  color: #374151;
   text-decoration: underline;
 }
 

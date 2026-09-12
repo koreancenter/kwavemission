@@ -17,8 +17,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Below-the-fold, drawer, and modal styles -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-cta-standard">
+    <!-- Below-the-fold, drawer, and modal styles (deferred, non-blocking) -->
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1">
+    </noscript>
 
     <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
@@ -137,14 +140,6 @@
         .brand-link:hover {
             color: #111827;
         }
-
-.brand-card,
-#about .brand-card {
-  background: transparent;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: none;
-}
-
 
         .brand-badge {
             background: transparent;
@@ -274,22 +269,6 @@
             opacity: 1;
         }
 
-        .prog-filter-btn {
-            background: transparent;
-            border: 1.331px solid rgba(0, 0, 0, 0.1331);
-            color: #4b5563;
-            transform: translateZ(0);
-        }
-
-        .prog-filter-btn.active {
-            color: #111827;
-            font-weight: 700;
-        }
-
-        .prog-filter-btn:hover {
-            transform: translateY(-1px);
-        }
-
         .reveal-item {
             opacity: 0;
             transform: translateY(12px);
@@ -324,29 +303,6 @@
             box-shadow: none;
         }
 
-        .modal-root {
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear var(--motion-modal-duration);
-        }
-
-        .modal-root.modal-active {
-            opacity: 1;
-            visibility: visible;
-            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .modal-root .modal-panel {
-            opacity: 0;
-            transform: translateY(10px);
-            transition: transform var(--motion-modal-panel-duration) cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
-        }
-
-        .modal-root.modal-active .modal-panel {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
         .hero-section {
             position: relative;
             overflow: hidden;
@@ -358,52 +314,6 @@
   
             mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
 }
-
-        .modal-footer {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 8px;
-            margin-top: 26px;
-            padding-top: 16px;
-            border-top: 1px solid #e5e7eb;
-        }
-
-        .btn-share-footer,
-        .btn-close-footer {
-            padding: 9px 16px;
-            border-radius: 9999px;
-            font-weight: 500;
-            font-size: 13px;
-            cursor: pointer;
-            transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
-        }
-
-        .btn-share-footer {
-            background-color: #ffffff;
-            border: 1px solid #d1d5db;
-            color: #4b5563;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-share-footer:hover {
-            border-color: #9ca3af;
-            color: #1f2937;
-        }
-
-        .btn-close-footer {
-            background-color: #fff;
-            border: 1px solid #d1d5db;
-            color: #4b5563;
-            padding: 9px 18px;
-        }
-
-        .btn-close-footer:hover {
-            border-color: #9ca3af;
-            color: #111827;
-        }
 
         @media (max-width: 640px) {
             :root {
@@ -417,35 +327,7 @@
             .reveal-item {
                 transform: translateY(8px);
             }
-
-            .modal-footer {
-                gap: 8px;
-                margin-top: 24px;
-                padding-top: 16px;
-            }
-
-            .btn-share-footer,
-            .btn-close-footer {
-                min-height: 44px;
-                padding: 10px 14px;
-                font-size: 13px;
-            }
         }
-        
-        #modal-body h1, #modal-body h2, #modal-body h3, #modal-body h4 { font-weight: 700; color: #0f172a; margin-top: 1.25rem; margin-bottom: 0.375rem; }
-        #modal-body h2 { font-size: 1.2rem; }
-        #modal-body h3 { font-size: 1rem; }
-        #modal-body p { margin-bottom: 0.875rem; }
-        #modal-body ul, #modal-body ol { padding-left: 1.4rem; margin-bottom: 0.875rem; }
-        #modal-body ul { list-style-type: disc; }
-        #modal-body ol { list-style-type: decimal; }
-        #modal-body li { margin-bottom: 0.2rem; }
-        #modal-body blockquote { border-left: 3px solid #4b5563; padding-left: 1rem; color: #6b7280; margin: 1rem 0; }
-        #modal-body a { color: #374151; text-decoration: underline; }
-        #modal-body img { max-width: 100%; border-radius: 0.5rem; margin: 1rem 0; }
-        #modal-body hr { border-color: #f1f5f9; margin: 1.25rem 0; }
-        #modal-body strong { font-weight: 700; }
-        #modal-body code { background: #f1f5f9; padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.85em; font-family: 'JetBrains Mono', monospace; }
 
         @media (prefers-reduced-motion: reduce) {
             html {
