@@ -1086,13 +1086,14 @@ img, video, iframe {
     translate: none !important;
     transform: translate3d(-100%, -50%, 0);
     transition: transform 0.32s cubic-bezier(0.32, 0, 0.2, 1);
-    will-change: transform;
+    will-change: transform, opacity;
 }
 
 #k-drawer.is-open,
 #kwave-drawer.is-open,
 #k-drawer:not(.-translate-x-full):not(.is-closing),
 #kwave-drawer:not(.-translate-x-full):not(.is-closing) {
+    pointer-events: auto !important;
     translate: none !important;
     transform: translate3d(0, -50%, 0);
     transition: transform 0.38s cubic-bezier(0.25, 1, 0.33, 1);
@@ -1102,6 +1103,7 @@ img, video, iframe {
 #kwave-drawer.is-closing,
 #k-drawer.-translate-x-full,
 #kwave-drawer.-translate-x-full {
+    pointer-events: none !important;
     translate: none !important;
     transform: translate3d(-100%, -50%, 0);
     transition: transform 0.32s cubic-bezier(0.32, 0, 0.2, 1);
@@ -1120,6 +1122,20 @@ img, video, iframe {
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
+    pointer-events: auto !important;
+    touch-action: pan-y !important;
+    overscroll-behavior-y: contain !important;
+    -webkit-overflow-scrolling: touch !important;
+}
+
+.k-drawer-handle {
+    width: 34px;
+    height: 4px;
+    background-color: #d6d3d1;
+    border-radius: 9999px;
+    margin: -0.5rem auto 0.75rem auto;
+    opacity: 0.65;
+    flex-shrink: 0;
 }
 
 .k-drawer-header {
@@ -1279,16 +1295,16 @@ img, video, iframe {
     }
     .k-drawer-panel {
         width: 100% !important;
-        padding-top: calc(1.58rem + 47px) !important;
-        padding-bottom: calc(1.58rem + 47px) !important;
+        padding-top: calc((1.58rem + 47px) * 0.95) !important;
+        padding-bottom: calc((1.58rem + 47px) * 0.95) !important;
         padding-left: 1.25rem !important;
         padding-right: 1.25rem !important;
-        min-height: 566px !important;
-        height: 566px !important;
-        max-height: 90vh !important;
+        min-height: 538px !important;
+        height: 538px !important;
+        max-height: 85.5vh !important;
     }
     #kwave-tab-btn {
-        top: calc(2rem + 47px) !important;
+        top: calc((2rem + 47px) * 0.95) !important;
     }
 }
 
@@ -1301,18 +1317,27 @@ img, video, iframe {
     outline: none !important;
     background-color: #F6F4EF !important;
     box-shadow: 3px 4px 14px -2px rgba(0, 0, 0, 0.18) !important;
-    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease !important;
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s ease !important;
     will-change: transform;
     pointer-events: auto !important;
     cursor: pointer !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    touch-action: manipulation !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 #kwave-tab-btn:hover {
     background-color: #ede9df !important;
     transform: translateX(3px) !important;
+}
+
+#kwave-tab-btn:active {
+    background-color: #e5e0d4 !important;
+    transform: scale(0.94) !important;
 }
 
 @media (min-width: 640px) {
