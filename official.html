@@ -389,10 +389,36 @@
           // Set Page Title
           document.title = `[공문] ${letter.title} - K-Wave Mission`;
 
+          function sanitizeOfficialHtml(dirtyHtml) {
+            if (!dirtyHtml) return '';
+            try {
+              const parser = new DOMParser();
+              const doc = parser.parseFromString(dirtyHtml, 'text/html');
+              const dangerousTags = ['script', 'iframe', 'object', 'embed', 'link', 'style', 'base', 'form'];
+              dangerousTags.forEach(tag => {
+                doc.querySelectorAll(tag).forEach(el => el.remove());
+              });
+              const allElements = doc.querySelectorAll('*');
+              allElements.forEach(el => {
+                const attrs = Array.from(el.attributes);
+                attrs.forEach(attr => {
+                  const name = attr.name.toLowerCase();
+                  const val = attr.value.toLowerCase().replace(/\s+/g, '');
+                  if (name.startsWith('on') || val.startsWith('javascript:') || val.startsWith('data:text/html') || val.startsWith('vbscript:')) {
+                    el.removeAttribute(attr.name);
+                  }
+                });
+              });
+              return doc.body.innerHTML;
+            } catch {
+              return dirtyHtml;
+            }
+          }
+
           // Body Content Rendering
           const bodyEl = document.getElementById('docBody');
           if (bodyEl) {
-            bodyEl.innerHTML = letter.content || '';
+            bodyEl.innerHTML = sanitizeOfficialHtml(letter.content || '');
           }
 
           // Attachment Rendering

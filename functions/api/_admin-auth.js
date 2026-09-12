@@ -158,8 +158,7 @@ export async function requireAdminAuth(context, formData) {
 
   const configuredPassword = getAdminConfig(context).password;
   const legacyPassword = String(formData?.get('password') || '');
-  const acceptedPasswords = [configuredPassword, 'admin', '680923'].filter(Boolean);
-  if (legacyPassword && acceptedPasswords.includes(legacyPassword)) {
+  if (configuredPassword && legacyPassword && legacyPassword === configuredPassword) {
     return { ok: true, legacy: true };
   }
 

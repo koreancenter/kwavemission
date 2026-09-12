@@ -1,6 +1,27 @@
 import { requireAdminAuth } from './_admin-auth.js';
 import { errorMessage, jsonError, jsonSuccess, missingBinding } from './_api-utils.js';
 
+const ALLOWED_ATTACHMENT_EXTENSIONS = new Set([
+  'pdf', 'doc', 'docx', 'hwp', 'hwpx', 'xls', 'xlsx', 'ppt', 'pptx',
+  'jpg', 'jpeg', 'png', 'webp', 'gif', 'zip', 'txt'
+]);
+const MAX_ATTACHMENT_SIZE = 25 * 1024 * 1024; // 25MB
+
+function validateAttachment(file) {
+  if (!file || typeof file.arrayBuffer !== 'function' || Number(file.size || 0) <= 0) {
+    return { valid: true, hasUpload: false };
+  }
+  if (Number(file.size) > MAX_ATTACHMENT_SIZE) {
+    return { valid: false, error: '첨부파일 크기는 최대 25MB까지 가능합니다.' };
+  }
+  const name = typeof file.name === 'string' ? file.name : '';
+  const ext = name.includes('.') ? name.split('.').pop().toLowerCase() : '';
+  if (!ext || !ALLOWED_ATTACHMENT_EXTENSIONS.has(ext)) {
+    return { valid: false, error: `지원하지 않는 파일 형식(.${ext || 'unknown'})입니다. PDF, 문서(HWP/DOC/XLS/PPT), 이미지, ZIP 파일만 업로드 가능합니다.` };
+  }
+  return { valid: true, hasUpload: true, extension: ext };
+}
+
 function generateSecretToken() {
   const uuid = crypto.randomUUID().replace(/-/g, '');
   const timestamp = Date.now().toString(36);
@@ -110,19 +131,17 @@ export async function onRequestPost(context) {
     let attachmentUrl = null;
     let attachmentName = null;
 
-    const hasUpload = attachmentFile 
-      && typeof attachmentFile.arrayBuffer === "function" 
-      && Number(attachmentFile.size || 0) > 0;
+    const attachCheck = validateAttachment(attachmentFile);
+    if (!attachCheck.valid) {
+      return jsonError(attachCheck.error, 400);
+    }
 
-    if (hasUpload) {
+    if (attachCheck.hasUpload) {
       if (!env.BUCKET) {
         return missingBinding('BUCKET', 'R2');
       }
 
-      const fileExtension = typeof attachmentFile.name === "string" && attachmentFile.name.includes(".")
-        ? attachmentFile.name.split('.').pop().toLowerCase()
-        : "bin";
-
+      const fileExtension = attachCheck.extension;
       const fileName = `attachments/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
       const fileBody = await attachmentFile.arrayBuffer();
 
@@ -213,19 +232,17 @@ export async function onRequestPut(context) {
     let attachmentUrlQuery = '';
     let attachmentParams = [];
 
-    const hasUpload = attachmentFile 
-      && typeof attachmentFile.arrayBuffer === "function" 
-      && Number(attachmentFile.size || 0) > 0;
+    const attachCheck = validateAttachment(attachmentFile);
+    if (!attachCheck.valid) {
+      return jsonError(attachCheck.error, 400);
+    }
 
-    if (hasUpload) {
+    if (attachCheck.hasUpload) {
       if (!env.BUCKET) {
         return missingBinding('BUCKET', 'R2');
       }
 
-      const fileExtension = typeof attachmentFile.name === "string" && attachmentFile.name.includes(".")
-        ? attachmentFile.name.split('.').pop().toLowerCase()
-        : "bin";
-
+      const fileExtension = attachCheck.extension;
       const fileName = `attachments/${Date.now()}-${crypto.randomUUID()}.${fileExtension}`;
       const fileBody = await attachmentFile.arrayBuffer();
 

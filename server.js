@@ -428,6 +428,34 @@ app.all('/api/image/*', (req, res) => {
   return handleCloudflareRoute(req, res, apiModules['image'], { path: pathParts });
 });
 
+// Security Middleware: Set essential HTTP security headers
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+// Security Middleware: Block direct external access to database, backend code, and config files
+app.use((req, res, next) => {
+  const reqPath = req.path.toLowerCase();
+  if (
+    reqPath.endsWith('.db') ||
+    reqPath.endsWith('.sqlite') ||
+    reqPath.endsWith('.sqlite3') ||
+    reqPath.includes('.env') ||
+    reqPath.startsWith('/functions') ||
+    reqPath === '/server.js' ||
+    reqPath === '/package.json' ||
+    reqPath === '/package-lock.json' ||
+    reqPath.startsWith('/.git') ||
+    reqPath.startsWith('/node_modules')
+  ) {
+    return res.status(404).type('text/plain').send('Not Found');
+  }
+  next();
+});
+
 // Serve static assets with optimized Cache-Control headers
 app.use('/assets', express.static(path.join(process.cwd(), 'assets'), {
   maxAge: '1y',
@@ -445,8 +473,13 @@ app.use('/assets', express.static(path.join(process.cwd(), 'assets'), {
 app.use('/uploads', express.static(path.join(process.cwd(), 'uploads'), {
   maxAge: '30d',
   etag: true,
-  setHeaders: (res) => {
+  setHeaders: (res, filePath) => {
     res.setHeader('Cache-Control', 'public, max-age=2592000');
+    // Force download or restrict execution for uploaded files
+    if (/\.(html|htm|js|mjs|svg|xml|php|sh|exe)$/i.test(filePath)) {
+      res.setHeader('Content-Disposition', 'attachment');
+      res.setHeader('Content-Type', 'application/octet-stream');
+    }
   }
 }));
 

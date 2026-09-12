@@ -1138,12 +1138,13 @@ img, video, iframe {
 
 .k-drawer-body {
     position: relative !important;
-    flex: 1 1 auto !important;
+    flex: 0 0 auto !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-evenly !important;
-    min-height: 225px !important;
-    max-height: 255px !important;
+    height: 240px !important;
+    min-height: 240px !important;
+    max-height: 240px !important;
     padding-left: 0.85rem !important;
     margin: 0.88rem 0 0.7rem 0 !important;
 }
@@ -1258,9 +1259,16 @@ img, video, iframe {
     }
     .k-drawer-panel {
         width: 100% !important;
-        padding: 1.42rem 1.15rem !important;
-        min-height: 425px !important;
+        padding-top: calc(1.42rem + 42.5px) !important;
+        padding-bottom: calc(1.42rem + 42.5px) !important;
+        padding-left: 1.15rem !important;
+        padding-right: 1.15rem !important;
+        min-height: 510px !important;
+        height: 510px !important;
         max-height: 88vh !important;
+    }
+    #kwave-tab-btn {
+        top: calc(2rem + 42.5px) !important;
     }
 }
 
@@ -1271,9 +1279,16 @@ img, video, iframe {
     }
     .k-drawer-panel {
         width: 100% !important;
-        padding: 1.58rem 1.25rem !important;
-        min-height: 472px !important;
+        padding-top: calc(1.58rem + 47px) !important;
+        padding-bottom: calc(1.58rem + 47px) !important;
+        padding-left: 1.25rem !important;
+        padding-right: 1.25rem !important;
+        min-height: 566px !important;
+        height: 566px !important;
         max-height: 90vh !important;
+    }
+    #kwave-tab-btn {
+        top: calc(2rem + 47px) !important;
     }
 }
 

@@ -38,17 +38,11 @@ export async function onRequest(context) {
       'mrpark@kwavemission.org'
     ].filter(Boolean).map(e => e.toLowerCase()));
 
-    if (!acceptedEmails.has(email) && !email.endsWith('@kwavemission.org')) {
+    if (!acceptedEmails.has(email)) {
       return jsonError('Unauthorized', 401);
     }
 
-    const validPasswords = new Set([
-      adminConfig.password,
-      'admin',
-      '680923'
-    ].filter(Boolean));
-
-    if (!validPasswords.has(password)) {
+    if (!adminConfig.password || password !== adminConfig.password) {
       return jsonError('Invalid password', 401);
     }
 
