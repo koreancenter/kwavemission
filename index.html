@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <!-- <head> 태그 상단 추가 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>케이웨이브 미션 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
+    <meta name="description" content="한국학 기반 교육선교 전문가 그룹. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    
+    <link rel="stylesheet" href="./assets/css/tailwind.public.css?v=20260912-cta-v3">
+    
+    <!-- Performance Resource Hints -->
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <!-- Below-the-fold, drawer, and modal styles -->
+    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-cta-standard">
+
+    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+    </noscript>
+
+    <style>
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+      .animate-fade-in-up {
+        animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+    </style>
+
+    <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
+    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+    </noscript>
+    
+    <style>
+        :root {
+            --bg-primary: #ece9e1;
+            --surface-glass: rgba(255, 255, 255, 0.78);
+            --surface-soft: rgba(255, 255, 255, 0.92);
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --brand-primary: #4b5563;
+            --brand-primary-soft: rgba(75, 85, 99, 0.12);
+            --brand-border: rgba(31, 41, 55, 0.16);
+            --consult-accent: #52525b;
+            --consult-soft: rgba(82, 82, 91, 0.08);
+            --motion-hover-scale: 1;
+            --motion-icon-shift: 1px;
+            --motion-reveal-duration: 0.46s;
+            --motion-modal-duration: 0.2s;
+            --motion-modal-panel-duration: 0.22s;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 5rem;
+        }
+
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            line-height: 1.6;
+        }
+
+        .hero-title,
+        .section-title,
+        .font-serif {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .hero-title {
+            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
+        }
+
+        .about-title-shadow {
+            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 5px 14px rgba(15, 23, 42, 0.07);
+        }
+
+        p, li, a, button, input, textarea {
+            font-family: 'Pretendard', sans-serif;
+        }
+
+        .section-badge,
+        .tech-tag,
+        .metric-label {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: 0.08em;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+            font-feature-settings: 'tnum';
+        }
+
+.header-fade-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 160px;
+  background: linear-gradient(to bottom, #ece9e1 0%, #ece9e1 50%, rgba(236, 233, 225, 0) 100%) !important;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.glass-nav {
+  background: transparent !important;
+  border-bottom: none;
+  position: fixed;
+  top: 0;
+  z-index: 50;
+}
+
+        .brand-link {
+            color: #4b5563;
+            transition: color 0.2s ease;
+        }
+
+        .brand-link:hover {
+            color: #111827;
+        }
+
+.brand-card,
+#about .brand-card {
+  background: transparent;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: none;
+}
+
+
+        .brand-badge {
+            background: transparent;
+            border: none;
+            color: #374151;
+        }
+
+        .btn-primary,
+        .btn-secondary,
+        .btn-consult {
+            border-radius: 9999px;
+            font-weight: 500;
+            transition: all 0.3s ease-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transform: translateZ(0);
+        }
+
+        .btn-primary {
+            background: #374151;
+            color: #fff;
+            border: 1px solid rgba(31, 41, 55, 0.2);
+            box-shadow: 0 6px 14px rgba(31, 41, 55, 0.24);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-0.125rem);
+            background: #1f2937;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-primary.no-shadow,
+        .btn-primary.no-shadow:hover {
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface-soft);
+            color: #374151;
+            border: 1px solid var(--brand-border);
+            backdrop-filter: blur(8px);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-0.125rem);
+            border-color: rgba(31, 41, 55, 0.3);
+            color: #111827;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .btn-consult {
+            background: var(--consult-soft);
+            border: 1px solid rgba(82, 82, 91, 0.36);
+            color: #4b5563;
+        }
+
+        .btn-consult:hover {
+            transform: translateY(-0.125rem);
+            background: rgba(82, 82, 91, 0.14);
+            border-color: var(--consult-accent);
+            color: #1f2937;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        .hero-btn-primary {
+            background-color: #ded9ce;
+            color: #1f2937;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            transition: all 0.2s ease;
+        }
+
+        .hero-btn-primary:hover {
+            background-color: #d5d0c4;
+            color: #111827;
+        }
+
+        .hero-btn-primary .hero-btn-arrow {
+            color: #78716c;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .hero-btn-primary:hover .hero-btn-arrow {
+            color: #111827;
+            transform: translate(1px, -1px);
+        }
+
+        .hero-btn-secondary {
+            background-color: rgba(255, 255, 255, 0.85);
+            color: #292524;
+            border: 1px solid rgba(31, 41, 55, 0.12);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+            transition: all 0.2s ease;
+        }
+
+        .hero-btn-secondary:hover {
+            background-color: #ffffff;
+            border-color: rgba(31, 41, 55, 0.22);
+            color: #111827;
+        }
+
+        
+
+        .btn-primary i,
+        .btn-secondary i,
+        .btn-consult i {
+            transition: transform 0.22s ease, opacity 0.22s ease;
+        }
+
+        
+
+        .btn-primary:hover i,
+        .btn-secondary:hover i,
+        .btn-consult:hover i {
+            transform: translateX(var(--motion-icon-shift));
+            opacity: 0.95;
+        }
+
+        .partner-action-arrow {
+            transition: translate 0.2s ease;
+        }
+
+        .partner-action:hover .partner-action-arrow {
+            transform: none;
+            translate: 2px -2px;
+            opacity: 1;
+        }
+
+        .prog-filter-btn {
+            background: transparent;
+            border: 1.331px solid rgba(0, 0, 0, 0.1331);
+            color: #4b5563;
+            transform: translateZ(0);
+        }
+
+        .prog-filter-btn.active {
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .prog-filter-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1),
+                        transform var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: var(--reveal-delay, 0ms);
+            will-change: opacity, transform;
+        }
+
+        .reveal-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            z-index: 70;
+            pointer-events: none;
+            background: rgba(17, 24, 39, 0.08);
+        }
+
+        #scroll-progress-bar {
+            width: 100%;
+            height: 100%;
+            transform-origin: left center;
+            transform: scaleX(0);
+            background: rgba(55, 65, 81, 0.78);
+            box-shadow: none;
+        }
+
+        .modal-root {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear var(--motion-modal-duration);
+        }
+
+        .modal-root.modal-active {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity var(--motion-modal-duration) cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .modal-root .modal-panel {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: transform var(--motion-modal-panel-duration) cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+        }
+
+        .modal-root.modal-active .modal-panel {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-section {
+            position: relative;
+            overflow: hidden;
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+  
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
+}
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 8px;
+            margin-top: 26px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .btn-share-footer,
+        .btn-close-footer {
+            padding: 9px 16px;
+            border-radius: 9999px;
+            font-weight: 500;
+            font-size: 13px;
+            cursor: pointer;
+            transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .btn-share-footer {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-share-footer:hover {
+            border-color: #9ca3af;
+            color: #1f2937;
+        }
+
+        .btn-close-footer {
+            background-color: #fff;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+            padding: 9px 18px;
+        }
+
+        .btn-close-footer:hover {
+            border-color: #9ca3af;
+            color: #111827;
+        }
+
+        @media (max-width: 640px) {
+            :root {
+                --motion-hover-scale: 1;
+                --motion-icon-shift: 1px;
+                --motion-reveal-duration: 0.4s;
+                --motion-modal-duration: 0.18s;
+                --motion-modal-panel-duration: 0.2s;
+            }
+
+            .reveal-item {
+                transform: translateY(8px);
+            }
+
+            .modal-footer {
+                gap: 8px;
+                margin-top: 24px;
+                padding-top: 16px;
+            }
+
+            .btn-share-footer,
+            .btn-close-footer {
+                min-height: 44px;
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+        }
+        
+        #modal-body h1, #modal-body h2, #modal-body h3, #modal-body h4 { font-weight: 700; color: #0f172a; margin-top: 1.25rem; margin-bottom: 0.375rem; }
+        #modal-body h2 { font-size: 1.2rem; }
+        #modal-body h3 { font-size: 1rem; }
+        #modal-body p { margin-bottom: 0.875rem; }
+        #modal-body ul, #modal-body ol { padding-left: 1.4rem; margin-bottom: 0.875rem; }
+        #modal-body ul { list-style-type: disc; }
+        #modal-body ol { list-style-type: decimal; }
+        #modal-body li { margin-bottom: 0.2rem; }
+        #modal-body blockquote { border-left: 3px solid #4b5563; padding-left: 1rem; color: #6b7280; margin: 1rem 0; }
+        #modal-body a { color: #374151; text-decoration: underline; }
+        #modal-body img { max-width: 100%; border-radius: 0.5rem; margin: 1rem 0; }
+        #modal-body hr { border-color: #f1f5f9; margin: 1.25rem 0; }
+        #modal-body strong { font-weight: 700; }
+        #modal-body code { background: #f1f5f9; padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.85em; font-family: 'JetBrains Mono', monospace; }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto !important;
+            }
+
+            .reveal-item,
+            .modal-root,
+            .modal-root .modal-panel,
+            .btn-primary,
+            .btn-secondary,
+            .btn-consult {
+                transition: none !important;
+                animation: none !important;
+                transform: none !important;
+            }
+
+            .partner-action-arrow {
+                transition: none !important;
+                translate: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#ece9e1] text-slate-800 antialiased selection:bg-zinc-400/35 selection:text-slate-900">
+    <div id="scroll-progress" aria-hidden="true"><div id="scroll-progress-bar"></div></div>
+
+    <div class="header-fade-container"></div>
+    <!-- Header / Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#hero" onclick="navigateToSection(event, 'hero')" class="flex items-center gap-3 group">
+                <img src="./assets/images/logo.webp" alt="로고" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
+                <div>
+                    <span class="text-slate-800 font-bold text-lg tracking-wider">K-WAVE MISSION</span>
+                    <p class="text-slate-500 text-xs">하나님 나라를 위한 한류</p>
+                </div>
+            </a>
+
+            <!-- Desktop Nav -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-sm">
+                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="brand-link">소개</a>
+                <a href="#about" onclick="navigateToSection(event, 'about')" class="brand-link">사역</a>
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="brand-link">프로그램</a>
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="brand-link">리포트</a>
+                <a href="./k-alliance.html" class="brand-link">K-Alliance</a>
+            </nav>
+
+            <!-- 모바일 전용 햄버거 메뉴 버튼 (데스크톱에서는 감춤 - 44px+ 터치 타겟) -->
+            <button id="menu-toggle" type="button" aria-label="메뉴 열기" class="md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center p-2 text-slate-700 hover:text-slate-900 rounded-xl">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+
+            <!-- Mobile Nav Dropdown -->
+            <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 w-full bg-[#f2f0ea]/95 backdrop-blur-xl border-b border-slate-800/20 px-6 py-5 space-y-1.5 text-right font-medium text-slate-800 shadow-2xl z-50 rounded-b-2xl">
+                <a href="#hero" onclick="navigateToSection(event, 'hero')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">소개</a>
+                <a href="#about" onclick="navigateToSection(event, 'about')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">사역</a>
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">프로그램</a>
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">리포트</a>
+                <a href="./k-alliance.html" class="mobile-menu-item block brand-link min-h-[44px] py-2.5 px-4 rounded-xl text-[15px] font-semibold text-slate-800 hover:text-black hover:bg-slate-300/40 transition-colors text-right">K-Alliance</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero-section pt-32 pb-16 md:pt-48 md:pb-32 text-slate-900 relative overflow-hidden">
+        
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div class="section-badge brand-badge inline-flex items-center gap-2 text-xs sm:text-sm font-medium mb-6 sm:mb-8">
+                <span class="w-2 h-2 rounded-full bg-brand-300"></span>
+                대한민국이 선교합니다.
+            </div>
+            
+            <h1 class="hero-title text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight leading-snug sm:leading-[1.3] lg:leading-[1.3] mb-6 sm:mb-8 text-black break-keep">
+                선교 현장과 한국교회를<br>
+                <span>
+                    잇는 풀스택 선교 플랫폼
+                </span>
+            </h1>
+            
+            <p class="text-lg sm:text-xl text-slate-700 max-w-3xl mx-auto mb-8 sm:mb-10 leading-relaxed">
+                "대한민국의 경제발전과 교회부흥의 경험이<br class="hidden sm:inline">
+                교육을 통해 세계선교 자원으로 쓰임 받도록 한국 교회와 함께합니다."
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-8 w-full px-2 sm:px-4">
+                <!-- 1. 선교 동역하기 버튼 -->
+                <a href="#programs" onclick="navigateToSection(event, 'programs')" class="hero-btn-primary w-[220px] sm:w-auto min-h-[48px] h-12 px-6 py-3.5 rounded-xl text-sm font-semibold tracking-tight whitespace-nowrap active:scale-[0.99] inline-flex items-center justify-center gap-2">
+                    선교 동역하기 <i data-lucide="arrow-up-right" class="hero-btn-arrow w-4 h-4"></i>
+                </a>
+                
+                <!-- 2. 주간 미션 리포트 버튼 -->
+                <a href="#news" onclick="navigateToSection(event, 'news')" class="hero-btn-secondary w-[220px] sm:w-auto min-h-[48px] h-12 px-6 py-3.5 rounded-xl text-sm font-medium tracking-tight whitespace-nowrap active:scale-[0.99] inline-flex items-center justify-center gap-1.5">
+                    주간 미션 리포트
+                </a>
+            </div>
+            
+            <div class="mt-12 sm:mt-16 text-sm sm:text-[15px] text-slate-900 sm:text-black flex justify-center items-center gap-2">
+                <i data-lucide="quote" class="w-4 h-4 text-slate-900 sm:text-black shrink-0"></i>
+                <span>"주의 도를 땅 위에, 주의 구원을 모든 나라에 알리소서." (시편 67:2)</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integrated Ministry Showcase -->
+    <section id="about" class="py-12 sm:py-20 text-slate-900 relative overflow-hidden">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            
+            <!-- Section Header -->
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-14">
+                <div>
+                    <span class="text-xs font-semibold tracking-widest uppercase text-stone-500 block mb-2 sm:mb-3">CORE VALUE &amp; STRATEGY</span>
+                    <h2 class="about-title-shadow text-2xl sm:text-5xl font-bold text-black tracking-tight font-serif leading-[1.35] sm:leading-[1.3]">
+                        고등교육선교 전문가 그룹<br>
+                        <span>
+                            케이웨이브 미션
+                        </span>
+                    </h2>
+                </div>
+                <p class="text-slate-800 sm:text-black text-base sm:text-lg md:text-xl max-w-md mt-4 sm:mt-6 md:mt-0 font-medium leading-relaxed">
+                    현지 대학에 세워지는 거점 센터를 중심으로 학술행사, 연구조사활동, 문화교류 행사 등을 통해 고등교육선교 영역을 개척합니다.
+                </p>
+            </div>
+
+            <!-- Markmonitor Style Asymmetric Bento Grid (Mobile Card Feed Layout) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+
+                <!-- [01] Highlight Feature (Main Visual Card) -->
+                <div class="brand-card lg:col-span-2 group relative rounded-xl sm:rounded-xl overflow-hidden min-h-[300px] sm:min-h-[380px] flex flex-col justify-between p-5 sm:p-8">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                            <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">
+                                HOLY MINISTRY
+                            </span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">01</span>
+                        </div>
+                        <h3 class="text-xl sm:text-3xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">영혼을 살리는 일</h3>
+                        <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg font-medium">
+                            케이웨이브 미션 사역의 본질이자 목적입니다.
+                        </p>
+                    </div>
+
+                    <div class="pt-4 sm:pt-5 mt-6 border-t border-slate-900/10 w-full flex items-center justify-start">
+                        <button type="button" onclick="openCinematicModal('01-for-spirit')" class="group/btn inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
+                            <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- [02] Next-Gen Disciple -->
+                <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                            <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">
+                                NEXT-GEN DISCIPLE
+                            </span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">02</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">교회를 세우는 일</h3>
+                        <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
+                            한국 교회와 함께 현지 교회가 지역의 거점이 되도록 세웁니다.
+                        </p>
+                    </div>
+                    <div class="pt-4 sm:pt-5 mt-6 border-t border-slate-900/10 w-full flex items-center justify-start">
+                        <button type="button" onclick="openCinematicModal('02-for-church')" class="group/btn inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
+                            <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- [03] Church Network -->
+                <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                            <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">
+                                GLOBAL BRIDGE
+                            </span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">03</span>
+                        </div>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">세상을 바꾸는 일</h3>
+                        <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
+                            대한민국의 성공 경험을 현지의 수요와 전략적으로 매칭합니다.
+                        </p>
+                    </div>
+                    <div class="pt-4 sm:pt-5 mt-6 border-t border-slate-900/10 w-full flex items-center justify-start">
+                        <button type="button" onclick="openCinematicModal('03-for-world')" class="group/btn inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
+                            <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- [04] Action Banner 1: Church Cooperation -->
+                <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                            <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">
+                                FOR CHURCHES
+                            </span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">04</span>
+                        </div>
+                        <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">우리 교회 국제화 프로젝트</h4>
+                        <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">한국 교회의 자원을 교육을 통해 공유하며 세계형제의식을 실천합니다.</p>
+                    </div>
+                    <div class="pt-4 sm:pt-5 mt-6 border-t border-slate-900/10 w-full flex items-center justify-start">
+                        <button type="button" onclick="openMdModal('04-global-church')" class="group/btn inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
+                            <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- [05] Action Banner 2: Individual Partner -->
+                <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                            <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">
+                                FOR INDIVIDUALS
+                            </span>
+                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">05</span>
+                        </div>
+                        <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">여러분이 선교 자원입니다.</h4>
+                        <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">여러분의 직업, 경험, 지식으로 선교적 주체가 될 수 있습니다.</p>
+                    </div>
+                    <div class="pt-4 sm:pt-5 mt-6 border-t border-slate-900/10 w-full flex items-center justify-start">
+                        <button type="button" onclick="openMdModal('05-mission-resource')" class="group/btn inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0">
+                            <span>자세히 보기</span> <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+<!-- Interactive Metrics Section (Mobile Card Feed Grid) -->
+<section class="metrics-section">
+  <div class="metrics-container">
+    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+      <div class="metric-header">
+        <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">ACADEMIC NETWORK</span>
+      </div>
+      <div class="metric-value-wrapper">
+        <span class="metric-value font-serif tabular-nums text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-none" data-target="295">0</span>
+        <span class="metric-unit font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-400 select-none leading-none ml-1">+</span>
+      </div>
+      <div class="metric-title text-base sm:text-lg font-bold text-slate-900 tracking-tight font-serif break-keep">우리와 동역하는 크리스천 대학교수</div>
+      <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">교육과 연구의 전문성으로 세계선교에 참여합니다.</p>
+    </div>
+
+    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+      <div class="metric-header">
+        <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">PARTNERSHIP</span>
+      </div>
+      <div class="metric-value-wrapper">
+        <span class="metric-value font-serif tabular-nums text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-none" data-target="19">0</span>
+        <span class="metric-unit font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-400 select-none leading-none ml-1">+</span>
+      </div>
+      <div class="metric-title text-base sm:text-lg font-bold text-slate-900 tracking-tight font-serif break-keep">우리와 동역하는 교회와 기관</div>
+      <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">하나님 나라 확장을 위한 전략적 과제를 함께 수행합니다.</p>
+    </div>
+
+    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+      <div class="metric-header">
+        <span class="text-xs font-semibold tracking-wider uppercase text-stone-500">HIGHER EDUCATION</span>
+      </div>
+      <div class="metric-value-wrapper">
+        <span class="metric-value font-serif tabular-nums text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-none" data-target="63">0</span>
+        <span class="metric-unit font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-stone-400 select-none leading-none ml-1">+</span>
+      </div>
+      <div class="metric-title text-base sm:text-lg font-bold text-slate-900 tracking-tight font-serif break-keep">우리가 개척한 현지 대학교</div>
+      <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">고등교육 프로그램을 통해 복음의 길을 확장하는 거점</p>
+    </div>
+  </div>
+</section>
+  
+<!-- Key Participation Programs -->
+<section id="programs" class="py-12 sm:py-16 bg-[#ece9e1] text-slate-900 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
+        <!-- Section Header -->
+        <div class="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+            <span class="text-xs font-semibold tracking-widest uppercase text-stone-500 block mb-2">JOIN THE MISSION</span>
+            <h2 class="text-2xl sm:text-5xl font-extrabold text-slate-900 tracking-tight mb-3 font-serif">
+                우리는 한 팀입니다
+            </h2>
+            <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">
+                K-WAVE MISSION은 한국 교회와 성도가 선교적 주체로서 참여할 수 있는 다양한 프로그램을 운영하고 있습니다.
+            </p>
+        </div>
+
+<!-- 📌 상단 고정 공지사항 배너 (모바일 터치 카드) -->
+<div id="main-notice-banner" 
+     onclick="openNoticeBannerModal()" 
+     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+    
+    <!-- Left: 배지 + 공지 제목 영역 -->
+    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
+        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-stone-200/80 text-stone-700 text-xs font-semibold tracking-wider flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-stone-700 animate-pulse"></span>
+            NOTICE
+        </span>
+        
+        <!-- JS가 최신 공지 제목을 넣는 자리 -->
+        <span id="main-notice-title" class="truncate text-slate-700 text-sm font-medium group-hover:text-slate-900 transition-colors">
+            📢 최신 공지사항을 불러오는 중입니다...
+        </span>
+    </div>
+
+    <!-- Right: 자세히 보기 영역 -->
+    <span class="shrink-0 group/notice-details text-xs text-slate-500 group-hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold">
+        <span class="whitespace-nowrap group-hover/notice-details:underline transition-all duration-200">자세히 보기</span>
+        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
+    </span>
+</div>
+
+        <!-- 📌 상태 필터 탭 (모바일 44px+ 터치 버튼) -->
+        <div class="flex items-center justify-center gap-2 mb-6 flex-wrap">
+            <button type="button" onclick="filterPrograms('all', this)" class="prog-filter-btn active min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold border border-black/15 transition-all">ALL</button>
+            <button type="button" onclick="filterPrograms('recruiting', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold border border-black/15 transition-all">모집 중</button>
+            <button type="button" onclick="filterPrograms('ongoing', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold border border-black/15 transition-all">진행 중</button>
+            <button type="button" onclick="filterPrograms('preparing', this)" class="prog-filter-btn min-h-[44px] px-4 py-2.5 rounded-full text-xs font-semibold border border-black/15 transition-all">준비 중</button>
+        </div>
+
+        <!-- 📌 프로그램 카드 슬라이더 -->
+        <div class="relative">
+
+        <!-- Left arrow (desktop only) -->
+        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="group/slider-nav hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+            <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:-translate-x-0.5"></i>
+        </button>
+
+        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 scrollbar-hide">
+            <div class="w-full min-h-[180px] flex items-center justify-center text-center text-slate-500 text-sm">
+                프로그램을 불러오는 중입니다...
+            </div>
+        </div><!-- end prog-slider -->
+
+        <!-- Right arrow (desktop only) -->
+        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="group/slider-nav hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+            <i data-lucide="chevron-right" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:translate-x-0.5"></i>
+        </button>
+
+        </div><!-- end slider wrapper -->
+    </div>
+</section>
+
+    <!-- DB-less Weekly Mission News Section -->
+    <section id="news" class="py-12 sm:py-16 bg-[#ece9e1] text-slate-900 relative overflow-hidden">
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-10">
+                <div>
+                    <span class="text-xs font-semibold tracking-widest uppercase text-stone-500 block mb-2 sm:mb-3">STRATEGIC BRIEFING</span>
+                    <h2 class="text-2xl sm:text-5xl font-bold text-slate-900 tracking-tight font-serif">
+                        주간 미션 리포트
+                    </h2>
+                </div>
+                <p class="text-slate-700 text-base sm:text-lg md:text-xl max-w-md mt-2 sm:mt-4 md:mt-0 font-medium leading-relaxed">
+                    매주 발행되는 미션 리포트를 통해 함께 소통하며 동역의 기회를 공유합니다.
+                </p>
+            </div>
+
+            <!-- Latest report and anonymous field voices (Populated via JS) -->
+            <div id="news-container">
+                <!-- JS Inject -->
+            </div>
+        </div>
+    </section>
+
+<!-- Partners Section (Unified Background) -->
+<section id="partners" class="py-16 sm:py-28 bg-[#ece9e1] relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <!-- 타이틀 -->
+        <p class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-stone-500 mb-6 sm:mb-10">
+            K-WAVE GLOBAL ALLIANCE
+        </p>
+        
+        <!-- 감싸는 컨테이너: 모바일은 2열 Grid / 데스크톱(sm:)은 가로 한 줄 Flex -->
+        <div class="grid grid-cols-2 gap-2.5 px-2 max-w-md mx-auto sm:flex sm:flex-wrap sm:justify-center sm:max-w-4xl sm:gap-3">
+            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
+                글로벌미래고등교육원
+            </div>
+            <a href="https://www.ishema.kr/" target="_blank" rel="noopener noreferrer" class="group/partner-link flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300">
+                <span>쉐마글로벌학교</span>
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
+            </a>
+            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
+                21세기SMF선교회
+            </div>
+            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
+                청평사랑의교회
+            </div>
+            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
+                함께걷는교회
+            </div>
+
+            <!-- 5번째 아이템: 모바일(col-span-2) / 데스크톱(sm:col-auto) -->
+            <a href="https://www.koreancenter.net/" target="_blank" rel="noopener noreferrer" class="group/partner-link col-span-2 sm:col-auto flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300">
+                <span>한국센터글로벌네트워크</span>
+                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
+            </a>
+        </div>
+    </div>
+
+        <!-- Donation & Support CTA Banner -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-24 mb-12 sm:mb-20">
+            <div class="bg-white/90 border border-slate-300/80 p-6 sm:p-10 rounded-xl sm:rounded-xl shadow-sm relative overflow-hidden flex flex-col md:flex-row items-start md:items-center justify-between gap-5 text-left">
+                <div class="space-y-2">
+                    <span class="text-xs font-semibold tracking-widest uppercase text-stone-500 block mb-1">INVEST IN MISSION</span>
+                    <h3 class="font-serif text-xl sm:text-3xl font-bold text-slate-900 tracking-tight">하나님 나라의 확장,<br class="sm:hidden"> 동역으로 완성됩니다.</h3>
+                    <p class="text-sm sm:text-sm text-slate-700 font-normal leading-relaxed">국민은행 <span class="font-mono text-slate-900 font-bold">233001-04-416923</span><br class="sm:hidden"> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
+                </div>
+                <a href="./k-alliance.html"
+                   class="btn-primary partner-action no-shadow min-h-[48px] px-6 py-3.5 text-xs sm:text-sm font-semibold tracking-wider shrink-0 w-full md:w-auto text-center justify-center inline-flex items-center gap-1.5 cursor-pointer">
+                    <span>K-Alliance</span> <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Minimalist Unified Footer -->
+        <footer class="bg-[#ece9e1] py-12 sm:py-16 relative overflow-hidden border-t border-black/10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+                <!-- [중앙 섹션 1] 사명 재확인 -->
+                <p class="text-xs sm:text-sm text-stone-500 font-medium uppercase tracking-widest mb-4 sm:mb-5 max-w-xl mx-auto leading-relaxed">
+                    Since 2011, Connecting South Korea and Indonesia
+                </p>
+
+                <!-- [중앙 섹션 2] 정책 및 안내 링크 -->
+                <div class="flex flex-wrap items-center justify-center gap-x-1 sm:gap-x-1.5 gap-y-1 text-xs text-slate-600 mb-5 sm:mb-6 max-w-full">
+                    <button type="button" onclick="openMdModal('terms')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Terms of Use</button>
+                    <span class="text-slate-500/60 select-none" aria-hidden="true">|</span>
+                    <button type="button" onclick="openMdModal('privacy')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Privacy Policy</button>
+                    <span class="text-slate-500/60 select-none" aria-hidden="true">|</span>
+                    <button type="button" onclick="openMdModal('contact-us')" class="px-2 sm:px-2.5 py-1 min-h-[36px] flex items-center justify-center whitespace-nowrap hover:text-slate-900 font-medium transition-colors cursor-pointer">Contact Us</button>
+                </div>
+
+                <!-- [하단] Copyright -->
+                <p class="text-[11px] sm:text-xs text-stone-500 tracking-wider sm:tracking-widest">
+                    © 2026 K-WAVE MISSION. All rights reserved.
+                </p>
+            </div>
+        </footer>
+
+    <!-- JavaScript modules (Deferred for Lighthouse mobile optimization) -->
+    <script>
+        window.openMdModal = function(slug, title, badge, sub) {
+            if (window._openMdModalReal) {
+                return window._openMdModalReal(slug, title, badge, sub);
+            }
+            window._pendingMdModal = [slug, title, badge, sub];
+        };
+
+        window.loadMarked = function () {
+            if (window.marked) return Promise.resolve(true);
+            if (window.markedLoadPromise) return window.markedLoadPromise;
+
+            window.markedLoadPromise = new Promise(function (resolve) {
+                var script = document.createElement('script');
+                script.src = './assets/js/vendor/marked.min.js';
+                script.async = true;
+                script.onload = function () { resolve(Boolean(window.marked)); };
+                script.onerror = function () {
+                    console.warn('Markdown parser could not be loaded.');
+                    resolve(false);
+                };
+                document.head.appendChild(script);
+            });
+
+            return window.markedLoadPromise;
+        };
+
+        window.navigateToSection = function(event, sectionId) {
+            if (event && typeof event.preventDefault === 'function') {
+                event.preventDefault();
+            }
+
+            var section = document.getElementById(sectionId);
+            if (!section) return;
+
+            var completeNavigation = function() {
+                var header = document.querySelector('header') || document.querySelector('.glass-nav') || document.querySelector('nav');
+                var headerHeight = header ? header.offsetHeight : 80;
+                var targetPosition = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                targetPosition = Math.max(0, targetPosition);
+
+                window.scrollTo({
+                    top: targetPosition,
+                    behavior: 'smooth'
+                });
+
+                if (window.history.pushState) {
+                    window.history.pushState(null, '', '#' + sectionId);
+                }
+
+                var mobileMenu = document.getElementById('mobile-menu');
+                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.add('hidden');
+                }
+            };
+
+            var openModal = document.querySelector('.modal-root:not(.hidden), #news-modal:not(.hidden), #md-modal:not(.hidden)');
+            if (openModal && typeof window.deactivateModal === 'function') {
+                window.deactivateModal(openModal, completeNavigation);
+            } else {
+                completeNavigation();
+            }
+        };
+    </script>
+    <script src="./assets/js/vendor/lucide.min.js" defer></script>
+    <script src="./assets/js/vendor/marked.min.js" defer></script>
+    <script src="./assets/js/api.js?v=20260912-unified-v1" defer></script>
+    <script src="./assets/js/ui-components.js?v=20260912-v1" defer></script>
+    <script src="./assets/js/animations.js" defer></script>
+    <script src="./assets/js/modal-handler.js?v=20260912-v1" defer></script>
+    <script src="./assets/js/metrics-counter.js" defer></script>
+    <script src="./assets/js/kwave-drawer.js?v=20260912-clean-refactor" defer></script>
+    <script src="./assets/js/program-loader.js?v=20260912-v1" defer></script>
+    <script src="./assets/js/news-loader.js?v=20260912-v1" defer></script>
+    <script src="./assets/js/app-init.js?v=20260912-clean-refactor" defer></script>
+    <!-- End of JavaScript modules -->
+     
+    <!-- 시네마틱 모달 -->
+    <div id="cinematic-modal" class="modal-root fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-opacity duration-300">
+        <div id="cinematic-modal-panel" class="relative w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up">
+            <!-- 배경 이미지 -->
+            <img id="cinematic-modal-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover grayscale-[15%] contrast-[105%]" />
+            
+            <!-- 그라데이션 오버레이 -->
+            <div id="cinematic-modal-gradient" class="absolute inset-x-0"></div>
+            
+            <!-- 우측 상단 미니멀 닫기 버튼 -->
+            <button type="button" onclick="closeCinematicModal()" aria-label="닫기" class="absolute top-4 right-4 bg-black/20 hover:bg-black/40 backdrop-blur-sm text-white/80 hover:text-white transition-colors p-2 rounded-full flex items-center justify-center cursor-pointer z-10 min-w-[36px] min-h-[36px]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+
+            <!-- 텍스트 영역 -->
+            <div id="cinematic-modal-text-container" class="absolute left-0 w-full p-6 sm:p-8 flex flex-col text-left">
+                <span id="cinematic-modal-badge" class="text-stone-300 text-xs mb-2 tracking-widest font-semibold uppercase"></span>
+                <h3 id="cinematic-modal-title" class="text-white font-bold text-sm sm:text-xl mb-3 leading-snug"></h3>
+                <p id="cinematic-modal-desc" class="text-slate-300 text-xs sm:text-base leading-relaxed"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 마크다운 공통 모달 -->
+<div id="md-modal" class="modal-root fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-3 sm:p-4">
+    <div class="modal-panel relative w-full max-w-xl max-h-[85vh] overflow-hidden bg-white border border-slate-200/90 text-slate-900 rounded-xl sm:rounded-xl shadow-2xl flex flex-col transition-all duration-200">
+        <!-- 모달 고정 상단 헤더 -->
+        <div class="relative shrink-0 px-6 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-slate-100 bg-white">
+            <button type="button" onclick="closeMdModal()" aria-label="닫기" class="absolute top-4 right-4 sm:top-6 sm:right-6 bg-transparent hover:bg-slate-100 text-slate-500 hover:text-slate-700 transition-colors p-2 rounded-xl flex items-center justify-center cursor-pointer z-10 min-w-[40px] min-h-[40px]">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="flex items-center gap-2 text-xs text-stone-500 font-medium mb-1 tracking-wider pr-10">
+                <span id="md-modal-badge" class="px-2.5 py-0.5 rounded-md bg-stone-100 text-stone-700 border border-stone-200/80 font-semibold text-[11px] sm:text-xs tracking-wider uppercase">안내</span>
+                <span class="text-stone-300">•</span>
+                <span id="md-modal-subtitle" class="text-xs text-stone-500 uppercase tracking-widest">K-WAVE MISSION</span>
+            </div>
+            <h2 id="md-modal-title" class="font-serif text-lg sm:text-2xl leading-snug font-bold text-slate-900 pr-8 mt-2.5 sm:mt-3">안내</h2>
+        </div>
+        <!-- 모달 스크롤 본문 (마크다운 파싱 결과) -->
+        <div id="md-modal-content" class="flex-1 min-h-0 overflow-y-auto overflow-x-hidden no-scrollbar overscroll-contain px-6 sm:px-8 py-5 sm:py-6 text-sm sm:text-base text-slate-800 leading-relaxed space-y-4 bg-white font-sans">
+            <!-- JavaScript가 이곳에 마크다운 HTML을 삽입합니다 -->
+        </div>
+        <!-- 모달 고정 하단 푸터 -->
+        <div class="shrink-0 flex items-center justify-between border-t border-slate-100 px-6 sm:px-8 py-3.5 sm:py-4 bg-white gap-3 font-sans">
+            <button type="button" onclick="shareCurrentMdModal()" class="btn-share-footer flex items-center justify-center gap-1.5 px-4 py-2 min-h-[40px] bg-slate-50 hover:bg-slate-100 border border-slate-200/80 text-slate-700 text-xs font-semibold rounded-xl transition-all shadow-2xs cursor-pointer">
+                <i data-lucide="link-2" class="w-4 h-4 text-slate-600"></i> <span>링크 공유</span>
+            </button>
+            <button type="button" onclick="closeMdModal()" class="btn-close-footer flex items-center justify-center px-5 py-2 min-h-[40px] bg-slate-100 hover:bg-slate-200 border border-slate-200/70 text-slate-800 text-xs font-semibold rounded-xl transition-all cursor-pointer">닫기</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

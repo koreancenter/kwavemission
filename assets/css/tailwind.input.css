@@ -1,0 +1,13 @@
+@config "../../tailwind.config.js";
+@source "../../index.html";
+@source "../../k-alliance.html";
+@source "../../docs";
+@source "../js/api.js";
+@source "../js/animations.js";
+@source "../js/kwave-drawer.js";
+@source "../js/metrics-counter.js";
+@source "../js/modal-handler.js";
+@source "../js/news-loader.js";
+@source "../js/program-loader.js";
+@source "../js/ui-components.js";
+@import "tailwindcss" source(none);

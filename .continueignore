@@ -1,0 +1,9 @@
+# .continueignore
+.git/
+.wrangler/
+node_modules/
+dist/
+*.sqlite
+*.wal
+*.png
+*.jpg

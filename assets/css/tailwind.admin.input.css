@@ -1,0 +1,12 @@
+@config "../../tailwind.config.js";
+@source "../../admin.html";
+@source "../js/ai-assistant.js";
+@source "../js/api.js";
+@source "../js/dashboardManager.js";
+@source "../js/html-source-editor.js";
+@source "../js/main.js";
+@source "../js/officialManager.js";
+@source "../js/postManager.js";
+@source "../js/programManager.js";
+@source "../js/uiHelper.js";
+@import "tailwindcss" source(none);

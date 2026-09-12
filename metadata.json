@@ -1,0 +1,8 @@
+{
+  "name": "Remix kwavemission",
+  "description": "프론트엔드 최종 마무리",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
