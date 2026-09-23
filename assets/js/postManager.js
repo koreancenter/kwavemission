@@ -448,7 +448,7 @@
           <td class="p-3 text-center text-slate-400 font-mono text-xs">${post.id}</td>
           <td class="p-3 text-center">
             ${post.thumbnail_url 
-              ? `<img src="${post.thumbnail_url}" class="w-10 h-10 object-cover rounded-lg border border-slate-200 mx-auto shadow-2xs">` 
+              ? `<img src="${post.thumbnail_url}" width="40" height="40" alt="썸네일" class="w-10 h-10 object-cover rounded-lg border border-slate-200 mx-auto shadow-2xs">` 
               : '<div class="w-10 h-10 rounded-lg bg-slate-100 border border-slate-200 flex items-center justify-center text-xs text-slate-400 mx-auto">📷</div>'}
           </td>
           <td class="p-3 text-center">

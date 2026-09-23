@@ -11,18 +11,37 @@
   <!-- Performance Resource Hints -->
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+  <!-- Defer non-critical external web fonts -->
+  <script>
+    (function() {
+      function loadDeferredFonts() {
+        var fonts = [
+          { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap' },
+          { href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css', crossOrigin: 'anonymous' }
+        ];
+        fonts.forEach(function(item) {
+          var el = document.createElement('link');
+          el.rel = 'stylesheet';
+          el.href = item.href;
+          if (item.crossOrigin) el.crossOrigin = item.crossOrigin;
+          document.head.appendChild(el);
+        });
+      }
+      if ('requestIdleCallback' in window) {
+        requestIdleCallback(loadDeferredFonts, { timeout: 2500 });
+      } else {
+        window.addEventListener('load', function() {
+          setTimeout(loadDeferredFonts, 100);
+        });
+      }
+    })();
+  </script>
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-  </noscript>
-  
-  <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
-  <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
-  <noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
   </noscript>
 
@@ -181,7 +200,7 @@
                 <label for="postImage" class="block text-xs font-bold text-slate-700">대표 썸네일</label>
                 <div class="flex items-center gap-3">
                   <input type="file" id="postImage" accept="image/*" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-200 file:text-slate-700 hover:file:bg-slate-300 transition-all cursor-pointer">
-                  <img id="preview-img" alt="대표 이미지 미리보기" class="h-9 w-16 object-cover rounded border border-slate-200 hidden shadow-xs shrink-0">
+                  <img id="preview-img" alt="대표 이미지 미리보기" width="64" height="36" class="h-9 w-16 object-cover rounded border border-slate-200 hidden shadow-xs shrink-0">
                 </div>
               </div>
             </div>
@@ -693,7 +712,7 @@
         <span id="modalDate" class="modal-date text-xs text-slate-400"></span>
       </div>
       <h2 id="modalTitle" class="modal-title text-xl font-extrabold text-slate-900"></h2>
-      <img id="modalImg" class="modal-image w-full rounded-xl object-cover max-h-64 hidden">
+      <img id="modalImg" alt="모달 미리보기 이미지" width="600" height="340" class="modal-image w-full rounded-xl object-cover max-h-64 hidden">
       <div id="modalContent" class="preview-body prose prose-slate max-w-none pt-2 border-t border-slate-100"></div>
     </div>
   </div>

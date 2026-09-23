@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/assets/images/favicon.ico">
-    <title>케이웨이브 미션 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
-    <meta name="description" content="한국학 기반 교육선교 전문가 그룹. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <title>K-WAVE MISSION - 한국학 기반 교육선교 전문가 그룹</title>
+    <meta name="description" content="한국학 기반 교육선교 전문가 그룹 - 하나님 나라를 위한 한류. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <meta property="og:title" content="K-WAVE MISSION - 한국학 기반 교육선교 전문가 그룹">
+    <meta property="og:description" content="한국학 기반 교육선교 전문가 그룹 - 하나님 나라를 위한 한류. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
     
     <link rel="preload" href="./assets/css/tailwind.public.css?v=20260912-cta-v3" as="style">
     <link rel="stylesheet" href="./assets/css/tailwind.public.css?v=20260912-cta-v3">
@@ -25,10 +27,34 @@
       <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1">
     </noscript>
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+    <!-- Defer non-critical external web fonts to eliminate unused CSS and remove render blocking -->
+    <script>
+      (function() {
+        function loadDeferredFonts() {
+          var fonts = [
+            { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap' },
+            { href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css', crossOrigin: 'anonymous' }
+          ];
+          fonts.forEach(function(item) {
+            var el = document.createElement('link');
+            el.rel = 'stylesheet';
+            el.href = item.href;
+            if (item.crossOrigin) el.crossOrigin = item.crossOrigin;
+            document.head.appendChild(el);
+          });
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadDeferredFonts, { timeout: 2500 });
+        } else {
+          window.addEventListener('load', function() {
+            setTimeout(loadDeferredFonts, 100);
+          });
+        }
+      })();
+    </script>
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     </noscript>
 
     <style>
@@ -46,12 +72,6 @@
         animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
     </style>
-
-    <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
-    <noscript>
-      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-    </noscript>
     
     <style>
         :root {
@@ -78,21 +98,33 @@
         }
 
         body {
-            font-family: 'Pretendard', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             letter-spacing: -0.02em;
             line-height: 1.6;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
         }
 
         .hero-title,
         .section-title,
         .font-serif {
-            font-family: 'Noto Serif KR', serif;
+            font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', Georgia, serif;
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-feature-settings: 'tnum';
+        }
+
+        .hero-section {
+            position: relative;
+            background: radial-gradient(ellipse 70% 45% at 50% 18%, rgba(255, 255, 255, 0.65) 0%, rgba(236, 233, 225, 0) 100%);
         }
 
         .hero-title {
-            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
+            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.1), 0 6px 16px rgba(15, 23, 42, 0.05);
         }
 
         .about-title-shadow {
@@ -209,39 +241,51 @@
         }
 
         .hero-btn-primary {
-            background-color: #ded9ce;
-            color: #1f2937;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease;
+            background-color: #242b35;
+            color: #f8fafc;
+            border: 1px solid rgba(15, 23, 42, 0.25);
+            box-shadow: 0 2px 4px rgba(15, 23, 42, 0.08), 0 8px 18px -2px rgba(15, 23, 42, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+            transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .hero-btn-primary:hover {
-            background-color: #d5d0c4;
-            color: #111827;
+            background-color: #141820;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(15, 23, 42, 0.12), 0 16px 26px -2px rgba(15, 23, 42, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.25);
         }
 
         .hero-btn-primary .hero-btn-arrow {
-            color: #78716c;
+            color: rgba(248, 250, 252, 0.75);
             transition: transform 0.2s ease, color 0.2s ease;
         }
 
         .hero-btn-primary:hover .hero-btn-arrow {
-            color: #111827;
-            transform: translate(1px, -1px);
+            color: #ffffff;
+            transform: translate(2px, -2px);
         }
 
         .hero-btn-secondary {
-            background-color: rgba(255, 255, 255, 0.85);
+            background-color: rgba(255, 255, 255, 0.76);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             color: #292524;
-            border: 1px solid rgba(31, 41, 55, 0.12);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 6px 14px -2px rgba(28, 25, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+            transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.24s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .hero-btn-secondary:hover {
             background-color: #ffffff;
-            border-color: rgba(31, 41, 55, 0.22);
+            border-color: #ffffff;
             color: #111827;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(28, 25, 23, 0.04), 0 14px 22px -2px rgba(28, 25, 23, 0.07), inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
         
@@ -362,7 +406,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#hero" onclick="navigateToSection(event, 'hero')" class="flex items-center gap-3 group">
-                <img src="./assets/images/logo.webp" alt="로고" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
+                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" width="40" height="40" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
                 <div>
                     <span class="text-slate-800 font-bold text-lg tracking-wider">K-WAVE MISSION</span>
                     <p class="text-slate-600 text-xs">하나님 나라를 위한 한류</p>
@@ -567,7 +611,7 @@
 <!-- Interactive Metrics Section (Mobile Card Feed Grid) -->
 <section class="metrics-section">
   <div class="metrics-container">
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">ACADEMIC NETWORK</span>
       </div>
@@ -579,7 +623,7 @@
       <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">교육과 연구의 전문성으로 세계선교에 참여합니다.</p>
     </div>
 
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">PARTNERSHIP</span>
       </div>
@@ -591,7 +635,7 @@
       <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">하나님 나라 확장을 위한 전략적 과제를 함께 수행합니다.</p>
     </div>
 
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">HIGHER EDUCATION</span>
       </div>
@@ -855,7 +899,7 @@
     <div id="cinematic-modal" class="modal-root fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-opacity duration-300">
         <div id="cinematic-modal-panel" class="relative w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up">
             <!-- 배경 이미지 -->
-            <img id="cinematic-modal-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover grayscale-[15%] contrast-[105%]" />
+            <img id="cinematic-modal-img" src="" alt="시네마틱 미디어" width="768" height="480" class="absolute inset-0 w-full h-full object-cover grayscale-[15%] contrast-[105%]" />
             
             <!-- 그라데이션 오버레이 -->
             <div id="cinematic-modal-gradient" class="absolute inset-x-0"></div>

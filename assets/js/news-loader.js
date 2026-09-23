@@ -213,7 +213,7 @@
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img data-lazy-src="' + _safeImageUrl(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + altText + '" class="transition-opacity duration-300 opacity-0 w-full h-full object-cover" onerror="if(!this.dataset.fallbackApplied){this.dataset.fallbackApplied=\'1\';this.src=\'' + randomImg + '\';}else{this.parentElement.classList.add(\'is-empty\');this.remove();}">' +
+                    '<img data-lazy-src="' + _safeImageUrl(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + altText + '" width="480" height="380" class="transition-opacity duration-300 opacity-0 w-full h-full object-cover" onerror="if(!this.dataset.fallbackApplied){this.dataset.fallbackApplied=\'1\';this.src=\'' + randomImg + '\';}else{this.parentElement.classList.add(\'is-empty\');this.remove();}">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
@@ -375,7 +375,7 @@ modalContent.innerHTML =
                     var titleAttr = imageTitle ? ' title="' + imageTitle + '"' : '';
                     
                     return '<div class="my-5 w-full flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-100/70 border border-slate-200/60 p-2 sm:p-2.5">' +
-                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' class="w-full max-w-full h-auto object-contain rounded-lg shadow-2xs transition-opacity duration-300 opacity-0" />' +
+                               '<img data-lazy-src="' + src + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + (caption || '') + '"' + titleAttr + ' width="800" height="450" class="w-full max-w-full h-auto object-contain rounded-lg shadow-2xs transition-opacity duration-300 opacity-0" />' +
                                (caption ? '<span class="text-xs text-slate-600 mt-2 text-center font-sans leading-snug px-2">' + caption + '</span>' : '') +
                            '</div>';
                 };
