@@ -10,15 +10,14 @@
     <link rel="preload" href="./assets/css/tailwind.public.css?v=20260907-split-v1" as="style">
     <link rel="stylesheet" href="./assets/css/tailwind.public.css?v=20260907-split-v1">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Defer non-critical external web fonts -->
+    <!-- Defer non-critical external web fonts (minified locally) -->
     <script>
       (function() {
         function loadDeferredFonts() {
           var fonts = [
-            { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap' },
+            { href: './assets/css/google-fonts.min.css?v=20260923-v1' },
             { href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css', crossOrigin: 'anonymous' }
           ];
           fonts.forEach(function(item) {
@@ -39,12 +38,12 @@
       })();
     </script>
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+      <link rel="stylesheet" href="./assets/css/google-fonts.min.css?v=20260923-v1">
       <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     </noscript>
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260923-vivid-v3" media="print" onload="this.media='all'">
     <noscript>
-      <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1">
+      <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260923-vivid-v3">
     </noscript>
 
     <style>
@@ -205,9 +204,9 @@
         });
     </script>
     <script src="./assets/js/vendor/lucide.min.js" defer></script>
-    <script src="./assets/js/api.js?v=20260912-unified-v1" defer></script>
-    <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
-    <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>
-    <script src="./assets/js/kwave-drawer.js?v=20260912-v2-70vw" defer></script>
+    <script src="./assets/js/api.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/ui-components.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/modal-handler.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/kwave-drawer.min.js?v=20260923-min-v1" defer></script>
 </body>
 </html>

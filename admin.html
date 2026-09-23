@@ -12,15 +12,14 @@
   <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Defer non-critical external web fonts -->
+  <!-- Defer non-critical external web fonts (minified locally) -->
   <script>
     (function() {
       function loadDeferredFonts() {
         var fonts = [
-          { href: 'https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap' },
+          { href: './assets/css/google-fonts.min.css?v=20260923-v1' },
           { href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css', crossOrigin: 'anonymous' }
         ];
         fonts.forEach(function(item) {
@@ -41,7 +40,7 @@
     })();
   </script>
   <noscript>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+    <link rel="stylesheet" href="./assets/css/google-fonts.min.css?v=20260923-v1">
     <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
   </noscript>
 
@@ -718,14 +717,14 @@
   </div>
 
   <script src="./assets/js/vendor/marked.min.js" defer></script>
-  <script src="./assets/js/api.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/uiHelper.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/html-source-editor.js?v=20260907-no-inline-preview-v1" defer></script>
-  <script src="./assets/js/dashboardManager.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/postManager.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/programManager.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/officialManager.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/main.js?v=20260907-html-editor-v1" defer></script>
-  <script src="./assets/js/ai-assistant.js?v=20260907-responsive-connect-v1" defer></script>
+  <script src="./assets/js/api.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/uiHelper.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/html-source-editor.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/dashboardManager.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/postManager.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/programManager.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/officialManager.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/main.min.js?v=20260923-min-v1" defer></script>
+  <script src="./assets/js/ai-assistant.min.js?v=20260923-min-v1" defer></script>
 </body>
 </html>

@@ -6,8 +6,15 @@
     const revealObserver = new IntersectionObserver(function (entries, observer) {
         entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            entry.target.classList.add('is-visible');
-            observer.unobserve(entry.target);
+            const target = entry.target;
+            target.classList.add('is-visible');
+            target.addEventListener('transitionend', function onEnd(e) {
+                if (e.propertyName === 'transform' || e.propertyName === 'opacity') {
+                    target.style.willChange = 'auto';
+                    target.removeEventListener('transitionend', onEnd);
+                }
+            });
+            observer.unobserve(target);
         });
     }, {
         threshold: 0.14,
