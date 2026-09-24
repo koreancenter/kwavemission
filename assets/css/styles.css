@@ -627,14 +627,15 @@ h6,
 
 .prog-filter-btn {
   background: transparent;
-  border: 1.331px solid rgba(0, 0, 0, 0.1331);
-  color: #4b5563;
+  border: 1.331px solid rgba(0, 0, 0, 0.2);
+  color: #1e293b;
   transform: translateZ(0);
 }
 
 .prog-filter-btn.active {
-  color: #111827;
+  color: #0f172a;
   font-weight: 700;
+  border-color: #0f172a;
 }
 
 .prog-filter-btn:hover {

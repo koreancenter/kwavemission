@@ -43,8 +43,8 @@
 
     function getAccentClasses(accent) {
         return {
-            category: 'text-slate-600',
-            titleHover: 'group-hover:text-slate-900',
+            category: 'text-slate-800',
+            titleHover: 'group-hover:text-black',
             buttonHover: 'hover:border-slate-900'
         };
     }
@@ -55,33 +55,33 @@
         const accent = getAccentClasses(statusMeta.accent);
         const slug = normalizeSlug(program.slug);
         const recommended = Number(program.is_recommended) === 1;
-        const preparingClasses = status === 'preparing' ? ' opacity-80 hover:opacity-100' : '';
+        const preparingClasses = status === 'preparing' ? ' border-dashed border-stone-300' : '';
         const jsSafeTitle = (program.title || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
         const safeTitle = escapeHtml(jsSafeTitle);
         const modalAction = slug ? `onclick="window.openMdModal ? window.openMdModal('${slug}', '${safeTitle}', '프로그램 안내') : undefined"` : 'disabled aria-disabled="true"';
-        const disabledClasses = slug ? '' : ' opacity-50 cursor-not-allowed';
+        const disabledClasses = slug ? '' : ' text-slate-500 cursor-not-allowed';
         const descriptionPreview = toPlainText(program.description);
 
         return `
-            <div class="prog-card ${status} snap-start flex-shrink-0 w-[78vw] max-w-[320px] sm:w-[320px] md:w-[calc(33.333%-1rem)] md:max-w-none md:min-w-[340px] h-full rounded-2xl p-5 sm:p-8 border border-white/80 hover:border-white/95 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}" style="background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 10px 26px -6px rgba(28, 25, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);">
-                ${recommended ? '<div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-stone-100 border border-stone-200/80 text-stone-900 text-[10px] font-semibold uppercase tracking-wider">RECOMMENDED</div>' : ''}
+            <div class="prog-card ${status} snap-start flex-shrink-0 w-[78vw] max-w-[320px] sm:w-[320px] md:w-[calc(33.333%-1rem)] md:max-w-none md:min-w-[340px] h-full rounded-2xl p-5 sm:p-8 border border-white/80 hover:border-white/95 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}" style="background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 10px 26px -6px rgba(28, 25, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);">
+                ${recommended ? '<div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-stone-100 border border-stone-300 text-stone-900 text-[10px] font-bold uppercase tracking-wider">RECOMMENDED</div>' : ''}
                 <div>
                     <div class="flex items-center justify-between mb-4 sm:mb-6">
                         <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl sm:rounded-xl bg-white/80 border border-stone-200/60 shadow-sm flex items-center justify-center ${statusMeta.iconTone}">
                             ${escapeHtml(program.icon || '🎓')}
                         </div>
-                        <span class="px-3 py-1 rounded-full bg-white/80 text-stone-700 border border-stone-200/70 text-xs font-semibold shadow-xs">
+                        <span class="px-3 py-1 rounded-full bg-white/95 text-slate-800 border border-stone-300 text-xs font-bold shadow-xs">
                             ${statusMeta.label}
                         </span>
                     </div>
-                    <span class="text-[11px] ${accent.category} font-semibold uppercase tracking-wider block mb-2">${escapeHtml(program.category || 'Mission Program')}</span>
+                    <span class="text-[11px] ${accent.category} font-bold uppercase tracking-wider block mb-2">${escapeHtml(program.category || 'Mission Program')}</span>
                     <h3 class="text-lg sm:text-xl font-bold text-slate-900 sm:text-slate-900 mb-2 sm:mb-3 ${accent.titleHover} transition-colors line-clamp-2 min-h-[3.5rem] sm:min-h-[3.5rem] flex items-start break-keep">${escapeHtml(program.title || '프로그램 안내')}</h3>
-                    <p class="text-slate-700 sm:text-slate-700 text-sm leading-relaxed font-normal sm:font-light mb-6 sm:mb-8 line-clamp-3 min-h-[4.5rem]">
+                    <p class="text-slate-800 sm:text-slate-800 text-sm leading-relaxed font-normal mb-6 sm:mb-8 line-clamp-3 min-h-[4.5rem]">
                         ${escapeHtml(descriptionPreview)}
                     </p>
                 </div>
                 <div class="pt-4 sm:pt-5 mt-auto border-t border-slate-900/10 w-full flex items-center justify-start">
-                    <button type="button" ${modalAction} class="group/program-action inline-flex items-center gap-1.5 text-slate-700 hover:text-slate-900 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0${disabledClasses}">
+                    <button type="button" ${modalAction} class="group/program-action inline-flex items-center gap-1.5 text-slate-800 hover:text-slate-950 font-bold text-xs sm:text-sm transition-colors cursor-pointer bg-transparent border-0 p-0${disabledClasses}">
                         <span>자세히 보기 및 신청</span>
                         <i data-lucide="arrow-up-right" class="w-4 h-4 transition-transform duration-200 group-hover/program-action:translate-x-0.5 group-hover/program-action:-translate-y-0.5"></i>
                     </button>
