@@ -289,6 +289,41 @@
             box-shadow: 0 4px 8px rgba(28, 25, 23, 0.04), 0 14px 22px -2px rgba(28, 25, 23, 0.07), inset 0 1px 0 rgba(255, 255, 255, 1);
         }
 
+        /* 📌 프로그램 슬라이더 좌우 네비게이션 버튼 (Y축 센터링 유지 & 부드러운 호버/클릭 효과) */
+        .slider-nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                        background-color 0.2s ease,
+                        box-shadow 0.2s ease,
+                        border-color 0.2s ease,
+                        color 0.2s ease;
+        }
+
+        .slider-nav-btn:hover {
+            transform: translateY(calc(-50% - 2px));
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12), 0 2px 4px rgba(15, 23, 42, 0.06);
+            color: #0f172a;
+        }
+
+        .slider-nav-btn:active {
+            transform: translateY(calc(-50% + 1px)) scale(0.96);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+            background-color: rgba(241, 245, 249, 0.95);
+        }
+
+        /* 📌 모바일 카드 엿보기(Peek) 시 우측 끝 스크롤 여백 확보 */
+        @media (max-width: 639px) {
+            #prog-slider::after {
+                content: '';
+                flex: 0 0 1rem;
+                width: 1rem;
+                pointer-events: none;
+            }
+        }
+
         
 
         .btn-primary i,
@@ -425,6 +460,100 @@
             transform: translateY(-6px) !important;
         }
 
+        /* Partner Section Gradient Divider (숫자 카드 하단과 동일한 그라데이션 라인 및 상하 여백) */
+        .partner-section-divider {
+            width: 100%;
+            max-width: 1200px;
+            height: 1px;
+            margin: 44px auto;
+            background: linear-gradient(to right, transparent, rgba(55, 65, 81, 0.35), transparent);
+            border: none;
+            display: block;
+        }
+
+        @media (max-width: 640px) {
+            .partner-section-divider {
+                margin: 32px auto 36px auto;
+            }
+        }
+
+        /* Partner CSS Grid Layout & Responsive Dividers */
+        .partner-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            align-items: center;
+            justify-items: center;
+            width: 100%;
+        }
+
+        /* Tablet (768px ~ 1023px): 4 columns */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .partner-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
+        }
+
+        /* Desktop (>= 1024px): 6 columns fixed */
+        @media (min-width: 1024px) {
+            .partner-grid {
+                grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+            }
+        }
+
+        .partner-grid-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 0.25rem 0.5rem;
+            text-align: center;
+        }
+
+        .partner-grid-divider {
+            position: absolute;
+            right: -0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d6d3d1; /* stone-300 */
+            font-weight: 300;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* Mobile (< 768px): 2 columns - hide dividers on 2nd column items (2, 4, 6) */
+        .partner-grid-item:nth-child(2n) .partner-grid-divider {
+            display: none;
+        }
+
+        /* Tablet (768px ~ 1023px): 4 columns - hide divider on 4th item (end of 1st row) and last item */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .partner-grid-divider {
+                right: -0.75rem;
+            }
+            .partner-grid-item:nth-child(2n) .partner-grid-divider {
+                display: inline-block;
+            }
+            .partner-grid-item:nth-child(4n) .partner-grid-divider,
+            .partner-grid-item:last-child .partner-grid-divider {
+                display: none;
+            }
+        }
+
+        /* Desktop (>= 1024px): 6 columns - hide divider on last item only */
+        @media (min-width: 1024px) {
+            .partner-grid-divider {
+                right: -1rem;
+            }
+            .partner-grid-item:nth-child(2n) .partner-grid-divider,
+            .partner-grid-item:nth-child(4n) .partner-grid-divider {
+                display: inline-block;
+            }
+            .partner-grid-item:last-child .partner-grid-divider {
+                display: none;
+            }
+        }
+
         @media (prefers-reduced-motion: reduce) {
             html {
                 scroll-behavior: auto !important;
@@ -435,12 +564,16 @@
             .modal-root .modal-panel,
             .btn-primary,
             .btn-secondary,
-            .btn-consult {
+            .btn-consult,
+            .hero-btn-primary,
+            .hero-btn-secondary,
+            .slider-nav-btn {
                 transition: none !important;
                 animation: none !important;
                 transform: none !important;
             }
 
+            .hero-btn-arrow,
             .partner-action-arrow,
             .partner-arrow-hover {
                 transition: none !important;
@@ -562,11 +695,10 @@
                 <!-- [01] Highlight Feature (Main Visual Card) -->
                 <div class="brand-card lg:col-span-2 group relative rounded-xl sm:rounded-xl overflow-hidden min-h-[300px] sm:min-h-[380px] flex flex-col justify-between p-5 sm:p-8">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 HOLY MINISTRY
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">01</span>
                         </div>
                         <h3 class="text-xl sm:text-3xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">영혼을 살리는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg font-medium">
@@ -584,11 +716,10 @@
                 <!-- [02] Next-Gen Disciple -->
                 <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 NEXT-GEN DISCIPLE
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">02</span>
                         </div>
                         <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">교회를 세우는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
@@ -605,11 +736,10 @@
                 <!-- [03] Church Network -->
                 <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 GLOBAL BRIDGE
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">03</span>
                         </div>
                         <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">세상을 바꾸는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
@@ -626,11 +756,10 @@
                 <!-- [04] Action Banner 1: Church Cooperation -->
                 <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 FOR CHURCHES
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">04</span>
                         </div>
                         <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">우리 교회 국제화 프로젝트</h4>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">한국 교회의 자원을 교육을 통해 공유하며 세계형제의식을 실천합니다.</p>
@@ -645,11 +774,10 @@
                 <!-- [05] Action Banner 2: Individual Partner -->
                 <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 FOR INDIVIDUALS
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">05</span>
                         </div>
                         <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">여러분이 선교 자원입니다.</h4>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">여러분의 직업, 경험, 지식으로 선교적 주체가 될 수 있습니다.</p>
@@ -724,25 +852,20 @@
 <!-- 📌 상단 고정 공지사항 배너 (모바일 터치 카드) -->
 <div id="main-notice-banner" 
      onclick="openNoticeBannerModal()" 
-     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 px-5 py-3.5 sm:px-6 sm:py-4 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group flex items-center justify-between gap-3 sm:gap-4 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
     
-    <!-- Left: 배지 + 공지 제목 영역 -->
-    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
-        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-stone-200/80 text-stone-700 text-xs font-semibold tracking-wider flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-stone-700 animate-pulse"></span>
-            NOTICE
-        </span>
-        
+    <!-- Left: 공지 제목 영역 -->
+    <div class="flex items-center min-w-0 flex-1">
         <!-- JS가 최신 공지 제목을 넣는 자리 -->
-        <span id="main-notice-title" class="truncate text-slate-700 text-sm font-medium group-hover:text-slate-900 transition-colors">
+        <span id="main-notice-title" class="truncate text-slate-700 text-sm sm:text-base font-medium group-hover:text-slate-900 transition-colors">
             📢 최신 공지사항을 불러오는 중입니다...
         </span>
     </div>
 
     <!-- Right: 자세히 보기 영역 -->
-    <span class="shrink-0 group/notice-details text-xs text-slate-600 group-hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold">
+    <span class="shrink-0 group/notice-details text-xs sm:text-sm text-slate-600 group-hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold">
         <span class="whitespace-nowrap group-hover/notice-details:underline transition-all duration-200">자세히 보기</span>
-        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
+        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
     </span>
 </div>
 
@@ -758,18 +881,18 @@
         <div class="relative">
 
         <!-- Left arrow (desktop only) -->
-        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="group/slider-nav hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="slider-nav-btn group/slider-nav hidden md:flex -left-5 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm text-slate-700 cursor-pointer" style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:-translate-x-0.5"></i>
         </button>
 
-        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 scrollbar-hide">
+        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             <div class="w-full min-h-[180px] flex items-center justify-center text-center text-slate-600 text-sm">
                 프로그램을 불러오는 중입니다...
             </div>
         </div><!-- end prog-slider -->
 
         <!-- Right arrow (desktop only) -->
-        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="group/slider-nav hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="slider-nav-btn group/slider-nav hidden md:flex -right-5 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm text-slate-700 cursor-pointer" style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-right" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:translate-x-0.5"></i>
         </button>
 
@@ -803,63 +926,73 @@
 <!-- Partners Section (K-WAVE GLOBAL ALLIANCE) -->
 <section id="partners" class="py-16 sm:py-24 bg-[#ece9e1] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- 섹션 헤더 (시각적 위계 및 비전 설명) -->
-        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-14">
+        <!-- 섹션 헤더 (시각적 위계) -->
+        <div class="text-center max-w-3xl mx-auto">
             <span class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-stone-600 block mb-2 sm:mb-2.5">
                 K-WAVE GLOBAL ALLIANCE
             </span>
             <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight leading-snug">
                 하나님 나라를 위한 연대
             </h2>
-            <p class="mt-3 text-xs sm:text-sm lg:text-base text-slate-600 leading-relaxed break-keep max-w-2xl mx-auto">
-                교육과 연구, 선교 현장, 지역 교회가 유기적으로 연대하여 차세대 글로벌 선교 생태계를 함께 세워갑니다.
-            </p>
         </div>
         
-        <!-- 파트너 아카이브 단일 라인 (전체 폭 활용, 수평 연속 배치, | 구분자, 무한 수평 확장 지원) -->
-        <div class="w-full overflow-x-auto no-scrollbar py-6 sm:py-10">
-            <div class="w-full min-w-max flex items-center justify-between gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 text-center">
-                <!-- 1. 글로벌미래고등교육원 -->
-                <span class="font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
-                    글로벌미래고등교육원
-                </span>
+        <!-- 가로 구분선 (숫자 카드 하단과 동일한 그라데이션 라인 및 위아래 동일한 여백) -->
+        <div class="partner-section-divider w-full max-w-[1200px] mx-auto" style="width: 100%; max-width: 1200px; height: 1px; margin-top: 44px; margin-bottom: 44px; margin-left: auto; margin-right: auto; background: linear-gradient(to right, transparent, rgba(55, 65, 81, 0.35), transparent); display: block;" aria-hidden="true"></div>
 
-                <span class="text-stone-300 select-none font-light text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">|</span>
+        <!-- 파트너 아카이브 라인 (CSS Grid 기반 유연한 반응형 레이아웃: 모바일 2열, 태블릿 4열, 데스크톱 6열 고정) -->
+        <div class="w-full">
+            <div class="partner-grid max-w-7xl mx-auto gap-x-4 sm:gap-x-6 lg:gap-x-8 gap-y-6 sm:gap-y-7 lg:gap-y-0 px-2 sm:px-4 text-center">
+                
+                <!-- 1. 글로벌미래고등교육원 -->
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        글로벌미래고등교육원
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
 
                 <!-- 2. 쉐마글로벌학교 (Link) -->
-                <a href="https://www.ishema.kr/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight hover:text-blue-900 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
-                    <span>쉐마글로벌학교</span>
-                    <i data-lucide="arrow-up-right" class="partner-arrow-hover w-4 h-4 text-stone-500 group-hover:text-blue-900"></i>
-                </a>
-
-                <span class="text-stone-300 select-none font-light text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">|</span>
+                <div class="partner-grid-item">
+                    <a href="https://www.ishema.kr/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-900 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
+                        <span>쉐마글로벌학교</span>
+                        <i data-lucide="arrow-up-right" class="partner-arrow-hover w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-500 group-hover:text-blue-900"></i>
+                    </a>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
 
                 <!-- 3. 21세기SMF선교회 -->
-                <span class="font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
-                    21세기SMF선교회
-                </span>
-
-                <span class="text-stone-300 select-none font-light text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">|</span>
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        21세기SMF선교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
 
                 <!-- 4. 청평사랑의교회 -->
-                <span class="font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
-                    청평사랑의교회
-                </span>
-
-                <span class="text-stone-300 select-none font-light text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">|</span>
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        청평사랑의교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
 
                 <!-- 5. 함께걷는교회 -->
-                <span class="font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
-                    함께걷는교회
-                </span>
-
-                <span class="text-stone-300 select-none font-light text-base sm:text-lg lg:text-xl shrink-0" aria-hidden="true">|</span>
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        함께걷는교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
 
                 <!-- 6. 양주꽃동산교회 (Link) -->
-                <a href="https://www.youtube.com/@양주꽃동산" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-base sm:text-lg lg:text-xl font-bold text-slate-900 tracking-tight hover:text-red-700 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
-                    <span>양주꽃동산교회</span>
-                    <i data-lucide="arrow-up-right" class="partner-arrow-hover w-4 h-4 text-stone-500 group-hover:text-red-700"></i>
-                </a>
+                <div class="partner-grid-item">
+                    <a href="https://www.youtube.com/@양주꽃동산" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight hover:text-red-700 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
+                        <span>양주꽃동산교회</span>
+                        <i data-lucide="arrow-up-right" class="partner-arrow-hover w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-500 group-hover:text-red-700"></i>
+                    </a>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
             </div>
         </div>
     </div>
@@ -874,8 +1007,8 @@
                     <p class="text-sm sm:text-sm text-slate-700 font-normal leading-relaxed">국민은행 <span class="font-mono text-slate-900 font-bold">233001-04-416923</span><br class="sm:hidden"> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
                 </div>
                 <a href="./k-alliance.html"
-                   class="btn-primary partner-action no-shadow min-h-[48px] px-6 py-3.5 text-xs sm:text-sm font-semibold tracking-wider shrink-0 w-full md:w-auto text-center justify-center inline-flex items-center gap-1.5 cursor-pointer">
-                    <span>K-Alliance</span> <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
+                   class="hero-btn-primary w-[220px] sm:w-auto min-h-[48px] h-12 px-6 py-3.5 rounded-xl text-sm font-semibold tracking-tight whitespace-nowrap active:scale-[0.99] shrink-0 inline-flex items-center justify-center gap-2 cursor-pointer">
+                    K-Alliance <i data-lucide="arrow-up-right" class="hero-btn-arrow w-4 h-4"></i>
                 </a>
             </div>
         </section>
@@ -973,13 +1106,13 @@
     <script src="./assets/js/vendor/marked.min.js" defer></script>
     <script src="./assets/js/api.min.js?v=20260923-min-v1" defer></script>
     <script src="./assets/js/ui-components.min.js?v=20260923-min-v1" defer></script>
-    <script src="./assets/js/animations.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/animations.min.js?v=20260924-min-v2" defer></script>
     <script src="./assets/js/modal-handler.min.js?v=20260923-min-v1" defer></script>
     <script src="./assets/js/metrics-counter.min.js?v=20260923-min-v1" defer></script>
     <script src="./assets/js/kwave-drawer.min.js?v=20260923-min-v1" defer></script>
-    <script src="./assets/js/program-loader.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/program-loader.min.js?v=20260924-peek-v1" defer></script>
     <script src="./assets/js/news-loader.min.js?v=20260923-min-v1" defer></script>
-    <script src="./assets/js/app-init.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/app-init.min.js?v=20260924-min-v2" defer></script>
     <!-- End of JavaScript modules -->
      
     <!-- 시네마틱 모달 -->

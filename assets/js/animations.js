@@ -21,7 +21,8 @@
         rootMargin: '0px 0px -10% 0px'
     });
 
-    function applyStaggerReveal(containerSelector, stepMs) {
+    function applyStaggerReveal(containerSelector, stepMs, maxDelay) {
+        const limitDelay = typeof maxDelay === 'number' ? maxDelay : 420;
         const containers = document.querySelectorAll(containerSelector);
         containers.forEach(function (container) {
             const children = Array.from(container.children);
@@ -29,7 +30,7 @@
                 if (child.dataset.revealBound === 'true') return;
                 child.dataset.revealBound = 'true';
                 child.classList.add('reveal-item');
-                child.style.setProperty('--reveal-delay', Math.min(index * stepMs, 420) + 'ms');
+                child.style.setProperty('--reveal-delay', Math.min(index * stepMs, limitDelay) + 'ms');
                 revealObserver.observe(child);
             });
         });
@@ -38,9 +39,11 @@
     function initializeRevealAnimations() {
         const staggerStep = isMobileMotion ? 44 : 72;
         const newsStaggerStep = isMobileMotion ? 36 : 62;
+        const partnerStaggerStep = isMobileMotion ? 60 : 80;
         applyStaggerReveal('#about .grid', staggerStep);
         applyStaggerReveal('#programs #prog-slider', staggerStep);
         applyStaggerReveal('#news-container', newsStaggerStep);
+        applyStaggerReveal('#partners .partner-grid', partnerStaggerStep, 500);
     }
 
     window.initializeRevealAnimations = initializeRevealAnimations;

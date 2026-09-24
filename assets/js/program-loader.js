@@ -63,7 +63,7 @@
         const descriptionPreview = toPlainText(program.description);
 
         return `
-            <div class="prog-card ${status} snap-center flex-shrink-0 w-[85vw] min-w-[280px] md:w-[calc(33.333%-1rem)] md:min-w-[340px] h-full rounded-2xl p-5 sm:p-8 border border-white/80 hover:border-white/95 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}" style="background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 10px 26px -6px rgba(28, 25, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);">
+            <div class="prog-card ${status} snap-start flex-shrink-0 w-[78vw] max-w-[320px] sm:w-[320px] md:w-[calc(33.333%-1rem)] md:max-w-none md:min-w-[340px] h-full rounded-2xl p-5 sm:p-8 border border-white/80 hover:border-white/95 flex flex-col justify-between transition-all duration-300 group relative${preparingClasses}" style="background: rgba(255, 255, 255, 0.68); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); box-shadow: 0 1px 3px rgba(28, 25, 23, 0.03), 0 10px 26px -6px rgba(28, 25, 23, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.95);">
                 ${recommended ? '<div class="absolute -top-3 right-6 z-50 px-3 py-1 rounded-full bg-stone-100 border border-stone-200/80 text-stone-900 text-[10px] font-semibold uppercase tracking-wider">RECOMMENDED</div>' : ''}
                 <div>
                     <div class="flex items-center justify-between mb-4 sm:mb-6">

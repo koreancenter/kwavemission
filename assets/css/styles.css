@@ -152,6 +152,23 @@ h6,
 .metrics-section::before { top: 0; }
 .metrics-section::after { bottom: 0; }
 
+/* 파트너 섹션 상단 그라데이션 구분선 (숫자 카드 하단과 동일한 형태 및 상하 여백) */
+.partner-section-divider {
+  width: 100%;
+  max-width: 1200px;
+  height: 1px;
+  margin: 44px auto;
+  background: linear-gradient(to right, transparent, rgba(55, 65, 81, 0.35), transparent);
+  border: none;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .partner-section-divider {
+    margin: 32px auto 36px auto;
+  }
+}
+
 .metrics-container {
   max-width: 1200px;
   width: 100%;
