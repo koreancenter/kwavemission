@@ -213,7 +213,7 @@
         container.innerHTML =
             '<article class="news-feature-card group" data-news-index="0" tabindex="0" role="button">' +
                 '<div class="news-feature-media">' +
-                    '<img data-lazy-src="' + _safeImageUrl(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + altText + '" width="480" height="380" class="transition-opacity duration-300 opacity-0 w-full h-full object-cover" onerror="if(!this.dataset.fallbackApplied){this.dataset.fallbackApplied=\'1\';this.src=\'' + randomImg + '\';}else{this.parentElement.classList.add(\'is-empty\');this.remove();}">' +
+                    '<img data-lazy-src="' + _safeImageUrl(displayImg) + '" src="data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 16 9\'%3E%3C/svg%3E" alt="' + altText + '" width="480" height="380" loading="lazy" decoding="async" class="transition-opacity duration-300 opacity-0 w-full h-full object-cover" onerror="if(!this.dataset.fallbackApplied){this.dataset.fallbackApplied=\'1\';this.src=\'' + randomImg + '\';}else{this.parentElement.classList.add(\'is-empty\');this.remove();}">' +
                     '<span class="news-security-badge"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i> SECURITY FILTERED</span>' +
                 '</div>' +
                 '<div class="news-feature-inner">' +
