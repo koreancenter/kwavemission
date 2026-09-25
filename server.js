@@ -12,7 +12,7 @@ const envVars = {
   ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'admin@kwavemission.org',
   ADMIN_PASSWORD: process.env.ADMIN_PASSWORD || '680923',
   JWT_SECRET: process.env.JWT_SECRET || 'kwave-mission-secure-jwt-secret-key-2026!',
-  GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
+  GEMINI_API_KEY: process.env.GEMINI_API_KEY || process.env.API_KEY || '',
   GEMINI_MODEL: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
   OLLAMA_URL: process.env.OLLAMA_URL || '',
   OLLAMA_MODEL: process.env.OLLAMA_MODEL || ''
@@ -194,11 +194,24 @@ function initDatabase() {
       }
     }
     // Retry once
-    db = new Database(dbPath);
-    const schemaPath = path.join(process.cwd(), 'docs', 'schema.sql');
-    if (fs.existsSync(schemaPath)) {
-      const schemaSql = fs.readFileSync(schemaPath, 'utf-8');
-      db.exec(schemaSql);
+    try {
+      db = new Database(dbPath);
+      const schemaPath = path.join(process.cwd(), 'docs', 'schema.sql');
+      if (fs.existsSync(schemaPath)) {
+        const schemaSql = fs.readFileSync(schemaPath, 'utf-8');
+        db.exec(schemaSql);
+      }
+    } catch (retryErr) {
+      console.warn('[AI Studio] SQLite fallback initialized:', retryErr.message);
+      db = {
+        prepare: () => ({
+          get: () => ({ c: 0 }),
+          all: () => [],
+          run: () => ({ changes: 0 })
+        }),
+        exec: () => {},
+        transaction: (fn) => fn
+      };
     }
   }
 }

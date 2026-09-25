@@ -5,354 +5,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="/assets/images/favicon.ico">
-    <title>케이웨이브 미션 | K-WAVE MISSION - 하나님 나라를 위한 한류</title>
-    <meta name="description" content="한국학 기반 교육선교 전문가 그룹. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <title>K-WAVE MISSION - 한국학 기반 교육선교 전문가 그룹</title>
+    <meta name="description" content="한국학 기반 교육선교 전문가 그룹 - 하나님 나라를 위한 한류. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
+    <meta property="og:title" content="K-WAVE MISSION - 한국학 기반 교육선교 전문가 그룹">
+    <meta property="og:description" content="한국학 기반 교육선교 전문가 그룹 - 하나님 나라를 위한 한류. 한류라는 문화의 힘을 통해 하나님 나라 확장과 영혼 구원의 사명을 감당합니다.">
     
     <link rel="preload" href="./assets/css/tailwind.public.css?v=20260912-cta-v3" as="style">
     <link rel="stylesheet" href="./assets/css/tailwind.public.css?v=20260912-cta-v3">
     
     <!-- Performance Resource Hints -->
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- Below-the-fold, drawer, and modal styles (deferred, non-blocking) -->
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1" media="print" onload="this.media='all'">
+    <!-- Below-the-fold, drawer, and modal styles -->
+    <link rel="stylesheet" href="./assets/css/kwave-drawer.min.css?v=20260924-v2">
+    <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260924-v2" media="print" onload="this.media='all'">
     <noscript>
-      <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1">
+      <link rel="stylesheet" href="./assets/css/kwave-drawer.min.css?v=20260924-v2">
+      <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260924-v2">
     </noscript>
 
-    <!-- Google Fonts (Noto Serif KR & JetBrains Mono) - Non-blocking -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap" media="print" onload="this.media='all'">
+    <!-- Defer non-critical external web fonts (minified) -->
+    <script>!function(){function e(){[{href:"./assets/css/google-fonts.min.css?v=20260924-v2"},{href:"https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css",crossOrigin:"anonymous"}].forEach(function(e){var n=document.createElement("link");n.rel="stylesheet",n.href=e.href,e.crossOrigin&&(n.crossOrigin=e.crossOrigin),document.head.appendChild(n)})}"requestIdleCallback"in window?requestIdleCallback(e,{timeout:2500}):window.addEventListener("load",function(){setTimeout(e,100)})}();</script>
     <noscript>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-    </noscript>
-
-    <style>
-      @keyframes fade-in-up {
-        from {
-          opacity: 0;
-          transform: translateY(20px) scale(0.95);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0) scale(1);
-        }
-      }
-      .animate-fade-in-up {
-        animation: fade-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      }
-    </style>
-
-    <!-- Pretendard Dynamic Subset Web Font (Non-blocking) -->
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css" media="print" onload="this.media='all'">
-    <noscript>
+      <link rel="stylesheet" href="./assets/css/google-fonts.min.css?v=20260924-v2">
       <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
     </noscript>
-    
-    <style>
-        :root {
-            --bg-primary: #ece9e1;
-            --surface-glass: rgba(255, 255, 255, 0.78);
-            --surface-soft: rgba(255, 255, 255, 0.92);
-            --text-primary: #1f2937;
-            --text-secondary: #4b5563;
-            --brand-primary: #4b5563;
-            --brand-primary-soft: rgba(75, 85, 99, 0.12);
-            --brand-border: rgba(31, 41, 55, 0.16);
-            --consult-accent: #52525b;
-            --consult-soft: rgba(82, 82, 91, 0.08);
-            --motion-hover-scale: 1;
-            --motion-icon-shift: 1px;
-            --motion-reveal-duration: 0.46s;
-            --motion-modal-duration: 0.2s;
-            --motion-modal-panel-duration: 0.22s;
-        }
 
-        html {
-            scroll-behavior: smooth;
-            scroll-padding-top: 5rem;
-        }
-
-        body {
-            font-family: 'Pretendard', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            letter-spacing: -0.02em;
-            line-height: 1.6;
-        }
-
-        .hero-title,
-        .section-title,
-        .font-serif {
-            font-family: 'Noto Serif KR', serif;
-        }
-
-        .hero-title {
-            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 6px 16px rgba(15, 23, 42, 0.08);
-        }
-
-        .about-title-shadow {
-            text-shadow: 0 1px 2px rgba(15, 23, 42, 0.14), 0 5px 14px rgba(15, 23, 42, 0.07);
-        }
-
-        p, li, a, button, input, textarea {
-            font-family: 'Pretendard', sans-serif;
-        }
-
-        .section-badge,
-        .tech-tag,
-        .metric-label {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            letter-spacing: 0.08em;
-        }
-
-        .font-mono {
-            font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-            font-feature-settings: 'tnum';
-        }
-
-.header-fade-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 160px;
-  background: linear-gradient(to bottom, #ece9e1 0%, #ece9e1 50%, rgba(236, 233, 225, 0) 100%) !important;
-  pointer-events: none;
-  z-index: 40;
-}
-
-.glass-nav {
-  background: transparent !important;
-  border-bottom: none;
-  position: fixed;
-  top: 0;
-  z-index: 50;
-}
-
-        .brand-link {
-            color: #4b5563;
-            transition: color 0.2s ease;
-        }
-
-        .brand-link:hover {
-            color: #111827;
-        }
-
-        .brand-badge {
-            background: transparent;
-            border: none;
-            color: #374151;
-        }
-
-        .btn-primary,
-        .btn-secondary,
-        .btn-consult {
-            border-radius: 9999px;
-            font-weight: 500;
-            transition: all 0.3s ease-out;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            transform: translateZ(0);
-        }
-
-        .btn-primary {
-            background: #374151;
-            color: #fff;
-            border: 1px solid rgba(31, 41, 55, 0.2);
-            box-shadow: 0 6px 14px rgba(31, 41, 55, 0.24);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-0.125rem);
-            background: #1f2937;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .btn-primary.no-shadow,
-        .btn-primary.no-shadow:hover {
-            box-shadow: none;
-        }
-
-        .btn-secondary {
-            background: var(--surface-soft);
-            color: #374151;
-            border: 1px solid var(--brand-border);
-            backdrop-filter: blur(8px);
-        }
-
-        .btn-secondary:hover {
-            transform: translateY(-0.125rem);
-            border-color: rgba(31, 41, 55, 0.3);
-            color: #111827;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .btn-consult {
-            background: var(--consult-soft);
-            border: 1px solid rgba(82, 82, 91, 0.36);
-            color: #4b5563;
-        }
-
-        .btn-consult:hover {
-            transform: translateY(-0.125rem);
-            background: rgba(82, 82, 91, 0.14);
-            border-color: var(--consult-accent);
-            color: #1f2937;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        }
-
-        .hero-btn-primary {
-            background-color: #ded9ce;
-            color: #1f2937;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            transition: all 0.2s ease;
-        }
-
-        .hero-btn-primary:hover {
-            background-color: #d5d0c4;
-            color: #111827;
-        }
-
-        .hero-btn-primary .hero-btn-arrow {
-            color: #78716c;
-            transition: transform 0.2s ease, color 0.2s ease;
-        }
-
-        .hero-btn-primary:hover .hero-btn-arrow {
-            color: #111827;
-            transform: translate(1px, -1px);
-        }
-
-        .hero-btn-secondary {
-            background-color: rgba(255, 255, 255, 0.85);
-            color: #292524;
-            border: 1px solid rgba(31, 41, 55, 0.12);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
-            transition: all 0.2s ease;
-        }
-
-        .hero-btn-secondary:hover {
-            background-color: #ffffff;
-            border-color: rgba(31, 41, 55, 0.22);
-            color: #111827;
-        }
-
-        
-
-        .btn-primary i,
-        .btn-secondary i,
-        .btn-consult i {
-            transition: transform 0.22s ease, opacity 0.22s ease;
-        }
-
-        
-
-        .btn-primary:hover i,
-        .btn-secondary:hover i,
-        .btn-consult:hover i {
-            transform: translateX(var(--motion-icon-shift));
-            opacity: 0.95;
-        }
-
-        .partner-action-arrow {
-            transition: translate 0.2s ease;
-        }
-
-        .partner-action:hover .partner-action-arrow {
-            transform: none;
-            translate: 2px -2px;
-            opacity: 1;
-        }
-
-        .reveal-item {
-            opacity: 0;
-            transform: translateY(12px);
-            transition: opacity var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1),
-                        transform var(--motion-reveal-duration) cubic-bezier(0.22, 1, 0.36, 1);
-            transition-delay: var(--reveal-delay, 0ms);
-            will-change: opacity, transform;
-        }
-
-        .reveal-item.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            z-index: 70;
-            pointer-events: none;
-            background: rgba(17, 24, 39, 0.08);
-        }
-
-        #scroll-progress-bar {
-            width: 100%;
-            height: 100%;
-            transform-origin: left center;
-            transform: scaleX(0);
-            background: rgba(55, 65, 81, 0.78);
-            box-shadow: none;
-        }
-
-        .hero-section {
-            position: relative;
-            overflow: hidden;
-            min-height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-  
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 75%, rgba(0,0,0,0) 100%);
-}
-
-        @media (max-width: 640px) {
-            :root {
-                --motion-hover-scale: 1;
-                --motion-icon-shift: 1px;
-                --motion-reveal-duration: 0.4s;
-                --motion-modal-duration: 0.18s;
-                --motion-modal-panel-duration: 0.2s;
-            }
-
-            .reveal-item {
-                transform: translateY(8px);
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            html {
-                scroll-behavior: auto !important;
-            }
-
-            .reveal-item,
-            .modal-root,
-            .modal-root .modal-panel,
-            .btn-primary,
-            .btn-secondary,
-            .btn-consult {
-                transition: none !important;
-                animation: none !important;
-                transform: none !important;
-            }
-
-            .partner-action-arrow {
-                transition: none !important;
-                translate: none !important;
-            }
-        }
-    </style>
+    <style>@keyframes fade-in-up{from{opacity:0;transform:translate3d(0,20px,0) scale(0.95)}to{opacity:1;transform:translate3d(0,0,0) scale(1)}}.animate-fade-in-up{animation:fade-in-up 0.4s cubic-bezier(0.16,1,0.3,1) forwards;will-change:transform,opacity;backface-visibility:hidden;-webkit-backface-visibility:hidden}:root{--bg-primary:#ece9e1;--surface-glass:rgba(255,255,255,0.78);--surface-soft:rgba(255,255,255,0.92);--text-primary:#1f2937;--text-secondary:#4b5563;--brand-primary:#4b5563;--brand-primary-soft:rgba(75,85,99,0.12);--brand-border:rgba(31,41,55,0.16);--consult-accent:#52525b;--consult-soft:rgba(82,82,91,0.08);--motion-hover-scale:1;--motion-icon-shift:1px;--motion-reveal-duration:0.46s;--motion-modal-duration:0.2s;--motion-modal-panel-duration:0.22s}html{scroll-behavior:smooth;scroll-padding-top:5rem}body{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Segoe UI',Roboto,'Noto Sans KR',sans-serif;background:var(--bg-primary);color:var(--text-primary);letter-spacing:-0.02em;line-height:1.6;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}.hero-title,.section-title,.font-serif{font-family:'Noto Serif KR','Nanum Myeongjo','Batang',Georgia,serif}.font-mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;font-feature-settings:'tnum'}.hero-section{position:relative;background:radial-gradient(ellipse 70% 45% at 50% 18%,rgba(255,255,255,0.65) 0%,rgba(236,233,225,0) 100%)}.hero-title{text-shadow:0 1px 2px rgba(15,23,42,0.1),0 6px 16px rgba(15,23,42,0.05)}.about-title-shadow{text-shadow:0 1px 2px rgba(15,23,42,0.14),0 5px 14px rgba(15,23,42,0.07)}p,li,a,button,input,textarea{font-family:'Pretendard',sans-serif}.section-badge,.tech-tag,.metric-label{font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;letter-spacing:0.08em}.font-mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,monospace;font-feature-settings:'tnum'}.header-fade-container{position:fixed;top:0;left:0;width:100%;height:160px;background:linear-gradient(to bottom,#ece9e1 0%,#ece9e1 50%,rgba(236,233,225,0) 100%) !important;pointer-events:none;z-index:40}.glass-nav{background:transparent !important;border-bottom:none;position:fixed;top:0;z-index:50}.brand-link{color:#4b5563;transition:color 0.2s ease}.brand-link:hover{color:#111827}.brand-badge{background:transparent;border:none;color:#374151}.btn-primary,.btn-secondary,.btn-consult{border-radius:9999px;font-weight:500;transition:all 0.3s ease-out;display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;transform:translateZ(0)}.btn-primary{background:#374151;color:#fff;border:1px solid rgba(31,41,55,0.2);box-shadow:0 6px 14px rgba(31,41,55,0.24)}.btn-primary:hover{transform:translateY(-0.125rem);background:#1f2937;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)}.btn-primary.no-shadow,.btn-primary.no-shadow:hover{box-shadow:none}.btn-secondary{background:var(--surface-soft);color:#374151;border:1px solid var(--brand-border);backdrop-filter:blur(8px)}.btn-secondary:hover{transform:translateY(-0.125rem);border-color:rgba(31,41,55,0.3);color:#111827;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)}.btn-consult{background:var(--consult-soft);border:1px solid rgba(82,82,91,0.36);color:#4b5563}.btn-consult:hover{transform:translateY(-0.125rem);background:rgba(82,82,91,0.14);border-color:var(--consult-accent);color:#1f2937;box-shadow:0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06)}.hero-btn-primary{background-color:#242b35;color:#f8fafc;border:1px solid rgba(15,23,42,0.25);box-shadow:0 2px 4px rgba(15,23,42,0.08),0 8px 18px -2px rgba(15,23,42,0.16),inset 0 1px 0 rgba(255,255,255,0.18);transition:transform 0.24s cubic-bezier(0.16,1,0.3,1),box-shadow 0.24s cubic-bezier(0.16,1,0.3,1),background-color 0.24s cubic-bezier(0.16,1,0.3,1)}.hero-btn-primary:hover{background-color:#141820;color:#ffffff;transform:translateY(-2px);box-shadow:0 4px 8px rgba(15,23,42,0.12),0 16px 26px -2px rgba(15,23,42,0.24),inset 0 1px 0 rgba(255,255,255,0.25)}.hero-btn-primary .hero-btn-arrow{color:rgba(248,250,252,0.75);transition:transform 0.2s ease,color 0.2s ease}.hero-btn-primary:hover .hero-btn-arrow{color:#ffffff;transform:translate(2px,-2px)}.hero-btn-secondary{background-color:rgba(255,255,255,0.76);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:#292524;border:1px solid rgba(255,255,255,0.9);box-shadow:0 1px 3px rgba(28,25,23,0.03),0 6px 14px -2px rgba(28,25,23,0.04),inset 0 1px 0 rgba(255,255,255,0.95);transition:transform 0.24s cubic-bezier(0.16,1,0.3,1),box-shadow 0.24s cubic-bezier(0.16,1,0.3,1),background-color 0.24s cubic-bezier(0.16,1,0.3,1),border-color 0.24s cubic-bezier(0.16,1,0.3,1)}.hero-btn-secondary:hover{background-color:#ffffff;border-color:#ffffff;color:#111827;transform:translateY(-2px);box-shadow:0 4px 8px rgba(28,25,23,0.04),0 14px 22px -2px rgba(28,25,23,0.07),inset 0 1px 0 rgba(255,255,255,1)}.slider-nav-btn{position:absolute;top:50%;transform:translateY(-50%);transition:transform 0.2s cubic-bezier(0.16,1,0.3,1),background-color 0.2s ease,box-shadow 0.2s ease,border-color 0.2s ease,color 0.2s ease}.slider-nav-btn:hover{transform:translateY(calc(-50% - 2px));background-color:rgba(255,255,255,0.95);box-shadow:0 4px 12px rgba(15,23,42,0.12),0 2px 4px rgba(15,23,42,0.06);color:#0f172a}.slider-nav-btn:active{transform:translateY(calc(-50% + 1px)) scale(0.96);box-shadow:0 1px 2px rgba(15,23,42,0.08);background-color:rgba(241,245,249,0.95)}@media (max-width:639px){#prog-slider::after{content:'';flex:0 0 1rem;width:1rem;pointer-events:none}}.btn-primary i,.btn-secondary i,.btn-consult i{transition:transform 0.22s ease,opacity 0.22s ease}.btn-primary:hover i,.btn-secondary:hover i,.btn-consult:hover i{transform:translateX(var(--motion-icon-shift));opacity:0.95}.partner-action-arrow{transition:translate 0.2s ease}.partner-action:hover .partner-action-arrow{transform:none;translate:2px -2px;opacity:1}.reveal-item{opacity:0;transform:translate3d(0,12px,0);transition:opacity var(--motion-reveal-duration) cubic-bezier(0.22,1,0.36,1),transform var(--motion-reveal-duration) cubic-bezier(0.22,1,0.36,1);transition-delay:var(--reveal-delay,0ms);will-change:opacity,transform;backface-visibility:hidden;-webkit-backface-visibility:hidden}.reveal-item.is-visible{opacity:1;transform:translate3d(0,0,0)}#scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:70;pointer-events:none;background:rgba(17,24,39,0.08)}#scroll-progress-bar{width:100%;height:100%;transform-origin:left center;transform:scaleX(0);background:rgba(55,65,81,0.78);box-shadow:none}.hero-section{position:relative;overflow:hidden;min-height:80vh;display:flex;align-items:center;justify-content:center;mask-image:linear-gradient(to bottom,rgba(0,0,0,1) 75%,rgba(0,0,0,0) 100%)}@media (max-width:640px){:root{--motion-hover-scale:1;--motion-icon-shift:1px;--motion-reveal-duration:0.4s;--motion-modal-duration:0.18s;--motion-modal-panel-duration:0.2s}.reveal-item{transform:translate3d(0,8px,0)}}@keyframes arrowGlide45{0%{transform:translate(0,0)}50%{transform:translate(4px,-4px)}100%{transform:translate(0,0)}}.partner-arrow-hover{display:inline-block;transition:color 0.2s ease;will-change:transform}.group:hover .partner-arrow-hover{animation:arrowGlide45 0.5s cubic-bezier(0.25,1,0.5,1)}.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}.metric-card,.metric-card:hover{background:transparent !important;border-color:transparent !important;box-shadow:none !important;transform:none !important}.metric-value-wrapper{transition:transform 0.28s cubic-bezier(0.16,1,0.3,1) !important;will-change:transform}.metric-card:hover .metric-value-wrapper{transform:translateY(-6px) !important}.partner-section-divider{width:100%;max-width:1200px;height:1px;margin:44px auto;background:linear-gradient(to right,transparent,rgba(55,65,81,0.35),transparent);border:none;display:block}@media (max-width:640px){.partner-section-divider{margin:32px auto 36px auto}}.partner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:center;justify-items:center;width:100%}@media (min-width:768px) and (max-width:1023px){.partner-grid{grid-template-columns:repeat(4,minmax(0,1fr)) !important}}@media (min-width:1024px){.partner-grid{grid-template-columns:repeat(6,minmax(0,1fr)) !important}}.partner-grid-item{position:relative;display:flex;align-items:center;justify-content:center;width:100%;padding:0.25rem 0.5rem;text-align:center}.partner-grid-divider{position:absolute;right:-0.5rem;top:50%;transform:translateY(-50%);color:#d6d3d1;font-weight:300;pointer-events:none;user-select:none}.partner-grid-item:nth-child(2n) .partner-grid-divider{display:none}@media (min-width:768px) and (max-width:1023px){.partner-grid-divider{right:-0.75rem}.partner-grid-item:nth-child(2n) .partner-grid-divider{display:inline-block}.partner-grid-item:nth-child(4n) .partner-grid-divider,.partner-grid-item:last-child .partner-grid-divider{display:none}}@media (min-width:1024px){.partner-grid-divider{right:-1rem}.partner-grid-item:nth-child(2n) .partner-grid-divider,.partner-grid-item:nth-child(4n) .partner-grid-divider{display:inline-block}.partner-grid-item:last-child .partner-grid-divider{display:none}}@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto !important}.reveal-item,.modal-root,.modal-root .modal-panel,.btn-primary,.btn-secondary,.btn-consult,.hero-btn-primary,.hero-btn-secondary,.slider-nav-btn{transition:none !important;animation:none !important;transform:none !important}.hero-btn-arrow,.partner-action-arrow,.partner-arrow-hover{transition:none !important;animation:none !important;transform:none !important;translate:none !important}.metric-card:hover .metric-value-wrapper{transform:none !important}}</style>
 </head>
 <body class="bg-[#ece9e1] text-slate-800 antialiased selection:bg-zinc-400/35 selection:text-slate-900">
     <div id="scroll-progress" aria-hidden="true"><div id="scroll-progress-bar"></div></div>
@@ -362,7 +44,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             <a href="#hero" onclick="navigateToSection(event, 'hero')" class="flex items-center gap-3 group">
-                <img src="./assets/images/logo.webp" alt="로고" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
+                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" width="40" height="40" class="w-10 h-10 rounded-full object-cover" fetchpriority="high" decoding="async">
                 <div>
                     <span class="text-slate-800 font-bold text-lg tracking-wider">K-WAVE MISSION</span>
                     <p class="text-slate-600 text-xs">하나님 나라를 위한 한류</p>
@@ -393,6 +75,9 @@
             </div>
         </div>
     </header>
+
+    <!-- Main Content Landmark for Accessibility -->
+    <main id="main-content">
 
     <!-- Hero Section -->
     <section id="hero" class="hero-section pt-32 pb-16 md:pt-48 md:pb-32 text-slate-900 relative overflow-hidden">
@@ -461,11 +146,10 @@
                 <!-- [01] Highlight Feature (Main Visual Card) -->
                 <div class="brand-card lg:col-span-2 group relative rounded-xl sm:rounded-xl overflow-hidden min-h-[300px] sm:min-h-[380px] flex flex-col justify-between p-5 sm:p-8">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 HOLY MINISTRY
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">01</span>
                         </div>
                         <h3 class="text-xl sm:text-3xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">영혼을 살리는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed max-w-lg font-medium">
@@ -483,11 +167,10 @@
                 <!-- [02] Next-Gen Disciple -->
                 <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 NEXT-GEN DISCIPLE
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">02</span>
                         </div>
                         <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">교회를 세우는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
@@ -504,11 +187,10 @@
                 <!-- [03] Church Network -->
                 <div class="brand-card lg:col-span-1 group relative rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 GLOBAL BRIDGE
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">03</span>
                         </div>
                         <h3 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">세상을 바꾸는 일</h3>
                         <p class="text-slate-700 text-base sm:text-lg leading-relaxed font-medium">
@@ -525,11 +207,10 @@
                 <!-- [04] Action Banner 1: Church Cooperation -->
                 <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 FOR CHURCHES
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">04</span>
                         </div>
                         <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">우리 교회 국제화 프로젝트</h4>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">한국 교회의 자원을 교육을 통해 공유하며 세계형제의식을 실천합니다.</p>
@@ -544,11 +225,10 @@
                 <!-- [05] Action Banner 2: Individual Partner -->
                 <div class="brand-card lg:col-span-2 group rounded-xl sm:rounded-xl p-5 sm:p-8 flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between mb-4 sm:mb-6">
+                        <div class="mb-4 sm:mb-6">
                             <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">
                                 FOR INDIVIDUALS
                             </span>
-                            <span class="font-mono text-xs sm:text-sm font-semibold text-stone-400 group-hover:text-stone-700 transition-colors">05</span>
                         </div>
                         <h4 class="text-lg sm:text-xl font-bold text-slate-900 mb-2 sm:mb-3 font-serif">여러분이 선교 자원입니다.</h4>
                         <p class="text-slate-700 text-base sm:text-lg md:text-xl leading-relaxed font-medium">여러분의 직업, 경험, 지식으로 선교적 주체가 될 수 있습니다.</p>
@@ -567,7 +247,7 @@
 <!-- Interactive Metrics Section (Mobile Card Feed Grid) -->
 <section class="metrics-section">
   <div class="metrics-container">
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">ACADEMIC NETWORK</span>
       </div>
@@ -579,7 +259,7 @@
       <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">교육과 연구의 전문성으로 세계선교에 참여합니다.</p>
     </div>
 
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">PARTNERSHIP</span>
       </div>
@@ -591,7 +271,7 @@
       <p class="metric-desc text-xs sm:text-sm text-slate-600 leading-relaxed break-keep mt-2">하나님 나라 확장을 위한 전략적 과제를 함께 수행합니다.</p>
     </div>
 
-    <div class="metric-card bg-transparent border border-slate-900/10 p-5 rounded-xl">
+    <div class="metric-card">
       <div class="metric-header">
         <span class="text-xs font-semibold tracking-wider uppercase text-stone-600">HIGHER EDUCATION</span>
       </div>
@@ -623,25 +303,20 @@
 <!-- 📌 상단 고정 공지사항 배너 (모바일 터치 카드) -->
 <div id="main-notice-banner" 
      onclick="openNoticeBannerModal()" 
-     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 p-4 sm:p-5 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all group flex items-center justify-between gap-3 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+     class="cursor-pointer max-w-4xl mx-auto mb-6 sm:mb-8 px-5 py-3.5 sm:px-6 sm:py-4 rounded-full border border-slate-900/10 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all group flex items-center justify-between gap-3 sm:gap-4 overflow-hidden min-h-[48px] hover:bg-white/70" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
     
-    <!-- Left: 배지 + 공지 제목 영역 -->
-    <div class="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
-        <span class="shrink-0 px-2.5 sm:px-3 py-1 rounded-full bg-stone-200/80 text-stone-700 text-xs font-semibold tracking-wider flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-stone-700 animate-pulse"></span>
-            NOTICE
-        </span>
-        
+    <!-- Left: 공지 제목 영역 -->
+    <div class="flex items-center min-w-0 flex-1">
         <!-- JS가 최신 공지 제목을 넣는 자리 -->
-        <span id="main-notice-title" class="truncate text-slate-700 text-sm font-medium group-hover:text-slate-900 transition-colors">
+        <span id="main-notice-title" class="truncate text-slate-700 text-sm sm:text-base font-medium group-hover:text-slate-900 transition-colors">
             📢 최신 공지사항을 불러오는 중입니다...
         </span>
     </div>
 
     <!-- Right: 자세히 보기 영역 -->
-    <span class="shrink-0 group/notice-details text-xs text-slate-600 group-hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold">
+    <span class="shrink-0 group/notice-details text-xs sm:text-sm text-slate-600 group-hover:text-slate-900 transition-colors flex items-center gap-1 font-semibold">
         <span class="whitespace-nowrap group-hover/notice-details:underline transition-all duration-200">자세히 보기</span>
-        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
+        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0 transition-transform duration-200 group-hover/notice-details:translate-x-0.5 group-hover/notice-details:-translate-y-0.5"></i>
     </span>
 </div>
 
@@ -657,18 +332,18 @@
         <div class="relative">
 
         <!-- Left arrow (desktop only) -->
-        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="group/slider-nav hidden md:flex absolute -left-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <button type="button" id="prog-prev" aria-label="이전 슬라이드" class="slider-nav-btn group/slider-nav hidden md:flex -left-5 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm text-slate-700 cursor-pointer" style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-left" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:-translate-x-0.5"></i>
         </button>
 
-        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 scrollbar-hide">
+        <div id="prog-slider" class="flex items-stretch overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 sm:gap-6 pt-4 sm:pt-6 pb-4 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
             <div class="w-full min-h-[180px] flex items-center justify-center text-center text-slate-600 text-sm">
                 프로그램을 불러오는 중입니다...
             </div>
         </div><!-- end prog-slider -->
 
         <!-- Right arrow (desktop only) -->
-        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="group/slider-nav hidden md:flex absolute -right-5 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm hover:shadow-md text-slate-700 hover:bg-white hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300" style="background-color: rgba(255, 255, 255, 0.4); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
+        <button type="button" id="prog-next" aria-label="다음 슬라이드" class="slider-nav-btn group/slider-nav hidden md:flex -right-5 z-10 w-10 h-10 items-center justify-center rounded-full border border-slate-900/10 shadow-sm text-slate-700 cursor-pointer" style="background-color: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);">
             <i data-lucide="chevron-right" class="w-5 h-5 transition-transform duration-200 group-hover/slider-nav:translate-x-0.5"></i>
         </button>
 
@@ -699,40 +374,80 @@
         </div>
     </section>
 
-<!-- Partners Section (Unified Background) -->
-<section id="partners" class="py-16 sm:py-28 bg-[#ece9e1] relative">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <!-- 타이틀 -->
-        <p class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-stone-600 mb-6 sm:mb-10">
-            K-WAVE GLOBAL ALLIANCE
-        </p>
+<!-- Partners Section (K-WAVE GLOBAL ALLIANCE) -->
+<section id="partners" class="py-16 sm:py-24 bg-[#ece9e1] relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- 섹션 헤더 (시각적 위계) -->
+        <div class="text-center max-w-3xl mx-auto">
+            <span class="text-xs sm:text-sm font-semibold tracking-widest uppercase text-stone-600 block mb-2 sm:mb-2.5">
+                K-WAVE GLOBAL ALLIANCE
+            </span>
+            <h2 class="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight leading-snug">
+                하나님 나라를 위한 연대
+            </h2>
+        </div>
         
-        <!-- 감싸는 컨테이너: 모바일은 2열 Grid / 데스크톱(sm:)은 가로 한 줄 Flex -->
-        <div class="grid grid-cols-2 gap-2.5 px-2 max-w-md mx-auto sm:flex sm:flex-wrap sm:justify-center sm:max-w-4xl sm:gap-3">
-            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
-                글로벌미래고등교육원
-            </div>
-            <a href="https://www.ishema.kr/" target="_blank" rel="noopener noreferrer" class="group/partner-link flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300">
-                <span>쉐마글로벌학교</span>
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
-            </a>
-            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
-                21세기SMF선교회
-            </div>
-            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
-                청평사랑의교회
-            </div>
-            <div class="flex items-center justify-center px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300 select-none">
-                함께걷는교회
-            </div>
+        <!-- 가로 구분선 (숫자 카드 하단과 동일한 그라데이션 라인 및 위아래 동일한 여백) -->
+        <div class="partner-section-divider w-full max-w-[1200px] mx-auto" style="width: 100%; max-width: 1200px; height: 1px; margin-top: 44px; margin-bottom: 44px; margin-left: auto; margin-right: auto; background: linear-gradient(to right, transparent, rgba(55, 65, 81, 0.35), transparent); display: block;" aria-hidden="true"></div>
 
-            <!-- 5번째 아이템: 모바일(col-span-2) / 데스크톱(sm:col-auto) -->
-            <a href="https://www.koreancenter.net/" target="_blank" rel="noopener noreferrer" class="group/partner-link col-span-2 sm:col-auto flex items-center justify-center gap-1 px-4 py-3.5 min-h-[48px] text-xs sm:text-sm font-semibold text-slate-800 bg-transparent text-center hover:-translate-y-1 transition-all duration-300">
-                <span>한국센터글로벌네트워크</span>
-                <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 shrink-0 transition-transform duration-200 group-hover/partner-link:translate-x-0.5 group-hover/partner-link:-translate-y-0.5"></i>
-            </a>
+        <!-- 파트너 아카이브 라인 (CSS Grid 기반 유연한 반응형 레이아웃: 모바일 2열, 태블릿 4열, 데스크톱 6열 고정) -->
+        <div class="w-full">
+            <div class="partner-grid max-w-7xl mx-auto gap-x-4 sm:gap-x-6 lg:gap-x-8 gap-y-6 sm:gap-y-7 lg:gap-y-0 px-2 sm:px-4 text-center">
+                
+                <!-- 1. 글로벌미래고등교육원 -->
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        글로벌미래고등교육원
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+                <!-- 2. 쉐마글로벌학교 (Link) -->
+                <div class="partner-grid-item">
+                    <a href="https://www.ishema.kr/" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight hover:text-blue-900 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
+                        <span>쉐마글로벌학교</span>
+                        <i data-lucide="arrow-up-right" class="partner-arrow-hover w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-500 group-hover:text-blue-900"></i>
+                    </a>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+                <!-- 3. 21세기SMF선교회 -->
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        21세기SMF선교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+                <!-- 4. 청평사랑의교회 -->
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        청평사랑의교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+                <!-- 5. 함께걷는교회 -->
+                <div class="partner-grid-item">
+                    <span class="font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight shrink-0 whitespace-nowrap">
+                        함께걷는교회
+                    </span>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+                <!-- 6. 양주꽃동산교회 (Link) -->
+                <div class="partner-grid-item">
+                    <a href="https://www.youtube.com/@양주꽃동산" target="_blank" rel="noopener noreferrer" class="group inline-flex items-center gap-1 font-serif text-sm sm:text-base lg:text-base xl:text-lg font-bold text-slate-900 tracking-tight hover:text-red-700 transition-colors shrink-0 whitespace-nowrap cursor-pointer">
+                        <span>양주꽃동산교회</span>
+                        <i data-lucide="arrow-up-right" class="partner-arrow-hover w-3.5 h-3.5 sm:w-4 sm:h-4 text-stone-500 group-hover:text-red-700"></i>
+                    </a>
+                    <span class="partner-grid-divider text-stone-300 font-light text-sm sm:text-base lg:text-lg" aria-hidden="true">|</span>
+                </div>
+
+            </div>
         </div>
     </div>
+</section>
 
         <!-- Donation & Support CTA Banner -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-12 sm:mt-24 mb-12 sm:mb-20">
@@ -743,11 +458,12 @@
                     <p class="text-sm sm:text-sm text-slate-700 font-normal leading-relaxed">국민은행 <span class="font-mono text-slate-900 font-bold">233001-04-416923</span><br class="sm:hidden"> (예금주: 케이웨이브 미션) | 고유번호: 106-82-76139</p>
                 </div>
                 <a href="./k-alliance.html"
-                   class="btn-primary partner-action no-shadow min-h-[48px] px-6 py-3.5 text-xs sm:text-sm font-semibold tracking-wider shrink-0 w-full md:w-auto text-center justify-center inline-flex items-center gap-1.5 cursor-pointer">
-                    <span>K-Alliance</span> <i data-lucide="arrow-up-right" class="partner-action-arrow w-4 h-4"></i>
+                   class="hero-btn-primary w-[220px] sm:w-auto min-h-[48px] h-12 px-6 py-3.5 rounded-xl text-sm font-semibold tracking-tight whitespace-nowrap active:scale-[0.99] shrink-0 inline-flex items-center justify-center gap-2 cursor-pointer">
+                    K-Alliance <i data-lucide="arrow-up-right" class="hero-btn-arrow w-4 h-4"></i>
                 </a>
             </div>
         </section>
+    </main>
         
         <!-- Minimalist Unified Footer -->
         <footer class="bg-[#ece9e1] py-12 sm:py-16 relative overflow-hidden border-t border-black/10">
@@ -774,88 +490,24 @@
         </footer>
 
     <!-- JavaScript modules (Deferred for Lighthouse mobile optimization) -->
-    <script>
-        window.openMdModal = function(slug, title, badge, sub) {
-            if (window._openMdModalReal) {
-                return window._openMdModalReal(slug, title, badge, sub);
-            }
-            window._pendingMdModal = [slug, title, badge, sub];
-        };
-
-        window.loadMarked = function () {
-            if (window.marked) return Promise.resolve(true);
-            if (window.markedLoadPromise) return window.markedLoadPromise;
-
-            window.markedLoadPromise = new Promise(function (resolve) {
-                var script = document.createElement('script');
-                script.src = './assets/js/vendor/marked.min.js';
-                script.async = true;
-                script.onload = function () { resolve(Boolean(window.marked)); };
-                script.onerror = function () {
-                    console.warn('Markdown parser could not be loaded.');
-                    resolve(false);
-                };
-                document.head.appendChild(script);
-            });
-
-            return window.markedLoadPromise;
-        };
-
-        window.navigateToSection = function(event, sectionId) {
-            if (event && typeof event.preventDefault === 'function') {
-                event.preventDefault();
-            }
-
-            var section = document.getElementById(sectionId);
-            if (!section) return;
-
-            var completeNavigation = function() {
-                var header = document.querySelector('header') || document.querySelector('.glass-nav') || document.querySelector('nav');
-                var headerHeight = header ? header.offsetHeight : 80;
-                var targetPosition = section.getBoundingClientRect().top + window.pageYOffset - headerHeight;
-                targetPosition = Math.max(0, targetPosition);
-
-                window.scrollTo({
-                    top: targetPosition,
-                    behavior: 'smooth'
-                });
-
-                if (window.history.pushState) {
-                    window.history.pushState(null, '', '#' + sectionId);
-                }
-
-                var mobileMenu = document.getElementById('mobile-menu');
-                if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                    mobileMenu.classList.add('hidden');
-                }
-            };
-
-            var openModal = document.querySelector('.modal-root:not(.hidden), #news-modal:not(.hidden), #md-modal:not(.hidden)');
-            if (openModal && typeof window.deactivateModal === 'function') {
-                window.deactivateModal(openModal, completeNavigation);
-            } else {
-                completeNavigation();
-            }
-        };
-    </script>
-    <script src="./assets/js/vendor/lucide.min.js" defer></script>
-    <script src="./assets/js/vendor/marked.min.js" defer></script>
-    <script src="./assets/js/api.js?v=20260912-unified-v1" defer></script>
-    <script src="./assets/js/ui-components.js?v=20260912-v1" defer></script>
-    <script src="./assets/js/animations.js" defer></script>
-    <script src="./assets/js/modal-handler.js?v=20260912-v1" defer></script>
-    <script src="./assets/js/metrics-counter.js" defer></script>
-    <script src="./assets/js/kwave-drawer.js?v=20260912-clean-refactor" defer></script>
-    <script src="./assets/js/program-loader.js?v=20260912-v1" defer></script>
-    <script src="./assets/js/news-loader.js?v=20260912-v1" defer></script>
-    <script src="./assets/js/app-init.js?v=20260912-clean-refactor" defer></script>
+    <script>window.openMdModal=function(e,o,n,d){if(window._openMdModalReal)return window._openMdModalReal(e,o,n,d);window._pendingMdModal=[e,o,n,d]},window.loadMarked=function(){return window.marked?Promise.resolve(!0):(window.markedLoadPromise||(window.markedLoadPromise=new Promise(function(e){var o=document.createElement("script");o.src="./assets/js/vendor/marked.min.js",o.async=!0,o.onload=function(){e(Boolean(window.marked))},o.onerror=function(){console.warn("Markdown parser could not be loaded."),e(!1)},document.head.appendChild(o)})),window.markedLoadPromise)},window.navigateToSection=function(e,o){e&&"function"==typeof e.preventDefault&&e.preventDefault();var n=document.getElementById(o);if(n){var d=function(){var e=document.querySelector("header")||document.querySelector(".glass-nav")||document.querySelector("nav"),d=e?e.offsetHeight:80,t=n.getBoundingClientRect().top+window.pageYOffset-d;t=Math.max(0,t),window.scrollTo({top:t,behavior:"smooth"}),window.history.pushState&&window.history.pushState(null,"","#"+o);var a=document.getElementById("mobile-menu");a&&!a.classList.contains("hidden")&&a.classList.add("hidden")},t=document.querySelector(".modal-root:not(.hidden), #news-modal:not(.hidden), #md-modal:not(.hidden)");t&&"function"==typeof window.deactivateModal?window.deactivateModal(t,d):d()}};</script>
+    <script src="./assets/js/vendor/lucide.min.js?v=20260924-opt-v1" defer></script>
+    <script src="./assets/js/api.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/ui-components.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/animations.min.js?v=20260924-min-v2" defer></script>
+    <script src="./assets/js/modal-handler.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/metrics-counter.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/kwave-drawer.min.js?v=20260924-v2" defer></script>
+    <script src="./assets/js/program-loader.min.js?v=20260924-a11y-v2" defer></script>
+    <script src="./assets/js/news-loader.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/app-init.min.js?v=20260924-min-v2" defer></script>
     <!-- End of JavaScript modules -->
      
     <!-- 시네마틱 모달 -->
     <div id="cinematic-modal" class="modal-root fixed inset-0 z-[60] hidden items-center justify-center bg-black/80 backdrop-blur-md p-4 sm:p-6 transition-opacity duration-300">
         <div id="cinematic-modal-panel" class="relative w-full rounded-2xl overflow-hidden shadow-2xl animate-fade-in-up">
             <!-- 배경 이미지 -->
-            <img id="cinematic-modal-img" src="" alt="" class="absolute inset-0 w-full h-full object-cover grayscale-[15%] contrast-[105%]" />
+            <img id="cinematic-modal-img" src="" alt="시네마틱 미디어" width="768" height="480" loading="lazy" decoding="async" class="absolute inset-0 w-full h-full object-cover grayscale-[15%] contrast-[105%]" />
             
             <!-- 그라데이션 오버레이 -->
             <div id="cinematic-modal-gradient" class="absolute inset-x-0"></div>
@@ -907,6 +559,65 @@
         </div>
     </div>
 </div>
+
+    <!-- K-WAVE Brand DNA Drawer (Independent Component) -->
+    <div id="kwave-drawer-backdrop" class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-sm opacity-0 will-change-[opacity]" aria-hidden="true"></div>
+    <div id="k-drawer" class="fixed left-0 top-1/2 z-50 pointer-events-none -translate-x-full will-change-transform" role="region" aria-label="Brand DNA 서랍 컨테이너">
+        <button id="kwave-tab-btn" type="button" data-kwave-drawer-toggle aria-label="Brand DNA 북마크 서랍 열기/닫기" aria-expanded="false">
+            <span class="pointer-events-none">K</span>
+        </button>
+        
+        <div class="k-drawer-panel" role="dialog" aria-modal="true" aria-label="Brand DNA 서랍" aria-hidden="true">
+            <div class="k-drawer-handle" aria-hidden="true"></div>
+            
+            <div class="k-drawer-header">
+                <span class="k-drawer-header-subtitle">BRAND DNA</span>
+                <h2 class="k-drawer-header-title">우리의 K-Wave</h2>
+            </div>
+
+            <div class="k-drawer-body">
+                <div id="k-drawer-spine" class="k-drawer-spine" aria-hidden="true"></div>
+                
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">01</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-blue">SPIRITUAL IDENTITY</span>
+                        <h3 class="k-drawer-item-title">King's <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">예수 그리스도의 왕 되심을 선포하며</p>
+                    </div>
+                </div>
+
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">02</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-green">KINGDOM EXPANSION</span>
+                        <h3 class="k-drawer-item-title">Kingdom's <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">하나님의 나라 확장에 헌신합니다.</p>
+                    </div>
+                </div>
+
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">03</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-rose">MISSIONAL BRIDGE</span>
+                        <h3 class="k-drawer-item-title">Korean <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">이 일을 위해 대한민국을 부르십니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-drawer-divider" aria-hidden="true"></div>
+
+            <div class="k-drawer-footer">
+                <div class="k-drawer-footer-verse-ref">
+                    <span>하박국 2:14</span>
+                </div>
+                <p class="k-drawer-footer-verse-text">
+                    “이는 물이 바다를 덮음 같이<br>여호와의 영광을 인정하는 것이<br>세상에 가득함이니라”
+                </p>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
