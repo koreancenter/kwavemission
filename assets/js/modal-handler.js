@@ -293,7 +293,7 @@
     function _inlineMarkdown(str) {
         if (!str) return '';
         return String(str)
-            .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" class="rounded-lg my-2 max-w-full">')
+            .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" loading="lazy" class="rounded-lg my-2 max-w-full h-auto">')
             .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline hover:text-blue-800">$1</a>')
             .replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-slate-900">$1</strong>')
             .replace(/__(.+?)__/g, '<strong class="font-bold text-slate-900">$1</strong>')

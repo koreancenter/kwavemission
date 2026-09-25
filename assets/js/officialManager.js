@@ -745,12 +745,12 @@
             <div class="relative overflow-hidden p-4 sm:p-6 rounded-xl border border-slate-200 bg-white">
               <!-- Watermark -->
               <div class="pointer-events-none absolute inset-0 flex items-center justify-center z-0 overflow-hidden select-none" aria-hidden="true">
-                <img src="/assets/images/logo.webp" alt="" class="w-64 opacity-[0.05] pointer-events-none select-none -rotate-6">
+                <img src="/assets/images/logo.webp" alt="" width="256" height="256" class="w-64 opacity-[0.05] pointer-events-none select-none -rotate-6">
               </div>
               <!-- Mini Letterhead -->
               <div class="relative z-10 text-center pb-3 mb-4 border-b-2 border-slate-900 space-y-1">
                 <div class="w-12 h-12 rounded-full overflow-hidden border border-slate-200 bg-white p-0.5 mx-auto mb-1 shadow-xs">
-                  <img src="/assets/images/logo.webp" alt="Logo" class="w-full h-full object-cover rounded-full">
+                  <img src="/assets/images/logo.webp" alt="Logo" width="48" height="48" class="w-full h-full object-cover rounded-full">
                 </div>
                 <div class="text-base sm:text-lg font-black text-slate-900">케이웨이브 미션</div>
                 <div class="text-[10px] tracking-widest text-slate-600 font-semibold uppercase">K-WAVE MISSION (HIGHER EDUCATION MISSION PLATFORM)</div>

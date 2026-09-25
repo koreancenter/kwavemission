@@ -9,13 +9,43 @@
 
     <link rel="preload" href="./assets/css/tailwind.public.css?v=20260907-split-v1" as="style">
     <link rel="stylesheet" href="./assets/css/tailwind.public.css?v=20260907-split-v1">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Noto+Serif+KR:wght@600;700&display=swap">
-    <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
-    <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1" media="print" onload="this.media='all'">
+
+    <!-- Defer non-critical external web fonts (minified locally) -->
+    <script>
+      (function() {
+        function loadDeferredFonts() {
+          var fonts = [
+            { href: './assets/css/google-fonts.min.css?v=20260923-v1' },
+            { href: 'https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css', crossOrigin: 'anonymous' }
+          ];
+          fonts.forEach(function(item) {
+            var el = document.createElement('link');
+            el.rel = 'stylesheet';
+            el.href = item.href;
+            if (item.crossOrigin) el.crossOrigin = item.crossOrigin;
+            document.head.appendChild(el);
+          });
+        }
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(loadDeferredFonts, { timeout: 2500 });
+        } else {
+          window.addEventListener('load', function() {
+            setTimeout(loadDeferredFonts, 100);
+          });
+        }
+      })();
+    </script>
     <noscript>
-      <link rel="stylesheet" href="./assets/css/styles.css?v=20260912-defer-v1">
+      <link rel="stylesheet" href="./assets/css/google-fonts.min.css?v=20260923-v1">
+      <link rel="stylesheet" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard-dynamic-subset.min.css">
+    </noscript>
+    <link rel="stylesheet" href="./assets/css/kwave-drawer.min.css?v=20260924-v2">
+    <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260924-v2" media="print" onload="this.media='all'">
+    <noscript>
+      <link rel="stylesheet" href="./assets/css/kwave-drawer.min.css?v=20260924-v2">
+      <link rel="stylesheet" href="./assets/css/styles.min.css?v=20260924-v2">
     </noscript>
 
     <style>
@@ -28,13 +58,15 @@
         body {
             background: var(--alliance-bg);
             color: var(--alliance-ink);
-            font-family: 'Pretendard', sans-serif;
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Segoe UI', Roboto, 'Noto Sans KR', sans-serif;
             letter-spacing: -0.02em;
             line-height: 1.7;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
         }
 
-        h1, h2, h3, .serif { font-family: 'Noto Serif KR', serif; }
-        .mono { font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; }
+        h1, h2, h3, .serif { font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', Georgia, serif; }
+        .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, monospace; letter-spacing: 0.08em; }
         .break-keep { word-break: keep-all; }
 
         .alliance-grid {
@@ -62,7 +94,7 @@
     <header class="fixed top-0 left-0 right-0 z-50 glass-nav">
         <div class="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
             <a href="./index.html" class="flex items-center gap-3">
-                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" class="h-10 w-10 rounded-full object-cover">
+                <img src="./assets/images/logo.webp" alt="케이웨이브 미션 로고" width="40" height="40" class="h-10 w-10 rounded-full object-cover">
                 <div>
                     <span class="text-lg font-bold tracking-wider text-slate-900">K-WAVE MISSION</span>
                     <p class="text-xs text-slate-600">하나님 나라를 위한 한류</p>
@@ -174,9 +206,68 @@
         });
     </script>
     <script src="./assets/js/vendor/lucide.min.js" defer></script>
-    <script src="./assets/js/api.js?v=20260912-unified-v1" defer></script>
-    <script src="./assets/js/ui-components.js?v=20260818-scroll-fix" defer></script>
-    <script src="./assets/js/modal-handler.js?v=20260818-scroll-fix" defer></script>
-    <script src="./assets/js/kwave-drawer.js?v=20260912-v2-70vw" defer></script>
+    <script src="./assets/js/api.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/ui-components.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/modal-handler.min.js?v=20260923-min-v1" defer></script>
+    <script src="./assets/js/kwave-drawer.min.js?v=20260924-v2" defer></script>
+    
+    <!-- K-WAVE Brand DNA Drawer (Independent Component) -->
+    <div id="kwave-drawer-backdrop" class="fixed inset-0 z-40 hidden bg-black/40 backdrop-blur-sm opacity-0 will-change-[opacity]" aria-hidden="true"></div>
+    <div id="k-drawer" class="fixed left-0 top-1/2 z-50 pointer-events-none -translate-x-full will-change-transform" role="region" aria-label="Brand DNA 서랍 컨테이너">
+        <button id="kwave-tab-btn" type="button" data-kwave-drawer-toggle aria-label="Brand DNA 북마크 서랍 열기/닫기" aria-expanded="false">
+            <span class="pointer-events-none">K</span>
+        </button>
+        
+        <div class="k-drawer-panel" role="dialog" aria-modal="true" aria-label="Brand DNA 서랍" aria-hidden="true">
+            <div class="k-drawer-handle" aria-hidden="true"></div>
+            
+            <div class="k-drawer-header">
+                <span class="k-drawer-header-subtitle">BRAND DNA</span>
+                <h2 class="k-drawer-header-title">우리의 K-Wave</h2>
+            </div>
+
+            <div class="k-drawer-body">
+                <div id="k-drawer-spine" class="k-drawer-spine" aria-hidden="true"></div>
+                
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">01</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-blue">SPIRITUAL IDENTITY</span>
+                        <h3 class="k-drawer-item-title">King's <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">예수 그리스도의 왕 되심을 선포하며</p>
+                    </div>
+                </div>
+
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">02</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-green">KINGDOM EXPANSION</span>
+                        <h3 class="k-drawer-item-title">Kingdom's <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">하나님의 나라 확장에 헌신합니다.</p>
+                    </div>
+                </div>
+
+                <div class="k-drawer-group">
+                    <span class="k-drawer-num" aria-hidden="true">03</span>
+                    <div class="k-drawer-info">
+                        <span class="k-tag-rose">MISSIONAL BRIDGE</span>
+                        <h3 class="k-drawer-item-title">Korean <span style="font-weight:normal;color:#78716c;">Wave</span></h3>
+                        <p class="k-drawer-item-desc">이 일을 위해 대한민국을 부르십니다.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="k-drawer-divider" aria-hidden="true"></div>
+
+            <div class="k-drawer-footer">
+                <div class="k-drawer-footer-verse-ref">
+                    <span>하박국 2:14</span>
+                </div>
+                <p class="k-drawer-footer-verse-text">
+                    “이는 물이 바다를 덮음 같이<br>여호와의 영광을 인정하는 것이<br>세상에 가득함이니라”
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

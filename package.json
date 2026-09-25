@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "dev": "node server.js",
-    "build": "echo 'No build required'",
+    "build": "node scripts/minify-js.js",
+    "build:js": "node scripts/minify-js.js",
     "lint": "node --check server.js",
     "start": "node server.js",
     "build:css": "tailwindcss -i ./assets/css/tailwind.input.css -o ./assets/css/tailwind.public.css --minify && tailwindcss -i ./assets/css/tailwind.admin.input.css -o ./assets/css/tailwind.admin.css --minify && tailwindcss -i ./assets/css/tailwind.official.input.css -o ./assets/css/tailwind.official.css --minify"
@@ -17,6 +18,7 @@
   "devDependencies": {
     "@tailwindcss/cli": "^4.3.3",
     "@tailwindcss/typography": "^0.5.20",
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "^4.3.3",
+    "terser": "^5.51.2"
   }
 }

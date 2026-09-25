@@ -59,7 +59,11 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', initApp);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+    } else {
+        initApp();
+    }
 
     // Handle BFCache back/forward navigation and popstate history
     window.addEventListener('pageshow', function () {

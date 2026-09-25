@@ -1,6 +1,6 @@
 {
-  "name": "Remix kwavemission",
-  "description": "프론트엔드 최종 마무리",
+  "name": "K-WAVE MISSION",
+  "description": "한국학 기반 교육선교 전문가 그룹 - 하나님 나라를 위한 한류",
   "requestFramePermissions": [],
   "majorCapabilities": [
     "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"

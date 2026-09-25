@@ -284,7 +284,7 @@
                             observer.unobserve(img);
                         }
                     });
-                }, { rootMargin: '120px 0px', threshold: 0.01 });
+                }, { rootMargin: '40px 0px', threshold: 0.01 });
             }
 
             lazyImages.forEach(function (img) {
